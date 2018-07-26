@@ -12,16 +12,83 @@ const validationLoginInput = require('../../validation/login');
 // load User model
 const User = require('../../models/User');
 
-// @router  GET api/users/test
-// @desc    Tests users route
-// @access  Public
+/**
+ * @swagger
+ * /api/users/test:
+ *   get:
+ *     tags:
+ *       - users
+ *     summary: Tests users route
+ *     description: Tests users route
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Users Works
+ */
 router.get('/test', (req, res) => res.json({
     msg: "Users Works"
 }));
 
-// @router  POST api/users/register
-// @desc    Register user
-// @access  Public
+/**
+ * @swagger
+ * definition:
+ *   UserForRegister:
+ *     properties:
+ *       name:
+ *         type: string
+ *       email:
+ *         type: string
+ *       password:
+ *         type: string
+ *       password2:
+ *         type: string
+ */
+/**
+ * @swagger
+ * definition:
+ *   UserForLogin:
+ *     properties:
+ *       email:
+ *         type: string
+ *       password:
+ *         type: string
+ */
+
+// https://swagger.io/docs/specification/2-0/authentication/api-keys/
+/**
+ * @swagger
+ * securityDefinitions:
+ *   JWT:
+ *     description: JWT token from user login
+ *     type: apiKey
+ *     name: Authorization
+ *     in: header
+ */
+
+/**
+ * @swagger
+ * /api/users/register:
+ *   post:
+ *     tags:
+ *       - users
+ *     summary: Register user
+ *     description: Registers a new user with different email from database
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Created user object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/UserForRegister'
+ *     responses:
+ *       200:
+ *         description: Successfully created
+ *       400:
+ *         description: Form validation fail
+ */
 router.post('/register', (req, res) => {
     const {
         errors,
@@ -62,9 +129,30 @@ router.post('/register', (req, res) => {
     })
 });
 
-// @router  POST api/users/login
-// @desc    Login user / Returning JWT Token
-// @access  Public
+
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     tags:
+ *       - users
+ *     summary: Login user into the system
+ *     description: User login (example> email:test@test.com passwprd:123456)
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: user email
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/UserForLogin'
+ *     responses:
+ *       200:
+ *         description: Successfully login and return JWT Token
+ *       400:
+ *         description: Invalid username/password supplied
+ */
 router.post('/login', (req, res) => {
     const {
         errors,
@@ -83,7 +171,7 @@ router.post('/login', (req, res) => {
     })
         .then(user => {
             if (!user) {
-                errors.email = 'User not found'
+                errors.email = 'User not found';
                 return res.status(404).json(errors);
             }
             // Check Password
@@ -115,9 +203,22 @@ router.post('/login', (req, res) => {
         });
 });
 
-// @router  GET api/users/current
-// @desc    Return current user
-// @access  Private
+/**
+ * @swagger
+ * /api/users/current:
+ *   get:
+ *     tags:
+ *       - users
+ *     summary: Return current user
+ *     description: This can only be done by the logged in user (add JWT token to header)
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: return current user successfully
+ *     security:
+ *       - JWT: []
+ */
 router.get('/current', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
