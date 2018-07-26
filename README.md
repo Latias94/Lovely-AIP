@@ -4,8 +4,10 @@ AIP assignment 3
 ## Getting Started
 ```bash
 cd server
-# Install dependence of both server and client
-npm run client-install
+# Install server's dependence
+npm install
+# Install client's dependence
+npm run install-client
 # Run server and client concurrently
 npm run dev
 ```
