@@ -1,0 +1,35 @@
+{
+  "name": "lovely-aip",
+  "version": "1.0.0",
+  "description": "Assignment 3 of Advance Internet Programming ",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Latias94/Lovely-AIP.git"
+  },
+  "author": "Mingzhen Zhuang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Latias94/Lovely-AIP/issues"
+  },
+  "homepage": "https://github.com/Latias94/Lovely-AIP#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "concurrently": "^3.6.1",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.2.5",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "validator": "^10.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  }
+}
