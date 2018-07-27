@@ -9,7 +9,9 @@
     "install-client": "cd ../client && npm install",
     "client": "cd ../client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint *.js",
+    "test": "jest",
+    "testwatch": "jest --watchAll"
   },
   "repository": {
     "type": "git",
@@ -34,6 +36,15 @@
     "validator": "^10.4.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.3"
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jest": "^21.18.0",
+    "jest": "^23.4.1",
+    "nodemon": "^1.18.3",
+    "supertest": "^3.1.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
