@@ -30,6 +30,7 @@
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.5",
+    "mongoose-url-slugs": "^1.0.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "swagger-jsdoc": "^1.10.3",

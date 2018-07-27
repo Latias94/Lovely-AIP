@@ -1,6 +1,5 @@
 const express = require('express');
 
-const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
@@ -12,6 +11,8 @@ const validationLoginInput = require('../../validation/login');
 
 // load User model
 const User = require('../../models/User');
+
+const router = express.Router();
 
 /**
  * @swagger

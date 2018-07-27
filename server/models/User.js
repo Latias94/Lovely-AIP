@@ -23,6 +23,10 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  isStaff: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model('users', UserSchema);
