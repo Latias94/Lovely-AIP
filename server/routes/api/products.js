@@ -3,6 +3,7 @@ const passport = require('passport');
 
 // Product model
 const Product = require('../../models/Product');
+const Category = require('../../models/Category');
 
 // Validation
 const validateProductInput = require('../../validation/product');
@@ -10,16 +11,40 @@ const validateCommentInput = require('../../validation/comment');
 
 const router = express.Router();
 
-// @route   GET api/products/test
-// @desc    Tests product route
-// @access  Public
+/**
+ * @swagger
+ * /api/products/test:
+ *   get:
+ *     tags:
+ *       - Product
+ *     summary: Tests products route
+ *     description: Tests products route
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Product Works
+ */
 router.get('/test', (req, res) => res.json({
-  msg: 'Products Works',
+  msg: 'Product Works',
 }));
 
-// @route   GET api/products
-// @desc    Get all products
-// @access  Public
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     tags:
+ *       - Product
+ *     summary: Get all products
+ *     description: Get all products
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get all products successfully
+ *       404:
+ *         description: No products found
+ */
 router.get('/', (req, res) => {
   Product.find()
     .sort({
@@ -31,20 +56,69 @@ router.get('/', (req, res) => {
     }));
 });
 
-// @route   GET api/products/:id
-// @desc    Get product by id
-// @access  Public
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   get:
+ *     tags:
+ *       - Product
+ *     summary: Get product by id
+ *     description: Get product by id
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get product successfully
+ *       404:
+ *         description: No products found with that ID
+ */
 router.get('/:id', (req, res) => {
   Product.findById(req.params.id)
     .then(product => res.json(product))
     .catch(() => res.status(404).json({
-      productnotfound: 'No product found with that ID',
+      productnotfound: 'No products found with that ID',
     }));
 });
 
-// @route   POST api/products
-// @desc    Create product
-// @access  Private
+/**
+ * @swagger
+ * definitions:
+ *   Product:
+ *     properties:
+ *       name:
+ *         type: string
+ *       text:
+ *         type: string
+ *       category:
+ *         type: string
+ *       price:
+ *         type: integer
+ */
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     tags:
+ *       - Product
+ *     summary: Create product
+ *     description: Create a new product. This can only be done by the logged in user (add JWT token to header). Category field (category id) is not required.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Created product object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Product'
+ *     responses:
+ *       200:
+ *         description: Successfully created
+ *       400:
+ *         description: Form validation fail
+ *       404:
+ *         description: Cannot create the Product with invalid category ID
+ */
 router.post(
   '/',
   passport.authenticate('jwt', {
@@ -62,13 +136,26 @@ router.post(
       return res.status(400).json(errors);
     }
 
+    // find whether category is exist
+    Category.findById(req.body.category)
+      .then((category) => {
+        if (!category) {
+          errors.categorynotfound = 'No categories found with that ID';
+          return res.status(400).json(errors);
+        }
+        return false;
+      })
+      .catch(() => res.status(404).json({
+        categorynotfound: 'Cannot create the Product with invalid category ID',
+      }));
+
     const newProduct = new Product({
       user: req.user.id,
       category: req.body.category,
       name: req.body.name,
       price: req.body.price,
       totalInventory: req.body.totalInventory,
-      detail: req.body.detail,
+      text: req.body.text,
     });
 
     newProduct.save().then(product => res.json(product));
@@ -76,9 +163,31 @@ router.post(
   },
 );
 
-// @route   DELETE api/products/:id
-// @desc    Delete product
-// @access  Private
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   delete:
+ *     tags:
+ *       - Product
+ *     summary: Delete product
+ *     description: Delete a exist product owned by current user. This can only be done by the logged in user (add JWT token to header).
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Delete product object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Product'
+ *     responses:
+ *       200:
+ *         description: Successfully deleted
+ *       401:
+ *         description: Cannot delete the product
+ *       404:
+ *         description: No products found
+ */
 router.delete(
   '/:id',
   passport.authenticate('jwt', {
@@ -97,20 +206,36 @@ router.delete(
         }
 
         // Delete
-        Product.remove().then(() => res.json({
-          success: true,
-        }));
+        Product.findOneAndRemove({ _id: req.params.id })
+          .then(() => res.json({
+            success: true,
+          }));
         return false;
       })
       .catch(() => res.status(404).json({
-        productnotfound: 'No product found',
+        productnotfound: 'No products found',
       }));
   },
 );
 
-// @route   POST api/products/like/:id
-// @desc    Like product
-// @access  Private
+/**
+ * @swagger
+ * /api/products/like/{id}:
+ *   post:
+ *     tags:
+ *       - Product
+ *     summary: Like product
+ *     description: Like a exist product. This can only be done by the logged in user (add JWT token to header).
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Successfully liked
+ *       400:
+ *         description: User already liked this product
+ *       404:
+ *         description: No products found
+ */
 router.post(
   '/like/:id',
   passport.authenticate('jwt', {
@@ -139,14 +264,29 @@ router.post(
         return false;
       })
       .catch(() => res.status(404).json({
-        productnotfound: 'No product found',
+        productnotfound: 'No products found',
       }));
   },
 );
 
-// @route   POST api/products/unlike/:id
-// @desc    Unlike product
-// @access  Private
+/**
+ * @swagger
+ * /api/products/unlike/{id}:
+ *   post:
+ *     tags:
+ *       - Product
+ *     summary: Unlike product
+ *     description: Unlike a exist product. This can only be done by the logged in user (add JWT token to header).
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Successfully Unliked
+ *       400:
+ *         description: You have not yet liked this product
+ *       404:
+ *         description: No products found
+ */
 router.post(
   '/unlike/:id',
   passport.authenticate('jwt', {
@@ -179,14 +319,45 @@ router.post(
         return false;
       })
       .catch(() => res.status(404).json({
-        productnotfound: 'No product found',
+        productnotfound: 'No products found',
       }));
   },
 );
-
-// @route   POST api/products/comment/:id
-// @desc    Add comment to product
-// @access  Private
+/**
+ * @swagger
+ * definitions:
+ *   Comment:
+ *     properties:
+ *       title:
+ *         type: string
+ *       text:
+ *         type: string
+ */
+/**
+ * @swagger
+ * /api/products/comment/{id}:
+ *   post:
+ *     tags:
+ *       - Product
+ *     summary: Add comment to product
+ *     description: Add comment to product. This can only be done by the logged in user (add JWT token to header).
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Comment object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Comment'
+ *     responses:
+ *       200:
+ *         description: Successfully added comment
+ *       400:
+ *         description: Form validation fail
+ *       404:
+ *         description: No products found
+ */
 router.post(
   '/comment/:id',
   passport.authenticate('jwt', {
@@ -219,15 +390,35 @@ router.post(
         product.save().then(productObject => res.json(productObject));
       })
       .catch(() => res.status(404).json({
-        productnotfound: 'No product found',
+        productnotfound: 'No products found',
       }));
     return false;
   },
 );
 
-// @route   DELETE api/products/comment/:id/:comment_id
-// @desc    Remove comment from product
-// @access  Private
+/**
+ * @swagger
+ * /api/products/comment/{id}/{comment_id}:
+ *   post:
+ *     tags:
+ *       - Product
+ *     summary: Remove comment from product
+ *     description: Remove comment from product. This can only be done by the logged in user (add JWT token to header).
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Comment object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Comment'
+ *     responses:
+ *       200:
+ *         description: Successfully removed comment
+ *       404:
+ *         description: No products found or comment does not exist
+ */
 router.delete(
   '/comment/:id/:comment_id',
   passport.authenticate('jwt', {
@@ -267,9 +458,31 @@ router.delete(
   },
 );
 
-// @route   POST api/products/:id
-// @desc    Update product
-// @access  Private
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   post:
+ *     tags:
+ *       - Product
+ *     summary: Edit product
+ *     description: Edit a exist product owned by current user. This can only be done by the logged in user (add JWT token to header).
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: Edit product object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Product'
+ *     responses:
+ *       200:
+ *         description: Successfully edited
+ *       401:
+ *         description: You are not the owner of product
+ *       404:
+ *         description: No products found
+ */
 router.post(
   '/:id',
   passport.authenticate('jwt', { session: false }),
@@ -305,21 +518,22 @@ router.post(
       .then((product) => {
         if (product.user !== req.user.id) {
           errors.unauthorized = 'You are not the owner of product';
-          res.status(401).json(errors);
+          return res.status(401).json(errors);
         }
 
         if (product) {
           productFields.updateDate = Date.now();
           // Update
-          product.findOneAndUpdate(
+          Product.findOneAndUpdate(
             { _id: req.params.id },
             { $set: productFields },
             { new: true },
           ).then(productObject => res.json(productObject));
         } else {
-          errors.productnotfound = 'No product found';
-          res.status(404).json(errors);
+          errors.productnotfound = 'No products found';
+          return res.status(404).json(errors);
         }
+        return false;
       });
     return false;
   },

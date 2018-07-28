@@ -12,12 +12,12 @@ const CategorySchema = new Schema({
   description: {
     type: String,
   },
-  products: [{
-    product: {
-      type: Schema.Types.ObjectId,
-      ref: 'products',
-    },
-  }],
+  // products: [{
+  //   product: {
+  //     type: Schema.Types.ObjectId,
+  //     ref: 'products',
+  //   },
+  // }],
   createDate: {
     type: Date,
     default: Date.now,

@@ -19,22 +19,22 @@ const router = express.Router();
  * /api/users/test:
  *   get:
  *     tags:
- *       - users
+ *       - User
  *     summary: Tests users route
  *     description: Tests users route
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: Users Works
+ *         description: User Works
  */
 router.get('/test', (req, res) => res.json({
-  msg: 'Users Works',
+  msg: 'User Works',
 }));
 
 /**
  * @swagger
- * definition:
+ * definitions:
  *   UserForRegister:
  *     properties:
  *       name:
@@ -48,7 +48,7 @@ router.get('/test', (req, res) => res.json({
  */
 /**
  * @swagger
- * definition:
+ * definitions:
  *   UserForLogin:
  *     properties:
  *       email:
@@ -73,7 +73,7 @@ router.get('/test', (req, res) => res.json({
  * /api/users/register:
  *   post:
  *     tags:
- *       - users
+ *       - User
  *     summary: Register user
  *     description: Registers a new user with different email from database
  *     produces:
@@ -109,11 +109,11 @@ router.post('/register', (req, res) => {
       return res.status(400).json(errors);
     }
     // TODO
-    const avatar = 'temp';
+    // const avatar = 'temp';
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
-      avatar,
+      // avatar,
       password: req.body.password,
     });
 
@@ -138,7 +138,7 @@ router.post('/register', (req, res) => {
  * /api/users/login:
  *   post:
  *     tags:
- *       - users
+ *       - User
  *     summary: Login user into the system
  *     description: User login (example> email:test@test.com passwprd:123456)
  *     produces:
@@ -185,7 +185,7 @@ router.post('/login', (req, res) => {
             const payload = {
               id: user.id,
               name: user.name,
-              avatar: user.avatar,
+              // avatar: user.avatar,
             }; // Create JWT payload
             // Sign Token
             jwt.sign(payload,
@@ -213,7 +213,7 @@ router.post('/login', (req, res) => {
  * /api/users/current:
  *   get:
  *     tags:
- *       - users
+ *       - User
  *     summary: Return current user
  *     description: This can only be done by the logged in user (add JWT token to header)
  *     produces:

@@ -13,10 +13,11 @@ module.exports = function validateCategoryInput(bodyData) {
   }
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = 'Text field is required';
+    errors.name = 'Name field is required';
   }
 
-  if (!Validator.isLength(data.description, { min: 10, max: 100 })) {
+  if (!Validator.isEmpty(data.description)
+    && !Validator.isLength(data.description, { min: 10, max: 100 })) {
     errors.description = 'Category description must be between 10 and 100 characters';
   }
 

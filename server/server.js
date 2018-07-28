@@ -4,21 +4,11 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const swaggerJSDoc = require('swagger-jsdoc');
 const users = require('./routes/api/users');
+const products = require('./routes/api/products');
+const categories = require('./routes/api/categories');
+const swaggerDefinition = require('./config/swagger');
 
 const app = express();
-
-// Swagger
-
-// Swagger definition
-const swaggerDefinition = {
-  info: {
-    title: 'Node Swagger API',
-    version: '1.0.0',
-    description: 'Demonstrating RESTful API',
-  },
-  host: 'localhost:5000',
-  basePath: '/',
-};
 
 // options for the swagger docs
 const swaggerOptions = {
@@ -30,6 +20,7 @@ const swaggerOptions = {
 
 // initialize swagger-jsdoc
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
 app.use('/swagger', express.static('api-docs'));
 app.get('/swagger.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
@@ -50,6 +41,7 @@ const db = require('./config/keys').mongoURI;
 const mongooseConfig = {
   useNewUrlParser: true,
 };
+
 mongoose
   .connect(db, mongooseConfig)
   .then(() => console.log('MongoDB Connected'))
@@ -62,6 +54,8 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 
 app.use('/api/users', users);
+app.use('/api/products', products);
+app.use('/api/categories', categories);
 
 const port = process.env.PORT || 5000;
 
