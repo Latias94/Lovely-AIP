@@ -117,6 +117,12 @@ router.get('/slug/:slug', (req, res) => {
  *     description: Get category by id
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of category that needs to be fetched"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Get category successfully
@@ -244,6 +250,11 @@ router.post(
  *         required: true
  *         schema:
  *           $ref: '#/definitions/Category'
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of category that needs to be edited"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully edited
@@ -317,6 +328,11 @@ router.post(
  *         required: true
  *         schema:
  *           $ref: '#/definitions/Category'
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of category that needs to be deleted"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully deletedproductObject

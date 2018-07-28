@@ -66,6 +66,12 @@ router.get('/', (req, res) => {
  *     description: Get product by id
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of product that needs to be fetched"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Get product successfully
@@ -180,6 +186,11 @@ router.post(
  *         required: true
  *         schema:
  *           $ref: '#/definitions/Product'
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of product that needs to be deleted"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully deleted
@@ -228,6 +239,12 @@ router.delete(
  *     description: Like a exist product. This can only be done by the logged in user (add JWT token to header).
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of product that needs to be liked"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully liked
@@ -279,6 +296,12 @@ router.post(
  *     description: Unlike a exist product. This can only be done by the logged in user (add JWT token to header).
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of product that needs to be unliked"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully Unliked
@@ -350,6 +373,11 @@ router.post(
  *         required: true
  *         schema:
  *           $ref: '#/definitions/Comment'
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of comment that needs to be added"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully added comment
@@ -413,6 +441,16 @@ router.post(
  *         required: true
  *         schema:
  *           $ref: '#/definitions/Comment'
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of product that needs to be modified"
+ *         required: true
+ *         type: "string"
+ *       - name: "comment_id"
+ *         in: "path"
+ *         description: "ID of comment that needs to be deleted"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully removed comment
@@ -475,6 +513,11 @@ router.delete(
  *         required: true
  *         schema:
  *           $ref: '#/definitions/Product'
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of product that needs to be edited"
+ *         required: true
+ *         type: "string"
  *     responses:
  *       200:
  *         description: Successfully edited
