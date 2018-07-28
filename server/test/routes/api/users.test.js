@@ -1,12 +1,17 @@
 const request = require('supertest');
-const app = require('../../../server');
+const { app, server, mongoose } = require('../../../server');
+
+afterAll(() => {
+  mongoose.connection.close();
+  server.close();
+});
 
 test('GET /api/users/test Tests users route', (done) => {
   request(app)
     .get('/api/users/test')
     .expect('Content-Type', /json/)
     .expect(200, {
-      msg: 'Users Works',
+      msg: 'User Works',
     })
     .end((err) => {
       if (err) throw done(err);
