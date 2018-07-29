@@ -62,7 +62,10 @@ app.use('/api/users', users);
 app.use('/api/products', products);
 app.use('/api/categories', categories);
 
-const port = process.env.PORT || 5000;
+// change port according to node environment
+const port = process.env.NODE_ENV === 'test'
+  ? require('./config/keys').test_port
+  : require('./config/keys').port;
 
 if (!module.parent) {
   app.listen(port,

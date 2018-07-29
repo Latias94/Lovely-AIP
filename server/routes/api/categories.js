@@ -85,24 +85,20 @@ router.get('/slug/:slug', (req, res) => {
     .then((category) => {
       if (!category) {
         errors.categorynotfound = 'No categories found';
-        res.status(404).json(errors);
+        return res.status(404).json(errors);
       }
       const categoryResult = {};
+      /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+      categoryResult.id = category._id;
+      categoryResult.slug = category.slug;
       categoryResult.name = category.name;
       categoryResult.description = category.description;
-      /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
-      // do not show this fields
-      // const productsProjection = {
-      //   __v: false,
-      //   _id: false,
-      //   category: false,
-      //   user: false,
-      // };
       Product.find({ category: category._id })
         .then((products) => {
           categoryResult.products = products;
-          res.json(categoryResult);
+          return res.json(categoryResult);
         });
+      return false;
     })
     .catch(err => res.status(404).json(err));
 });
@@ -136,25 +132,20 @@ router.get('/:id', (req, res) => {
     .then((category) => {
       if (!category) {
         errors.categorynotfound = 'No categories found';
-        res.status(404).json(errors);
+        return res.status(404).json(errors);
       }
 
       const categoryResult = {};
+      categoryResult.id = category._id;
+      categoryResult.slug = category.slug;
       categoryResult.name = category.name;
       categoryResult.description = category.description;
-      /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
-      // do not show this fields
-      // const productsProjection = {
-      //   __v: false,
-      //   _id: false,
-      //   category: false,
-      //   user: false,
-      // };
       Product.find({ category: category._id })
         .then((products) => {
           categoryResult.products = products;
-          res.json(categoryResult);
+          return res.json(categoryResult);
         });
+      return false;
     })
     .catch(err => res.status(404).json(err));
 });
@@ -193,6 +184,8 @@ router.get('/:id', (req, res) => {
  *         description: Form validation fail
  *       401:
  *         description: Cannot create the category
+ *       404:
+ *         description: Category name has existed
  */
 router.post(
   '/',
@@ -212,23 +205,35 @@ router.post(
       return true;
     });
 
-    const {
-      errors,
-      isValid,
-    } = validateCategoryInput(req.body);
+    Category.findOne({ name: req.body.name }).then((hasFound) => {
+      if (hasFound) {
+        return res.status(404).json({
+          categoryexist: 'Category name has existed',
+        });
+      } else {
+        const {
+          errors,
+          isValid,
+        } = validateCategoryInput(req.body);
 
-    // Check Validation
-    if (!isValid) {
-      // If any errors, send 400 with errors object
-      return res.status(400).json(errors);
-    }
+        // Check Validation
+        if (!isValid) {
+          // If any errors, send 400 with errors object
+          return res.status(400).json(errors);
+        }
 
-    const newCategory = new Category({
-      description: req.body.description,
-      name: req.body.name,
+        const newCategory = new Category({
+          description: req.body.description,
+          name: req.body.name,
+        });
+
+        newCategory.save().then((category) => {
+          return res.json(category);
+        });
+        return false;
+      }
     });
 
-    newCategory.save().then(category => res.json(category));
     return false;
   },
 );
@@ -240,7 +245,7 @@ router.post(
  *     tags:
  *       - Category
  *     summary: Edit category
- *     description: Edit a exist category. Category can only be edited by staff.
+ *     description: Edit a exist category. Category can only be edited by staff. Both name and description fields are required.
  *     produces:
  *       - application/json
  *     parameters:
@@ -261,7 +266,7 @@ router.post(
  *       401:
  *         description: Cannot edit the category
  *       404:
- *         description: No categories found
+ *         description: No categories found or Category name has existed
  */
 router.post(
   '/:id',
@@ -297,15 +302,20 @@ router.post(
         if (category) {
           categoryFields.updateDate = Date.now();
           // Update
-          Category.findOneAndUpdate(
-            { _id: req.params.id },
-            { $set: categoryFields },
+          Category.findByIdAndUpdate(
+            req.params.id,
+            categoryFields,
             { new: true },
-          ).then(categoryObject => res.json(categoryObject));
+            (err, categoryObject) => {
+              return err ? res.status(404).json(err)
+                : res.json(categoryObject);
+            },
+          );
         } else {
           errors.categorynotfound = 'No categories found';
-          res.status(404).json(errors);
+          return res.status(404).json(errors);
         }
+        return false;
       });
     return false;
   },
@@ -359,11 +369,11 @@ router.delete(
       return true;
     });
 
-    Category.findOneAndRemove({ _id: req.params.id })
-      .then(() => {
-        res.json({ success: true });
-      })
-      .catch(() => res.status(404).json({ success: false }));
+    Category.findByIdAndRemove(req.params.id, (err) => {
+      return err
+        ? res.status(404).send(err)
+        : res.json({ success: true });
+    });
   },
 );
 
