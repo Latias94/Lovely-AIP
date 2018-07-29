@@ -144,7 +144,7 @@ router.get('/:id', (req, res) => {
         .then((products) => {
           categoryResult.products = products;
           return res.json(categoryResult);
-        });
+        })
       return false;
     })
     .catch(err => res.status(404).json(err));
@@ -351,7 +351,6 @@ router.post(
  *       404:
  *         description: No categories found
  */
-// TODO edit all product with this category
 router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
@@ -359,20 +358,20 @@ router.delete(
     const errors = {};
 
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
+    User.findById(req.user.id).then((user) => {
       if (user) {
         if (!user.isStaff) {
           errors.unauthorized = 'Cannot delete the category';
           return res.status(401).json(errors);
+        } else {
+          Category.findByIdAndRemove(req.params.id, (err) => {
+            return err
+              ? res.status(404).send(err)
+              : res.json({ success: true });
+          });
         }
       }
       return true;
-    });
-
-    Category.findByIdAndRemove(req.params.id, (err) => {
-      return err
-        ? res.status(404).send(err)
-        : res.json({ success: true });
     });
   },
 );

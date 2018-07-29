@@ -66,6 +66,113 @@ describe('Product Route testing', () => {
       });
   });
 
+  test('POST /api/products/like/{test id} Like Test product', (done) => {
+    // get Test product id by slug
+    request
+      .get('/api/products/slug/testgame')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        getToken().then((token) => {
+          // edit product
+          request
+          /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+            .post(`/api/products/like/${res.body._id}`)
+            .set('Authorization', token)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((error, response) => {
+              supertestWithJest(error, response, done, () => {
+                // assert Test user id
+                expect(response.body.likes.length).toBe(1);
+                expect(response.body.likes[0].user).toBe('5b5d1d1ab5f26241308bfd66');
+              });
+            });
+        });
+      });
+  });
+
+  test('POST /api/products/unlike/{test id} Unlike Test product', (done) => {
+    // get Test product id by slug
+    request
+      .get('/api/products/slug/testgame')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        getToken().then((token) => {
+          // edit product
+          request
+          /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+            .post(`/api/products/unlike/${res.body._id}`)
+            .set('Authorization', token)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((error, response) => {
+              supertestWithJest(error, response, done, () => {
+                // assert Test user id
+                expect(response.body.likes.length).toBe(0);
+              });
+            });
+        });
+      });
+  });
+
+  test('POST /api/products/comment/{test id} Add comment to Test product', (done) => {
+    // get Test product id by slug
+    request
+      .get('/api/products/slug/testgame')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        getToken().then((token) => {
+          // edit product
+          request
+          /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+            .post(`/api/products/comment/${res.body._id}`)
+            .set('Authorization', token)
+            .send('title=Soooo Cooool!!!')
+            .send('text=For the Alliance!!!')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((error, response) => {
+              supertestWithJest(error, response, done, () => {
+                // assert Test user id
+                expect(response.body.comments.length).toBe(1);
+                expect(response.body.comments[0].title).toBe('Soooo Cooool!!!');
+                expect(response.body.comments[0].text).toBe('For the Alliance!!!');
+              });
+            });
+        });
+      });
+  });
+
+  test('DELETE /api/products/comment/{test id}/{comment_id} Delete comment to Test product', (done) => {
+    // get Test product id by slug
+    request
+      .get('/api/products/slug/testgame')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        getToken().then((token) => {
+          // get the first comment id
+          const commentId = res.body.comments[0]._id.toString();
+          // edit product
+          request
+          /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+            .delete(`/api/products/comment/${res.body._id}/${commentId}`)
+            .set('Authorization', token)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((error, response) => {
+              supertestWithJest(error, response, done, () => {
+                // assert Test user id
+                expect(response.body.comments.length).toBe(0);
+              });
+            });
+        });
+      });
+  });
+
   test('POST /api/products/{test id} Edit Test product', (done) => {
     // get Test product id by slug
     request

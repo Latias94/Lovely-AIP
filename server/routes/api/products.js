@@ -63,7 +63,7 @@ router.get('/', (req, res) => {
  *     tags:
  *       - Product
  *     summary: Get product by id
- *     description: Get product by id
+ *     description: Get product by id. For some reason, please send an extra request to find out whether the related category is exist.
  *     produces:
  *       - application/json
  *     parameters:
@@ -469,7 +469,7 @@ router.post(
 /**
  * @swagger
  * /api/products/comment/{id}/{comment_id}:
- *   post:
+ *   delete:
  *     tags:
  *       - Product
  *     summary: Remove comment from product
