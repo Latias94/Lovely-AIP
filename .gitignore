@@ -10,6 +10,9 @@ package-lock.json
 .idea/
 .code/
 
+# jest coverage report
+coverage/
+
 # Runtime data
 pids
 *.pid

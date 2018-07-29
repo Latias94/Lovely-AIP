@@ -6,13 +6,14 @@
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js",
+    "test-server": "cross-env NODE_ENV=test nodemon server.js",
     "install-client": "cd ../client && npm install",
     "client": "cd ../client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "lint": "eslint *.js",
-    "test": "jest",
-    "testwatch": "jest --watchAll",
-    "coverage": "jest --coverage"
+    "test": "cross-env NODE_ENV=test jest test",
+    "testwatch": "cross-env NODE_ENV=test jest --watchAll",
+    "coverage": "cross-env NODE_ENV=test jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
     "validator": "^10.4.0"
   },
   "devDependencies": {
+    "cross-env": "^5.2.0",
     "eslint": "^5.2.0",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
@@ -47,6 +49,7 @@
     "supertest": "^3.1.0"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupTestFrameworkScriptFile": "./config/jest.js"
   }
 }

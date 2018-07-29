@@ -34,13 +34,18 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-// DB Config
-const db = require('./config/keys').mongoURI;
-
+let db;
 // Connect to MongoDB
 const mongooseConfig = {
   useNewUrlParser: true,
 };
+
+if (process.env.NODE_ENV === 'test') {
+  db = require('./config/keys').testMongoURL;
+  console.log('You are under the test Node environment');
+} else {
+  db = require('./config/keys').mongoURI;
+}
 
 mongoose
   .connect(db, mongooseConfig)
@@ -59,6 +64,9 @@ app.use('/api/categories', categories);
 
 const port = process.env.PORT || 5000;
 
-const server = app.listen(port, () => console.log(`Server running on port ${port}`));
+if (!module.parent) {
+  app.listen(port,
+    () => console.log(`Server running on port ${port}`));
+}
 
-module.exports = { app, server, mongoose };
+module.exports = { app };
