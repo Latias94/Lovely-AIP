@@ -22,18 +22,6 @@ describe('Product Route testing', () => {
       .end(done);
   });
 
-  test('GET /api/products/{wow id} Get Wow product by id', (done) => {
-    request
-      .get('/api/products/5b5d7d18b5369b4c50eae907')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end((err, res) => {
-        supertestWithJest(err, res, done, () => {
-          expect(res.body.name).toBe('War of Warcraft');
-        });
-      });
-  });
-
   test('POST /api/products Create Test product', (done) => {
     getToken().then((token) => {
       request
@@ -63,6 +51,27 @@ describe('Product Route testing', () => {
         supertestWithJest(err, res, done, () => {
           expect(res.body.name).toBe('TestGame');
         });
+      });
+  });
+
+  test('GET /api/products/{test id} Get Test product by id', (done) => {
+    request
+      .get('/api/products/slug/testgame')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        // edit product
+        request
+          .get(`/api/products/${res.body._id}`)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end((error, response) => {
+            supertestWithJest(error, response, done, () => {
+              expect(response.body.name).toBe('TestGame');
+              expect(response.body.text).toBe('Just for testing');
+            });
+            return false;
+          });
       });
   });
 

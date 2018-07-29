@@ -22,18 +22,6 @@ describe('Category Route testing', () => {
       .end(done);
   });
 
-  test('GET /api/categories/{game id} Get Game category by id', (done) => {
-    request
-      .get('/api/categories/5b5d5d21a9928090b84fa168')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end((err, res) => {
-        supertestWithJest(err, res, done, () => {
-          expect(res.body.name).toBe('Game');
-        });
-      });
-  });
-
   test('POST /api/categories Create Test category', (done) => {
     getToken(true).then((token) => {
       request
@@ -61,6 +49,28 @@ describe('Category Route testing', () => {
         supertestWithJest(err, res, done, () => {
           expect(res.body.name).toBe('Test');
         });
+      });
+  });
+
+
+  test('GET /api/categories/{test id} Get Test category by id', (done) => {
+    request
+      .get('/api/categories/slug/test')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        // get category by id
+        request
+          .get(`/api/categories/${res.body._id}`)
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end((error, response) => {
+            supertestWithJest(error, response, done, () => {
+              expect(response.body.name).toBe('Test');
+              expect(response.body.description).toBe('Just for testing');
+            });
+            return false;
+          });
       });
   });
 
