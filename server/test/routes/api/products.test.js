@@ -94,7 +94,6 @@ describe('Product Route testing', () => {
               supertestWithJest(error, response, done, () => {
                 // assert Test user id
                 expect(response.body.likes.length).toBe(1);
-                expect(response.body.likes[0].user).toBe('5b5d1d1ab5f26241308bfd66');
               });
             });
         });
