@@ -3,10 +3,11 @@ const request = require('supertest').agent(app.listen());
 
 // get admin token from promise
 // getAdminToken().then(token => console.log(`token is ${token}`));
-const getAdminToken = () => new Promise((resolve) => {
+const getToken = isAdmin => new Promise((resolve) => {
+  const email = isAdmin ? 'frankorz@qq.com' : 'test@test.com';
   request
     .post('/api/users/login')
-    .send({ email: 'frankorz@qq.com', password: '123456' })
+    .send({ email, password: '123456' })
     .expect('Content-Type', /json/)
     .expect(200)
     .then(response => resolve(response.body.token));
@@ -23,4 +24,4 @@ const supertestWithJest = (err, res, done, asserts) => {
   }
 };
 
-module.exports = { getAdminToken, supertestWithJest };
+module.exports = { getToken, supertestWithJest };

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const URLSlugs = require('mongoose-url-slugs');
 
 const { Schema } = mongoose;
 
@@ -60,5 +61,6 @@ const ProductSchema = new Schema({
     },
   }],
 });
+ProductSchema.plugin(URLSlugs('name', { field: 'slug' }));
 
 module.exports = mongoose.model('products', ProductSchema);

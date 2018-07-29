@@ -1,6 +1,6 @@
 const { app } = require('../../../server');
 const request = require('supertest').agent(app.listen());
-const { getAdminToken, supertestWithJest } = require('./helper');
+const { getToken, supertestWithJest } = require('./helper');
 
 
 describe('Category Route testing', () => {
@@ -35,7 +35,7 @@ describe('Category Route testing', () => {
   });
 
   test('POST /api/categories Create Test category', (done) => {
-    getAdminToken().then((token) => {
+    getToken(true).then((token) => {
       request
         .post('/api/categories')
         .set('Authorization', token)
@@ -71,10 +71,11 @@ describe('Category Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getAdminToken().then((token) => {
+        getToken(true).then((token) => {
+          /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
           // edit category
           request
-            .post(`/api/categories/${res.body.id}`)
+            .post(`/api/categories/${res.body._id}`)
             .set('Authorization', token)
             .send('name=Test')
             .send('description=After modified')
@@ -98,12 +99,13 @@ describe('Category Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getAdminToken().then((token) => {
+        getToken(true).then((token) => {
           // edit category
           request
-            .delete(`/api/categories/${res.body.id}`)
+            .delete(`/api/categories/${res.body._id}`)
             .set('Authorization', token)
             .expect('Content-Type', /json/)
+            .expect(200)
             .end((error, response) => {
               supertestWithJest(error, response, done, () => {
                 expect(response.body.success).toBeTruthy();

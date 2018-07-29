@@ -89,7 +89,7 @@ router.get('/slug/:slug', (req, res) => {
       }
       const categoryResult = {};
       /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
-      categoryResult.id = category._id;
+      categoryResult._id = category._id;
       categoryResult.slug = category.slug;
       categoryResult.name = category.name;
       categoryResult.description = category.description;

@@ -1,6 +1,6 @@
 const { app } = require('../../../server');
 const request = require('supertest').agent(app.listen());
-const { getAdminToken, supertestWithJest } = require('./helper');
+const { getToken, supertestWithJest } = require('./helper');
 
 describe('User Route testing', () => {
   test('GET /api/users/test Tests users route', (done) => {
@@ -46,7 +46,7 @@ describe('User Route testing', () => {
   });
 
   test('GET /api/users/current Return current user', (done) => {
-    getAdminToken().then((token) => {
+    getToken(true).then((token) => {
       request
         .get('/api/users/current')
         .set('Authorization', token)

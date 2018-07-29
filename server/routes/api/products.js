@@ -142,18 +142,22 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    // find whether category is exist
-    Category.findById(req.body.category)
-      .then((category) => {
-        if (!category) {
-          errors.categorynotfound = 'No categories found with that ID';
-          return res.status(400).json(errors);
-        }
-        return false;
-      })
-      .catch(() => res.status(404).json({
-        categorynotfound: 'Cannot create the Product with invalid category ID',
-      }));
+    if (req.body.category) {
+      // find whether category is exist
+      Category.findById(req.body.category)
+        .then((category) => {
+          if (!category) {
+            errors.categorynotfound = 'No categories found with that ID';
+            return res.status(400).json(errors);
+          }
+          return false;
+        })
+        .catch(() => {
+          return res.status(404).json({
+            categorynotfound: 'Cannot create the Product with invalid category ID',
+          });
+        });
+    }
 
     const newProduct = new Product({
       user: req.user.id,
@@ -164,10 +168,43 @@ router.post(
       text: req.body.text,
     });
 
-    newProduct.save().then(product => res.json(product));
+    newProduct.save().then((product) => {
+      return res.json(product);
+    });
     return false;
   },
 );
+
+/**
+ * @swagger
+ * /api/products/slug/{slug}:
+ *   get:
+ *     tags:
+ *       - Product
+ *     summary: Get product by slug
+ *     description: Get product by slug.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get product successfully
+ *       404:
+ *         description: No products found
+ */
+router.get('/slug/:slug', (req, res) => {
+  const errors = {};
+
+  Product.findOne({ slug: req.params.slug })
+    .then((product) => {
+      if (!product) {
+        errors.categorynotfound = 'No products found';
+        return res.status(404).json(errors);
+      } else {
+        return res.json(product);
+      }
+    })
+    .catch(err => res.status(404).json(err));
+});
 
 /**
  * @swagger
@@ -201,26 +238,31 @@ router.post(
  */
 router.delete(
   '/:id',
-  passport.authenticate('jwt', {
-    session: false,
-  }),
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
     Product.findById(req.params.id)
       .then((product) => {
-        // Check for product owner
-        if (product.user.toString() !== req.user.id) {
-          return res
-            .status(401)
-            .json({
-              notauthorized: 'User not authorized',
+        if (product) {
+          // Check for product owner
+          if (product.user.toString() !== req.user.id) {
+            return res
+              .status(401)
+              .json({
+                notauthorized: 'User not authorized',
+              });
+          } else {
+            // Delete
+            Product.findByIdAndRemove(req.params.id, (err) => {
+              return err
+                ? res.status(404).send(err)
+                : res.json({ success: true });
             });
+          }
+        } else {
+          return res.status(404).json({
+            productnotfound: 'No products found',
+          });
         }
-
-        // Delete
-        Product.findOneAndRemove({ _id: req.params.id })
-          .then(() => res.json({
-            success: true,
-          }));
         return false;
       })
       .catch(() => res.status(404).json({
@@ -559,19 +601,25 @@ router.post(
 
     Product.findById(req.params.id)
       .then((product) => {
-        if (product.user !== req.user.id) {
-          errors.unauthorized = 'You are not the owner of product';
-          return res.status(401).json(errors);
-        }
-
+        // if find product
         if (product) {
-          productFields.updateDate = Date.now();
-          // Update
-          Product.findOneAndUpdate(
-            { _id: req.params.id },
-            { $set: productFields },
-            { new: true },
-          ).then(productObject => res.json(productObject));
+          // if product user isnt current user
+          if (product.user.toString() !== req.user.id) {
+            errors.unauthorized = 'You are not the owner of product';
+            return res.status(401).json(errors);
+          } else {
+            productFields.updateDate = Date.now();
+            // Update
+            Product.findByIdAndUpdate(
+              req.params.id,
+              productFields,
+              { new: true },
+              (err, productObject) => {
+                return err ? res.status(404).json(err)
+                  : res.json(productObject);
+              },
+            );
+          }
         } else {
           errors.productnotfound = 'No products found';
           return res.status(404).json(errors);

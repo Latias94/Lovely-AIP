@@ -30,7 +30,7 @@ Visit [http://eslint.org](http://eslint.org) for details.
 
 ### Testing
 
-This project uses [Jest](https://jestjs.io/) and [SuperTest](https://github.com/visionmedia/supertest) for testing.
+This project uses [Jest](https://jestjs.io/) and [SuperTest](https://github.com/visionmedia/supertest) for testing.  
 Visit [https://jestjs.io/](https://jestjs.io/) and [https://github.com/visionmedia/supertest](https://github.com/visionmedia/supertest) for details.
 
 To execute tests:
