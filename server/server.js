@@ -55,6 +55,13 @@ mongoose
 // Passport middleware
 app.use(passport.initialize());
 
+// cross origin
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 // Passport Config
 require('./config/passport')(passport);
 
@@ -72,4 +79,4 @@ if (!module.parent) {
     () => console.log(`Server running on port ${port}`));
 }
 
-module.exports = { app };
+module.exports = {app};
