@@ -43,8 +43,6 @@ router.get('/test', (req, res) => res.json({
  *         type: string
  *       password:
  *         type: string
- *       password2:
- *         type: string
  */
 /**
  * @swagger
