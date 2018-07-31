@@ -6,7 +6,8 @@ export const background = {
 
 export const iconLogo = {
     width: '100px',
-    height: '85px'
+    height: '45px',
+    marginBottom: '15px',
 }
 
 export const containerDiv = {

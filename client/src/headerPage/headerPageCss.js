@@ -5,8 +5,8 @@ export const background = {
 }
 
 export const iconLogo = {
-    width: '200px',
-    height: '170px'
+    width: '170px',
+    height: '80px'
 }
 
 export const containerDiv = {
@@ -15,7 +15,8 @@ export const containerDiv = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
+    height: '100%'
 }
 
 export const navigation = {
