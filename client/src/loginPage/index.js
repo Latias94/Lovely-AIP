@@ -1,22 +1,31 @@
 import React, { Component } from 'react';
+import * as ReactDOM from "react-dom";
 const axios = require('axios');
 
 class LoginForm extends Component {
   constructor(props) {
     super(props);
+
+    // init state
     this.state = {
       email: '',
       password: ''
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
+  handleEmailChange(e) {
     this.setState({
-      email: e.target.email,
-      password: e.target.password
+      email: e.target.value
+    })
+  }
+
+  handlePasswordChange(e) {
+    this.setState({
+      password: e.target.value
     })
   }
 
@@ -30,8 +39,8 @@ class LoginForm extends Component {
           'content-type': 'application/x-www-form-urlencoded',
         },
         data: {
-          email: 'dasihdoiahsdo@hotmail.com',
-          password: 'dasdaasdasdasdssdasdasdas',
+          email: e.target.email, // 'dasihdoiahsdo@hotmail.com'
+          password: e.target.password, // dasdaasdasdasdssdasdasdas
         }
       }
     ).then(function (response) {
@@ -45,12 +54,17 @@ class LoginForm extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <h1>Welcome</h1>
-        <label>username<input type="email" value={this.state.email} onChange={this.handleChange}/></label>
+        <label>username<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
         <div><p>password</p><input type="password"/></div>
-        <input type="submit" value="submit"/>
+        <input type="submit" value="Submit"/>
       </form>
     )
   }
 }
+
+ReactDOM.render(
+  <LoginForm />,
+  document.getElementById('root')
+);
 
 export default LoginForm
