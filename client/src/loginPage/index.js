@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import * as ReactDOM from "react-dom";
 const axios = require('axios');
 
 export default class LoginForm extends Component {
@@ -30,7 +29,6 @@ export default class LoginForm extends Component {
   }
 
   handleSubmit(e) {
-    alert('submitted' + this.state.email + '\n' + this.state.password);
     axios({
         method: 'post',
         url: 'http://localhost:5000/api/users/login',
@@ -39,8 +37,8 @@ export default class LoginForm extends Component {
           'content-type': 'application/x-www-form-urlencoded',
         },
         data: {
-          email: this.state.email, // 'dasihdoiahsdo@hotmail.com'
-          password: this.state.password, // dasdaasdasdasdssdasdasdas
+          email: this.state.email,
+          password: this.state.password,
         }
       }
     ).then(function (response) {
@@ -50,21 +48,44 @@ export default class LoginForm extends Component {
     e.preventDefault()
   }
 
-  render() {
-    return (
+
+render() {
+  const { forgotPasswordStyle, buttonStyle } = styles
+  return (
+      <div>
       <form onSubmit={this.handleSubmit}>
-        <h1>Please Log in</h1>
-        <label>Username(Email)<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
+        <h1>Log in</h1>
+        <label>Username (Email)<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
         <br/>
         <label>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label>
         <br/>
-        <input type="submit" value="Submit"/>
+        <input type="submit" value="Sign in"/>
       </form>
+      <br/>
+      <button type="button" style={buttonStyle}>Log in with your Google account</button>
+        <br/>
+        <a href="http://www.w3school.com.cn" style={forgotPasswordStyle}>Forgot password?</a>
+    {/*TODO: 组件库*/}
+    {/*<Button bsStyle="success">Log in with your Google account</Button>*/}
+      </div>
     )
   }
 }
 
-// ReactDOM.render(
-//   <LoginForm />,
-//   document.getElementById('root')
-// );
+
+const styles = {
+  forgotPasswordStyle: {
+    color: 'gray',
+    textDecoration: 'underline'
+  },
+  buttonStyle: {
+    flex: 1,// extend as much as it can
+    alignSelf: 'stretch',
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#007aff',
+    marginLeft: 5,
+    marginRight: 5
+  },
+}
