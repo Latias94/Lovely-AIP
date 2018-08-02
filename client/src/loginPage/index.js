@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import * as ReactDOM from "react-dom";
+// import * as ReactDOM from "react-dom";
 const axios = require('axios');
 
-class LoginForm extends Component {
+export default class LoginForm extends Component {
   constructor(props) {
     super(props);
 
@@ -13,7 +13,7 @@ class LoginForm extends Component {
     };
 
     this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this)
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -64,9 +64,7 @@ class LoginForm extends Component {
   }
 }
 
-ReactDOM.render(
-  <LoginForm />,
-  document.getElementById('root')
-);
-
-export default LoginForm
+// ReactDOM.render(
+//   <LoginForm />,
+//   document.getElementById('root')
+// );
