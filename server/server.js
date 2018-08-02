@@ -55,6 +55,12 @@ mongoose
 // Passport middleware
 app.use(passport.initialize());
 
+// Public Folder
+app.use(express.static('./public'));
+
+
+
+
 // cross origin
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -79,4 +85,4 @@ if (!module.parent) {
     () => console.log(`Server running on port ${port}`));
 }
 
-module.exports = {app};
+module.exports = { app };

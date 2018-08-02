@@ -4,14 +4,24 @@ const URLSlugs = require('mongoose-url-slugs');
 const { Schema } = mongoose;
 
 // Create Schema
-const CategorySchema = new Schema({
-  name: {
+const ReviewSchema = new Schema({
+  content: {
     type: String,
     required: true,
   },
-  subCategory: {
+  book: {
     type: Schema.Types.ObjectId,
-    ref: 'categories',
+    ref: 'books',
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'users',
+  },
+  star: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 5,
   },
   createDate: {
     type: Date,
@@ -23,6 +33,6 @@ const CategorySchema = new Schema({
   },
 });
 
-CategorySchema.plugin(URLSlugs('name', { field: 'slug' }));
+ReviewSchema.plugin(URLSlugs('name', { field: 'slug' }));
 
-module.exports = mongoose.model('categories', CategorySchema);
+module.exports = mongoose.model('reviews', ReviewSchema);
