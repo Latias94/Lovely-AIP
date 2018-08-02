@@ -39,8 +39,8 @@ class LoginForm extends Component {
           'content-type': 'application/x-www-form-urlencoded',
         },
         data: {
-          email: e.target.email, // 'dasihdoiahsdo@hotmail.com'
-          password: e.target.password, // dasdaasdasdasdssdasdasdas
+          email: this.state.email, // 'dasihdoiahsdo@hotmail.com'
+          password: this.state.password, // dasdaasdasdasdssdasdasdas
         }
       }
     ).then(function (response) {
@@ -53,9 +53,11 @@ class LoginForm extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <h1>Welcome</h1>
-        <label>username<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
-        <div><p>password</p><input type="password"/></div>
+        <h1>Please Log in</h1>
+        <label>Username(Email)<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
+        <br/>
+        <label>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label>
+        <br/>
         <input type="submit" value="Submit"/>
       </form>
     )
