@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Button } from "reactstrap";
+import 'bootstrap/dist/css/bootstrap.min.css';
 const axios = require('axios');
 
 export default class LoginForm extends Component {
@@ -42,6 +44,7 @@ export default class LoginForm extends Component {
         }
       }
     ).then(function (response) {
+      // TODO: error hint
       console.log(response);
       console.log(response.data)
     });
@@ -49,29 +52,30 @@ export default class LoginForm extends Component {
   }
 
 
-render() {
-  const { forgotPasswordStyle, buttonStyle } = styles
-  return (
+  render() {
+    const { forgotPasswordStyle } = styles
+
+    return (
       <div>
-      <form onSubmit={this.handleSubmit}>
-        <h1>Log in</h1>
-        <label>Username (Email)<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
+        <form onSubmit={this.handleSubmit}>
+          <h1>Log in</h1>
+          <label>Username (Email)<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
+          <br/>
+          <label>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label>
+          <br/>
+          <input type="submit" value="Sign in"/>
+        </form>
         <br/>
-        <label>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label>
+        <Button color="success">Log in with your Google account</Button>
+        {/*<button type="button" style={buttonStyle}>Log in with your Google account</button>*/}
         <br/>
-        <input type="submit" value="Sign in"/>
-      </form>
-      <br/>
-      <button type="button" style={buttonStyle}>Log in with your Google account</button>
-        <br/>
+        {/*TODO: replace link*/}
         <a href="http://www.w3school.com.cn" style={forgotPasswordStyle}>Forgot password?</a>
-    {/*TODO: 组件库*/}
-    {/*<Button bsStyle="success">Log in with your Google account</Button>*/}
+        {/*TODO: 组件库*/}
       </div>
     )
   }
 }
-
 
 const styles = {
   forgotPasswordStyle: {
