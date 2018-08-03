@@ -11,10 +11,10 @@
 
 a {
   text-decoration: none;
-  color:white;
+  color:none;
 }
 a:visited{
-  color: white;
+  color: none;
 }
 
 .router{
