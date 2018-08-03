@@ -13,7 +13,7 @@ const MainRoute = () => {
                 <Route exact path="/" component={Welcome} />
                 <Route path="/register" component={Register} />
                 <Route path="/login" component={Login} />
-                <Route path="/book/:id" component={BooksPage} />
+                <Route path="/book/:id" component={BooksPage}/>
             </Switch>
         </Route>
     )
