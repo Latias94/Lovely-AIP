@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button } from "reactstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
 const axios = require('axios');
 
 export default class LoginForm extends Component {
@@ -47,7 +46,9 @@ export default class LoginForm extends Component {
       // TODO: error hint
       console.log(response);
       console.log(response.data)
-    });
+    }).catch(function (error) {
+        console.log(error);
+      });
     e.preventDefault()
   }
 
