@@ -1,9 +1,8 @@
 import React from 'react';
+import ContentComponent from './component';
 
 export default ({match}) => {
     return (
-        <div>
-            <h3>ID: {match.params.id}</h3>
-        </div>
+        <ContentComponent id={match.params.id}/>
     )
 }
