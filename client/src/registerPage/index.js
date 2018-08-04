@@ -14,16 +14,6 @@ export default class RegisterFrom extends Component {
     isSignedUp: false
   };
 
-  // constructor(props) {
-  //   super(props)
-
-    // this.handleEmailChange = this.handleEmailChange.bind(this);
-    // this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    // this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    // this.handleConfirmedPasswordChange = this.handleConfirmedPasswordChange.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
-  // }
-
   handleSubmit(e) {
     e.preventDefault() // prevent reset the inputs
 
@@ -60,30 +50,6 @@ export default class RegisterFrom extends Component {
     }
 }
 
-  // handleUsernameChange(e) {
-  //   this.setState({
-  //     username: e.target.value
-  //   })
-  // }
-
-  // handleEmailChange(e) {
-  //   this.setState({
-  //     email: e.target.value
-  //   })
-  // }
-
-  // handlePasswordChange(e) {
-  //   this.setState({
-  //     password: e.target.value
-  //   })
-  // }
-
-  // handleConfirmedPasswordChange(e) {
-  //   this.setState({
-  //     confirmedPassword: e.target.value
-  //   })
-  // }
-
   validate() {
   if(this.state.username === '') {
       alert('Please fill in your username')
@@ -105,10 +71,10 @@ export default class RegisterFrom extends Component {
     const { containerLayout, innerDiv, underlineStyle } = styles;
 
     if(!this.state.isSignedUp) {
-return      <div style={containerLayout}>
+      return <div style={containerLayout}>
         <h1>Sign up</h1>
         <form onSubmit={this.handleSubmit.bind(this)}>
-          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChangeText={e => this.setState({email: e.target.value})}/></label></div>
+          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChange={e => this.setState({email: e.target.value})}/></label></div>
           <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={e => this.setState({
             username: e.target.value})}/></label></div>
           <div><label style={innerDiv}>Password<input type="password" value={this.state.password} onChange={e => this.setState({
