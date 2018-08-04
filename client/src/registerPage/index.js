@@ -14,15 +14,15 @@ export default class RegisterFrom extends Component {
     isSignedUp: false
   };
 
-  constructor(props) {
-    super(props)
+  // constructor(props) {
+  //   super(props)
 
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleConfirmedPasswordChange = this.handleConfirmedPasswordChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+    // this.handleEmailChange = this.handleEmailChange.bind(this);
+    // this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    // this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    // this.handleConfirmedPasswordChange = this.handleConfirmedPasswordChange.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
+  // }
 
   handleSubmit(e) {
     e.preventDefault() // prevent reset the inputs
@@ -60,29 +60,29 @@ export default class RegisterFrom extends Component {
     }
 }
 
-  handleUsernameChange(e) {
-    this.setState({
-      username: e.target.value
-    })
-  }
+  // handleUsernameChange(e) {
+  //   this.setState({
+  //     username: e.target.value
+  //   })
+  // }
 
-  handleEmailChange(e) {
-    this.setState({
-      email: e.target.value
-    })
-  }
+  // handleEmailChange(e) {
+  //   this.setState({
+  //     email: e.target.value
+  //   })
+  // }
 
-  handlePasswordChange(e) {
-    this.setState({
-      password: e.target.value
-    })
-  }
+  // handlePasswordChange(e) {
+  //   this.setState({
+  //     password: e.target.value
+  //   })
+  // }
 
-  handleConfirmedPasswordChange(e) {
-    this.setState({
-      confirmedPassword: e.target.value
-    })
-  }
+  // handleConfirmedPasswordChange(e) {
+  //   this.setState({
+  //     confirmedPassword: e.target.value
+  //   })
+  // }
 
   validate() {
   if(this.state.username === '') {
@@ -107,11 +107,15 @@ export default class RegisterFrom extends Component {
     if(!this.state.isSignedUp) {
 return      <div style={containerLayout}>
         <h1>Sign up</h1>
-        <form onSubmit={this.handleSubmit}>
-          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChange={this.handleEmailChange}/></label></div>
-          <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={this.handleUsernameChange}/></label></div>
-          <div><label style={innerDiv}>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label></div>
-          <div><label style={innerDiv}>Confirm your password<input type="password" value={this.state.confirmedPassword} onChange={this.handleConfirmedPasswordChange}/></label></div>
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChangeText={e => this.setState({email: e.target.value})}/></label></div>
+          <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={e => this.setState({
+            username: e.target.value})}/></label></div>
+          <div><label style={innerDiv}>Password<input type="password" value={this.state.password} onChange={e => this.setState({
+            password: e.target.value
+          })}/></label></div>
+          <div><label style={innerDiv}>Confirm your password<input type="password" value={this.state.confirmedPassword} onChange={e => this.setState({
+            confirmedPassword: e.target.value })}/></label></div>
           <input type={"submit"} value={"Create a new account"}/>
         </form>
         <div><Button color="success">Sign up with your Google account</Button></div>
