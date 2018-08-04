@@ -12,7 +12,7 @@ module.exports = function validateProductInput(bodyData) {
 
   function isInt(value) {
     return !Number.isNaN(value)
-      && parseInt(Number(value)) === value
+      && parseInt(Number(value), 10) === value
       && !Number.isNaN(parseInt(value, 10));
   }
 

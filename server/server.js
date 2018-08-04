@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const swaggerJSDoc = require('swagger-jsdoc');
 const users = require('./routes/api/users');
-const products = require('./routes/api/products');
+const books = require('./routes/api/books');
 const categories = require('./routes/api/categories');
 const swaggerDefinition = require('./config/swagger');
 
@@ -58,9 +58,6 @@ app.use(passport.initialize());
 // Public Folder
 app.use(express.static('./public'));
 
-
-
-
 // cross origin
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -72,7 +69,7 @@ app.use((req, res, next) => {
 require('./config/passport')(passport);
 
 app.use('/api/users', users);
-app.use('/api/products', products);
+app.use('/api/books', books);
 app.use('/api/categories', categories);
 
 // change port according to node environment

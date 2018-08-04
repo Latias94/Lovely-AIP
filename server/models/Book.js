@@ -8,16 +8,47 @@ const BookSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'categories',
   },
+  categoryName: {
+    type: String,
+  },
   title: {
     type: String,
     required: true,
   },
-  author: [
-    {
+  authors: [{
+    name: {
       type: String,
       required: true,
     },
-  ],
+  }],
+  reviews: [{
+    reviewid: {
+      type: Schema.Types.ObjectId,
+      ref: 'reviews',
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    star: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 5,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    createDate: {
+      type: Date,
+      default: Date.now,
+    },
+  }],
   description: {
     type: String,
     required: true,
@@ -36,7 +67,7 @@ const BookSchema = new Schema({
   },
   coverUrl: {
     type: String,
-    required: true,
+    // required: true,
   },
   stock: {
     type: Number,
@@ -44,6 +75,10 @@ const BookSchema = new Schema({
   },
   price: {
     type: Number,
+    required: true,
+  },
+  isbn: {
+    type: String,
     required: true,
   },
   score: {

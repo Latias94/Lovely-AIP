@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const URLSlugs = require('mongoose-url-slugs');
 
 const { Schema } = mongoose;
 
@@ -27,12 +26,6 @@ const ReviewSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  updateDate: {
-    type: Date,
-    default: Date.now,
-  },
 });
-
-ReviewSchema.plugin(URLSlugs('name', { field: 'slug' }));
 
 module.exports = mongoose.model('reviews', ReviewSchema);

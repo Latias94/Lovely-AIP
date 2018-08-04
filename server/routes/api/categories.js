@@ -8,8 +8,8 @@ const validateCategoryInput = require('../../validation/category');
 const Category = require('../../models/Category');
 // Load User Model
 const User = require('../../models/User');
-// Load Product Model
-const Product = require('../../models/Product');
+// Load Book Model
+const Book = require('../../models/Book');
 
 const router = express.Router();
 
@@ -88,14 +88,13 @@ router.get('/slug/:slug', (req, res) => {
         return res.status(404).json(errors);
       }
       const categoryResult = {};
-      /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
       categoryResult._id = category._id;
       categoryResult.slug = category.slug;
       categoryResult.name = category.name;
-      categoryResult.description = category.description;
-      Product.find({ category: category._id })
-        .then((products) => {
-          categoryResult.products = products;
+      categoryResult.subCategories = category.subCategories;
+      Book.find({ category: category._id })
+        .then((books) => {
+          categoryResult.books = books;
           return res.json(categoryResult);
         });
       return false;
@@ -139,12 +138,12 @@ router.get('/:id', (req, res) => {
       categoryResult.id = category._id;
       categoryResult.slug = category.slug;
       categoryResult.name = category.name;
-      categoryResult.description = category.description;
-      Product.find({ category: category._id })
-        .then((products) => {
-          categoryResult.products = products;
+      categoryResult.subCategories = category.subCategories;
+      Book.find({ category: category._id })
+        .then((books) => {
+          categoryResult.books = books;
           return res.json(categoryResult);
-        })
+        });
       return false;
     })
     .catch(err => res.status(404).json(err));
@@ -157,8 +156,6 @@ router.get('/:id', (req, res) => {
  *     properties:
  *       name:
  *         type: string
- *       description:
- *         type: string
  */
 /**
  * @swagger
@@ -167,7 +164,7 @@ router.get('/:id', (req, res) => {
  *     tags:
  *       - Category
  *     summary: Create category
- *     description: Registers a new category with different name from database. Category can only be created by staff. Description field is not required.
+ *     description: Registers a new category with different name from database. Category can only be created by staff.
  *     produces:
  *       - application/json
  *     parameters:
@@ -210,28 +207,24 @@ router.post(
         return res.status(404).json({
           categoryexist: 'Category name has existed',
         });
-      } else {
-        const {
-          errors,
-          isValid,
-        } = validateCategoryInput(req.body);
-
-        // Check Validation
-        if (!isValid) {
-          // If any errors, send 400 with errors object
-          return res.status(400).json(errors);
-        }
-
-        const newCategory = new Category({
-          description: req.body.description,
-          name: req.body.name,
-        });
-
-        newCategory.save().then((category) => {
-          return res.json(category);
-        });
-        return false;
       }
+      // category not exist
+      const {
+        errors,
+        isValid,
+      } = validateCategoryInput(req.body);
+
+      if (!isValid) {
+        return res.status(400).json(errors);
+      }
+      const newCategory = new Category({
+        name: req.body.name,
+      });
+
+      newCategory.save().then((categoryObject) => {
+        return res.json(categoryObject);
+      });
+      return false;
     });
 
     return false;
@@ -240,12 +233,25 @@ router.post(
 
 /**
  * @swagger
+ * definitions:
+ *   AddSubCategory:
+ *     properties:
+ *       name:
+ *         type: string
+ *       id:
+ *         type: string
+ *       slug:
+ *         type: string
+ */
+
+/**
+ * @swagger
  * /api/categories/{id}:
  *   post:
  *     tags:
  *       - Category
  *     summary: Edit category
- *     description: Edit a exist category. Category can only be edited by staff. Both name and description fields are required.
+ *     description: Edit a exist category. Category can only be edited by staff. Slug of subCategory has higher priority than id.
  *     produces:
  *       - application/json
  *     parameters:
@@ -254,7 +260,7 @@ router.post(
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/Category'
+ *           $ref: '#/definitions/AddSubCategory'
  *       - name: "id"
  *         in: "path"
  *         description: "ID of category that needs to be edited"
@@ -284,33 +290,39 @@ router.post(
       return true;
     });
 
-    const { errors, isValid } = validateCategoryInput(req.body);
-
-    // Check Validation
-    if (!isValid) {
-      // Return any errors with 400 status
-      return res.status(400).json(errors);
-    }
-
-    // Get fields
-    const categoryFields = {};
-    if (req.body.description) categoryFields.description = req.body.description;
-    if (req.body.name) categoryFields.name = req.body.name;
-
+    const errors = {};
     Category.findById(req.params.id)
       .then((category) => {
         if (category) {
-          categoryFields.updateDate = Date.now();
-          // Update
-          Category.findByIdAndUpdate(
-            req.params.id,
-            categoryFields,
-            { new: true },
-            (err, categoryObject) => {
-              return err ? res.status(404).json(err)
-                : res.json(categoryObject);
-            },
-          );
+          if (req.body.slug) {
+            Category.findOne({ slug: req.body.slug })
+              .then((subCategory) => {
+                category.updateDate = Date.now();
+                // Update
+                category.subCategories.unshift({
+                  subid: subCategory._id,
+                  subname: subCategory.name,
+                });
+                category.save().then(categoryObject => res.json(categoryObject));
+              })
+              .catch(() => res.status(404).json({
+                subcategorynotfound: 'No subCategories found',
+              }));
+          } else if (req.body.id) {
+            Category.findById(req.body.id)
+              .then((subCategory) => {
+                category.updateDate = Date.now();
+                // Update
+                category.subCategories.unshift({
+                  subid: subCategory._id,
+                  subname: subCategory.name,
+                });
+                category.save().then(categoryObject => res.json(categoryObject));
+              })
+              .catch(() => res.status(404).json({
+                subcategorynotfound: 'No subCategories found',
+              }));
+          }
         } else {
           errors.categorynotfound = 'No categories found';
           return res.status(404).json(errors);
@@ -332,12 +344,6 @@ router.post(
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: body
- *         description: Delete category object
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/definitions/Category'
  *       - name: "id"
  *         in: "path"
  *         description: "ID of category that needs to be deleted"
@@ -345,7 +351,7 @@ router.post(
  *         type: "string"
  *     responses:
  *       200:
- *         description: Successfully deletedproductObject
+ *         description: Successfully deleted category Object
  *       401:
  *         description: Cannot delete the category
  *       404:
@@ -363,13 +369,13 @@ router.delete(
         if (!user.isStaff) {
           errors.unauthorized = 'Cannot delete the category';
           return res.status(401).json(errors);
-        } else {
-          Category.findByIdAndRemove(req.params.id, (err) => {
-            return err
-              ? res.status(404).send(err)
-              : res.json({ success: true });
-          });
         }
+        // user is staff
+        Category.findByIdAndRemove(req.params.id, (err) => {
+          return err
+            ? res.status(404).json({ categorynotfound: 'No categories found' })
+            : res.json({ success: true });
+        });
       }
       return true;
     });
