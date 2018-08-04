@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 // import * as style from './registerPageCss';
 import axios from "axios";
+import { Button } from "reactstrap";
 
 export default class RegisterFrom extends Component {
+
+  // init state
+  state = {
+    email: 'sf@sf.com',
+    username: 'sj',
+    password: '12345678',
+    confirmedPassword: '12345678',
+    isSignedUp: false
+  };
+
   constructor(props) {
     super(props)
-
-    // init state
-    this.state = {
-      email: '',
-      username: '',
-      password: '',
-      confirmedPassword: ''
-    };
 
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleUsernameChange = this.handleUsernameChange.bind(this);
@@ -23,7 +26,8 @@ export default class RegisterFrom extends Component {
 
   handleSubmit(e) {
     e.preventDefault() // prevent reset the inputs
-    if (this.validation()) {
+
+    if (this.validate()) {
       axios({
         method: 'post',
         url: 'http://localhost:5000/api/users/register',
@@ -38,11 +42,19 @@ export default class RegisterFrom extends Component {
         }
       })
         .then(response => {
-          // TODO: error hint
-          console.log(response);
           console.log(response.data)
+          if(response.status === 200) {
+            this.setState({ isSignedUp: true })
+          }
         }).catch(error => {
-          console.log(error);
+          for (const property in error.response.data) {
+            if (error.response.data.hasOwnProperty(property)) {
+              alert(error.response.data[property]);
+              // TODO: change the CSS of corresponding input box
+              // console.log("property:",property);
+              // console.log("value:",error.response.data[property]);
+            }
+          }
         }
         );
     }
@@ -72,7 +84,7 @@ export default class RegisterFrom extends Component {
     })
   }
 
-  validation() {
+  validate() {
   if(this.state.username === '') {
       alert('Please fill in your username')
     } else if(this.state.password === '') {
@@ -90,19 +102,28 @@ export default class RegisterFrom extends Component {
   }
 
   render() {
-    const { containerLayout, innerDiv } = styles;
-    return (
-            <div style={containerLayout}>
-              <h1>Sign up</h1>
-              <form onSubmit={this.handleSubmit}>
-                <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChange={this.handleEmailChange}/></label></div>
-              <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={this.handleUsernameChange}/></label></div>
-                <div><label style={innerDiv}>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label></div>
-                <div><label style={innerDiv}>Confirm your password<input type="password" value={this.state.confirmedPassword} onChange={this.handleConfirmedPasswordChange}/></label></div>
-              <input type={"submit"} value={"Submit"}/>
-              </form>
-            </div>
-    )}
+    const { containerLayout, innerDiv, underlineStyle } = styles;
+
+    if(!this.state.isSignedUp) {
+return      <div style={containerLayout}>
+        <h1>Sign up</h1>
+        <form onSubmit={this.handleSubmit}>
+          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChange={this.handleEmailChange}/></label></div>
+          <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={this.handleUsernameChange}/></label></div>
+          <div><label style={innerDiv}>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label></div>
+          <div><label style={innerDiv}>Confirm your password<input type="password" value={this.state.confirmedPassword} onChange={this.handleConfirmedPasswordChange}/></label></div>
+          <input type={"submit"} value={"Create a new account"}/>
+        </form>
+        <div><Button color="success">Sign up with your Google account</Button></div>
+        {/*TODO: replace link with root URL*/}
+        <div><a href="http://localhost:3000//login" style={underlineStyle}>Already signed up?</a></div>
+        {/*{this.renderSignUpSuccessfully()}*/}
+      </div>
+    } else if(this.state.isSignedUp) {
+      return <div style={ containerLayout }><h1>Account created</h1></div>
+    }
+  }
+
 }
 
 const styles = {
@@ -113,7 +134,11 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
   },
- innerDiv: {
-  width: 'auto'
-}
+  innerDiv: {
+    width: 'auto'
+  },
+  underlineStyle: {
+    color: 'gray',
+    textDecoration: 'underline'
+  }
 }
