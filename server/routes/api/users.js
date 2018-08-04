@@ -200,7 +200,7 @@ router.post('/login', (req, res) => {
             return true;
           }
           errors.password = 'Password incorrect';
-          return res.status(400).json(errors);
+          return res.status(404).json(errors);
         });
       return false;
     });

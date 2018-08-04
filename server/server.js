@@ -5,6 +5,7 @@ const passport = require('passport');
 const swaggerJSDoc = require('swagger-jsdoc');
 const users = require('./routes/api/users');
 const books = require('./routes/api/books');
+const bookLists = require('./routes/api/bookLists');
 const categories = require('./routes/api/categories');
 const swaggerDefinition = require('./config/swagger');
 
@@ -71,6 +72,7 @@ require('./config/passport')(passport);
 app.use('/api/users', users);
 app.use('/api/books', books);
 app.use('/api/categories', categories);
+app.use('/api/booklists', bookLists);
 
 // change port according to node environment
 const port = process.env.NODE_ENV === 'test'

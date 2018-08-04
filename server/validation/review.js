@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
 
-module.exports = function validateCommentInput(bodyData) {
+module.exports = function validateReviewInput(bodyData) {
   const errors = {};
   const data = bodyData;
 

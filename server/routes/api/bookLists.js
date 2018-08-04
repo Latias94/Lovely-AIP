@@ -1,26 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 
-const BookList = require('../../models/BookList');
-const User = require('../../models/User');
 const Book = require('../../models/Book');
 const Review = require('../../models/Review');
+const BookList = require('../../models/BookList');
 
 const router = express.Router();
 
-// format information
-// function filterSecret(bookList) {
-//   /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
-//   return {
-//     id: bookList._id,
-//     slug: bookList.slug,
-//     title: bookList.title,
-//     reviews: bookList.reviews,
-//     books: bookList.books,
-//     user: bookList.user,
-//     username: bookList.username,
-//   };
-// }
+const validateBookListInput = require('../../validation/bookList');
 
 /**
  * @swagger
@@ -56,7 +43,6 @@ router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
  */
 router.get('/', (req, res) => {
   const errors = {};
-
   BookList.find()
     .then((bookLists) => {
       if (!bookLists) {
@@ -179,19 +165,24 @@ router.post(
     session: false,
   }),
   (req, res) => {
-    User.findById(req.user.id)
-      .then((user) => {
-        const newBookList = new BookList({
-          title: req.body.title,
-          user: req.user.id,
-          username: user.name,
-          description: req.body.description,
-        });
+    const {
+      errors,
+      isValid,
+    } = validateBookListInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const newBookList = new BookList({
+      title: req.body.title,
+      user: req.user.id,
+      username: req.user.name,
+      description: req.body.description,
+    });
 
-        newBookList.save().then((bookList) => {
-          return res.json(bookList);
-        });
-      });
+    newBookList.save().then((bookList) => {
+      return res.json(bookList);
+    });
+    return false;
   },
 );
 
@@ -202,7 +193,7 @@ router.post(
  *     tags:
  *       - BookList
  *     summary: Edit BookList
- *     description: Edit a exist BookList. Both title and description fields are required.
+ *     description: Edit a exist BookList. Both title and description fields are required. This can only be done by the logged in user (add JWT token to header).
  *     produces:
  *       - application/json
  *     parameters:
@@ -229,8 +220,13 @@ router.post(
   '/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const errors = {};
-    // Get fields
+    const {
+      errors,
+      isValid,
+    } = validateBookListInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
     const bookListFields = {};
     if (req.body.title) bookListFields.title = req.body.title;
     if (req.body.description) bookListFields.description = req.body.description;
@@ -238,6 +234,12 @@ router.post(
     BookList.findById(req.params.id)
       .then((bookList) => {
         if (bookList) {
+          if (bookList.user.toString() !== req.user.id) {
+            // can only edit the book list user created
+            errors.unauthorized = 'Cannot edit the booklist';
+            return res.status(401).json(errors);
+          }
+
           bookListFields.updateDate = Date.now();
           // Update
           BookList.findByIdAndUpdate(
@@ -287,27 +289,37 @@ router.post(
  *         description: No booklists found or other internal error
  */
 router.post(
-  'book/:id/:book_id',
+  '/book/:id/:book_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
     BookList.findById(req.params.id)
       .then((bookList) => {
         if (bookList) {
+          if (bookList.books.filter(book => book.bookid.toString()
+            === req.params.book_id).length > 0) {
+            return res
+              .status(404)
+              .json({
+                alreadyadded: 'User already added this book',
+              });
+          }
           Book.findById(req.params.book_id)
             .then((book) => {
-              Review.find({ user: req.user.id, book: req.params.id })
+              Review.findOne({ user: req.user.id, book: req.params.book_id })
                 .then((review) => {
+                  const bookFields = {};
+                  bookFields.bookid = req.params.book_id;
+                  bookFields.description = book.description;
+                  bookFields.review = review._id.toString();
+                  bookFields.reviewContent = review.content;
+                  bookFields.score = book.score;
+
                   const bookListFields = {};
                   bookListFields.books = bookList.books;
                   bookListFields.updateDate = Date.now();
-                  const bookFields = {};
-                  bookFields.book = req.params.book_id;
-                  bookFields.description = book.description;
-                  bookFields.score = book.score;
-                  bookFields.reviewid = review._id;
-                  bookFields.reviewContent = review.content;
                   bookListFields.books.unshift(bookFields);
+
                   // Update
                   BookList.findByIdAndUpdate(
                     req.params.id,
@@ -318,8 +330,8 @@ router.post(
                         : res.json(bookListObject);
                     },
                   );
-                }).catch(err => res.status(404).json(err));
-            }).catch(err => res.status(404).json(err));
+                }).catch(() => res.status(404).json({ reviewnotfound: 'No reviews found' }));
+            }).catch(() => res.status(404).json({ booknotfound: 'No books found' }));
         } else {
           errors.booklistnotfound = 'No booklists found';
           return res.status(404).json(errors);
@@ -336,8 +348,8 @@ router.post(
  *   delete:
  *     tags:
  *       - BookList
- *     summary: Add Book to BookList
- *     description: Add Book to a exist BookList. Both BookList id and Book id fields are required.
+ *     summary: Delete Book to BookList
+ *     description: Delete Book from a exist BookList. Both BookList id and Book id fields are required.
  *     produces:
  *       - application/json
  *     parameters:
@@ -353,24 +365,32 @@ router.post(
  *         type: "string"
  *     responses:
  *       200:
- *         description: Successfully Added
+ *         description: Successfully Deleted
+ *       401:
+ *         description: Cannot delete the BookList
  *       404:
  *         description: No booklists found or other internal error
  */
 router.delete(
-  'book/:id/:book_id',
+  '/book/:id/:book_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const errors = {};
     BookList.findById(req.params.id)
       .then((bookList) => {
         if (bookList) {
-          if (bookList.books.filter(book => book._id.toString() === req.params.book_id)
+          if (bookList.user.toString() !== req.user.id) {
+            // can only edit the book list user created
+            errors.unauthorized = 'Cannot delete the booklist';
+            return res.status(401).json(errors);
+          }
+
+          if (bookList.books.filter(book => book.bookid.toString() === req.params.book_id)
             .length === 0) {
             return res
               .status(404)
               .json({
-                booknotexists: 'Book does not exist',
+                booknotfound: 'No books found',
               });
           }
           // Get remove index
@@ -424,7 +444,7 @@ router.post(
         if (bookList.likes.filter(like => like.user.toString()
           === req.user.id).length > 0) {
           return res
-            .status(400)
+            .status(404)
             .json({
               alreadyliked: 'User already liked this booklist',
             });
@@ -529,6 +549,8 @@ router.post(
  *     responses:
  *       200:
  *         description: Successfully deleted bookList Object
+ *       401:
+ *         description: Cannot delete the booklist
  *       404:
  *         description: No booklists found
  */
@@ -536,11 +558,22 @@ router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    BookList.findByIdAndRemove(req.params.id, (err) => {
-      return err
-        ? res.status(404).json({ booklistnotfound: 'No booklists found' })
-        : res.json({ success: true });
-    });
+    const errors = {};
+    BookList.findById(req.params.id)
+      .then((bookList) => {
+        if (bookList.user.toString() !== req.user.id) {
+          // can only edit the book list user created
+          errors.unauthorized = 'Cannot delete the booklist';
+          return res.status(401).json(errors);
+        }
+
+        BookList.findByIdAndRemove(req.params.id, (err) => {
+          return err
+            ? res.status(404).json({ booklistnotfound: 'No booklists found' })
+            : res.json({ success: true });
+        });
+        return false;
+      });
   },
 );
 

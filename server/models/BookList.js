@@ -20,31 +20,29 @@ const BookListSchema = new Schema({
     type: String,
     required: true,
   },
-  books: [
-    {
-      bookid: {
-        type: Schema.Types.ObjectId,
-        ref: 'books',
-      },
-      description: {
-        type: String,
-        required: true,
-      },
-      score: {
-        type: Number,
-        min: 0,
-        max: 5,
-      },
-      review: {
-        Type: Schema.Types.ObjectId,
-        ref: 'reviews',
-      },
-      reviewContent: {
-        Type: String,
-        required: true,
-      },
+  books: [{
+    bookid: {
+      type: Schema.Types.ObjectId,
+      ref: 'books',
     },
-  ],
+    review: {
+      type: Schema.Types.ObjectId,
+      ref: 'reviews',
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    score: {
+      type: Number,
+      min: 0,
+      max: 5,
+    },
+    reviewContent: {
+      type: String,
+      required: true,
+    },
+  }],
   likes: [{
     user: {
       type: Schema.Types.ObjectId,

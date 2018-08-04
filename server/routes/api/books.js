@@ -89,6 +89,36 @@ router.get('/:id', (req, res) => {
 
 /**
  * @swagger
+ * /api/books/isbn/{isbn}:
+ *   get:
+ *     tags:
+ *       - Book
+ *     summary: Get book by isbn
+ *     description: Get book by isbn.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "isbn"
+ *         in: "path"
+ *         description: "ISBN of book that needs to be fetched"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Get book successfully
+ *       404:
+ *         description: No books found
+ */
+router.get('/isbn/:isbn', (req, res) => {
+  Book.findOne({ isbn: req.params.isbn })
+    .then(book => res.json(book))
+    .catch(() => res.status(404).json({
+      booknotfound: 'No books found',
+    }));
+});
+
+/**
+ * @swagger
  * definitions:
  *   Book:
  *     properties:
