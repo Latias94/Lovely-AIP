@@ -7,6 +7,7 @@ import { ic_account_circle } from 'react-icons-kit/md/ic_account_circle';
 import { ic_search } from 'react-icons-kit/md/ic_search';
 
 
+
 export default () => {
     return (
         <div style={style.background}>
@@ -19,7 +20,8 @@ export default () => {
                 <div style={style.navigation}>
                     <div style={style.navigationBar}><Link to='/'>Home</Link></div>
                     <div style={style.navigationBar}><Link to='/register'>register</Link></div>
-                    <div style={style.navigationBar}><Link to='./login'>login</Link></div>
+                    <div style={style.navigationBar}><Link to='/login'>login</Link></div>
+                    <div style={style.navigationBar}><Link to='/book/1'> 123</Link></div>
                 </div>
             </div>
         </div>
