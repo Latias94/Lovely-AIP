@@ -42,11 +42,11 @@ export default class LoginForm extends Component {
           password: this.state.password,
         }
       }
-    ).then(function (response) {
+    ).then(response =>  {
       // TODO: error hint
       console.log(response);
       console.log(response.data)
-    }).catch(function (error) {
+    }).catch(error =>  {
         console.log(error);
       });
     e.preventDefault()
