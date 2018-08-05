@@ -50,3 +50,29 @@ export const logoPart = {
     boxSizing: 'border-box',
     borderColor: 'white'
 }
+
+export const leftIcon = {
+    width: '200px', 
+    color: 'white',
+    height: '60px',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+}
+
+export const rightIcon = {
+    width: '200px',
+    color: 'white',
+    height: '60px',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+}
+
+export const iconStyle = {
+    width: '48px',
+    height: '48px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent:'center',
+}
