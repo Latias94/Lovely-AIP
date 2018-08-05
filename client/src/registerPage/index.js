@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import * as style from './registerPageCss';
 import axios from "axios";
 import { Button } from "reactstrap";
 
@@ -7,15 +6,15 @@ export default class RegisterFrom extends Component {
 
   // init state
   state = {
-    email: 'sf@sf.com',
-    username: 'sj',
-    password: '12345678',
-    confirmedPassword: '12345678',
+    email: '',
+    username: '',
+    password: '',
+    confirmedPassword: '',
     isSignedUp: false
   };
 
   handleSubmit(e) {
-    e.preventDefault() // prevent reset the inputs
+    e.preventDefault() // prevent resetting the inputs
 
     if (this.validate()) {
       axios({
