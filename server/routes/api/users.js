@@ -188,7 +188,8 @@ router.post('/login', (req, res) => {
             // Sign Token
             jwt.sign(payload,
               keys.secretOrKey, {
-                expiresIn: 3600,
+              // expires in 3 hours
+                expiresIn: 10800,
               },
               (err, token) => {
                 res.json({
@@ -199,7 +200,7 @@ router.post('/login', (req, res) => {
             return true;
           }
           errors.password = 'Password incorrect';
-          return res.status(400).json(errors);
+          return res.status(404).json(errors);
         });
       return false;
     });

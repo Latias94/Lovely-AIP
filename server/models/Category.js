@@ -9,10 +9,16 @@ const CategorySchema = new Schema({
     type: String,
     required: true,
   },
-  subCategory: {
-    type: Schema.Types.ObjectId,
-    ref: 'categories',
-  },
+  subCategories: [{
+    subid: {
+      type: Schema.Types.ObjectId,
+      ref: 'categories',
+    },
+    subname: {
+      type: String,
+      required: true,
+    },
+  }],
   createDate: {
     type: Date,
     default: Date.now,

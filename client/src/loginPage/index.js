@@ -1,34 +1,20 @@
 import React, { Component } from 'react';
+import { Button } from "reactstrap";
+import Redirect from "react-router-dom/es/Redirect";
 const axios = require('axios');
 
 export default class LoginForm extends Component {
-  constructor(props) {
-    super(props);
 
-    // init state
-    this.state = {
-      email: '',
-      password: ''
-    };
-
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleEmailChange(e) {
-    this.setState({
-      email: e.target.value
-    })
-  }
-
-  handlePasswordChange(e) {
-    this.setState({
-      password: e.target.value
-    })
+  // init state
+  state = {
+    isLoggedIn : false,
+    email: '',
+    password: ''
   }
 
   handleSubmit(e) {
+    e.preventDefault();
+
     axios({
         method: 'post',
         url: 'http://localhost:5000/api/users/login',
@@ -41,37 +27,54 @@ export default class LoginForm extends Component {
           password: this.state.password,
         }
       }
-    ).then(function (response) {
-      console.log(response);
+    ).then(response => {
+      // TODO: error hint
       console.log(response.data)
-    });
-    e.preventDefault()
+      if(response.status = 200) {
+        // alert("Logged in successfully!")
+        this.setState({ isLoggedIn : true })
+      }
+    }).catch(error => {
+      for (const property in error.response.data) {
+        if (error.response.data.hasOwnProperty(property)) {
+          alert(error.response.data[property]);
+          // TODO: change the CSS of corresponding input box
+          // console.log("property:",property);
+          // console.log("value:",error.response.data[property]);
+        }
+      }});
   }
 
+  render() {
+    const {forgotPasswordStyle} = styles
 
-render() {
-  const { forgotPasswordStyle, buttonStyle } = styles
-  return (
-      <div>
-      <form onSubmit={this.handleSubmit}>
-        <h1>Log in</h1>
-        <label>Username (Email)<input type="email" value={this.state.email} onChange={this.handleEmailChange}/></label>
-        <br/>
-        <label>Password<input type="password" value={this.state.password} onChange={this.handlePasswordChange}/></label>
-        <br/>
-        <input type="submit" value="Sign in"/>
-      </form>
-      <br/>
-      <button type="button" style={buttonStyle}>Log in with your Google account</button>
-        <br/>
-        <a href="http://www.w3school.com.cn" style={forgotPasswordStyle}>Forgot password?</a>
-    {/*TODO: 组件库*/}
-    {/*<Button bsStyle="success">Log in with your Google account</Button>*/}
-      </div>
-    )
+    if (!this.state.isLoggedIn) {
+      return (
+        <div>
+          <form onSubmit={this.handleSubmit.bind(this)}>
+            <h1>Log in</h1>
+            <label>Email<input type="email" value={this.state.email} onChange={e => this.setState({
+              email: e.target.value
+            })}/></label>
+            <br/>
+            <label>Password<input type="password" value={this.state.password} onChange={e => this.setState({
+              password: e.target.value
+            })}/></label>
+            <br/>
+            <input type="submit" value="Sign in"/>
+          </form>
+          <br/>
+          <Button color="success">Log in with your Google account</Button>
+          {/*<button type="button" style={buttonStyle}>Log in with your Google account</button>*/}
+          <br/>
+          <a href="/retrieve-password" style={forgotPasswordStyle}>Forgot password?</a>
+        </div>
+      )
+    } else if(this.state.isLoggedIn) {
+      return <Redirect to='/home' />
+    }
   }
 }
-
 
 const styles = {
   forgotPasswordStyle: {
