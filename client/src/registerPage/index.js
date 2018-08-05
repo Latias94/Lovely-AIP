@@ -84,8 +84,7 @@ export default class RegisterFrom extends Component {
           <input type={"submit"} value={"Create a new account"}/>
         </form>
         <div><Button color="success">Sign up with your Google account</Button></div>
-        {/*TODO: replace link with root URL*/}
-        <div><a href="http://localhost:3000//login" style={underlineStyle}>Already signed up?</a></div>
+        <div><a href="/login" style={underlineStyle}>Already signed up?</a></div>
         {/*{this.renderSignUpSuccessfully()}*/}
       </div>
     } else if(this.state.isSignedUp) {
