@@ -3,7 +3,11 @@ module.exports = {
         "browser": true,
         "es6": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "airbnb-base",
+    ],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -30,6 +34,7 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-tabs":"off"
     }
 };

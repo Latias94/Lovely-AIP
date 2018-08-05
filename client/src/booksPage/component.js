@@ -1,5 +1,7 @@
 import React from 'react';
-import {Rate, InputNumber, Menu, Dropdown, Icon,} from 'antd';
+import {
+	Rate, InputNumber, Menu, Dropdown, Icon,
+} from 'antd';
 import Button from '@material-ui/core/Button';
 import * as style from './booksPageCss';
 import PopularBooks from '../welcomePage/popularBooks';
@@ -22,8 +24,7 @@ const menu = (
 const i = [1, 2, 3, 4, 5];
 const m = [1];
 
-
-export default props => (
+const booksPageComponent = props => (
 	<div style={style.container}>
 		<div>
 			<ul className="booksClassList">
@@ -54,7 +55,7 @@ export default props => (
 					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }}> Add to Cart </Button>
 					<Dropdown overlay={menu} trigger={['click']}>
 						<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }}>
-                                Add to your List<Icon type="down" />
+							Add to your List<Icon type="down" />
 						</Button>
 					</Dropdown>
 				</div>
@@ -66,3 +67,5 @@ export default props => (
 		/>
 	</div>
 );
+
+export default booksPageComponent;

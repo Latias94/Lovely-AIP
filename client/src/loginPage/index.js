@@ -30,7 +30,7 @@ export default class LoginForm extends Component {
     ).then(response => {
       // TODO: error hint
       console.log(response.data)
-      if(response.status = 200) {
+      if(response.status === 200) {
         // alert("Logged in successfully!")
         this.setState({ isLoggedIn : true })
       }
