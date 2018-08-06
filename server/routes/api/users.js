@@ -9,8 +9,10 @@ const keys = require('../../config/keys');
 const validationRegisterInput = require('../../validation/register');
 const validationLoginInput = require('../../validation/login');
 
-// load User model
 const User = require('../../models/User');
+const BookList = require('../../models/BookList');
+const Book = require('../../models/Book');
+const Category = require('../../models/Category');
 
 const router = express.Router();
 
@@ -188,7 +190,7 @@ router.post('/login', (req, res) => {
             // Sign Token
             jwt.sign(payload,
               keys.secretOrKey, {
-              // expires in 3 hours
+                // expires in 3 hours
                 expiresIn: 10800,
               },
               (err, token) => {
@@ -231,6 +233,40 @@ router.get('/current', passport.authenticate('jwt', {
     name: req.user.name,
     email: req.user.email,
   });
+});
+
+/**
+ * @swagger
+ * /api/users/current/like/booklist:
+ *   get:
+ *     tags:
+ *       - BookList
+ *     summary: Return the bookLists current user liked
+ *     description: This can only be done by the logged in user (add JWT token to header)
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: return bookLists successfully
+ *     security:
+ *       - JWT: []
+ */
+router.get('/current/like/booklist', passport.authenticate('jwt', {
+  session: false,
+}), (req, res) => {
+  BookList.find({ user: req.user.id })
+    .then((bookLists) => {
+      if (bookLists) {
+        return res.json(bookLists);
+      } else {
+        return res.status(404).json({
+          booklistnotfound: 'No booklists found',
+        });
+      }
+    })
+    .catch(() => res.status(404).json({
+      booklistnotfound: 'No booklists found',
+    }));
 });
 
 module.exports = router;

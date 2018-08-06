@@ -63,8 +63,29 @@ export default class RegisterFrom extends Component {
 		} return {};
 	}
 
-	render() {
-		const { containerLayout, innerDiv, underlineStyle } = styles;
+    if(!this.state.isSignedUp) {
+      return <div style={containerLayout}>
+        <h1>Sign up</h1>
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChange={e => this.setState({email: e.target.value})}/></label></div>
+          <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={e => this.setState({
+            username: e.target.value})}/></label></div>
+          <div><label style={innerDiv}>Password<input type="password" value={this.state.password} onChange={e => this.setState({
+            password: e.target.value
+          })}/></label></div>
+          <div><label style={innerDiv}>Confirm your password<input type="password" value={this.state.confirmedPassword} onChange={e => this.setState({
+            confirmedPassword: e.target.value })}/></label></div>
+          <input type={"submit"} value={"Create a new account"}/>
+        </form>
+        {/* TODO: make it as a component*/}
+        <div><Button color="success">Sign up with your Google account</Button></div>
+        <div><a href="/login" style={underlineStyle}>Already signed up?</a></div>
+        {/*{this.renderSignUpSuccessfully()}*/}
+      </div>
+    } else if(this.state.isSignedUp) {
+      return <div style={ containerLayout }><h1>Account created</h1></div>
+    }
+  }
 
 		if (!this.state.isSignedUp) {
 			return <div style={containerLayout}>
