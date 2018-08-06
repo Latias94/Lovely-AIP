@@ -74,6 +74,7 @@ export default class RegisterForm extends Component {
       return <div style={containerLayout}>
         <h1>Sign up</h1>
         <form onSubmit={this.handleSubmit.bind(this)}>
+          <div style={{display: 'flex', textAlign: 'center', width: '100px', height: '100px', backgroundColor: 'gray', color: 'white', borderRadius: '50px', margin: '70px'}}>Avatar</div>
           <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChange={e => this.setState({email: e.target.value})}/></label></div>
           <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={e => this.setState({
             username: e.target.value})}/></label></div>

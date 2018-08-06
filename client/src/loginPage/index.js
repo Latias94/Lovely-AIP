@@ -14,7 +14,6 @@ export default class LoginForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-
     axios({
         method: 'post',
       // TODO: URL need to be modified before deployment
@@ -30,10 +29,10 @@ export default class LoginForm extends Component {
       }
     ).then(response => {
       // TODO: error hint
-      console.log(response.data)
+      // console.log(response.data)
       if(response.status = 200) {
-        // alert("Logged in successfully!")
         this.setState({ isLoggedIn : true })
+        axios.defaults.headers.common['Authorization'] = response.data.token;
       }
     }).catch(error => {
       for (const property in error.response.data) {
