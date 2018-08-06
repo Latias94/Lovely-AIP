@@ -11,6 +11,8 @@ const validationLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
 const BookList = require('../../models/BookList');
+const Book = require('../../models/Book');
+const Category = require('../../models/Category');
 
 const router = express.Router();
 
