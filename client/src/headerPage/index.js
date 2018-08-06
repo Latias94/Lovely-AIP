@@ -15,7 +15,7 @@ export default () => {
                 <div style={style.logoPart}>
                     <div style={{width: '200px', color:'white', height:'60px', display:'flex', alignItems:'flex-end', justifyContent:'flex-end' }}><Icon icon={ic_search} size={30} /></div>
                     <img src={Logo} style={style.iconLogo} />
-                    <div style={{width:'200px', color:'white', height:'60px',display:'flex', alignItems:'flex-end', justifyContent:'flex-start' }}><Icon icon={ic_account_circle} size={30} /></div>
+                  <div style={{width:'200px', color:'white', height:'60px',display:'flex', alignItems:'flex-end', justifyContent:'flex-start' }}><Link to='/account'><Icon icon={ic_account_circle} size={30}/></Link></div>
                 </div>
                 <div style={style.navigation}>
                     <div style={style.navigationBar}><Link to='/'>Home</Link></div>

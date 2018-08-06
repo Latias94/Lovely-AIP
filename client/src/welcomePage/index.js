@@ -1,7 +1,4 @@
-import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
-import { UncontrolledCarousel } from 'reactstrap';
-import * as style from './welcomePageCss';
+import React from 'react';
 import CarouselDIV from './carouselDIV';
 import PopularBooks from './popularBooks';
 
