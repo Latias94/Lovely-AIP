@@ -1,20 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
+import Axios from 'axios';
 import CarouselDIV from './carouselDIV';
 import PopularBooks from './popularBooks';
 
-const i = [1, 2, 3, 4, 5];
-const m = [1, 2, 3, 4, 5];
 
-const welcomePageIndex = () => (
-	<div style={{
-		height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
-	}}>
-		<CarouselDIV/>
-		<PopularBooks
-			bookList= {i}
-			categoriesList= {m}
-		/>
-	</div>
-);
+export default class welcomePageIndex extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			bookListArray: [],
+			categoriesListArray: [],
+		};
+	}
 
-export default welcomePageIndex;
+	componentDidMount() {
+		Axios({
+			method: 'get',
+			url: 'http://localhost:5000/api/booklists',
+			header: {
+				'Access-Control-Allow-Origin': '*',
+				'content-type': 'application/x-www-form-urlencoded',
+			},
+		}).then((response) => {
+			// TODO: error hint
+			this.setState({ bookListArray: response.data });
+			console.log(this.state.bookListArray);
+		}).catch((error) => {
+			console.log(error);
+		});
+	}
+
+	render() {
+		return (
+			<div style={{
+				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
+			}}>
+				<CarouselDIV/>
+				<PopularBooks
+					bookList= {this.state.bookListArray}
+					categoriesList= {[1, 2, 3, 4, 5]}
+				/>
+			</div>
+		);
+	}
+}
