@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from "axios";
 import { Button } from "reactstrap";
 
-export default class RegisterFrom extends Component {
+export default class RegisterForm extends Component {
 
   // init state
   state = {
