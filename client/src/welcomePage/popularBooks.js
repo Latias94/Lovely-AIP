@@ -4,13 +4,14 @@ import * as style from './welcomePageCss';
 
 const popularBooksComponent = props => (
 	<div style={{ marginTop: '10px', marginBottom: '10px', justifyContent: 'center' }}>
-		{props.bookList.map(index => (
-			<div key={index} style={{ marginTop: '5px' }}>
-				<h3>Popular Books</h3>
+		{props.bookList.map(obj => (
+			<div key={obj._id} style={{ marginTop: '5px' }}>
+				<h3>{obj.title}</h3>
 				<hr/>
 				<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-					{props.categoriesList.map(index => (
-						<Link to={`/book/${index}`} key={index} replace><div style={style.eachBook}>
+					{console.log(obj.books.map(() => ('1')))}
+					{obj.books.map(smallobj => (
+						<Link to={`/book/${smallobj.bookid}`} key={smallobj._id} replace><div style={style.eachBook}>
 							<div style={{ backgroundColor: 'gray', height: '160px', width: '160px' }}></div>
 							<span>Name</span>
 							<span>Author</span>
