@@ -83,6 +83,7 @@ export default class RegisterFrom extends Component {
             confirmedPassword: e.target.value })}/></label></div>
           <input type={"submit"} value={"Create a new account"}/>
         </form>
+        {/* TODO: make it as a component*/}
         <div><Button color="success">Sign up with your Google account</Button></div>
         <div><a href="/login" style={underlineStyle}>Already signed up?</a></div>
         {/*{this.renderSignUpSuccessfully()}*/}
