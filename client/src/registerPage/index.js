@@ -19,6 +19,7 @@ export default class RegisterFrom extends Component {
     if (this.validate()) {
       axios({
         method: 'post',
+        // TODO: URL need to be modified before deployment
         url: 'http://localhost:5000/api/users/register',
         header: {
           'Access-Control-Allow-Origin': '*',

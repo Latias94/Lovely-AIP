@@ -17,6 +17,7 @@ export default class LoginForm extends Component {
 
     axios({
         method: 'post',
+      // TODO: URL need to be modified before deployment
         url: 'http://localhost:5000/api/users/login',
         header: {
           'Access-Control-Allow-Origin': '*',
