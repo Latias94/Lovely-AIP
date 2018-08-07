@@ -59,6 +59,66 @@ router.get('/', (req, res) => {
 
 /**
  * @swagger
+ * /api/books/list:
+ *   get:
+ *     tags:
+ *       - Book
+ *     summary: Get all books by condition
+ *     description: Get all books by condition. e.g.http://localhost:5000/api/books/list?page=2&pageSize=10&price=-1&publish
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "page"
+ *         in: "query"
+ *         description: "the page you are query (powered by pageSize)"
+ *         required: true
+ *         type: "integer"
+ *       - name: "pageSize"
+ *         in: "query"
+ *         description: "How many books you want to show in one page"
+ *         required: true
+ *         type: "integer"
+ *       - name: "publish"
+ *         in: "query"
+ *         description: "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest"
+ *         required: false
+ *         type: "integer"
+ *       - name: "price"
+ *         in: "query"
+ *         description: "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest"
+ *         required: false
+ *         type: "integer"
+ *     responses:
+ *       200:
+ *         description: Get books successfully
+ *       404:
+ *         description: No books found
+ */
+router.get('/list', (req, res) => {
+  const page = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10);
+  // 1 for oldest to newest, -1 for newest to oldest
+  const sortByPublish = parseInt(req.query.publish, 10);
+  // 1 for cheapest to most expensive
+  const sortByPrice = parseInt(req.query.price, 10);
+  const sortParams = {};
+  if (sortByPublish) {
+    sortParams.publishDate = sortByPublish;
+  }
+  if (sortByPrice) {
+    sortParams.price = sortByPrice;
+  }
+  const interval = (page - 1) * pageSize;
+  Book.find().skip(interval).limit(pageSize)
+    .sort(sortParams)
+    .then(books => res.json(books))
+    .catch(() => res.status(404).json({
+      booknotfound: 'No books found',
+    }));
+});
+
+/**
+ * @swagger
  * /api/books/{id}:
  *   get:
  *     tags:

@@ -263,7 +263,7 @@ router.post(
  *     tags:
  *       - Category
  *     summary: Edit category
- *     description: Edit a exist category. Category can only be edited by staff. Slug of subCategory has higher priority than id.
+ *     description: Edit a exist category (eg add sub category). Category can only be edited by staff. Slug of subCategory has higher priority than id.
  *     produces:
  *       - application/json
  *     parameters:

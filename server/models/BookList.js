@@ -33,6 +33,9 @@ const BookListSchema = new Schema({
       type: String,
       required: true,
     },
+    coverUrl: {
+      type: String,
+    },
     score: {
       type: Number,
       min: 0,

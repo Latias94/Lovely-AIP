@@ -27,6 +27,31 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  cart: [{
+    bookid: {
+      type: Schema.Types.ObjectId,
+      ref: 'books',
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      min: 0,
+    },
+    coverUrl: {
+      type: String,
+    },
+    quantity: {
+      type: Number,
+      min: 0,
+    },
+    checked: {
+      type: Boolean,
+      default: false,
+    },
+  }],
 });
 
 module.exports = mongoose.model('users', UserSchema);
