@@ -63,8 +63,8 @@ router.get('/', (req, res) => {
  *   get:
  *     tags:
  *       - Book
- *     summary: Get all books by condition
- *     description: Get all books by condition. e.g.http://localhost:5000/api/books/list?page=2&pageSize=10&price=-1&publish
+ *     summary: Get books with condition
+ *     description: Get books with condition. e.g.http://localhost:5000/api/books/list?page=2&pageSize=10&price=-1&publish
  *     produces:
  *       - application/json
  *     parameters:
