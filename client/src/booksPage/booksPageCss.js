@@ -30,3 +30,26 @@ export const bookInfo = {
 export const rightPart = {
 
 };
+
+export const viewPersonalInfromation = {
+	display: 'flex',
+	flexDirection: 'row',
+	justifyContent: 'flex-start',
+	alignItems: 'center',
+};
+
+export const userHeadImage = {
+	height: '30px',
+	width: '30px',
+	backgroundColor: 'gray',
+};
+
+export const reviewContent = {
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'flex-start',
+};
+
+export const containerOfPersonalReview = {
+	margin: '10px 0px 10px 0px',
+};

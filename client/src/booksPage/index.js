@@ -58,6 +58,7 @@ class BooksPage extends Component {
 					bookSelectNumber={booknumber}
 					onbookNumberChange={onbookNumberChange}
 					stockNumber={this.state.bookDetailInformation.stock}
+					views={this.state.bookDetailInformation.reviews}
 				/>
 			);
 		}

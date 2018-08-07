@@ -59,10 +59,27 @@ const booksPageComponent = props => (
 				</div>
 			</div>
 		</div>
+		<hr/>
 		{/* <PopularBooks
 			bookList={m}
 			categoriesList={i}
 		/> */}
+		<hr />
+		<div style={style.containerOfPersonalReview}>
+			<div style={style.viewPersonalInfromation}>
+				<div style={style.userHeadImage}></div>
+				<span>{props.views[0].username}</span>
+			</div>
+			<div style={style.viewPersonalInfromation}>
+				<Rate disabled value={props.views[0].star} />
+				<span>{props.views[0].content}</span>
+			</div>
+			<div style={style.reviewContent}>
+				<span>{props.views[0].createDate}</span>
+				<span>Already buied</span>
+				<span>{props.views[0].content}</span>
+			</div>
+		</div>
 	</div>
 );
 
