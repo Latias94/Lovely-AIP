@@ -6,20 +6,24 @@ import {
 	CarouselIndicators,
 	CarouselCaption,
 } from 'reactstrap';
+import imageOne from '../Img/Banner1.png';
 
 const items = [
 	{
 		id: 1,
+		src: imageOne,
 		altText: 'Slide 1',
 		caption: 'Slide 1',
 	},
 	{
 		id: 2,
+		src: imageOne,
 		altText: 'Slide 2',
 		caption: 'Slide 2',
 	},
 	{
 		id: 3,
+		src: imageOne,
 		altText: 'Slide 3',
 		caption: 'Slide 3',
 	},
@@ -72,6 +76,7 @@ class CarouselDIV extends Component {
 				onExiting={this.onExiting}
 				onExited={this.onExited}
 			>
+				<img style={{ height: '100%', width: '100%' }} src={item.src} alt={item.altText}/>
 				<CarouselCaption className="text-danger" captionText={item.caption} captionHeader={item.caption} />
 			</CarouselItem>
 		));

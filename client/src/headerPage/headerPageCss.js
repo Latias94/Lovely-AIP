@@ -8,7 +8,7 @@ export const iconLogo = {
 	width: '370px',
 	height: '40px',
 	float: 'left',
-    marginTop: '14px',
+	marginTop: '14px',
 };
 
 export const containerDiv = {
