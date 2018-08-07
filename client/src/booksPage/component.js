@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import Button from '@material-ui/core/Button';
 import * as style from './booksPageCss';
-import PopularBooks from '../welcomePage/popularBooks';
+// import PopularBooks from '../welcomePage/popularBooks';
 
 
 const totalPrice = (unitPrice, number) => (unitPrice * number);
@@ -21,8 +21,6 @@ const menu = (
 		<Menu.Item key="3">3rd menu item</Menu.Item>
 	</Menu>
 );
-const i = [1, 2, 3, 4, 5];
-const m = [1];
 
 const booksPageComponent = props => (
 	<div style={style.container}>
@@ -39,7 +37,7 @@ const booksPageComponent = props => (
 				<h3>Bookname: {props.bookName}</h3>
 				<div style={style.bookInfo}>
 					<h5>{`by: ${props.bookAuthor}(Author)`}</h5>
-					<div ><Rate disabled defaultValue={props.bookRate} /><span>{props.bookReviews}</span><span style={{ marginLeft: '5px' }}>customer reviews</span></div>
+					<div ><Rate disabled value={props.bookRate} /><span>{props.bookReviews}</span><span style={{ marginLeft: '5px' }}>customer reviews</span></div>
 					<hr />
 					<div>{props.description}</div>
 				</div>
@@ -61,10 +59,27 @@ const booksPageComponent = props => (
 				</div>
 			</div>
 		</div>
-		<PopularBooks
+		<hr/>
+		{/* <PopularBooks
 			bookList={m}
 			categoriesList={i}
-		/>
+		/> */}
+		<hr />
+		<div style={style.containerOfPersonalReview}>
+			<div style={style.viewPersonalInfromation}>
+				<div style={style.userHeadImage}></div>
+				<span>{props.views[0].username}</span>
+			</div>
+			<div style={style.viewPersonalInfromation}>
+				<Rate disabled value={props.views[0].star} />
+				<span>{props.views[0].content}</span>
+			</div>
+			<div style={style.reviewContent}>
+				<span>{props.views[0].createDate}</span>
+				<span>Already buied</span>
+				<span>{props.views[0].content}</span>
+			</div>
+		</div>
 	</div>
 );
 
