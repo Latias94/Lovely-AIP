@@ -337,6 +337,12 @@ router.post(
  *       - Book
  *     summary: Get book by slug
  *     description: Get book by slug.
+ *     parameters:
+ *       - name: "slug"
+ *         in: "path"
+ *         description: "Slug of book that needs to get"
+ *         required: true
+ *         type: "string"
  *     produces:
  *       - application/json
  *     responses:
