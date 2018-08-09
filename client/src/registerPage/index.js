@@ -1,28 +1,53 @@
 import React, { Component } from 'react';
 import axios from "axios";
-import { Button } from "reactstrap";
+// import { Button } from "reactstrap";
 import './registerPage.css'
 
-export default class RegisterForm extends Component {
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button'
+
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+  },
+  underlineStyle: {
+    color: 'gray',
+    textDecoration: 'underline'
+  }
+});
+
+class RegisterForm extends Component {
 
   // init state
   state = {
     email: '',
-    username: '',
+    name: '',
     password: '',
-    confirmedPassword: '',
+    password2: '',
     isSignedUp: false,
     errors: {}
   };
 
-  handleUsernameChange = e => {
-    this.setState({
-      username: e.target.value
-    })
-  }
+  handleChange = e => {
+    this.setState({ [e.target.id]: e.target.value });
+  };
+  
 
   handleSubmit = e => {
     e.preventDefault() // prevent resetting the inputs
+    const { name, email, password } = this.state
 
     if (this.validate()) {
       axios({
@@ -34,89 +59,127 @@ export default class RegisterForm extends Component {
           'content-type': 'application/x-www-form-urlencoded',
         },
         data: {
-          name: this.state.username,
-          email: this.state.email,
-          password: this.state.password,
+          name,
+          email,
+          password,
         }
       })
         .then(response => {
-          console.log(response.data)
           if(response.status === 200) {
             this.setState({ isSignedUp: true })
           }
         }).catch(error => {
-          for (const property in error.response.data) {
-            if (error.response.data.hasOwnProperty(property)) {
-              alert(error.response.data[property]);
-              // TODO: change the CSS of corresponding input box
-              // console.log("property:",property);
-              // console.log("value:",error.response.data[property]);
-            }
-          }
+          this.setState({
+            errors: error.response.data
+          })
+          // for (const property in error.response.data) {
+          //   if (error.response.data.hasOwnProperty(property)) {
+          //     alert(error.response.data[property]);
+          //     // TODO: change the CSS of corresponding input box
+          //     // console.log("property:",property);
+          //     // console.log("value:",error.response.data[property]);
+          //   }
+          // }
         }
         );
     }
 }
 
-  validate() {
-  if(this.state.username === '') {
-      alert('Please fill in your username')
-    } else if(this.state.password === '') {
-      alert('Please fill in your password')
-    } else if(this.state.confirmedPassword === '') {
-      alert('Please fill in your confirmed password')
-    } else if(this.state.password.length < 8) {
-      alert('Your password has to be more than 7 characters')
-    } else if(this.state.password !== this.state.confirmedPassword) {
-      alert("The two passwords don't match.")
-    }
-    else {
+  validate = () => {
+    const { email, name, password, password2 } = this.state
+    if(email.length === 0) {
+      this.setState({
+        errors: {
+          email: 'Please fill in your email.'
+        }})
+    } else if(name.length === 0) {
+    this.setState({
+      errors: {
+        name: 'Please fill in your name.'
+      }})
+    } else if (name.length < 2 || name.length > 30) {
+    this.setState({
+      errors: {
+        name: 'Name must be between 2 and 30 characters.'
+      }})
+  } else if(password.length === 0) {
+    this.setState({
+      errors: {
+        password: 'The password is required.'
+      }})
+    } else if(password.length < 6) {
+      this.setState({
+        errors: {
+          password: 'Password must be at least 6 character.'
+        }})
+    } else if(password2.length === 0) {
+      this.setState({
+        errors: {
+          password2: 'Please type your password again.'
+        }})
+    } else if(password !== password2) {
+    this.setState({
+      errors: {
+        password: 'The two passwords don\'t match.'
+      }})
+    } else {
       return true
     }
-  }
+  };
 
   render() {
-    const { containerLayout, innerDiv, underlineStyle } = styles;
-    const { email, username, password, confirmedPassword } = this.state
+    const { containerLayout, underlineStyle } = styles;
+    const { email, name, password, password2, errors, isSignedUp } = this.state;
+    const { classes } = this.props;
 
-    if(!this.state.isSignedUp) {
-      return <div style={containerLayout}>
+    // TODO: refactor to conditional render
+    if(!isSignedUp) {
+      return <div className={classes.container}>
         <h1>Sign up</h1>
-        <form onSubmit={this.handleSubmit}>
           <div className={"Avatar"}>Avatar</div>
-          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={email} onChange={e => this.setState({email: e.target.value})} required/></label></div>
-          <div><label>Username<span>*</span><input type={"text"} value={username} onChange={this.handleUsernameChange} required/></label></div>
-          <div><label style={innerDiv}>Password<input type="password" value={password} onChange={e => this.setState({
-            password: e.target.value
-          })} required/></label></div>
-          <div><label style={innerDiv}>Confirm your password<input type="password" value={confirmedPassword} onChange={e => this.setState({
-            confirmedPassword: e.target.value })} required/></label></div>
-          <input type={"submit"} value={"Create a new account"}/>
-        </form>
-        <div><Button color="success">Sign up with your Google account</Button></div>
-        <div><a href="/login" style={underlineStyle}>Already signed up?</a></div>
-        {/*{this.renderSignUpSuccessfully()}*/}
+
+          <FormControl className={classes.formControl} error={errors.email} aria-describedby="email-helper-text">
+            <InputLabel htmlFor="email-helper">Email*</InputLabel>
+            <Input id="email" value={email} type={"email"} onChange={this.handleChange} />
+            {errors.email && <FormHelperText id="email-helper-text">{errors.email}</FormHelperText>}
+            </FormControl>
+
+          <FormControl className={classes.formControl} error={errors.name} aria-describedby="name-helper-text">
+            <InputLabel htmlFor="name-helper">Name*</InputLabel>
+            <Input id="name" value={name} onChange={this.handleChange} />
+            {errors.name && <FormHelperText id="name-helper-text">{errors.name}</FormHelperText>}
+          </FormControl>
+
+          <FormControl className={classes.formControl} error={errors.password} aria-describedby="password-helper-text">
+            <InputLabel htmlFor="password-helper">Password</InputLabel>
+            <Input id="password" value={password} type={"password"} onChange={this.handleChange} />
+            {errors.password && <FormHelperText id="password-helper-text">{errors.password}</FormHelperText>}
+          </FormControl>
+
+          <FormControl className={classes.formControl} error={errors.password2} aria-describedby="password2-helper-text">
+            <InputLabel htmlFor="password2-helper">Confirm your password</InputLabel>
+            <Input id="password2" value={password2} type={"password"} onChange={this.handleChange} />
+            {errors.password2 && <FormHelperText id="password-helper-text">{errors.password2}</FormHelperText>}
+          </FormControl>
+
+        <Button variant="contained" color="secondary" onClick={this.handleSubmit}>Create a new account</Button>
+<br/>
+        <div>
+          <Button variant="contained">Sign up with your Google account</Button>
+        </div>
+        <br/>
+        <div>
+          <a href="/login" style={underlineStyle}>Already signed up?</a>
+        </div>
       </div>
-    } else if(this.state.isSignedUp) {
+    } else if(isSignedUp) {
       return <div style={ containerLayout }><h1>Account created</h1></div>
     }
   }
-
 }
 
-const styles = {
-  containerLayout: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  innerDiv: {
-    width: 'auto'
-  },
-  underlineStyle: {
-    color: 'gray',
-    textDecoration: 'underline'
-  }
-}
+RegisterForm.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(RegisterForm);

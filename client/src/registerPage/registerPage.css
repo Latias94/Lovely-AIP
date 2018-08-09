@@ -9,6 +9,10 @@
 	margin: 70px
 }
 
+.invalid-feedback {
+	color: red;
+}
+
 
 /*export const containerLayout = {*/
 	/*display: 'flex',*/
