@@ -29,8 +29,6 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "enzyme": "^3.4.1",
-    "enzyme-adapter-react-16": "^1.2.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-config-airbnb-base": "^13.0.0",
