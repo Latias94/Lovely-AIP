@@ -36,7 +36,6 @@ module.exports = function validateProductInput(bodyData) {
   }
 
   if (!Validator.isLength(data.title, { min: 2, max: 80 })) {
-    console.log('title len: ' + data.title.length);
     errors.title = 'Book title must be between 2 and 80 characters';
   }
   if (Validator.isEmpty(data.title)) {
@@ -44,7 +43,6 @@ module.exports = function validateProductInput(bodyData) {
   }
 
   if (!Validator.isLength(data.description, { min: 10, max: 1000 })) {
-    console.log('description len: ' + data.description.length);
     errors.description = 'Book description must be between 10 and 1000 characters';
   }
   if (Validator.isEmpty(data.description)) {

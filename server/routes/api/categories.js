@@ -36,8 +36,8 @@ router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
  *   get:
  *     tags:
  *       - Category
- *     summary: Get all categories
- *     description: Get all categories
+ *     summary: Get all categories with their books
+ *     description: Get all categories with their books
  *     produces:
  *       - application/json
  *     responses:
@@ -47,19 +47,31 @@ router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
  *         description: No categories found
  */
 router.get('/', (req, res) => {
-  const errors = {};
-
+  const allCategories = [];
+  let counter = 0;
   Category.find()
     .then((categories) => {
-      if (!categories) {
-        errors.categorynotfound = 'No categories found';
-        return res.status(404).json(errors);
-      }
-
-      res.json(categories);
-      return false;
+      categories.forEach((category) => {
+        Book.find({ category: category._id })
+          .then((books) => {
+            counter += 1;
+            const categoryResult = {};
+            categoryResult._id = category._id;
+            categoryResult.slug = category.slug;
+            categoryResult.name = category.name;
+            categoryResult.subCategories = category.subCategories;
+            categoryResult.books = books;
+            allCategories.push(categoryResult);
+            if (counter === categories.length) {
+              return res.json(allCategories);
+            }
+            return false;
+          });
+      });
     })
-    .catch(() => res.status(404).json({ categorynotfound: 'No categories found' }));
+    .catch(() => {
+      return res.status(404).json({ categorynotfound: 'No categories found' });
+    });
 });
 
 /**
@@ -251,7 +263,7 @@ router.post(
  *     tags:
  *       - Category
  *     summary: Edit category
- *     description: Edit a exist category. Category can only be edited by staff. Slug of subCategory has higher priority than id.
+ *     description: Edit a exist category (eg add sub category). Category can only be edited by staff. Slug of subCategory has higher priority than id.
  *     produces:
  *       - application/json
  *     parameters:

@@ -314,6 +314,7 @@ router.post(
                   bookFields.review = review._id.toString();
                   bookFields.reviewContent = review.content;
                   bookFields.score = book.score;
+                  bookFields.coverUrl = book.coverUrl;
 
                   const bookListFields = {};
                   bookListFields.books = bookList.books;
