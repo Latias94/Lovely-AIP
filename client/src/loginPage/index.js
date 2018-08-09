@@ -13,7 +13,7 @@ export default class LoginForm extends Component {
     password: ''
   }
 
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
     axios({
         method: 'post',
@@ -48,12 +48,13 @@ export default class LoginForm extends Component {
   }
 
   render() {
-    const {forgotPasswordStyle} = styles
+    const {forgotPasswordStyle} = styles;
+    const { isLoggedIn } = this.state.isLoggedIn;
 
-    if (!this.state.isLoggedIn) {
+    if (!isLoggedIn) {
       return (
         <div>
-          <form onSubmit={this.handleSubmit.bind(this)}>
+          <form onSubmit={this.handleSubmit}>
             <h1>Log in</h1>
             <label>Email<input id={"email"} type="email" value={this.state.email} onChange={e => this.setState({
               email: e.target.value
@@ -67,7 +68,6 @@ export default class LoginForm extends Component {
           </form>
           <br/>
           <Button variant="contained" color="primary">Log in with your Google account</Button>
-          {/*<button type="button" style={buttonStyle}>Log in with your Google account</button>*/}
           <br/>
           <a href="/retrieve-password" style={forgotPasswordStyle}>Forgot password?</a>
         </div>
