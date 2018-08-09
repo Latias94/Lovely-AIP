@@ -1,8 +1,9 @@
+import './loginForm.css';
 import React, { Component } from 'react';
-// import { Button } from "reactstrap";
 import Button from '@material-ui/core/Button';
 import Redirect from "react-router-dom/es/Redirect";
 const axios = require('axios');
+
 
 export default class LoginForm extends Component {
 
@@ -10,7 +11,8 @@ export default class LoginForm extends Component {
   state = {
     isLoggedIn : false,
     email: '',
-    password: ''
+    password: '',
+    errors: {}
   }
 
   handleSubmit = e => {
@@ -49,20 +51,20 @@ export default class LoginForm extends Component {
 
   render() {
     const {forgotPasswordStyle} = styles;
-    const { isLoggedIn } = this.state.isLoggedIn;
+    const { isLoggedIn, email, password } = this.state;
 
     if (!isLoggedIn) {
       return (
         <div>
           <form onSubmit={this.handleSubmit}>
             <h1>Log in</h1>
-            <label>Email<input id={"email"} type="email" value={this.state.email} onChange={e => this.setState({
+            <label className="input box">Email<input id={"email"} type="email" value={email} onChange={e => this.setState({
               email: e.target.value
-            })}/></label>
+            })} required/></label>
             <br/>
-            <label>Password<input id={"password"} name={"password"} type="password" value={this.state.password} onChange={e => this.setState({
+            <label className={"is-invalid"}>Password<input id={"password"} name={"password"} type="password" value={password} onChange={e => this.setState({
               password: e.target.value
-            })}/></label>
+            })} required/></label>
             <br/>
             <input type="submit" value="Sign in"/>
           </form>

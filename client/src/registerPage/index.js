@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from "axios";
 import { Button } from "reactstrap";
+import './registerPage.css'
 
 export default class RegisterForm extends Component {
 
@@ -10,10 +11,17 @@ export default class RegisterForm extends Component {
     username: '',
     password: '',
     confirmedPassword: '',
-    isSignedUp: false
+    isSignedUp: false,
+    errors: {}
   };
 
-  handleSubmit(e) {
+  handleUsernameChange = e => {
+    this.setState({
+      username: e.target.value
+    })
+  }
+
+  handleSubmit = e => {
     e.preventDefault() // prevent resetting the inputs
 
     if (this.validate()) {
@@ -69,20 +77,20 @@ export default class RegisterForm extends Component {
 
   render() {
     const { containerLayout, innerDiv, underlineStyle } = styles;
+    const { email, username, password, confirmedPassword } = this.state
 
     if(!this.state.isSignedUp) {
       return <div style={containerLayout}>
         <h1>Sign up</h1>
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <div style={{display: 'flex', textAlign: 'center', width: '100px', height: '100px', backgroundColor: 'gray', color: 'white', borderRadius: '50px', margin: '70px'}}>Avatar</div>
-          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={this.state.email} onChange={e => this.setState({email: e.target.value})}/></label></div>
-          <div><label>Username<span>*</span><input type={"text"} value={this.state.username} onChange={e => this.setState({
-            username: e.target.value})}/></label></div>
-          <div><label style={innerDiv}>Password<input type="password" value={this.state.password} onChange={e => this.setState({
+        <form onSubmit={this.handleSubmit}>
+          <div className={"Avatar"}>Avatar</div>
+          <div><label style={innerDiv}>Email<span>*</span><input type={"email"} value={email} onChange={e => this.setState({email: e.target.value})} required/></label></div>
+          <div><label>Username<span>*</span><input type={"text"} value={username} onChange={this.handleUsernameChange} required/></label></div>
+          <div><label style={innerDiv}>Password<input type="password" value={password} onChange={e => this.setState({
             password: e.target.value
-          })}/></label></div>
-          <div><label style={innerDiv}>Confirm your password<input type="password" value={this.state.confirmedPassword} onChange={e => this.setState({
-            confirmedPassword: e.target.value })}/></label></div>
+          })} required/></label></div>
+          <div><label style={innerDiv}>Confirm your password<input type="password" value={confirmedPassword} onChange={e => this.setState({
+            confirmedPassword: e.target.value })} required/></label></div>
           <input type={"submit"} value={"Create a new account"}/>
         </form>
         <div><Button color="success">Sign up with your Google account</Button></div>

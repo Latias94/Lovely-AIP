@@ -1,0 +1,23 @@
+.Avatar {
+	display: flex;
+	text-align: center;
+	width: 100px;
+	height: 100px;
+	background-color: gray;
+	color: white;
+	border-radius: 50px;
+	margin: 70px
+}
+
+
+/*export const containerLayout = {*/
+	/*display: 'flex',*/
+	/*flexDirection: 'column',*/
+	/*flexWrap: 'nowrap',*/
+	/*justifyContent: 'space-between',*/
+	/*alignItems: 'center',*/
+/*};*/
+
+/*export const innerDiv = {*/
+	/*width: 'auto',*/
+/*};*/
