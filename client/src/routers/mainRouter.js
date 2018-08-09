@@ -5,7 +5,7 @@ import Welcome from '../welcomePage';
 import RegisterForm from '../registerPage';
 import LoginForm from '../loginPage';
 import BooksPage from '../booksPage';
-import AccountPage from '../accountPage';
+import AccountPage from '../accountPage/AccountPage';
 
 const MainRoute = () => {
     return (
