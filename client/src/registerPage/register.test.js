@@ -1,95 +1,158 @@
-import FormHelperText from '@material-ui/core/FormHelperText';
-import React from 'react';
-
+// import React from 'react';
+// import Enzyme, { shallow } from 'enzyme';
+// import Adapter from 'enzyme-adapter-react-16';
+// import renderer from 'react-test-renderer';
+import RegisterForm from './index';
 const puppeteer = require('puppeteer');
 
-describe('Test account page', () => {
-	test('App name === Knight Frank', async () => {
-		const browser = await puppeteer.launch({
-			headless: false,
-		});
-
-		const page = await browser.newPage();
-		await page.setViewport({ width: 1280, height: 800 });
-
-		await page.goto('localhost:3000/login', { waitUntil: 'networkidle2' });
-		// TODO: move to App.test.js
-		const title = await page.title();
-		expect(title).toBe('Knight Frank'); // code behind it won't execute
-		await browser.close();
-	});
-
-	test('view account page', async () => {
-		const browser = await puppeteer.launch({
-			headless: false,
-		});
-		const page = await browser.newPage();
-		await page.setViewport({ width: 1280, height: 800 });
-
-		// page.emulate({
-		//   viewport: {
-		//     width: 500,
-		//     height: 2400,
-		//   },
-		//   userAgent: ''
-		// })
-
-		//   page.on('dialog', async dialog => {
-		//     console.log(dialog.message());
-		//     await dialog.dismiss();
-		// });
-		// await page.authenticate({ username: 'admin', password: 'admin' });
-		await page.goto('localhost:3000/login', { waitUntil: 'networkidle2' });
-
-		//   const html = await page.$eval('.App-title', e => e.innerHTML);
-		//   expect(html).toBe('Welcome to React');
-
-
-		//   test('Title == Pronto Tools', async () => {
-		//     await page.goto(url);
-		//     const title = await page.title();
-		//     expect(title).toBe("Pronto Tools");
-		//   });
-		//   test("Center == Tools for Your Growing Business", async () => {
-		//     await page.goto(url);
-		//     const center = await page.$eval('h2.font-34.uppercase > strong', e => e.innerHTML);
-		//     expect(center).toBe("Tools for Your Growing Business");
-		//   });
+// let browser;
+// let page;
+//
+// describe('LoginPage', () => {
+// 	beforeAll(async () => {
+// 		browser = await puppeteer.launch({
+// 			headless: false,
+// 			slowMo: 30,
+// 		});
+// 		page = await browser.newPage();
+// 	}); // timeout , async () => ( ,60e3)
+//
+// 	afterAll(() => browser.close());
+//
+// 	beforeEach(() => page.goto('http://localhost:3000/register')); // start with fresh page between test, don't keep implicit page state dependency
+//
+// 	it('should display login page', async () => {
+// 		// const text = await page.evaluate(() => document.body.innerText);
+// 		// expect(text).toContain('name');
+// 		expect(true).toBe(true);
+// 		// done(); // here
+// 	});
+//
+// 	it('should show error message if email is not correct', async () => {
+// 		await page.type('#email', 'user');
+// 		await page.type('#password', 'pass');
+// 		await page.click('Button[id=submit]');
+//
+// 		try { // you need to try catch the error with async await
+// 			await page.evaluate(
+// 				() => document.getElementsByClassName('ui negative message container')[0], // no need for async
+// 			);
+// 		} catch (errorMessage) {
+// 			console.log('errorMessage', errorMessage);
+// 		}
+//
+// 		expect(true).toBe(true);
+// 	});
+// });
 
 
-		//   await page.goto('localhost:3000/login', {waitUntil: 'networkidle2'});
-		//   await page.goto('http://192.168.1.254/lancfg2menu.cgi?brName=Default', {waitUntil: 'networkidle2'});
+describe('Test validation of sign up =', () => {
+  // afterAll(() => browser.close());
+  it('Length of password > 5', async () => {
+    const browser = await puppeteer.launch({
+      headless: false,
+    });
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1280, height: 800 });
+    await page.goto('localhost:3000/register', { waitUntil: 'networkidle0' });
+    await page.type('#email', 'test@mail.com');
+    await page.type('#name', 'username');
+    await page.type('#password', 'short');
+    await page.type('#password2', 'short');
+    await page.click('Button[id="submit"]');
+
+    const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
+    expect(errorMsg).toBe('Password must be at least 6 character.');
+
+    await page.screenshot({
+      path: `./__tests__/screenshots/register-${Date.now()}.png`,
+      fullPage: true,
+    });
+
+    await browser.close();
+  });
+
+  it('account created', async () => {
+    const browser = await puppeteer.launch({
+      headless: false,
+    });
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1280, height: 800 });
+    await page.goto('localhost:3000/register', { waitUntil: 'networkidle0' });
+    let fakeEmail = Math.floor((Math.random() * 100) + 1).toString() + '@mail.com';
+    await page.type('#email', fakeEmail);
+    await page.type('#name', 'username');
+    await page.type('#password', 'short');
+    await page.type('#password2', 'short');
+    await page.click('Button[id="submit"]');
+
+    const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
+    expect(errorMsg).toBe('Password must be at least 6 character.');
+
+    await page.screenshot({
+      path: `./__tests__/screenshots/register-${Date.now()}.png`,
+      fullPage: true,
+    });
+
+    await browser.close();
+  });
 
 
-		//   await page.waitFor('input[name=email]');
-		//   await page.waitForSelector('#email');
+  // it('renders correctly', () => {
+  //   const rendered = renderer.create(
+  //     <RegisterForm />
+  //   );
+  //   expect(rendered.toJSON()).toMatchSnapshot();
+  // });
 
-		//   await page.click('input[type="submit"]');
-		await page.focus('#email');
-		// for (let i = 0; i< '192.168.1.254'.length; i++) {
-		//     await page.keyboard.press('Delete');
-		// }
-		await page.keyboard.type('sf4@sf.com');
-		await page.focus('input[name="password"]');
-		await page.keyboard.type('12345678');
-		//   await page.focus('input[name="chkIgmpSnp"]')
-		//   await page.type('#login_field', 'admin')
-		await page.screenshot({
-			path: '/Users/anluoridge/Downloads/TEMP/KnightFrank.png',
-			fullPage: true,
-		});
-		const inputElement = await page.$('input[type=submit]');
-		await inputElement.click();
-		await page.waitFor(1000);
-		// 等待几秒
-		// _sleep(5);
-		//   await page.goto('localhost:3000/account'); // a new tab
-		const accountButton = await page.$('a[href$=account]');
-		await accountButton.click();
-		await page.waitFor(3000);
+  // it('Button click calls onAdd', () => {
+  //   onAdd = jest.fn();
+  //   add = mount(<Add onAdd={onAdd} />);
+  //   const button = add.find('button').first();
+  //   const input = add.find('input').first();
+  //   input.simulate('change', { target: { value: 'Name 4' }});
+  //   button.simulate('click');
+  //   expect(onAdd).toBeCalledWith('Name 4');
+  // });
 
-		const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
-		expect(errorMsg).toBe('Password must be at least 6 character.');
-		await browser.close();
-	});
+  // it('Email is required', () => {
+  //   Enzyme.configure({ adapter: new Adapter() })
+  //   const wrapper = shallow(<RegisterForm />);
+  // 	const res = wrapper.validate({
+  // 		email: '',
+  // 	});
+  // 	expect(res).toBe(false);
+  // });
 });
+
+
+// "jest": {
+//   "collectCoverageFrom": [
+//     "src/**/*.{js,jsx}"
+//   ],
+//     "setupFiles": [
+//     "<rootDir>/config/polyfills.js"
+//   ],
+//     "testMatch": [
+//     "<rootDir>/src/**/__tests__/**/*.js?(x)",
+//     "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
+//   ],
+//     "testEnvironment": "node",
+//     "testURL": "http://localhost",
+//     "transform": {
+//     "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
+//       "^.+\\.(scss|css)$": "<rootDir>/config/jest/cssTransform.js",
+//       "^(?!.*\\.(js|jsx|css|scss|json)$)": "<rootDir>/config/jest/fileTransform.js"
+//   },
+//   "transformIgnorePatterns": [
+//     "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+//   ],
+//     "moduleFileExtensions": [
+//     "web.js",
+//     "js",
+//     "json",
+//     "web.jsx",
+//     "jsx",
+//     "node"
+//   ]
+// }
