@@ -9,6 +9,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button'
+import KFAccountInput from '../components/KFAccountInput'
 
 const styles = theme => ({
   container: {
@@ -84,6 +85,7 @@ class RegisterForm extends Component {
     }
   }
 
+  // TODO: move validation out, return errors not boolean.
 // TODO: implement better validation approach
 
   validate = (props) => {
@@ -140,35 +142,51 @@ class RegisterForm extends Component {
     const { email, name, password, password2, errors, isSignedUp } = this.state;
     const { classes } = this.props;
 
-    // TODO: refactor to conditional render
+    // TODO: refactor to conditional rendering
     if(!isSignedUp) {
       return <div className={classes.container}>
         <h1>Sign up</h1>
         <div className={"Avatar"}>Avatar</div>
 
-        <FormControl className={classes.formControl} error={errors.email} aria-describedby="email-helper-text">
-          <InputLabel htmlFor="email-helper">Email*</InputLabel>
-          <Input id="email" value={email} type={"email"} onChange={this.handleChange} required/>
-          {errors.email && <FormHelperText id="email-helper-text">{errors.email}</FormHelperText>}
-        </FormControl>
+        <KFAccountInput
+          name={"Email*"}
+          className={classes.formControl}
+          error={errors.email}
+          id={"email"}
+          value={email}
+          type={"email"}
+          onChange={this.handleChange}
+        />
 
-        <FormControl className={classes.formControl} error={errors.name} aria-describedby="name-helper-text">
-          <InputLabel htmlFor="name-helper">Name*</InputLabel>
-          <Input id="name" value={name} onChange={this.handleChange} required/>
-          {errors.name && <FormHelperText id="name-helper-text">{errors.name}</FormHelperText>}
-        </FormControl>
+        <KFAccountInput
+          name={"Name*"}
+          className={classes.formControl}
+          error={errors.name}
+          id={"name"}
+          value={name}
+          type={"text"}
+          onChange={this.handleChange}
+        />
 
-        <FormControl className={classes.formControl} error={errors.password} aria-describedby="password-helper-text">
-          <InputLabel htmlFor="password-helper">Password</InputLabel>
-          <Input id="password" value={password} type={"password"} onChange={this.handleChange} required/>
-          {errors.password && <FormHelperText id="password-helper-text">{errors.password}</FormHelperText>}
-        </FormControl>
+        <KFAccountInput
+          name={"Password"}
+          className={classes.formControl}
+          error={errors.password}
+          id={"password"}
+          value={password}
+          type={"password"}
+          onChange={this.handleChange}
+        />
 
-        <FormControl className={classes.formControl} error={errors.password2} aria-describedby="password2-helper-text">
-          <InputLabel htmlFor="password2-helper">Confirm your password</InputLabel>
-          <Input id="password2" value={password2} type={"password"} onChange={this.handleChange} required/>
-          {errors.password2 && <FormHelperText id="password2-helper-text">{errors.password2}</FormHelperText>}
-        </FormControl>
+        <KFAccountInput
+          name={"Confirm your password"}
+          className={classes.formControl}
+          error={errors.password2}
+          id={"password2"}
+          value={password2}
+          type={"password"}
+          onChange={this.handleChange}
+        />
 
         <Button variant="contained" color="secondary" id={"submit"} onClick={this.handleSubmit}>Create a new account</Button>
         <br/>

@@ -8,7 +8,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import KFAccountInput from '../components/KFAccountInput'
+import KFAccountInput from '../components/KFAccountInput';
 
 const styles = theme => ({
   container: {
@@ -98,6 +98,7 @@ class LoginForm extends Component {
     const { isLoggedIn, email, password, errors } = this.state;
     const { classes } = this.props;
 
+    // TODO: use conditional rendering
     if (!isLoggedIn) {
       return (
         <div className={classes.container}>
@@ -113,13 +114,6 @@ class LoginForm extends Component {
                    onChange={this.handleChange}
           />
 
-
-          {/*<FormControl className={classes.formControl} error={errors.email} aria-describedby="email-helper-text">*/}
-            {/*<InputLabel htmlFor="email-helper">Email</InputLabel>*/}
-            {/*<Input id="email" value={email} type={"email"} onChange={this.handleChange} required/>*/}
-            {/*{errors.email && <FormHelperText id="email-helper-text">{errors.email}</FormHelperText>}*/}
-          {/*</FormControl>*/}
-
           <br/>
 
           <KFAccountInput
@@ -131,12 +125,6 @@ class LoginForm extends Component {
             type={"password"}
             onChange={this.handleChange}
           />
-
-          {/*<FormControl className={classes.formControl} error={errors.password} aria-describedby="password-helper-text">*/}
-            {/*<InputLabel htmlFor="password-helper">Password</InputLabel>*/}
-            {/*<Input id="password" value={password} type={"password"} onChange={this.handleChange} required/>*/}
-            {/*{errors.password && <FormHelperText id="password-helper-text">{errors.password}</FormHelperText>}*/}
-          {/*</FormControl>*/}
 
           <br/>
           <Button variant="contained" color="primary" onClick={this.handleSubmit}>Sign in</Button>
