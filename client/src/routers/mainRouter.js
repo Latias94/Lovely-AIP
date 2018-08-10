@@ -1,9 +1,9 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Welcome from '../welcomePage';
-import Register from '../registerPage';
-import Login from '../loginPage';
+import RegisterForm from '../registerPage';
+import LoginForm from '../loginForm';
 import BooksPage from '../booksPage';
 import Categories from '../allCategoriesPage';
 
