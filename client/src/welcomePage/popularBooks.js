@@ -9,7 +9,6 @@ const popularBooksComponent = props => (
 				<h3>{obj.title}</h3>
 				<hr/>
 				<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-					{console.log(obj.books.map(() => ('1')))}
 					{obj.books.map(smallobj => (
 						<Link to={`/book/${smallobj.bookid}`} key={smallobj._id} replace><div style={style.eachBook}>
 							<div style={{ backgroundColor: 'gray', height: '160px', width: '160px' }}></div>

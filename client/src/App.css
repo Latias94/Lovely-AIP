@@ -10,13 +10,14 @@
 }
 
 a {
-  text-decoration: none;
-  color:none;
+  text-decoration: none !important;
+  color:none !important;
 }
 a:visited{
-  color: none;
+  color: 'white' !important;
 }
 
 .router{
   height: auto;
 }
+
