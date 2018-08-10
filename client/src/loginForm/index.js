@@ -1,11 +1,47 @@
-import './loginForm.css';
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
 import Redirect from "react-router-dom/es/Redirect";
-const axios = require('axios');
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
 
-export default class LoginForm extends Component {
+const styles = theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+  },
+  underlineStyle: {
+    color: 'gray',
+    textDecoration: 'underline'
+  },
+  forgotPasswordStyle: {
+    color: 'gray',
+    textDecoration: 'underline'
+  },
+  buttonStyle: {
+    flex: 1,// extend as much as it can
+    alignSelf: 'stretch',
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#007aff',
+    marginLeft: 5,
+    marginRight: 5
+  },
+});
+
+class LoginForm extends Component {
 
   // init state
   state = {
@@ -15,11 +51,15 @@ export default class LoginForm extends Component {
     errors: {}
   }
 
+  handleChange = e => {
+    this.setState({ [e.target.id]: e.target.value });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     axios({
         method: 'post',
-      // TODO: URL need to be modified before deployment
+        // TODO: URL need to be modified before deployment
         url: 'http://localhost:5000/api/users/login',
         header: {
           'Access-Control-Allow-Origin': '*',
@@ -38,38 +78,49 @@ export default class LoginForm extends Component {
         axios.defaults.headers.common['Authorization'] = response.data.token;
         console.log(axios.defaults.headers.common['Authorization'])
       }
-    }).catch(error => {
-      for (const property in error.response.data) {
-        if (error.response.data.hasOwnProperty(property)) {
-          alert(error.response.data[property]);
+    }).catch(err => {
+      this.setState({
+        errors: err.response.data
+      })
+      // for (const property in error.response.data) {
+        // if (error.response.data.hasOwnProperty(property)) {
+          // alert(error.response.data[property]);
           // TODO: change the CSS of corresponding input box
           // console.log("property:",property);
           // console.log("value:",error.response.data[property]);
-        }
-      }});
+        // }
+      // }
+    });
   }
 
   render() {
-    const {forgotPasswordStyle} = styles;
-    const { isLoggedIn, email, password } = this.state;
+    const { forgotPasswordStyle } = styles;
+    const { isLoggedIn, email, password, errors } = this.state;
+    const { classes } = this.props;
 
     if (!isLoggedIn) {
       return (
-        <div>
-          <form onSubmit={this.handleSubmit}>
-            <h1>Log in</h1>
-            <label className="input box">Email<input id={"email"} type="email" value={email} onChange={e => this.setState({
-              email: e.target.value
-            })} required/></label>
-            <br/>
-            <label className={"is-invalid"}>Password<input id={"password"} name={"password"} type="password" value={password} onChange={e => this.setState({
-              password: e.target.value
-            })} required/></label>
-            <br/>
-            <input type="submit" value="Sign in"/>
-          </form>
+        <div className={classes.container}>
+          <h1>Log in</h1>
+
+          <FormControl className={classes.formControl} error={errors.email} aria-describedby="email-helper-text">
+            <InputLabel htmlFor="email-helper">Email</InputLabel>
+            <Input id="email" value={email} type={"email"} onChange={this.handleChange} required/>
+            {errors.email && <FormHelperText id="email-helper-text">{errors.email}</FormHelperText>}
+          </FormControl>
+
           <br/>
-          <Button variant="contained" color="primary">Log in with your Google account</Button>
+
+          <FormControl className={classes.formControl} error={errors.password} aria-describedby="password-helper-text">
+            <InputLabel htmlFor="password-helper">Password</InputLabel>
+            <Input id="password" value={password} type={"password"} onChange={this.handleChange} required/>
+            {errors.password && <FormHelperText id="password-helper-text">{errors.password}</FormHelperText>}
+          </FormControl>
+
+          <br/>
+          <Button variant="contained" color="primary" onClick={this.handleSubmit}>Sign in</Button>
+          <br/>
+          <Button variant="contained">Log in with your Google account</Button>
           <br/>
           <a href="/retrieve-password" style={forgotPasswordStyle}>Forgot password?</a>
         </div>
@@ -80,19 +131,8 @@ export default class LoginForm extends Component {
   }
 }
 
-const styles = {
-  forgotPasswordStyle: {
-    color: 'gray',
-    textDecoration: 'underline'
-  },
-  buttonStyle: {
-    flex: 1,// extend as much as it can
-    alignSelf: 'stretch',
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#007aff',
-    marginLeft: 5,
-    marginRight: 5
-  },
-}
+LoginForm.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(LoginForm);

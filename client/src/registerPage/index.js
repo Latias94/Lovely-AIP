@@ -45,7 +45,7 @@ class RegisterForm extends Component {
 
 
   handleSubmit = e => {
-    e.preventDefault() // prevent resetting the inputs
+    e.preventDefault(); // prevent resetting the inputs
     const { name, email, password } = this.state
 
     if (this.validate(this.state)) {
@@ -92,43 +92,43 @@ class RegisterForm extends Component {
       this.setState({
         errors: {
           email: 'Please fill in your email.'
-        }})
+        }});
       return false
     } else if(name.length === 0) {
       this.setState({
         errors: {
           name: 'Please fill in your name.'
-        }})
+        }});
       return false
     } else if (name.length < 2 || name.length > 30) {
       this.setState({
         errors: {
           name: 'Name must be between 2 and 30 characters.'
-        }})
+        }});
       return false
     } else if(password.length === 0) {
       this.setState({
         errors: {
           password: 'The password is required.'
-        }})
+        }});
       return false
     } else if(password.length < 6) {
       this.setState({
         errors: {
           password: 'Password must be at least 6 character.'
-        }})
+        }});
       return false
     } else if(password2.length === 0) {
       this.setState({
         errors: {
           password2: 'Please type your password again.'
-        }})
+        }});
       return false
     } else if(password !== password2) {
       this.setState({
         errors: {
           password: 'The two passwords don\'t match.'
-        }})
+        }});
       return false
     } else {
       return true
@@ -148,25 +148,25 @@ class RegisterForm extends Component {
 
         <FormControl className={classes.formControl} error={errors.email} aria-describedby="email-helper-text">
           <InputLabel htmlFor="email-helper">Email*</InputLabel>
-          <Input id="email" value={email} type={"email"} onChange={this.handleChange} />
+          <Input id="email" value={email} type={"email"} onChange={this.handleChange} required/>
           {errors.email && <FormHelperText id="email-helper-text">{errors.email}</FormHelperText>}
         </FormControl>
 
         <FormControl className={classes.formControl} error={errors.name} aria-describedby="name-helper-text">
           <InputLabel htmlFor="name-helper">Name*</InputLabel>
-          <Input id="name" value={name} onChange={this.handleChange} />
+          <Input id="name" value={name} onChange={this.handleChange} required/>
           {errors.name && <FormHelperText id="name-helper-text">{errors.name}</FormHelperText>}
         </FormControl>
 
         <FormControl className={classes.formControl} error={errors.password} aria-describedby="password-helper-text">
           <InputLabel htmlFor="password-helper">Password</InputLabel>
-          <Input id="password" value={password} type={"password"} onChange={this.handleChange} />
+          <Input id="password" value={password} type={"password"} onChange={this.handleChange} required/>
           {errors.password && <FormHelperText id="password-helper-text">{errors.password}</FormHelperText>}
         </FormControl>
 
         <FormControl className={classes.formControl} error={errors.password2} aria-describedby="password2-helper-text">
           <InputLabel htmlFor="password2-helper">Confirm your password</InputLabel>
-          <Input id="password2" value={password2} type={"password"} onChange={this.handleChange} />
+          <Input id="password2" value={password2} type={"password"} onChange={this.handleChange} required/>
           {errors.password2 && <FormHelperText id="password2-helper-text">{errors.password2}</FormHelperText>}
         </FormControl>
 
