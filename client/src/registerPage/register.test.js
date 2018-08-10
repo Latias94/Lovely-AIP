@@ -1,62 +1,35 @@
 const puppeteer = require('puppeteer');
 import { mount } from 'enzyme';
 
-let browser;
-let page;
-
-describe('LoginPage', () => {
-	beforeAll(async () => {
-		browser = await puppeteer.launch({
-			headless: false,
-			slowMo: 30,
-		});
-		page = await browser.newPage();
-	}); // timeout , async () => ( ,60e3)
-
-	afterAll(() => browser.close());
-
-	beforeEach(() => page.goto('http://localhost:3000/register')); // start with fresh page between test, don't keep implicit page state dependency
-
-	it('should display login page', async () => {
-		// const text = await page.evaluate(() => document.body.innerText);
-		// expect(text).toContain('name');
-		expect(true).toBe(true);
-		// done(); // here
-	});
-
-	it('should show error message if email is not correct', async () => {
-		await page.type('#email', 'user');
-		await page.type('#password', 'pass');
-		await page.click('Button[id=submit]');
-
-		try { // you need to try catch the error with async await
-			await page.evaluate(
-				() => document.getElementsByClassName('ui negative message container')[0], // no need for async
-			);
-		} catch (errorMessage) {
-			console.log('errorMessage', errorMessage);
-		}
-
-		expect(true).toBe(true);
-	});
-});
-
-
 describe('Test validation of sign up =', () => {
-  // afterAll(() => browser.close());
-  it('Length of password > 5', async () => {
+	test('Length of password > 5', async () => {
+    beforeEach(function() {
+      originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+    });
+
+    afterEach(function() {
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    });
 
 		const browser = await puppeteer.launch({
 			headless: false
 		});
 		const page = await browser.newPage();
 		await page.setViewport({ width: 1280, height: 800 });
-		await page.goto('localhost:3000/register', { waitUntil: 'networkidle0' });
-		await page.type('#email', 'test@mail.com');
-		await page.type('#name', 'username');
-		await page.type('#password', 'short');
-		await page.type('#password2', 'short');
-		await page.click('Button[id="submit"]');
+		await page.goto('localhost:3000/register', { waitUntil: 'networkidle2' });
+		await page.waitFor(2000);
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+    // await page.focus('#username');
+		await page.focus('input[name=email]');
+		// await page.type('test@mail.com');
+		// await page.focus('input[name="username"]');
+		await page.type('username');
+		await page.focus('input[name="password"]');
+		await page.type('short');
+		await page.focus('input[name="password2"]');
+		await page.type('short');
+		await page.click('input[type="submit"]');
 
 		const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
 		expect(errorMsg).toBe('Password must be at least 6 character.');

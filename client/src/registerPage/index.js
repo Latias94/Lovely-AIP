@@ -159,10 +159,10 @@ class RegisterForm extends Component {
           <FormControl className={classes.formControl} error={errors.password2} aria-describedby="password2-helper-text">
             <InputLabel htmlFor="password2-helper">Confirm your password</InputLabel>
             <Input id="password2" value={password2} type={"password"} onChange={this.handleChange} />
-            {errors.password2 && <FormHelperText id="password2-helper-text">{errors.password2}</FormHelperText>}
+            {errors.password2 && <FormHelperText id="password-helper-text">{errors.password2}</FormHelperText>}
           </FormControl>
 
-        <Button variant="contained" color="secondary" id={"submit"} onClick={this.handleSubmit}>Create a new account</Button>
+        <Button variant="contained" color="secondary" onClick={this.handleSubmit}>Create a new account</Button>
 <br/>
         <div>
           <Button variant="contained">Sign up with your Google account</Button>
