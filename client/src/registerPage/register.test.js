@@ -1,128 +1,67 @@
-// import React from 'react';
-// import Enzyme, { shallow } from 'enzyme';
-// import Adapter from 'enzyme-adapter-react-16';
-// import renderer from 'react-test-renderer';
-import RegisterForm from './index';
 const puppeteer = require('puppeteer');
 
-// let browser;
-// let page;
-//
-// describe('LoginPage', () => {
-// 	beforeAll(async () => {
-// 		browser = await puppeteer.launch({
-// 			headless: false,
-// 			slowMo: 30,
-// 		});
-// 		page = await browser.newPage();
-// 	}); // timeout , async () => ( ,60e3)
-//
-// 	afterAll(() => browser.close());
-//
-// 	beforeEach(() => page.goto('http://localhost:3000/register')); // start with fresh page between test, don't keep implicit page state dependency
-//
-// 	it('should display login page', async () => {
-// 		// const text = await page.evaluate(() => document.body.innerText);
-// 		// expect(text).toContain('name');
-// 		expect(true).toBe(true);
-// 		// done(); // here
-// 	});
-//
-// 	it('should show error message if email is not correct', async () => {
-// 		await page.type('#email', 'user');
-// 		await page.type('#password', 'pass');
-// 		await page.click('Button[id=submit]');
-//
-// 		try { // you need to try catch the error with async await
-// 			await page.evaluate(
-// 				() => document.getElementsByClassName('ui negative message container')[0], // no need for async
-// 			);
-// 		} catch (errorMessage) {
-// 			console.log('errorMessage', errorMessage);
-// 		}
-//
-// 		expect(true).toBe(true);
-// 	});
-// });
+let browser;
+let page;
 
-
-describe('Test validation of sign up =', () => {
-  // afterAll(() => browser.close());
-  it('Length of password > 5', async () => {
-    const browser = await puppeteer.launch({
+describe('Test sign up', () => {
+	beforeAll(async () => {
+    browser = await puppeteer.launch({
       headless: false,
     });
-    const page = await browser.newPage();
+    page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
-    await page.goto('localhost:3000/register', { waitUntil: 'networkidle0' });
-    await page.type('#email', 'test@mail.com');
-    await page.type('#name', 'username');
-    await page.type('#password', 'short');
-    await page.type('#password2', 'short');
-    await page.click('Button[id="submit"]');
+	});
 
-    const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
-    expect(errorMsg).toBe('Password must be at least 6 character.');
+	beforeEach(async () => {
+		await page.goto('localhost:3000/register', { waitUntil: 'networkidle0' });
+	}); // start with fresh page between test, don't keep implicit page state dependency
 
+	afterAll(async () => {
     await page.screenshot({
       path: `./__tests__/screenshots/register-${Date.now()}.png`,
       fullPage: true,
     });
-
-    await browser.close();
+    browser.close();
   });
 
-  it('account created', async () => {
-    const browser = await puppeteer.launch({
-      headless: false,
-    });
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1280, height: 800 });
-    await page.goto('localhost:3000/register', { waitUntil: 'networkidle0' });
-    let fakeEmail = Math.floor((Math.random() * 100) + 1).toString() + '@mail.com';
-    await page.type('#email', fakeEmail);
-    await page.type('#name', 'username');
-    await page.type('#password', 'short');
-    await page.type('#password2', 'short');
-    await page.click('Button[id="submit"]');
+	it('Validation: Length of password > 5 error hint', async () => {
+		await page.type('#email', 'test@mail.com');
+		await page.type('#name', 'username');
+		await page.type('#password', 'short');
+		await page.type('#password2', 'short');
+		await page.click('Button[id="submit"]');
 
-    const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
-    expect(errorMsg).toBe('Password must be at least 6 character.');
+		const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
+		expect(errorMsg).toBe('Password must be at least 6 character.');
+	});
 
-    await page.screenshot({
-      path: `./__tests__/screenshots/register-${Date.now()}.png`,
-      fullPage: true,
-    });
+	it('Validation: short name error hint', async () => {
+		await page.type('#email', 'test@mail.com');
+		await page.type('#name', 'o');
+		await page.type('#password', '12345678');
+		await page.type('#password2', '12345678');
+		await page.click('Button[id="submit"]');
 
-    await browser.close();
-  });
+		const errorMsg = await page.$eval('#name-helper-text', e => e.innerHTML);
+		expect(errorMsg).toContain('Name must be between 2 and 30 characters.');
+	});
 
+	it('Success: update the page after the account created', async () => {
+		const fakeEmail = `${Math.floor((Math.random() * 1000) + 1).toString()}@mail.com`;
+		await page.type('#email', fakeEmail);
+		await page.type('#name', 'username');
+		await page.type('#password', 'rightPassword');
+		await page.type('#password2', 'rightPassword');
+		await page.click('Button[id="submit"]');
+		await page.waitFor(1000);
+		const submitButton = await page.$('Button[id="submit"]');
+		expect(submitButton).toBe(null);
+	});
 
-  // it('renders correctly', () => {
-  //   const rendered = renderer.create(
-  //     <RegisterForm />
-  //   );
-  //   expect(rendered.toJSON()).toMatchSnapshot();
-  // });
-
-  // it('Button click calls onAdd', () => {
-  //   onAdd = jest.fn();
-  //   add = mount(<Add onAdd={onAdd} />);
-  //   const button = add.find('button').first();
-  //   const input = add.find('input').first();
-  //   input.simulate('change', { target: { value: 'Name 4' }});
-  //   button.simulate('click');
-  //   expect(onAdd).toBeCalledWith('Name 4');
-  // });
-
-  // it('Email is required', () => {
-  //   Enzyme.configure({ adapter: new Adapter() })
-  //   const wrapper = shallow(<RegisterForm />);
-  // 	const res = wrapper.validate({
-  // 		email: '',
-  // 	});
-  // 	expect(res).toBe(false);
-  // });
+	it('should display register page', async () => {
+		const text = await page.evaluate(() => document.body.innerText);
+		expect(text).toContain('Sign up');
+	});
 });
 
 

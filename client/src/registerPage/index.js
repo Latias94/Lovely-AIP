@@ -181,7 +181,7 @@ class RegisterForm extends Component {
         </div>
       </div>
     } else if(isSignedUp) {
-      return <div style={ containerLayout }><h1>Account created</h1></div>
+      return <div id={"success"} style={ containerLayout }><h1>Account created</h1></div>
     }
   }
 }
