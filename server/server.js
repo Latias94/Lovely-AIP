@@ -64,8 +64,9 @@ app.use(express.static('./public'));
 
 // cross origin
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  // BEFORE CHANGING, MAKE SURE THE ACCOUNT PAGE WORKS!!!
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
   next();
 });
 

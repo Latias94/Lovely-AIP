@@ -62,6 +62,7 @@ class BooksPage extends Component {
 				/>
 			);
 		}
+		return {};
 	}
 }
 
