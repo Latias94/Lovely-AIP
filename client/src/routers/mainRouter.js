@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
 import Welcome from '../welcomePage';
-import RegisterForm from '../registerPage';
-import LoginForm from '../loginForm';
+import RegisterForm from '../account/registerPage';
+import LoginForm from '../account/loginForm';
 import BooksPage from '../booksPage';
-import AccountPage from '../accountPage/AccountPage';
+import AccountPage from '../account/accountPage/AccountPage';
 import store from '../store';
 
 const MainRoute = () => (
