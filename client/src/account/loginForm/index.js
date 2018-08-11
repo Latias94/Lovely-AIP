@@ -50,19 +50,30 @@ class LoginForm extends Component {
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push('/welcome');
+      this.props.history.push('/');
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/welcome');
+      this.props.history.push('/');
     }
 
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
   }
+
+  // TODO: how to use this in getDerivedStateFromProps
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   if (nextProps.auth.isAuthenticated) {
+  //     props.history.push('/welcome');
+  //   }
+
+  //   if (nextProps.errors) {
+  //     return{ errors: nextProps.errors };
+  //   }
+  // }
 
   handleChange = e => {
     this.setState({ [e.target.id]: e.target.value });

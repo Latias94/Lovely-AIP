@@ -51,8 +51,6 @@ class RegisterForm extends Component {
     if (nextProps.errors) {
       return {
         errors: nextProps.errors,
-        // externalData: null,
-        // prevId: nextProps.id,
       };
     }}
 
