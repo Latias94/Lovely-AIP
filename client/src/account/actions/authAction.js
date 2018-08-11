@@ -33,10 +33,7 @@ export const loginUser = userData => (dispatch) => {
 			'Access-Control-Allow-Origin': '*',
 			'content-type': 'application/x-www-form-urlencoded',
 		},
-		data: {
-			email: this.state.email,
-			password: this.state.password,
-		},
+		data: userData,
 	}).then((res) => {
 		const { token } = res.data;
 		// Save to localStorage
