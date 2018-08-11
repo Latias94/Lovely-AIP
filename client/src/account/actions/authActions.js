@@ -9,10 +9,6 @@ export const registerUser = (userData, history) => (dispatch) => {
 		method: 'post',
 		// TODO: URL need to be modified before deployment
 		url: 'http://localhost:5000/api/users/register',
-		header: {
-			'Access-Control-Allow-Origin': '*',
-			'content-type': 'application/x-www-form-urlencoded',
-		},
 		data: userData,
 	})
 		.then(() => history.push('/login'))
@@ -28,10 +24,6 @@ export const loginUser = userData => (dispatch) => {
 		method: 'post',
 		// TODO: URL need to be modified before deployment
 		url: 'http://localhost:5000/api/users/login',
-		header: {
-			'Access-Control-Allow-Origin': '*',
-			'content-type': 'application/x-www-form-urlencoded',
-		},
 		data: userData,
 	}).then((res) => {
 		const { token } = res.data;

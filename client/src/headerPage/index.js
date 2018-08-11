@@ -10,6 +10,37 @@ import SearchInput from './searchIcon';
 import NavigationBar from './navigationBar';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { connect } from 'react-redux';
+import { loginUser, logoutUser } from '../account/actions/authActions';
+import { Link, Redirect } from 'react-router-dom';
+
+function MenuItems(props) {
+	const handleClose = props.closeHandle;
+	if (props.isAuthenticated) {
+		return (
+			<span>
+			{/* <MenuItem onClick={handleClose}><Redirect to={"/kk"}/>My account</MenuItem> */}
+			<MenuItem onClick={handleClose}><a href="/account">My account</a></MenuItem>
+
+			{/* <MenuItem onClick={handleClose}><Link to={"/cc"}>Log out</Link></MenuItem> */}
+			<MenuItem onClick={handleClose}>
+			<div onClick={props.logoutUser}>Log out</div>
+			</MenuItem>
+			</span>
+		);
+	} else {
+		return (
+			<span>
+			<MenuItem onClick={handleClose}>
+			<a href="/login">Sign in</a>
+			</MenuItem>
+			<MenuItem onClick={handleClose}>
+			<a href="/register">New here?</a>
+			</MenuItem>
+			</span>
+		);
+	}
+}
 
 class headerPageIndex extends Component {
 	constructor(props) {
@@ -76,7 +107,11 @@ class headerPageIndex extends Component {
 							<Icon icon={ic_search} size={24} style={{ marginBottom: '8px' }} />
 						</div>
 						<div style={rightIcon}>
-							<div style={avatarStyle} onClick={this.handleClick}><Icon icon={ic_account_circle} size={24} />
+							<div style={avatarStyle} 
+							onClick={this.handleClick}
+							// onMouseOver={this.handleClick}
+							// onMouseOut={this.handleClose}
+							><Icon icon={ic_account_circle} size={24} />
 							</div>
 							<Menu
           id="simple-menu"
@@ -84,8 +119,11 @@ class headerPageIndex extends Component {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          <MenuItem onClick={this.handleClose}>My account</MenuItem>
-          <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+<MenuItems 
+isAuthenticated={this.props.auth.isAuthenticated} 
+closeHandle={this.handleClose} 
+logoutUser={this.props.logoutUser}
+/>
         </Menu>
 							<Cart/>
 						</div>
@@ -97,4 +135,9 @@ class headerPageIndex extends Component {
 	}
 }
 
-export default headerPageIndex;
+const mapStateToProps = state => ({
+	auth: state.auth,
+  })
+
+export default connect(mapStateToProps, { loginUser, logoutUser })(headerPageIndex);
+
