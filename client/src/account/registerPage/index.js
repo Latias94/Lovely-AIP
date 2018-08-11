@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { registerUser } from "../actions/authAction";
 import { PropTypes } from "prop-types";
 import { withRouter } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button'
-import KFAccountInput from '../components/KFAccountInput'
+import Button from '@material-ui/core/Button';
+import KFAccountInput from '../components/KFAccountInput';
 
 const styles = theme => ({
   container: {
@@ -36,13 +37,24 @@ class RegisterForm extends Component {
     errors: {}
   };
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.errors) {
-      this.setState({
-        errors: nextProps.errors
-      })
-    }
-  }
+  // componentWillReceiveProps(nextPropss) {
+  //   console.log(nextPropss);
+  //   if(nextPropss.errors) {
+  //     this.setState({
+  //       errors: nextPropss.errors
+  //     })
+  //   }
+  // }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // Store prevId in state so we can compare when props change.
+    if (nextProps.errors) {
+      return {
+        errors: nextProps.errors,
+        // externalData: null,
+        // prevId: nextProps.id,
+      };
+    }}
 
   handleChange = e => {
     this.setState({ [e.target.id]: e.target.value });
@@ -51,7 +63,7 @@ class RegisterForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault(); // prevent resetting the inputs
-    const { name, email, password } = this.state
+    const { name, email, password } = this.state;
     const newUser = {
       name,
       email,
@@ -116,7 +128,7 @@ class RegisterForm extends Component {
   };
 
   render() {
-    const { containerLayout, underlineStyle } = styles;
+    const { underlineStyle } = styles;
     const { email, name, password, password2, errors } = this.state;
     const { classes } = this.props;
 
@@ -184,9 +196,9 @@ class RegisterForm extends Component {
 }
 
 RegisterForm.propTypes = {
-  registerUser: PropsTypes.func.isRequired,
-  auth: PropsTypes.object.isRequired,
-  errors: PropsTypes.object.isRequired,
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
 };
 
@@ -195,5 +207,7 @@ const mapStateToProps = (state) => ({
   errors: state.errors
 });
 
-export default withStyles(styles)(RegisterForm);
-export default connect(mapStateToProps, { registerUser })(withRouter(RegisterForm));
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps, { registerUser }),
+)(withRouter(RegisterForm));

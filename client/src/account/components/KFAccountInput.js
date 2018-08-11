@@ -9,7 +9,7 @@ export default function KFInput(props) {
 		className, error, id, value, name, type, onChange,
 	} = props;
 	return (
-		<FormControl className={className} error={error} aria-describedby={`${id}-helper-text`}>
+		<FormControl className={className} error={!!error} aria-describedby={`${id}-helper-text`}>
 			<InputLabel htmlFor={`${id}-helper`}>{name}</InputLabel>
 			<Input id={id} value={value} type={type} onChange={onChange}/>
 			{error && <FormHelperText id={`${id}-helper-text`}>{error}</FormHelperText>}
