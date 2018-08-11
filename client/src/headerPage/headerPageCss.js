@@ -67,12 +67,13 @@ export const rightIcon = {
 	float: 'right',
 };
 
-export const iconStyle = {
+export const avatarStyle = {
 	width: '48px',
 	height: '48px',
 	display: 'flex',
 	alignItems: 'left',
 	justifyContent: 'center',
+	cursor: 'pointer'
 };
 
 export const navSpan = {
