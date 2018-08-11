@@ -1,4 +1,9 @@
-import BooksPageReducer from './booksPage/booksPageReducer';
+// root reducer
+import { combineReducers } from 'redux';
+import authReducer from './account/reducers/authReducer';
+import errorReducer from './account/reducers/errorReducer';
 
-export default () => { };
-// export BooksPageReducer;
+export default combineReducers({
+	auth: authReducer,
+	errors: errorReducer,
+});

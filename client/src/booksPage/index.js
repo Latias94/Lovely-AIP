@@ -33,7 +33,6 @@ class BooksPage extends Component {
 				'content-type': 'application/x-www-form-urlencoded',
 			},
 		}).then((response) => {
-			// TODO: error hint
 			this.setState({ bookDetailInformation: response.data });
 		}).catch((error) => {
 			console.log(error);
@@ -43,22 +42,33 @@ class BooksPage extends Component {
 
 	render() {
 		const { booknumber, onbookNumberChange } = this.props;
+		const {
+			_id,
+			categoryName,
+			title,
+			authors,
+			reviews,
+			description,
+			price,
+			stock,
+		} = this.state.bookDetailInformation;
+
 		if (this.state.bookDetailInformation !== {}) {
 			return (
 				<ContentComponent
-					id={this.state.bookDetailInformation._id}
-					categaryName={this.state.bookDetailInformation.categoryName}
-					bookName={this.state.bookDetailInformation.title}
+					id={_id}
+					categaryName={categoryName}
+					bookName={title}
 					bookImagePath={'#'}
-					bookAuthor={this.state.bookDetailInformation.authors[0].name}
-					bookRate={this.state.bookDetailInformation.reviews[0].star}
-					bookReviews={this.state.bookDetailInformation.reviews.length}
-					description={this.state.bookDetailInformation.description}
-					bookPrice={this.state.bookDetailInformation.price}
+					bookAuthor={authors[0].name}
+					bookRate={reviews[0].star}
+					bookReviews={reviews.length}
+					description={description}
+					bookPrice={price}
 					bookSelectNumber={booknumber}
 					onbookNumberChange={onbookNumberChange}
-					stockNumber={this.state.bookDetailInformation.stock}
-					views={this.state.bookDetailInformation.reviews}
+					stockNumber={stock}
+					views={reviews}
 				/>
 			);
 		}

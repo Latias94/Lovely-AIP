@@ -5,11 +5,11 @@ let page;
 
 describe('Test sign up', () => {
 	beforeAll(async () => {
-    browser = await puppeteer.launch({
-      headless: false,
-    });
-    page = await browser.newPage();
-    await page.setViewport({ width: 1280, height: 800 });
+		browser = await puppeteer.launch({
+			headless: false,
+		});
+		page = await browser.newPage();
+		await page.setViewport({ width: 1280, height: 800 });
 	});
 
 	beforeEach(async () => {
@@ -17,12 +17,12 @@ describe('Test sign up', () => {
 	}); // start with fresh page between test, don't keep implicit page state dependency
 
 	afterAll(async () => {
-    await page.screenshot({
-      path: `./__tests__/screenshots/register-${Date.now()}.png`,
-      fullPage: true,
-    });
-    browser.close();
-  });
+		await page.screenshot({
+			path: `./__tests__/screenshots/register-${Date.now()}.png`,
+			fullPage: true,
+		});
+		browser.close();
+	});
 
 	it('Validation: Length of password > 5 error hint', async () => {
 		await page.type('#email', 'test@mail.com');
@@ -58,12 +58,44 @@ describe('Test sign up', () => {
 		expect(submitButton).toBe(null);
 	});
 
+	it('Email already exists', async () => {
+		await page.type('#email', 'sf4@sf.com');
+		await page.type('#name', 'username');
+		await page.type('#password', 'rightPassword');
+		await page.type('#password2', 'rightPassword');
+		await page.click('Button[id="submit"]');
+		await page.waitFor(1000);
+		const errorMsg = await page.$eval('#email-helper-text', e => e.innerHTML);
+		expect(errorMsg).toContain('already');
+	});
+
 	it('should display register page', async () => {
 		const text = await page.evaluate(() => document.body.innerText);
 		expect(text).toContain('Sign up');
 	});
 });
 
+// describe('manually check', function () {
+//   beforeAll(async () => {
+//     browser = await puppeteer.launch({
+//       headless: false,
+//     });
+//     page = await browser.newPage();
+//     await page.setViewport({ width: 1280, height: 800 });
+//   });
+//
+//   beforeEach(async () => {
+//     await page.goto('localhost:3000/register', { waitUntil: 'networkidle0' });
+//   });
+//
+// 	it('fill in blanks', async () => {
+//     await page.type('#email', 'sf4@sf.com');
+//     await page.type('#name', 'username');
+//     await page.type('#password', 'rightPassword');
+//     await page.type('#password2', 'rightPassword');
+//     await page.waitFor(100000);
+// 	})
+// });
 
 // "jest": {
 //   "collectCoverageFrom": [
