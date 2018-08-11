@@ -40,7 +40,7 @@ export const loginUser = userData => (dispatch) => {
 		localStorage.setItem('jwtToken', token);
 		// Set to axios header
 		setAuthToken(token);
-// TODO: email?
+		// TODO: email?
 		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));
 	})
@@ -55,3 +55,11 @@ export const setCurrentUser = decoded => ({
 	type: SET_CURRENT_USER,
 	payload: decoded,
 });
+
+export const logoutUser = () => (dispatch) => {
+	localStorage.removeItem('jwtToken');
+	// Remove auth header for future requests
+	setAuthToken(false);
+	// Set current user to {} which will set isAuthenticated to false
+	dispatch(setCurrentUser({}));
+};
