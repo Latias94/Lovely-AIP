@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from "axios";
 import './registerPage.css'
 
 import PropTypes from 'prop-types';
@@ -32,7 +31,7 @@ class RegisterForm extends Component {
     name: '',
     password: '',
     password2: '',
-    isSignedUp: false,
+    // isSignedUp: false,
     errors: {}
   };
 
@@ -44,40 +43,15 @@ class RegisterForm extends Component {
   handleSubmit = e => {
     e.preventDefault(); // prevent resetting the inputs
     const { name, email, password } = this.state
+    const userData = {
+      name,
+      email,
+      password
+    }
 
     if (this.validate(this.state)) {
-      axios({
-        method: 'post',
-        // TODO: URL need to be modified before deployment
-        url: 'http://localhost:5000/api/users/register',
-        header: {
-          'Access-Control-Allow-Origin': '*',
-          'content-type': 'application/x-www-form-urlencoded',
-        },
-        data: {
-          name,
-          email,
-          password,
-        }
-      })
-        .then(response => {
-          if(response.status === 200) {
-            this.setState({ isSignedUp: true })
-          }
-        }).catch(error => {
-          this.setState({
-            errors: error.response.data
-          })
-          // for (const property in error.response.data) {
-          //   if (error.response.data.hasOwnProperty(property)) {
-          //     alert(error.response.data[property]);
-          //     // TODO: change the CSS of corresponding input box
-          //     // console.log("property:",property);
-          //     // console.log("value:",error.response.data[property]);
-          //   }
-          // }
-        }
-      );
+ // axios
+      // registerUser (userData)
     }
   }
 
@@ -135,11 +109,11 @@ class RegisterForm extends Component {
 
   render() {
     const { containerLayout, underlineStyle } = styles;
-    const { email, name, password, password2, errors, isSignedUp } = this.state;
+    const { email, name, password, password2, errors } = this.state;
     const { classes } = this.props;
 
     // TODO: refactor to conditional rendering
-    if(!isSignedUp) {
+    // if(!isSignedUp) {
       return <div className={classes.container}>
         <h1>Sign up</h1>
         <div className={"Avatar"}>Avatar</div>
@@ -194,9 +168,10 @@ class RegisterForm extends Component {
           <a href="/login" style={underlineStyle}>Already signed up?</a>
         </div>
       </div>
-    } else if(isSignedUp) {
-      return <div id={"success"} style={ containerLayout }><h1>Account created</h1></div>
-    }
+    // }
+    // else if(isSignedUp) {
+    //   return <div id={"success"} style={ containerLayout }><h1>Account created</h1></div>
+    // }
   }
 }
 
