@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import './registerPage.css'
-
-import PropTypes from 'prop-types';
+import { connect } from "react-redux";
+import { registerUser } from "../actions/authAction";
+import { PropTypes } from "prop-types";
+import { withRouter } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
 import KFAccountInput from '../components/KFAccountInput'
@@ -35,6 +36,14 @@ class RegisterForm extends Component {
     errors: {}
   };
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.errors) {
+      this.setState({
+        errors: nextProps.errors
+      })
+    }
+  }
+
   handleChange = e => {
     this.setState({ [e.target.id]: e.target.value });
   };
@@ -43,17 +52,16 @@ class RegisterForm extends Component {
   handleSubmit = e => {
     e.preventDefault(); // prevent resetting the inputs
     const { name, email, password } = this.state
-    const userData = {
+    const newUser = {
       name,
       email,
       password
-    }
+    };
 
     if (this.validate(this.state)) {
- // axios
-      // registerUser (userData)
+      this.props.registerUser(newUser, this.props.history);
     }
-  }
+  };
 
   // TODO: move validation out, return errors not boolean.
 // TODO: implement better validation approach
@@ -176,7 +184,16 @@ class RegisterForm extends Component {
 }
 
 RegisterForm.propTypes = {
-  classes: PropTypes.object.isRequired,
+  registerUser: PropsTypes.func.isRequired,
+  auth: PropsTypes.object.isRequired,
+  errors: PropsTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
 export default withStyles(styles)(RegisterForm);
+export default connect(mapStateToProps, { registerUser })(withRouter(RegisterForm));
