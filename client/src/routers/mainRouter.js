@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
-import { jwt_decode as decoder } from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import Welcome from '../welcomePage';
 import RegisterForm from '../account/registerPage';
 import LoginForm from '../account/loginForm';
@@ -18,7 +18,7 @@ if (localStorage.jwtToken) {
 	// Set token header in axios
 	setAuthToken(localStorage.jwtToken);
 
-	const decoded = decoder(localStorage.jwtToken);
+	const decoded = jwt_decode(localStorage.jwtToken);
 	// install user
 	store.dispatch(setCurrentUser(decoded));
 
