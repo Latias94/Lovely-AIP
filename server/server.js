@@ -11,6 +11,8 @@ const cart = require('./routes/api/cart');
 const swaggerDefinition = require('./config/swagger');
 
 const app = express();
+// for compress http header
+require('./config/prod')(app);
 
 // options for the swagger docs
 const swaggerOptions = {

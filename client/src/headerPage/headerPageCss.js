@@ -17,24 +17,28 @@ export const containerDiv = {
 	flexDirection: 'column',
 	justifyContent: 'space-between',
 	alignItems: 'center',
-	height: '100%',
+	height: '60%',
 };
 
 export const navigation = {
 	width: '100%',
 	paddingLeft: '10%',
 	paddingRight: '10%',
-	height: '40%',
-	justifyContent: 'space-between',
-	paddingTop: '12px',
+	height: 'auto',
 	backgroundColor: '#585858',
-	display: 'flex',
+};
+
+export const navigationSub = {
+	width: '100%',
+	paddingLeft: '10%',
+	height: 'auto',
+	backgroundColor: '#585858',
 };
 
 export const logoPart = {
 	width: '100%',
 	padding: '1% 10% 1% 10% ',
-	height: '60%',
+	height: '100%',
 	display: 'flex',
 	flexDirection: 'row',
 	justifyContent: 'space-between',
@@ -44,7 +48,7 @@ export const logoPart = {
 };
 
 export const searchIcon = {
-	width: '160px',
+	width: '200px',
 	color: 'white',
 	height: '60px',
 	display: 'flex',

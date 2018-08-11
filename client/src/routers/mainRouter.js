@@ -7,6 +7,7 @@ import Welcome from '../welcomePage';
 import RegisterForm from '../account/registerPage';
 import LoginForm from '../account/loginForm';
 import BooksPage from '../booksPage';
+import Categories from '../allCategoriesPage';
 import AccountPage from '../account/accountPage/AccountPage';
 import store from '../store';
 import setAuthToken from '../account/utils/setAuthToken';
@@ -43,6 +44,7 @@ const MainRoute = () => (
 					<Route path="/login" component={LoginForm} />
 					<Route path={'/account'} component={AccountPage} />
 					<Route path="/book/:id" component={BooksPage}/>
+          <Route path="/categories" component={Categories} />
 				</Switch>
 			</Route>
 		</Router>
