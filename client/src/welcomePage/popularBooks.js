@@ -15,7 +15,7 @@ const popularBooksComponent = props => (
 							<span>Name</span>
 							<span>Author</span>
 							<span>Rank</span>
-							<span>Price</span>
+							<span>Awards</span>
 						</div></Link>
 					))}
 				</div>

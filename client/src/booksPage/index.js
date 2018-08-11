@@ -69,7 +69,7 @@ class BooksPage extends Component {
 
 function mapStateToProps(state) {
 	return {
-		booknumber: state.bookNumber,
+		booknumber: state.booksPageReducer.bookNumber,
 	};
 }
 

@@ -11,8 +11,8 @@ const MainRoute = () => (
 	<Route>
 		<Switch>
 			<Route exact path="/" component={Welcome} />
-			<Route path="/register" component={Register} />
-			<Route path="/login" component={Login} />
+			<Route path="/register" component={RegisterForm} />
+			<Route path="/login" component={LoginForm} />
 			<Route path="/book/:id" component={BooksPage} />
 			<Route path="/categories" component={Categories} />
 		</Switch>
