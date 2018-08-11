@@ -3,8 +3,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function KFInput(props) {
+export default function KFAccountInput(props) {
 	const {
 		className, error, id, value, name, type, onChange,
 	} = props;
@@ -17,4 +18,12 @@ export default function KFInput(props) {
 	);
 }
 
-// TODO: PropsType
+KFAccountInput.propTypes = {
+	className: PropTypes.object.isRequired,
+	error: PropTypes.object.isRequired,
+	id: PropTypes.string.isRequired,
+	value: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired,
+	type: PropTypes.string.isRequired,
+	onChange: PropTypes.func.isRequired,
+};
