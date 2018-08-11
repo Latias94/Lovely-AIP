@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { jwt_decode as decoder } from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -40,7 +40,7 @@ export const loginUser = userData => (dispatch) => {
 		// Set to axios header
 		setAuthToken(token);
 		// TODO: email?
-		const decoded = decoder(token);
+		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));
 	})
 		.catch(err => dispatch({
