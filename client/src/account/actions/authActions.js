@@ -1,5 +1,5 @@
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
+import { jwt_decode as decoder } from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -15,13 +15,12 @@ export const registerUser = (userData, history) => (dispatch) => {
 		},
 		data: userData,
 	})
-		.then(res => history.push('/login'))
+		.then(() => history.push('/login'))
 		.catch(err => dispatch({
 			type: GET_ERRORS,
 			payload: err.response.data,
 		}));
 };
-
 
 // Login and get the token
 export const loginUser = userData => (dispatch) => {
@@ -41,7 +40,7 @@ export const loginUser = userData => (dispatch) => {
 		// Set to axios header
 		setAuthToken(token);
 		// TODO: email?
-		const decoded = jwt_decode(token);
+		const decoded = decoder(token);
 		dispatch(setCurrentUser(decoded));
 	})
 		.catch(err => dispatch({
@@ -56,6 +55,7 @@ export const setCurrentUser = decoded => ({
 	payload: decoded,
 });
 
+// log out
 export const logoutUser = () => (dispatch) => {
 	localStorage.removeItem('jwtToken');
 	// Remove auth header for future requests
