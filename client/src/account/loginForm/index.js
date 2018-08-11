@@ -41,7 +41,7 @@ class LoginForm extends Component {
 
   // init state
   state = {
-    isLoggedIn : false,
+    // isLoggedIn : false,
     email: '',
     password: '',
     errors: {}
@@ -53,40 +53,7 @@ class LoginForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    axios({
-        method: 'post',
-        // TODO: URL need to be modified before deployment
-        url: 'http://localhost:5000/api/users/login',
-        header: {
-          'Access-Control-Allow-Origin': '*',
-          'content-type': 'application/x-www-form-urlencoded',
-        },
-        data: {
-          email: this.state.email,
-          password: this.state.password,
-        }
-      }
-    ).then(response => {
-      // TODO: error hint
-      // console.log(response.data)
-      if(response.status = 200) {
-        this.setState({ isLoggedIn : true })
-        axios.defaults.headers.common['Authorization'] = response.data.token;
-        console.log(axios.defaults.headers.common['Authorization'])
-      }
-    }).catch(err => {
-      this.setState({
-        errors: err.response.data
-      })
-      // for (const property in error.response.data) {
-        // if (error.response.data.hasOwnProperty(property)) {
-          // alert(error.response.data[property]);
-          // TODO: change the CSS of corresponding input box
-          // console.log("property:",property);
-          // console.log("value:",error.response.data[property]);
-        // }
-      // }
-    });
+ // TODO: add action
   }
 
   render() {
@@ -95,7 +62,7 @@ class LoginForm extends Component {
     const { classes } = this.props;
 
     // TODO: use conditional rendering
-    if (!isLoggedIn) {
+    // if (!isLoggedIn) {
       return (
         <div className={classes.container}>
           <h1>Log in</h1>
@@ -130,9 +97,9 @@ class LoginForm extends Component {
           <a href="/retrieve-password" style={forgotPasswordStyle}>Forgot password?</a>
         </div>
       )
-    } else if(this.state.isLoggedIn) {
-      return <Redirect to='/home' />
-    }
+    // } else if(this.state.isLoggedIn) {
+      // return <Redirect to='/home' />
+    // }
   }
 }
 

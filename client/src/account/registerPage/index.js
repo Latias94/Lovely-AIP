@@ -74,10 +74,9 @@ class RegisterForm extends Component {
       this.props.registerUser(newUser, this.props.history);
     }
   };
-
+  // TODO: !!!! validation action. State of error cannot be changed in the component.
   // TODO: move validation out, return errors not boolean.
 // TODO: implement better validation approach
-
   validate = (props) => {
     const { email, name, password, password2 } = props
     if(email.length === 0) {
