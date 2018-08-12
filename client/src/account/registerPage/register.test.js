@@ -32,7 +32,7 @@ describe('Test sign up', () => {
 		await page.click('Button[id="submit"]');
 
 		const errorMsg = await page.$eval('#password-helper-text', e => e.innerHTML);
-		expect(errorMsg).toBe('Password must be at least 6 character.');
+		expect(errorMsg).toBe('Password must be at least 8 character.');
 	});
 
 	it('Validation: short name error hint', async () => {
