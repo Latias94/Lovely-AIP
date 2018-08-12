@@ -84,9 +84,9 @@ class LoginForm extends Component {
     const userData = {
 			email: this.state.email,
 			password: this.state.password,
-		}
+		};
     this.props.loginUser(userData);
-  }
+  };
 
   render() {
     const { forgotPasswordStyle } = styles;
