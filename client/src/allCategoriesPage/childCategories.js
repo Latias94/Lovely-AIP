@@ -31,17 +31,27 @@ class childList extends React.Component {
     const { classes } = this.props;
 
       return (
-          <div>
-            <ListItem button onClick={this.handleClick}>
-                <ListItemText inset primary={this.props.categoriesName} />
-                {this.state.open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
+        <div>
+          {
+            this.props.subcategoriesName.length === 0 ?
+              (
+                <ListItem button onClick={this.handleClick}>
+                  <ListItemText style={{paddingLeft:'0px'}} inset primary={this.props.categoriesName} />
+                </ListItem>
+              ) : (
+                <ListItem button onClick={this.handleClick}>
+                  <ListItemText style={{paddingLeft:'0px'}} inset primary={this.props.categoriesName} />
+                  {this.state.open ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+              )
+          }
+            
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     {
                         this.props.subcategoriesName.map(
                             subitems => (
-                                <ListItem button>
+                                <ListItem key={subitems._id} button>
                                     <ListItemText inset primary={subitems.subname} />
                                 </ListItem>)
                         )

@@ -24,14 +24,14 @@ class NestedList extends React.Component {
 		const { classes } = this.props;
 
 		return (
-			<div className={classes.root}>
+			<div className={classes.root} style={{
+				borderRightStyle: 'solid', borderRightWidth: '2px', width: '20%', minWidth: '120px', height: '100%',
+			}}>
 				<List
 					component="nav"
-					subheader={<ListSubheader component="div">All Categories</ListSubheader>}
+					subheader={<ListSubheader style={{ top: 'auto', fontSize: 'large' }} component="div">All Categories</ListSubheader>}
 				>
-					<ListItem button>
-						<ListItemText inset primary="Sent mail" />
-					</ListItem>
+					<hr style={{ margin: '0' }} />
 					{
 						this.props.categoriesList.map(
 							item => (

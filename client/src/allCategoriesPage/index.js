@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import Axios from 'axios';
 import CategoriesBar from './categoriesBar';
+import showBooksinCategoryAction from './categoriesPageReducer';
+import Books from './booksInCategory';
 import * as style from './categoriesPageCss';
 
 
@@ -33,27 +35,35 @@ class allCategoriesPage extends Component {
 
 
 	render() {
+		const { bookCategory, onCategoryNumberChange } = this.props;
 		return (
-			<div style={style.categoriesContainer}><CategoriesBar categoriesList={this.state.allCategories} /></div>
+			<div style={style.categoriesContainer}>
+				<CategoriesBar
+					categoriesList={this.state.allCategories}
+					bookCategory= {bookCategory}
+					onCategoryNumberChange={onCategoryNumberChange}
+				/>
+				<Books/>
+			</div>
 		);
 	}
 }
 
-export default allCategoriesPage;
+// export default allCategoriesPage;
 
-// function mapStateToProps(state) {
-// 	return {
-// 		booknumber: state.bookNumber,
-// 	};
-// }
+function mapStateToProps(state) {
+	return {
+		bookCategory: state.categoryPageReducer.booksCategory,
+	};
+}
 
-// function mapDispatchToProps(dispatch) {
-// 	return {
-// 		onbookNumberChange: (number) => { dispatch(selectBookNumberAction(number)); },
-// 	};
-// }
+function mapDispatchToProps(dispatch) {
+	return {
+		onCategoryNumberChange: (number) => { dispatch(showBooksinCategoryAction(number)); },
+	};
+}
 
-// export default connect(
-// 	mapStateToProps,
-// 	mapDispatchToProps,
-// )(allCategoriesPage);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(allCategoriesPage);
