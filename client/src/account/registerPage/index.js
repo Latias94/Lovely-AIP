@@ -26,25 +26,14 @@ const styles = theme => ({
 });
 
 class RegisterForm extends Component {
-
   // init state
   state = {
     email: '',
     name: '',
     password: '',
     password2: '',
-    // isSignedUp: false,
     errors: {}
   };
-
-  // componentWillReceiveProps(nextPropss) {
-  //   console.log(nextPropss);
-  //   if(nextPropss.errors) {
-  //     this.setState({
-  //       errors: nextPropss.errors
-  //     })
-  //   }
-  // }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     // Store prevId in state so we can compare when props change.
@@ -58,71 +47,23 @@ class RegisterForm extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-
   handleSubmit = e => {
     e.preventDefault(); // prevent resetting the inputs
-    const { name, email, password } = this.state;
+    const { name, email, password, password2 } = this.state;
     const newUser = {
       name,
       email,
-      password
+      password,
+      password2
     };
 
-    if (this.validate(this.state)) {
+    // if (this.validate(this.state)) {
       this.props.registerUser(newUser, this.props.history);
-    }
+    // }
   };
   // TODO: !!!! validation action. State of error cannot be changed in the component.
   // TODO: move validation out, return errors not boolean.
 // TODO: implement better validation approach
-  validate = (props) => {
-    const { email, name, password, password2 } = props
-    if(email.length === 0) {
-      this.setState({
-        errors: {
-          email: 'Please fill in your email.'
-        }});
-      return false
-    } else if(name.length === 0) {
-      this.setState({
-        errors: {
-          name: 'Please fill in your name.'
-        }});
-      return false
-    } else if (name.length < 2 || name.length > 30) {
-      this.setState({
-        errors: {
-          name: 'Name must be between 2 and 30 characters.'
-        }});
-      return false
-    } else if(password.length === 0) {
-      this.setState({
-        errors: {
-          password: 'The password is required.'
-        }});
-      return false
-    } else if(password.length < 6) {
-      this.setState({
-        errors: {
-          password: 'Password must be at least 6 character.'
-        }});
-      return false
-    } else if(password2.length === 0) {
-      this.setState({
-        errors: {
-          password2: 'Please type your password again.'
-        }});
-      return false
-    } else if(password !== password2) {
-      this.setState({
-        errors: {
-          password: 'The two passwords don\'t match.'
-        }});
-      return false
-    } else {
-      return true
-    }
-  };
 
   render() {
     const { underlineStyle } = styles;
