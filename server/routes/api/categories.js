@@ -50,6 +50,7 @@ router.get('/', (req, res) => {
   const allCategories = [];
   let counter = 0;
   Category.find()
+    .sort({ name: 1 })
     .then((categories) => {
       categories.forEach((category) => {
         Book.find({ category: category._id })
