@@ -36,6 +36,33 @@ router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
  *   get:
  *     tags:
  *       - Category
+ *     summary: Get all categories
+ *     description: Get all categories
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get all categories successfully
+ *       404:
+ *         description: No categories found
+ */
+router.get('/', (req, res) => {
+  Category.find()
+    .sort({ name: 1 })
+    .then((categories) => {
+      return res.json(categories);
+    })
+    .catch(() => {
+      return res.status(404).json({ categorynotfound: 'No categories found' });
+    });
+});
+
+/**
+ * @swagger
+ * /api/categories/list:
+ *   get:
+ *     tags:
+ *       - Category
  *     summary: Get all categories with their books
  *     description: Get all categories with their books
  *     produces:
@@ -46,7 +73,7 @@ router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
  *       404:
  *         description: No categories found
  */
-router.get('/', (req, res) => {
+router.get('/list', (req, res) => {
   const allCategories = [];
   let counter = 0;
   Category.find()

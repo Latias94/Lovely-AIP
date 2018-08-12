@@ -1,6 +1,8 @@
 const { app } = require('../../../server');
 const request = require('supertest').agent(app.listen());
-const { getToken, supertestWithJest } = require('./helper');
+const { BAD_REQUEST } = require('http-status-codes');
+const { getToken, supertestWithJest } = require('../../../utils/testHelper');
+const expectError = require('../../../utils/expectError');
 
 describe('User Route testing', () => {
   test('GET /api/users/test Tests users route', (done) => {
@@ -27,22 +29,22 @@ describe('User Route testing', () => {
       });
   });
 
+  test('POST /api/users/login Should fail to login user without input', (done) => {
+    const response = request.post('/api/users/login');
+    expectError(response, done, BAD_REQUEST);
+  });
+
+
   test('POST /api/users/register Register user with duplicate email', (done) => {
-    request
+    const response = request
       .post('/api/users/register')
       .send({
         name: 'duplicate',
         email: 'test@test.com',
         password: '1234567',
         password2: '1234567',
-      })
-      .expect('Content-Type', /json/)
-      .expect(400)
-      .end((err, res) => {
-        supertestWithJest(err, res, done, () => {
-          expect(res.body.email).toBe('Email already exists');
-        });
       });
+    expectError(response, done, BAD_REQUEST);
   });
 
   test('GET /api/users/current Return current user', (done) => {

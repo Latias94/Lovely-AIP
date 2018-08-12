@@ -1,7 +1,6 @@
 const { app } = require('../../../server');
 const request = require('supertest').agent(app.listen());
-const { getToken, supertestWithJest } = require('./helper');
-
+const { getToken, supertestWithJest } = require('../../../utils/testHelper');
 
 describe('Category Route testing', () => {
   test('GET /api/categories/test Tests categories route', (done) => {
@@ -22,19 +21,25 @@ describe('Category Route testing', () => {
       .end(done);
   });
 
+  test('GET /api/categories Get all categories with their books', (done) => {
+    request
+      .get('/api/categories/list')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(done);
+  });
+
   test('POST /api/categories Create Test category', (done) => {
     getToken(true).then((token) => {
       request
         .post('/api/categories')
         .set('Authorization', token)
         .send('name=Test')
-        .send('description=Just for testing')
         .expect('Content-Type', /json/)
         .expect(200)
         .end((err, res) => {
           supertestWithJest(err, res, done, () => {
             expect(res.body.name).toBe('Test');
-            expect(res.body.description).toBe('Just for testing');
           });
         });
     });
@@ -67,38 +72,9 @@ describe('Category Route testing', () => {
           .end((error, response) => {
             supertestWithJest(error, response, done, () => {
               expect(response.body.name).toBe('Test');
-              expect(response.body.description).toBe('Just for testing');
             });
             return false;
           });
-      });
-  });
-
-  test('POST /api/categories/{test id} Edit Test category', (done) => {
-    // get Test category id by slug
-    request
-      .get('/api/categories/slug/test')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end((err, res) => {
-        getToken(true).then((token) => {
-          /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
-          // edit category
-          request
-            .post(`/api/categories/${res.body._id}`)
-            .set('Authorization', token)
-            .send('name=Test')
-            .send('description=After modified')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((error, response) => {
-              supertestWithJest(error, response, done, () => {
-                expect(response.body.name).toBe('Test');
-                expect(response.body.description).toBe('After modified');
-              });
-            });
-          return false;
-        });
       });
   });
 
@@ -110,7 +86,6 @@ describe('Category Route testing', () => {
       .expect(200)
       .end((err, res) => {
         getToken(true).then((token) => {
-          // edit category
           request
             .delete(`/api/categories/${res.body._id}`)
             .set('Authorization', token)

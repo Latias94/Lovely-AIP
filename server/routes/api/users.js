@@ -3,6 +3,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const nodemailer = require('nodemailer');
 const keys = require('../../config/keys');
 
 // Load Input Validation
@@ -11,8 +12,8 @@ const validationLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
 const BookList = require('../../models/BookList');
-const Book = require('../../models/Book');
-const Category = require('../../models/Category');
+
+const { mailOptions, transporter } = require('../../service/mail');
 
 const router = express.Router();
 
@@ -185,6 +186,7 @@ router.post('/login', (req, res) => {
             const payload = {
               id: user.id,
               name: user.name,
+              email: user.email,
               // avatar: user.avatar,
             }; // Create JWT payload
             // Sign Token
@@ -267,6 +269,21 @@ router.get('/current/like/booklist', passport.authenticate('jwt', {
     .catch(() => res.status(404).json({
       booklistnotfound: 'No booklists found',
     }));
+});
+
+router.post('/', passport.authenticate('jwt', {
+  session: false,
+}), (req, res) => {
+// send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(404).json(error);
+    }
+    console.log('Message sent: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    return res.json({ success: true });
+    // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
+  });
 });
 
 module.exports = router;
