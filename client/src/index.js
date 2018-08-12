@@ -3,16 +3,13 @@ import ReactDOM from 'react-dom';
 import jwt_decode from 'jwt-decode';
 import './index.css';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
 import { BrowserRouter } from 'react-router-dom';
 import { setCurrentUser, logoutUser } from './account/actions/authActions';
 import setAuthToken from './account/utils/setAuthToken';
-import reducer from './reducers';
 import App from './App';
+import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
-
-const store = createStore(reducer);
 
 // Check for token
 if (localStorage.jwtToken) {
