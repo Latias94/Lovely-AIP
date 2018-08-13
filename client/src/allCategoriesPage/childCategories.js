@@ -10,6 +10,7 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
+import { Link, Redirect } from 'react-router-dom';
 
 const styles = (theme) => ({
   root: {
@@ -21,10 +22,16 @@ const styles = (theme) => ({
 });
 
 class childList extends React.Component {
-  state = { open: false };
+  constructor(props) {
+    super(props);
+    this.state = { open: false };
+    // this.handleClick = this.handleClick.bind(this);
+  }
 
-  handleClick = () => {
+  handleClick = (name) => {
     this.setState(state => ({ open: !state.open }));
+    console.log(name)
+    this.props.updataCategory({ mainCategories: name, subCategories: '' });
   };
 
   render() {
@@ -32,26 +39,28 @@ class childList extends React.Component {
 
       return (
         <div>
-          {
-            this.props.subcategoriesName.length === 0 ?
-              (
-                <ListItem button onClick={this.handleClick}>
-                  <ListItemText style={{paddingLeft:'0px'}} inset primary={this.props.categoriesName} />
+          {this.props.subcategoriesName.length === 0 ? (
+            <ListItem button onClick={() => this.handleClick(this.props.categoriesName)} component={Link} to={`/categories/${this.props.categoryID}`}>
+              <ListItemText style={{ paddingLeft: '0px' }} inset primary={this.props.categoriesName} />
+            </ListItem>
+          ) : (
+              <ListItem button onClick={() => this.handleClick(this.props.categoriesName)}>
+                <ListItemText style={{paddingLeft:'0px'}} inset primary={this.props.categoriesName} />
+                {this.state.open ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-              ) : (
-                <ListItem button onClick={this.handleClick}>
-                  <ListItemText style={{paddingLeft:'0px'}} inset primary={this.props.categoriesName} />
-                  {this.state.open ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-              )
-          }
-            
+            )}            
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     {
                         this.props.subcategoriesName.map(
                             subitems => (
-                                <ListItem key={subitems._id} button>
+                              <ListItem
+                                key={subitems._id}
+                                button
+                                onClick={() => this.props.updataCategory({ mainCategories: this.props.categoriesName, subCategories: subitems.subname })}
+                                component={Link}
+                                to={`/categories/${subitems.subid}`}
+                              >
                                     <ListItemText inset primary={subitems.subname} />
                                 </ListItem>)
                         )
