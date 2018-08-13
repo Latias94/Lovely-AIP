@@ -35,6 +35,27 @@ router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
  *     description: Get all booklists
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: "page"
+ *         in: "query"
+ *         description: "the page you are query (powered by pageSize)"
+ *         required: true
+ *         type: "integer"
+ *       - name: "pageSize"
+ *         in: "query"
+ *         description: "How many booklists you want to show in one page"
+ *         required: true
+ *         type: "integer"
+ *       - name: "update"
+ *         in: "query"
+ *         description: "Sort result by update date, 1 for oldest to newest, -1 for newest to oldest"
+ *         required: false
+ *         type: "integer"
+ *       - name: "title"
+ *         in: "query"
+ *         description: "Sort result by title, default = 1"
+ *         required: false
+ *         type: "integer"
  *     responses:
  *       200:
  *         description: Get all booklists successfully
@@ -43,7 +64,27 @@ router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
  */
 router.get('/', (req, res) => {
   const errors = {};
+
+  const page = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10);
+  // 1 for oldest to newest, -1 for newest to oldest
+  const sortByUpdate = parseInt(req.query.update, 10);
+  const sortByTitle = parseInt(req.query.title, 10);
+  const sortParams = {};
+  if (sortByUpdate) {
+    sortParams.updateDate = sortByUpdate;
+  }
+  if (sortByTitle) {
+    sortParams.title = sortByTitle;
+  } else {
+    sortParams.title = 1;
+  }
+  const interval = (page - 1) * pageSize;
+
   BookList.find()
+    .skip(interval)
+    .limit(pageSize)
+    .sort(sortParams)
     .then((bookLists) => {
       if (!bookLists) {
         errors.booklistnotfound = 'No bookLists found';

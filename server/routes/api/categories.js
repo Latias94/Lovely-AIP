@@ -112,6 +112,32 @@ router.get('/list', (req, res) => {
  *     description: Get category by slug. Example http://localhost:5000/api/categories/slug/game Any details please refer to https://github.com/talha-asad/mongoose-url-slugs
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: "slug"
+ *         in: "path"
+ *         description: "Slug of category that needs to be fetched"
+ *         required: true
+ *         type: "string"
+ *       - name: "page"
+ *         in: "query"
+ *         description: "the page you are query (powered by pageSize)"
+ *         required: true
+ *         type: "integer"
+ *       - name: "pageSize"
+ *         in: "query"
+ *         description: "How many books you want to show in one page"
+ *         required: true
+ *         type: "integer"
+ *       - name: "publish"
+ *         in: "query"
+ *         description: "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest"
+ *         required: false
+ *         type: "integer"
+ *       - name: "price"
+ *         in: "query"
+ *         description: "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest"
+ *         required: false
+ *         type: "integer"
  *     responses:
  *       200:
  *         description: Get category successfully
@@ -132,7 +158,25 @@ router.get('/slug/:slug', (req, res) => {
       categoryResult.slug = category.slug;
       categoryResult.name = category.name;
       categoryResult.subCategories = category.subCategories;
+
+      const page = parseInt(req.query.page, 10);
+      const pageSize = parseInt(req.query.pageSize, 10);
+      // 1 for oldest to newest, -1 for newest to oldest
+      const sortByPublish = parseInt(req.query.publish, 10);
+      // 1 for cheapest to most expensive
+      const sortByPrice = parseInt(req.query.price, 10);
+      const sortParams = {};
+      if (sortByPublish) {
+        sortParams.publishDate = sortByPublish;
+      }
+      if (sortByPrice) {
+        sortParams.price = sortByPrice;
+      }
+      const interval = (page - 1) * pageSize;
       Book.find({ category: category._id })
+        .skip(interval)
+        .limit(pageSize)
+        .sort(sortParams)
         .then((books) => {
           categoryResult.books = books;
           return res.json(categoryResult);
@@ -158,6 +202,26 @@ router.get('/slug/:slug', (req, res) => {
  *         description: "ID of category that needs to be fetched"
  *         required: true
  *         type: "string"
+ *       - name: "page"
+ *         in: "query"
+ *         description: "the page you are query (powered by pageSize)"
+ *         required: true
+ *         type: "integer"
+ *       - name: "pageSize"
+ *         in: "query"
+ *         description: "How many books you want to show in one page"
+ *         required: true
+ *         type: "integer"
+ *       - name: "publish"
+ *         in: "query"
+ *         description: "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest"
+ *         required: false
+ *         type: "integer"
+ *       - name: "price"
+ *         in: "query"
+ *         description: "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest"
+ *         required: false
+ *         type: "integer"
  *     responses:
  *       200:
  *         description: Get category successfully
@@ -179,7 +243,25 @@ router.get('/:id', (req, res) => {
       categoryResult.slug = category.slug;
       categoryResult.name = category.name;
       categoryResult.subCategories = category.subCategories;
+
+      const page = parseInt(req.query.page, 10);
+      const pageSize = parseInt(req.query.pageSize, 10);
+      // 1 for oldest to newest, -1 for newest to oldest
+      const sortByPublish = parseInt(req.query.publish, 10);
+      // 1 for cheapest to most expensive
+      const sortByPrice = parseInt(req.query.price, 10);
+      const sortParams = {};
+      if (sortByPublish) {
+        sortParams.publishDate = sortByPublish;
+      }
+      if (sortByPrice) {
+        sortParams.price = sortByPrice;
+      }
+      const interval = (page - 1) * pageSize;
       Book.find({ category: category._id })
+        .skip(interval)
+        .limit(pageSize)
+        .sort(sortParams)
         .then((books) => {
           categoryResult.books = books;
           return res.json(categoryResult);
