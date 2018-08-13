@@ -109,7 +109,9 @@ router.get('/list', (req, res) => {
     sortParams.price = sortByPrice;
   }
   const interval = (page - 1) * pageSize;
-  Book.find().skip(interval).limit(pageSize)
+  Book.find()
+    .skip(interval)
+    .limit(pageSize)
     .sort(sortParams)
     .then(books => res.json(books))
     .catch(() => res.status(404).json({
