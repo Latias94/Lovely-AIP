@@ -86,6 +86,7 @@ export default class booksPage extends Component {
 						item => (
 							<Book
 								key={item._id}
+								bookid={item._id}
 								bookTitle={item.title}
 								bookPrice={item.price}
 								bookAuthor={item.authors[0].name}

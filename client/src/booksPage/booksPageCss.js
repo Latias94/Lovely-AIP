@@ -6,9 +6,9 @@ export const container = {
 };
 
 export const bookImage = {
-	height: '100%',
-	width: '200px',
-	backgroundColor: 'gray',
+	// height: '100%',
+	minWidth: '260px',
+	// backgroundColor: 'gray',
 };
 
 export const mainView = {
@@ -28,7 +28,10 @@ export const bookInfo = {
 };
 
 export const rightPart = {
-
+	minWidth: '270px',
+	// display: 'flex',
+	// flexDirection: 'column',
+	// alignItems: 'center',
 };
 
 export const viewPersonalInfromation = {

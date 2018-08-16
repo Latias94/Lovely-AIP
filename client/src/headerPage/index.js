@@ -51,14 +51,6 @@ class headerPageIndex extends Component {
 		};
 	}
 
-	/*
-	有一种错觉，在componentWillMount请求的数据在render就能拿到，但其实render在willMount之后几乎是马上就被调用，根本等不到数据回来，同样需要render一次“加载中”的空数据状态，所以在didMount去取数据几乎不会产生影响。
-
-作者：翡翡
-链接：https://juejin.im/post/5aca20c96fb9a028d700e1ce
-来源：掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-	 */
 	componentDidMount() {
 		const requestURL = 'http://localhost:5000/api/categories';
 

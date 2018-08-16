@@ -14,11 +14,14 @@ class BooksPage extends Component {
 				categoryName: '',
 				title: '',
 				authors: [{ name: '' }],
-				reviews: [{ star: 0 }],
+				reviews: [],
 				description: '',
 				price: '',
 				stock: '',
 			},
+			submittedReviewStar: 0,
+			submittedReviewcontent: '',
+
 		};
 	}
 
@@ -39,6 +42,33 @@ class BooksPage extends Component {
 		});
 	}
 
+	reviewStarChange = (star) => {
+		this.setState({ submittedReviewStar: star });
+	}
+	
+	reviewContentChange = (content) => {
+		this.setState({ submittedReviewcontent: content });
+	}
+
+	submmitReview = (review) => {
+		const requestURL = `http://localhost:5000/api/books/review/${this.props.match.params.id}`;
+		Axios({
+			method: 'post',
+			url: requestURL,
+			header: {
+				'Access-Control-Allow-Origin': '*',
+				'content-type': 'application/x-www-form-urlencoded',
+			},
+			data: {
+				star:this.state.submittedReviewStar,
+				content:this.state.submittedReviewcontent,
+			}
+		}).then((response) => {
+			window.location.reload();
+		}).catch((error) => {
+			console.log(error);
+		});
+	}
 
 	render() {
 		const { booknumber, onbookNumberChange } = this.props;
@@ -61,7 +91,7 @@ class BooksPage extends Component {
 					bookName={title}
 					bookImagePath={'#'}
 					bookAuthor={authors[0].name}
-					bookRate={reviews[0].star}
+					// bookRate={reviews[0].star}
 					bookReviews={reviews.length}
 					description={description}
 					bookPrice={price}
@@ -69,12 +99,18 @@ class BooksPage extends Component {
 					onbookNumberChange={onbookNumberChange}
 					stockNumber={stock}
 					views={reviews}
+					submittedReviewStar={this.state.submittedReviewStar}
+					reviewStarChange={this.reviewStarChange}
+					submittedReviewcontent={this.state.submittedReviewcontent}
+					reviewContentChange={this.reviewContentChange}
+					submitClick={this.submmitReview}
 				/>
 			);
 		}
 		return {};
 	}
 }
+
 
 
 function mapStateToProps(state) {

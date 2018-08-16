@@ -2,6 +2,7 @@ export const background = {
 	backgroundColor: 'black',
 	width: '100%',
 	height: '170px',
+	marginTop: '30px',
 };
 
 export const iconLogo = {

@@ -478,7 +478,7 @@ router.post(
       .then((book) => {
         Review.findOne({ book: req.params.id })
           .then((review) => {
-            if (!review) {
+            if (true) {
               const newReview = new Review({
                 content: req.body.content,
                 star: req.body.star,
