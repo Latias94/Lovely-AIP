@@ -476,9 +476,9 @@ router.post(
 
     Book.findById(req.params.id)
       .then((book) => {
-        Review.findOne({ book: req.params.id })
+        Review.findOne({ book: req.params.id, user: req.user.id })
           .then((review) => {
-            if (true) {
+            if (!review) {
               const newReview = new Review({
                 content: req.body.content,
                 star: req.body.star,

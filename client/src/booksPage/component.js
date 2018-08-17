@@ -79,7 +79,7 @@ const booksPageComponent = props => (
 							<span>{item.username}</span>
 						</div>
 						<div style={style.viewPersonalInfromation}>
-							<Rate disabled value={item.star} />
+							<Rate disabled allowHalf={true} value={item.star} />
 							<span>{item.content}</span>
 						</div>
 						<div style={style.reviewContent}>
@@ -94,7 +94,7 @@ const booksPageComponent = props => (
 		<div>
 			<span style={{
 				fontSize: '20px', fontWeight: '400', color: 'black', marginRight: '10px',
-			}}>Rate:</span><Rate onChange={value => props.reviewStarChange(value)} value={props.submittedReviewStar} style={{ marginTop: '5px' }} />
+			}}>Rate:</span><Rate allowHalf={true} onChange={value => props.reviewStarChange(value)} value={props.submittedReviewStar} style={{ marginTop: '5px' }} />
 			<h5 style={{ margin: '0' }}>Content:</h5>
 			<div style={{
 				width: '90%', marginLeft: '5%',

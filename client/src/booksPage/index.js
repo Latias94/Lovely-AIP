@@ -64,9 +64,11 @@ class BooksPage extends Component {
 				content:this.state.submittedReviewcontent,
 			}
 		}).then((response) => {
+			alert('sdasdasd');
 			window.location.reload();
-		}).catch((error) => {
-			console.log(error);
+			}).catch((error) => {
+			if(error.response.status===404)
+			alert(error.response.data.reviewexist);
 		});
 	}
 
