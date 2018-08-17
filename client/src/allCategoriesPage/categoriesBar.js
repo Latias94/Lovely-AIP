@@ -36,9 +36,11 @@ class NestedList extends React.Component {
 						this.props.categoriesList.map(
 							item => (
 								<ChildCategories
-									key = {item._id}
+									key={item._id}
+									categoryID={item._id}
 									categoriesName={item.name}
 									subcategoriesName={item.subCategories}
+									updataCategory={this.props.onCategoryNumberChange}
 								/>
 							),
 						)

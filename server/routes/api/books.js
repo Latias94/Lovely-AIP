@@ -109,7 +109,9 @@ router.get('/list', (req, res) => {
     sortParams.price = sortByPrice;
   }
   const interval = (page - 1) * pageSize;
-  Book.find().skip(interval).limit(pageSize)
+  Book.find()
+    .skip(interval)
+    .limit(pageSize)
     .sort(sortParams)
     .then(books => res.json(books))
     .catch(() => res.status(404).json({
@@ -269,7 +271,6 @@ router.post(
     } else {
       authors.push({ name: req.body.authors });
     }
-    console.log(`authors: ${authors}`);
 
     if (req.body.category) {
       Category.findById(req.body.category)
@@ -322,7 +323,9 @@ router.post(
             return res.json(book);
           });
         })
-        .catch(err => res.status(404).json(err));
+        .catch(() => res.status(404).json({
+          categorynotfound: 'No categories found',
+        }));
     }
 
     return false;
@@ -473,7 +476,7 @@ router.post(
 
     Book.findById(req.params.id)
       .then((book) => {
-        Review.findOne({ book: req.params.id })
+        Review.findOne({ book: req.params.id, user: req.user.id })
           .then((review) => {
             if (!review) {
               const newReview = new Review({
@@ -688,6 +691,16 @@ router.post(
           }
         })
         .catch(() => res.status(404).json({ categorynotfound: 'No categories found' }));
+    } else {
+      Book.findByIdAndUpdate(
+        req.params.id,
+        bookFields,
+        { new: true },
+        (err, bookObject) => {
+          return err ? res.status(404).json({ booknotfound: 'No books found' })
+            : res.json(bookObject);
+        },
+      );
     }
   },
 );

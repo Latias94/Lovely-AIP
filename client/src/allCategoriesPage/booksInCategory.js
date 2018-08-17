@@ -1,77 +1,102 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import React, { Component } from 'react';
+import Axios from 'axios';
 import * as style from './categoriesPageCss';
+import Book from './aBook';
 
-const styles = {
-	card: {
-		maxWidth: 200,
-		width: 200,
-		height: 400,
-	},
-	media: {
-		height: 0,
-		paddingTop: '100%', // 1:1
-		backgroundSize: 'contain',
-	},
-};
 
-function SimpleMediaCard(props) {
-	const { classes } = props;
-	return (
-		<div style={style.booksContainer}>
-			<div style={style.breadcrumbTrail}>
-				<ul className="booksClassList" style={style.insideUl}>
-					<li>sdasd</li>
-					<li>›</li>
-					<li>asdasd</li>
-				</ul>
+export default class booksPage extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			categoryName: '',
+			subCategoryName: '',
+			books: { books: [] },
+			categoryID: '5b69933780422c14325872a7',
+		};
+		console.log('constructore');
+	}
+
+	// shouldComponentUpdate(nextState) {
+	// 	console.log('should');
+	// 	console.log(nextState);
+	// 	console.log(this.state.books);
+	// 	console.log('over');
+	// 	console.log(nextState.books !== this.state.books);
+	// 	return nextState.books !== this.state.books;
+	// }
+
+	componentDidMount() {
+		let requestURL = 'http://localhost:5000/api/categories/';
+		requestURL += '5b69933780422c14325872a7';
+		console.log('didamount');
+		Axios({
+			method: 'get',
+			url: requestURL,
+			header: {
+				'Access-Control-Allow-Origin': '*',
+				'content-type': 'application/x-www-form-urlencoded',
+			},
+		}).then((response) => {
+			// TODO: error hint
+			this.setState({ books: response.data });
+			console.log('didAnmount');
+		}).catch((error) => {
+			console.log(error);
+		});
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (!this.props.categoriesID) { console.log(this.props.categoriesID); return null; }
+		if (this.props.categoriesID !== prevProps.categoriesID) {
+			this.setState({ books: { books: [] }, categoryID: this.props.categoriesID });
+			let requestURL = 'http://localhost:5000/api/categories/';
+			requestURL += this.props.categoriesID;
+			console.log(requestURL);
+			Axios({
+				method: 'get',
+				url: requestURL,
+				header: {
+					'Access-Control-Allow-Origin': '*',
+					'content-type': 'application/x-www-form-urlencoded',
+				},
+			}).then((response) => {
+				console.log('didupdata'); this.setState({ books: response.data });
+			}).catch((error) => {
+				console.log(error);
+			});
+		}
+		return null;
+	}
+
+	render() {
+		return (
+			<div style={style.booksContainer}>
+				<div style={style.breadcrumbTrail}>
+					<ul className="booksClassList" style={style.insideUl}>
+						<li>{this.props.categoryName}</li>
+						{this.props.subCategoryName
+							? (<div style={{ display: 'inline' }}><li>›</li>
+								<li>{this.props.subCategoryName}</li></div>) : (null)
+						}
+					</ul>
+				</div>
+				<hr style={style.hrTag} />
+				<div style={style.bookRow}>
+					{this.state.books.books.map(
+						item => (
+							<Book
+								key={item._id}
+								bookid={item._id}
+								bookTitle={item.title}
+								bookPrice={item.price}
+								bookAuthor={item.authors[0].name}
+								bookReviews={item.reviews.length}
+							/>
+						),
+					)}
+				</div>
 			</div>
-			<hr style={style.hrTag} />
-			<div style={style.bookRow}>
-				<Card className={classes.card}>
-					<CardMedia
-						className={classes.media}
-						image="image/book01.jpg"
-						title="Contemplative Reptile"
-					/>
-					<CardContent>
-						<Typography gutterBottom variant="headline" component="span" noWrap={true} style={{ fontSize: '1.2rem', margin: '0' }}>
-                            Name
-						</Typography>
-						<Typography component="span" noWrap={true}>
-                            Author
-						</Typography>
-						<Typography component="span" noWrap={true}>
-                            Rank
-						</Typography>
-						<Typography component="span" noWrap={true}>
-                            Prize
-						</Typography>
-					</CardContent>
-					{/* <CardActions>
-						<Button size="small" color="primary">
-            Share
-						</Button>
-						<Button size="small" color="primary">
-            Learn More
-						</Button>
-					</CardActions> */}
-				</Card>
 
-			</div>
-		</div>
-	);
+		);
+	}
 }
-
-SimpleMediaCard.propTypes = {
-	classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(SimpleMediaCard);

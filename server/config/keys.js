@@ -5,4 +5,6 @@ module.exports = {
   testMongoURL: 'mongodb://lovely-aip:lovelyaip726@ds020208.mlab.com:20208/lovely-aip-test',
   // testMongoURL: 'mongodb://localhost:27017/aiptest',
   test_port: 5001,
+  email: 'xsrt7bfthwgtavkf@ethereal.email',
+  emailPwd: '8qJM9jVdDQjvbWXryY',
 };

@@ -19,5 +19,7 @@ module.exports = {
     "no-param-reassign": 0,
     "global-require": 0,
     "no-else-return": 0,
+    "import/order": 0,
+    "import/no-extraneous-dependencies": 0,
   }
 };

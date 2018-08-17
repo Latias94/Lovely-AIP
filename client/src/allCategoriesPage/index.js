@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Axios from 'axios';
 import CategoriesBar from './categoriesBar';
-import showBooksinCategoryAction from './categoriesPageReducer';
+import { showBooksinCategoryAction } from './actions';
 import Books from './booksInCategory';
 import * as style from './categoriesPageCss';
 
@@ -12,11 +13,14 @@ class allCategoriesPage extends Component {
 		super(props);
 		this.state = {
 			allCategories: [],
+			booksPageCategoryID: '',
 		};
 	}
 
+
 	componentDidMount() {
 		const requestURL = 'http://localhost:5000/api/categories';
+		console.log(this.props.match.params);
 
 		Axios({
 			method: 'get',
@@ -33,33 +37,44 @@ class allCategoriesPage extends Component {
 		});
 	}
 
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.match.params.categoryID !== prevState.booksPageCategoryID) {
+			return {
+				booksPageCategoryID: nextProps.match.params.categoryID,
+			};
+		}
+		return null;
+	}
+
 
 	render() {
-		const { bookCategory, onCategoryNumberChange } = this.props;
+		const { mainCategory, subCategory, onCategoryNumberChange } = this.props;
 		return (
 			<div style={style.categoriesContainer}>
 				<CategoriesBar
 					categoriesList={this.state.allCategories}
-					bookCategory= {bookCategory}
-					onCategoryNumberChange={onCategoryNumberChange}
+					onCategoryNumberChange={name => onCategoryNumberChange(name)}
 				/>
-				<Books/>
+				<Books
+					categoryName={mainCategory}
+					subCategoryName={subCategory}
+					categoriesID={this.state.booksPageCategoryID}
+				/>
 			</div>
 		);
 	}
 }
 
-// export default allCategoriesPage;
-
 function mapStateToProps(state) {
 	return {
-		bookCategory: state.categoryPageReducer.booksCategory,
+		mainCategory: state.categoryPageReducer.name.mainCategories,
+		subCategory: state.categoryPageReducer.name.subCategories,
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onCategoryNumberChange: (number) => { dispatch(showBooksinCategoryAction(number)); },
+		onCategoryNumberChange: (name) => { dispatch(showBooksinCategoryAction(name)); },
 	};
 }
 

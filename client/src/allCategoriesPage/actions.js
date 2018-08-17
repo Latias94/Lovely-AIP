@@ -1,1 +1,1 @@
-export const showBooksinCategoryAction = categoriesID => ({ type: 'SELECT_CATEGORY', booksCategory: categoriesID });
+export function showBooksinCategoryAction(str) { return { type: 'SELECT_CATEGORY', name: str }; }

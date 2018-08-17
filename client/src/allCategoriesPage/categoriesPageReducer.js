@@ -1,7 +1,15 @@
-export default (state = { booksCategory: '5b654b5b9147ad0de0336650' }, action) => {
+const defaultDate = {
+	// booksCategory: '5b69933780422c14325872a7',
+	mainCategories: 'Computers & Technology',
+	subCategories: 'Databases & Big Data',
+};
+
+export default (state = { name: defaultDate }, action) => {
 	switch (action.type) {
 	case 'SELECT_CATEGORY':
-		return { booksCategory: action.booksCategory };
+		return {
+			name: action.name,
+		};
 	default:
 		return state;
 	}
