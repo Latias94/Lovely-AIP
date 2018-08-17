@@ -19,24 +19,24 @@ function MenuItems(props) {
   if (props.isAuthenticated) {
     return (
       <span>
-			<MenuItem onClick={handleClose}>
-			<Link to="/account">My account</Link>
+			<MenuItem component={Link} to={"/account"} onClick={handleClose}>
+			My account
 			</MenuItem>
 
-			<MenuItem onClick={handleClose}>
-			<div onClick={props.logoutUser}>Log out</div>
+			<MenuItem onClick={props.logoutUser}>
+			<div onClick={handleClose}>Log out</div>
 			</MenuItem>
 			</span>
     );
   } else {
     return (
       <span>
-			<MenuItem onClick={handleClose}>
-			<Link to="/login">Sign in</Link>
-
+        <MenuItem component={Link} to="/login" onClick={handleClose} >
+          Login in
 			</MenuItem>
-			<MenuItem onClick={handleClose}>
-			<Link to="/register">New here?</Link>
+
+			<MenuItem component={Link} to={"/register"} onClick={handleClose}>
+			New here?
 			</MenuItem>
 			</span>
     );
@@ -52,14 +52,6 @@ class headerPageIndex extends Component {
     };
   }
 
-  /*
-  有一种错觉，在componentWillMount请求的数据在render就能拿到，但其实render在willMount之后几乎是马上就被调用，根本等不到数据回来，同样需要render一次“加载中”的空数据状态，所以在didMount去取数据几乎不会产生影响。
-
-作者：翡翡
-链接：https://juejin.im/post/5aca20c96fb9a028d700e1ce
-来源：掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-   */
   componentDidMount() {
     const requestURL = 'http://localhost:5000/api/categories';
 
