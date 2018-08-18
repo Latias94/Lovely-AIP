@@ -57,7 +57,10 @@ class childList extends React.Component {
                               <ListItem
                                 key={subitems._id}
                                 button
-                                onClick={() => this.props.updataCategory({ mainCategories: this.props.categoriesName, subCategories: subitems.subname })}
+                                onClick={() => {
+                                  this.props.updataCategory({ mainCategories: this.props.categoriesName, subCategories: subitems.subname })
+                                  console.log('click category child')
+                                }}
                                 component={Link}
                                 to={`/categories/${subitems.subid}`}
                               >
