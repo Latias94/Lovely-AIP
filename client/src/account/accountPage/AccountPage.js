@@ -17,7 +17,7 @@ const styles = {
   },
 };
 
-function ImageAvatars(props) {
+function ImageAvatars() {
   const classes = {
     row: {
       display: 'flex',
@@ -46,6 +46,10 @@ function ImageAvatars(props) {
     </div>
   );
 }
+
+ImageAvatars.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 function ShowAccountInfo(props) {
 	if (props.isRetrieved) {
@@ -94,7 +98,7 @@ class AccountPage extends React.Component {
 	render() {
 		// const {} = styles
 		const { isRetrieved, username, email } = this.state;
-
+		// style is diff from classNames
 		return <div style={styles.container}>
 			<h1>ACCOUNT INFO</h1>
 			<ShowAccountInfo isRetrieved={isRetrieved} username={username} email={email}/>

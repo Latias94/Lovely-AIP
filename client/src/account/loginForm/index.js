@@ -88,6 +88,10 @@ class LoginForm extends Component {
     this.props.loginUser(userData);
   };
 
+  handleEnter = e => {
+    if(e.keyCode===13) {this.handleSubmit()}
+  };
+
   render() {
     const { forgotPasswordStyle } = styles;
     const { email, password, errors } = this.state;
@@ -119,6 +123,7 @@ class LoginForm extends Component {
             value={password}
             type={"password"}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnter} // TODO: fail to set onkeydown
           />
 
           <br/>
