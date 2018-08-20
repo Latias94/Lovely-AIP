@@ -48,32 +48,29 @@ class headerPageIndex extends Component {
 		this.state = {
 			categories: [],
 			anchorEl: null,
+			cartNumber: 0,
 		};
 	}
 
+
 	componentDidMount() {
-		const requestURL = 'http://localhost:5000/api/categories';
+		const requestURL = `http://localhost:5000/api/cart`;
 
 		Axios({
 			method: 'get',
 			url: requestURL,
-			// TODO: this can be moved to axios global header
-			header: {
-				'Access-Control-Allow-Origin': '*',
-				'content-type': 'application/x-www-form-urlencoded',
-			},
 		}).then((response) => {
-			this.setState({ categories: response.data });
+			this.setState({ cartNumber: response.data.length });
 		}).catch((error) => {
 			console.log(error);
 		});
-	}
+	}	
 
 	handleClick = event => {
 		this.setState({ anchorEl: event.currentTarget });
 	  };
 	
-	  handleClose = () => {
+	handleClose = () => {
 		this.setState({ anchorEl: null });
 	  };
 
@@ -106,17 +103,17 @@ class headerPageIndex extends Component {
 							><Icon icon={ic_account_circle} size={24} />
 							</div>
 							<Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={this.handleClose}
-        >
-<MenuItems 
-isAuthenticated={this.props.auth.isAuthenticated} 
-closeHandle={this.handleClose} 
-logoutUser={this.props.logoutUser}
-/>
-        </Menu>
+								id="simple-menu"
+								anchorEl={anchorEl}
+								open={Boolean(anchorEl)}
+								onClose={this.handleClose}
+							>
+								<MenuItems 
+								isAuthenticated={this.props.auth.isAuthenticated} 
+								closeHandle={this.handleClose} 
+								logoutUser={this.props.logoutUser}
+								/>
+							</Menu>
 							<Cart/>
 						</div>
 					</div>

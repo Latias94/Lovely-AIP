@@ -73,7 +73,7 @@ class BooksPage extends Component {
 	}
 
 	render() {
-		const { booknumber, onbookNumberChange } = this.props;
+		const { booknumber, onbookNumberChange, auth } = this.props;
 		const {
 			_id,
 			categoryName,
@@ -106,6 +106,7 @@ class BooksPage extends Component {
 					submittedReviewcontent={this.state.submittedReviewcontent}
 					reviewContentChange={this.reviewContentChange}
 					submitClick={this.submmitReview}
+					authOrNot={auth}
 				/>
 			);
 		}
@@ -118,6 +119,7 @@ class BooksPage extends Component {
 function mapStateToProps(state) {
 	return {
 		booknumber: state.booksPageReducer.bookNumber,
+		auth: state.auth.isAuthenticated,
 	};
 }
 
