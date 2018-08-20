@@ -28,9 +28,15 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  hasConfirmEmail: {
+  active: {
     type: Boolean,
     default: false,
+  },
+  activeToken: {
+    type: String,
+  },
+  activeExpires: {
+    type: Date,
   },
   cart: [{
     bookid: {

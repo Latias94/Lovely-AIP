@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const mailer = require('./../../utils/mailer');
 const keys = require('../../config/keys');
 
 // Load Input Validation
@@ -12,8 +14,6 @@ const validationLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
 const BookList = require('../../models/BookList');
-
-const { mailOptions, transporter } = require('../../service/mail');
 
 const router = express.Router();
 
@@ -57,6 +57,14 @@ router.get('/test', (req, res) => res.json({
  *       password:
  *         type: string
  */
+/**
+ * @swagger
+ * definitions:
+ *   UserForActivate:
+ *     properties:
+ *       email:
+ *         type: string
+ */
 
 // https://swagger.io/docs/specification/2-0/authentication/api-keys/
 /**
@@ -76,7 +84,7 @@ router.get('/test', (req, res) => res.json({
  *     tags:
  *       - User
  *     summary: Register user
- *     description: Registers a new user with different email from database
+ *     description: Registers a new user with different email from database, and send email for activation.
  *     produces:
  *       - application/json
  *     parameters:
@@ -116,6 +124,22 @@ router.post('/register', (req, res) => {
       email: req.body.email,
       // avatar,
       password: req.body.password,
+      activeToken: '',
+      activeExpires: null,
+    });
+
+    crypto.randomBytes(20, (err, buf) => {
+      if (err) console.log(errors);
+      // unique token
+      newUser.activeToken = req.body.email + buf.toString('hex');
+      // expire time is one day
+      newUser.activeExpires = Date.now() + 24 * 3600 * 1000;
+      const link = `http://localhost:5000/api/users/active/${newUser.activeToken}`;
+      mailer({
+        to: req.body.email,
+        subject: 'Welcome to Knight Frank',
+        html: `<p>Please click <a href="${link}"> Here </a> to activate your account.</p>`,
+      });
     });
 
     bcrypt.genSalt(10, (err, salt) => {
@@ -133,6 +157,111 @@ router.post('/register', (req, res) => {
   return false;
 });
 
+/**
+ * @swagger
+ * /api/users/active/{active}:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Activate user account
+ *     description: Activate user account.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "active"
+ *         description: "user activate token"
+ *         in: path
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Successfully activate account
+ *       404:
+ *         description: The token is invalid. Please Re-activate your email.
+ */
+router.get('/active/:activeToken', (req, res) => {
+  User.findOne({
+    activeToken: req.params.activeToken,
+    activeExpires: { $gt: Date.now() },
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          activationfail: 'The token is invalid. Please Re-activate your email.',
+        });
+      }
+      user.active = true;
+      user.save()
+        .then(() => {
+          return res.json({ success: true });
+        })
+        .catch(err => res.status(404).json(err));
+      return false;
+    });
+});
+
+/**
+ * @swagger
+ * /api/users/active/:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: send activate email to user email
+ *     description: send activate email to user email
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         description: user email
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/UserForActivate'
+ *     responses:
+ *       200:
+ *         description: Successfully send activate email
+ *       404:
+ *         description: No user found Or Account has activated
+ */
+router.post('/active/', (req, res) => {
+  User.findOne({
+    email: req.body.email,
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          usernotfound: 'No user found',
+        });
+      }
+
+      if (user.active) {
+        return res.status(404).json({
+          isactive: 'Account has activated',
+        });
+      }
+      crypto.randomBytes(20, (err, buf) => {
+        // unique token
+        user.activeToken = user.email + buf.toString('hex');
+        // expire time is one day
+        user.activeExpires = Date.now() + 24 * 3600 * 1000;
+        const link = `http://localhost:5000/api/users/active/${user.activeToken}`;
+        mailer({
+          to: req.body.email,
+          subject: 'Welcome to Knight Frank',
+          html: `<p>Please click <a href="${link}"> Here </a> to activate your account.</p>`,
+        });
+      });
+      user.save()
+        .then(() => {
+          return res.json({
+            success: true,
+            activateToken: user.activeToken,
+          });
+        })
+        .catch(err => res.status(404).json(err));
+      return false;
+    });
+});
 
 /**
  * @swagger
@@ -156,6 +285,8 @@ router.post('/register', (req, res) => {
  *         description: Successfully login and return JWT Token
  *       400:
  *         description: Invalid username/password supplied
+ *       404:
+ *         description: Account is not activated
  */
 router.post('/login', (req, res) => {
   const {
@@ -182,6 +313,11 @@ router.post('/login', (req, res) => {
       bcrypt.compare(password, user.password)
         .then((isMatch) => {
           if (isMatch) {
+            if (!user.active) {
+              return res.status(404).json({
+                needactivate: 'Account is not activated',
+              });
+            }
             // User Matched
             const payload = {
               id: user.id,

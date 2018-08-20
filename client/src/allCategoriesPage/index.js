@@ -53,7 +53,10 @@ class allCategoriesPage extends Component {
 			<div style={style.categoriesContainer}>
 				<CategoriesBar
 					categoriesList={this.state.allCategories}
-					onCategoryNumberChange={name => onCategoryNumberChange(name)}
+					onCategoryNumberChange={name => {
+						console.log('categoriesList')
+						onCategoryNumberChange(name)
+					}}
 				/>
 				<Books
 					categoryName={mainCategory}
