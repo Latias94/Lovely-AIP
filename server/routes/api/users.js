@@ -179,7 +179,7 @@ router.post('/register', (req, res) => {
  *       404:
  *         description: The token is invalid. Please Re-activate your email.
  */
-router.post('/active/:activeToken', (req, res) => {
+router.get('/active/:activeToken', (req, res) => {
   User.findOne({
     activeToken: req.params.activeToken,
     activeExpires: { $gt: Date.now() },

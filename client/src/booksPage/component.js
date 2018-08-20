@@ -22,7 +22,13 @@ const menu = (
 		<Menu.Item key="3">3rd menu item</Menu.Item>
 	</Menu>
 );
-
+const dropdown = isLogin => (!isLogin ? (
+	<Menu>
+		<Menu.Item key="0">
+			<a href="#">You need to login</a>
+		</Menu.Item>
+	</Menu>) : menu
+);
 const booksPageComponent = props => (
 	<div style={style.container}>
 		<div>
@@ -54,7 +60,7 @@ const booksPageComponent = props => (
 					<span>Deliver to Australia</span>
 					<hr />
 					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }}> Add to Cart </Button>
-					<Dropdown overlay={menu} trigger={['click']} >
+					<Dropdown overlay={dropdown(props.authOrNot)} trigger={['click']} >
 						<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', marginTop: '15px' }}>
 							Add to your List<Icon type="down" />
 						</Button>
