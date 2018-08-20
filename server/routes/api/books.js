@@ -143,7 +143,20 @@ router.get('/list', (req, res) => {
  */
 router.get('/:id', (req, res) => {
   Book.findById(req.params.id)
-    .then(book => res.json(book))
+    .then((book) => {
+      Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
+        .then((category) => {
+          if (category) {
+            book = book.toObject();
+            book.parentCategory = category.name;
+            book.parentCategoryId = category._id;
+            return res.json(book);
+          } else {
+            return res.json(book);
+          }
+        })
+        .catch(err => console.log(err));
+    })
     .catch(() => res.status(404).json({
       booknotfound: 'No books found',
     }));

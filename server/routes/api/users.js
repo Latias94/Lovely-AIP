@@ -15,8 +15,6 @@ const validationLoginInput = require('../../validation/login');
 const User = require('../../models/User');
 const BookList = require('../../models/BookList');
 
-const { mailOptions, transporter } = require('../../service/mail');
-
 const router = express.Router();
 
 /**
