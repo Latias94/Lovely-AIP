@@ -8,6 +8,7 @@ import BooksPage from '../booksPage';
 import Categories from '../allCategoriesPage';
 import AccountPage from '../account/accountPage/AccountPage';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
+import Payment from '../payment'
 
 const MainRoute = () => (
 
@@ -19,6 +20,7 @@ const MainRoute = () => (
 			<Route path="/book/:id" component={BooksPage} />
 			<Route path="/categories/:categoryID?" component={Categories} />
 			<Route path={'/account'} component={AccountPage} />
+            <Route path={'/payment'} component={Payment} />
 		</Switch>
 	</Route>
 );
