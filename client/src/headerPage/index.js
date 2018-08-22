@@ -12,7 +12,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { connect } from 'react-redux';
 import { loginUser, logoutUser } from '../account/actions/authActions';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function MenuItems(props) {
   const handleClose = props.closeHandle;
@@ -49,22 +49,18 @@ class headerPageIndex extends Component {
     this.state = {
       categories: [],
       anchorEl: null,
+      cartNumber: 0,
     };
   }
 
   componentDidMount() {
-    const requestURL = 'http://localhost:5000/api/categories';
+    const requestURL = `http://localhost:5000/api/cart`;
 
     Axios({
       method: 'get',
       url: requestURL,
-      // TODO: this can be moved to axios global header
-      header: {
-        'Access-Control-Allow-Origin': '*',
-        'content-type': 'application/x-www-form-urlencoded',
-      },
     }).then((response) => {
-      this.setState({ categories: response.data });
+      this.setState({ cartNumber: response.data.length });
     }).catch((error) => {
       console.log(error);
     });
@@ -102,8 +98,6 @@ class headerPageIndex extends Component {
             <div style={rightIcon}>
               <div style={avatarStyle}
                    onClick={this.handleClick}
-								// onMouseOver={this.handleClick}
-								// onMouseOut={this.handleClose}
               ><Icon icon={ic_account_circle} size={24} />
               </div>
               <Menu
@@ -133,4 +127,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { loginUser, logoutUser })(headerPageIndex);
-
