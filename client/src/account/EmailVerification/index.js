@@ -12,7 +12,14 @@ function countDown() {
 	return '(60s)';
 }
 
+
 export default class EmailVerification extends Component {
+
+	sendActivationEmail = email => {
+alert("Sorry, this feature is under development.")
+		// TODO: api /active/
+	};
+
 	render() {
 		const { container } = styles;
 
@@ -24,7 +31,7 @@ export default class EmailVerification extends Component {
 					TODO: Gmail for now */}
 				<div style={{ padding: '20px' }} onClick={jumpToUsersMailbox}><Button variant="contained" color="secondary" >Go to your mail box</Button></div>
 				{/* TODO: */}
-				<Button variant="contained">Resend the verification email{countDown()}</Button>
+				<div onClick={this.sendActivationEmail}><Button variant="contained">Resend the verification email{countDown()}</Button></div>
 			</div>
 		);
 	}
