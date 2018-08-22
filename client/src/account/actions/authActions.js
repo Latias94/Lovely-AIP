@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
-import setAuthToken from '../utils/setAuthToken';
+import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
 
 // validation (temp)
 
@@ -79,7 +79,7 @@ export const registerUser = (userData, history) => (dispatch) => {
 			url: 'http://localhost:5000/api/users/register',
 			data: userData,
 		})
-			.then(() => history.push('/login'))
+			.then(() => history.push('/verify-email'))
 			.catch(err => dispatch({
 				type: GET_ERRORS,
 				payload: err.response.data,
@@ -99,7 +99,7 @@ export const loginUser = userData => (dispatch) => {
 		// Save to localStorage
 		localStorage.setItem('jwtToken', token);
 		// Set to axios header
-		setAuthToken(token);
+		setAuthTokenInHeader(token);
 		// TODO: email?
 		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));
@@ -119,8 +119,10 @@ export const setCurrentUser = decoded => ({
 // log out
 export const logoutUser = () => (dispatch) => {
 	localStorage.removeItem('jwtToken');
-	// Remove auth header for future requests
-	setAuthToken(false);
-	// Set current user to {} which will set isAuthenticated to false
+	// Remove auth header from global
+	setAuthTokenInHeader(false);
+	// Set current user to {} which will set isAuthenticated to false as well
 	dispatch(setCurrentUser({}));
+	// return to home page
+	window.open('/', '_self');
 };

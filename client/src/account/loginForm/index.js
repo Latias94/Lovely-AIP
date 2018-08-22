@@ -84,9 +84,13 @@ class LoginForm extends Component {
     const userData = {
 			email: this.state.email,
 			password: this.state.password,
-		}
+		};
     this.props.loginUser(userData);
-  }
+  };
+
+  handleEnter = e => {
+    if(e.keyCode===13) {this.handleSubmit()}
+  };
 
   render() {
     const { forgotPasswordStyle } = styles;
@@ -119,6 +123,7 @@ class LoginForm extends Component {
             value={password}
             type={"password"}
             onChange={this.handleChange}
+            onKeyDown={this.handleEnter} // TODO: fail to set onkeydown
           />
 
           <br/>
@@ -145,7 +150,7 @@ LoginForm.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors
-})
+});
 
 export default compose(
   withStyles(styles),
