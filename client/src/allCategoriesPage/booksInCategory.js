@@ -28,18 +28,14 @@ export default class booksPage extends Component {
 	componentDidMount() {
 		let requestURL = '/categories/';
 		requestURL += '5b69933780422c14325872a7';
-		console.log('didamount');
+		console.log('did amount');
 		Axios({
 			method: 'get',
 			url: requestURL,
-			header: {
-				'Access-Control-Allow-Origin': '*',
-				'content-type': 'application/x-www-form-urlencoded',
-			},
 		}).then((response) => {
 			// TODO: error hint
 			this.setState({ books: response.data });
-			console.log('didAnmount');
+			console.log('did amount');
 		}).catch((error) => {
 			console.log(error);
 		});
@@ -52,16 +48,11 @@ export default class booksPage extends Component {
 			let requestURL = '/categories/';
 			requestURL += this.props.categoriesID;
 			console.log(requestURL);
-			Axios({
-				method: 'get',
-				url: requestURL,
-				header: {
-					'Access-Control-Allow-Origin': '*',
-					'content-type': 'application/x-www-form-urlencoded',
-				},
-			}).then((response) => {
+			Axios.get(requestURL)
+        .then((response) => {
 				console.log('didupdata'); this.setState({ books: response.data });
-			}).catch((error) => {
+			})
+        .catch((error) => {
 				console.log(error);
 			});
 		}
