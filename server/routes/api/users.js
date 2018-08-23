@@ -244,7 +244,7 @@ router.post('/active/', (req, res) => {
         user.activeToken = user.email + buf.toString('hex');
         // expire time is one day
         user.activeExpires = Date.now() + 24 * 3600 * 1000;
-        const link = `http://localhost:5000/api/users/active/${user.activeToken}`;
+        const link = `http://localhost:3000/activate/${user.activeToken}`;
         mailer({
           to: req.body.email,
           subject: 'Welcome to Knight Frank',
@@ -254,8 +254,8 @@ router.post('/active/', (req, res) => {
       user.save()
         .then(() => {
           return res.json({
-            success: true,
-            activateToken: user.activeToken,
+            success: true
+            // activateToken: user.activeToken,
           });
         })
         .catch(err => res.status(404).json(err));

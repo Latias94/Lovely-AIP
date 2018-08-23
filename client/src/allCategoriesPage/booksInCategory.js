@@ -29,11 +29,8 @@ export default class booksPage extends Component {
 		let requestURL = '/categories/';
 		requestURL += '5b69933780422c14325872a7';
 		console.log('did amount');
-		Axios({
-			method: 'get',
-			url: requestURL,
-		}).then((response) => {
-			// TODO: error hint
+		Axios.get(requestURL)
+      .then((response) => {
 			this.setState({ books: response.data });
 			console.log('did amount');
 		}).catch((error) => {
