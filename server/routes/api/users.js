@@ -134,7 +134,8 @@ router.post('/register', (req, res) => {
       newUser.activeToken = req.body.email + buf.toString('hex');
       // expire time is one day
       newUser.activeExpires = Date.now() + 24 * 3600 * 1000;
-      const link = `http://localhost:5000/api/users/active/${newUser.activeToken}`;
+      // const link = `http://localhost:5000/api/users/active/${newUser.activeToken}`;
+      const link = `${keys.frontendHost}/activate/${newUser.activeToken}`;
       mailer({
         to: req.body.email,
         subject: 'Welcome to Knight Frank',
@@ -244,7 +245,7 @@ router.post('/active/', (req, res) => {
         user.activeToken = user.email + buf.toString('hex');
         // expire time is one day
         user.activeExpires = Date.now() + 24 * 3600 * 1000;
-        const link = `http://localhost:5000/api/users/active/${user.activeToken}`;
+        const link = `${keys.frontendHost}/activate/${user.activeToken}`;
         mailer({
           to: req.body.email,
           subject: 'Welcome to Knight Frank',
@@ -407,21 +408,6 @@ router.get('/current/like/booklist', passport.authenticate('jwt', {
     .catch(() => res.status(404).json({
       booklistnotfound: 'No booklists found',
     }));
-});
-
-router.post('/', passport.authenticate('jwt', {
-  session: false,
-}), (req, res) => {
-// send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return res.status(404).json(error);
-    }
-    console.log('Message sent: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    return res.json({ success: true });
-    // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
-  });
 });
 
 module.exports = router;
