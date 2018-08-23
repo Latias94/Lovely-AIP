@@ -5,9 +5,15 @@ import axios from 'axios';
 
 /**
  * Email verification page
+ * When the user click the activation link, the token will pass into this component.
+ * VerifyEmail will transfer the token to the back-end for checking.
+ * If success, the page will show a success message for 2s and direct to the login page.
+ * If failed, the page will show a failure message and go to the home page.
+ *
  * @todo use Button property for onClick
  * @todo countDown()
  * @todo jumpToUsersMailbox() should support various mailbox
+ * @author AnLuoRidge
  */
 
 class EmailVerification extends Component {

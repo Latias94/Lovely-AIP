@@ -255,7 +255,6 @@ router.post('/active/', (req, res) => {
         .then(() => {
           return res.json({
             success: true
-            // activateToken: user.activeToken,
           });
         })
         .catch(err => res.status(404).json(err));
@@ -314,9 +313,8 @@ router.post('/login', (req, res) => {
         .then((isMatch) => {
           if (isMatch) {
             if (!user.active) {
-              return res.status(404).json({
-                needactivate: 'Account is not activated',
-              });
+              errors.email = 'Account is not activated';
+              return res.status(404).json(errors);
             }
             // User Matched
             const payload = {
