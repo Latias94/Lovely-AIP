@@ -1,36 +1,49 @@
 import React from 'react';
 import axios from 'axios';
-import setAuthTokenInHeader from "./setAuthTokenInHeader";
-import jwt_decode from "jwt-decode";
-import {GET_ERRORS} from "../actions/types";
-import {setCurrentUser} from "../actions/authActions";
+import {styles} from '../AccountStyles'
 
+/**
+ * @test token = '2@test.com0c4628a8ae46efe765bcae01d370461457a5c73d';
+ */
 class VerifyEmail extends React.Component {
-	state = {
-		token: ''
-	}
+  state = {
+    status: ''
+  };
 
-	componentDidMount() {
-		this.setState({token:this.props.match.params.token});
-		setTimeout(3000);
-		verify();
-    window.open('/login', '_self');
-	}
+  verify = token => {
+    axios.get('/users/active/' + token)
+      .then(() => {
+        this.setState({status: "You have been successfully activated!"});
+        // back to login page
+        window.setTimeout(
+          () => {window.open('/login', '_self')},
+          1000);
+      })
+      .catch(() => {
+        this.setState({status: 'Oops! Your activation link is invalid.'});
+        // back to home page
+        window.setTimeout(() => {
+          window.open('/', '_self')},
+          3000);
+      });
+  };
 
-	render () {
-	  return <div></div>
+  componentDidMount() {
+    const token = this.props.match.params.token;
+    this.verify(token);
   }
-}
 
-function verify(token) {
-  axios({
-    method: 'post',
-    url: '/users/activate',
-    data: token,
-  }).then((res) => {
+  render() {
+    const {emailVerificationHint: hint, container} = styles;
 
-  })
-    .catch();
+    return (
+    <div style={container}>
+      <p style={hint}>
+        {this.state.status}
+      </p>
+    </div>
+    )
+  }
 }
 
 export default VerifyEmail;
