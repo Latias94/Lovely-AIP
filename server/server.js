@@ -81,7 +81,7 @@ app.use('/api/cart', cart);
 
 // change port according to node environment
 const port = process.env.NODE_ENV === 'test'
-  ? require('./config/keys').test_port
+  ? require('./config/keys').testPort
   : require('./config/keys').port;
 
 if (!module.parent) {
