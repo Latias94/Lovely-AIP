@@ -7,6 +7,7 @@ import LoginForm from '../account/loginForm';
 import BooksPage from '../booksPage';
 import Categories from '../allCategoriesPage';
 import AccountPage from '../account/accountPage/AccountPage';
+import EmailVerification from '../account/EmailVerification';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
 
 const MainRoute = () => (
@@ -19,6 +20,7 @@ const MainRoute = () => (
 			<Route path="/book/:id" component={BooksPage} />
 			<Route path="/categories/:categoryID?" component={Categories} />
 			<Route path={'/account'} component={AccountPage} />
+			<Route path={'/verify-email'} component={EmailVerification} />
 		</Switch>
 	</Route>
 );

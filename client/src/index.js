@@ -5,7 +5,7 @@ import './index.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { setCurrentUser, logoutUser } from './account/actions/authActions';
-import setAuthToken from './account/utils/setAuthToken';
+import setAuthTokenInHeader from './account/utils/setAuthTokenInHeader';
 import App from './App';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,7 +14,7 @@ import 'antd/dist/antd.css';
 // Check for token
 if (localStorage.jwtToken) {
 	// Set token header in axios
-	setAuthToken(localStorage.jwtToken);
+	setAuthTokenInHeader(localStorage.jwtToken);
 
 	const decoded = jwt_decode(localStorage.jwtToken);
 	// install user

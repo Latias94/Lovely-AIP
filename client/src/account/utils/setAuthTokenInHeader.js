@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const setAuthToken = (token) => {
+const setAuthTokenInHeader = (token) => {
 	axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 	if (token) {
@@ -12,4 +12,4 @@ const setAuthToken = (token) => {
 	}
 };
 
-export default setAuthToken;
+export default setAuthTokenInHeader;
