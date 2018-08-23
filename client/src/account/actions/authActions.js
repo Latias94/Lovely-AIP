@@ -76,7 +76,7 @@ export const registerUser = (userData, history) => (dispatch) => {
 		axios({
 			method: 'post',
 			// TODO: URL need to be modified before deployment
-			url: 'http://localhost:5000/api/users/register',
+			url: '/users/register',
 			data: userData,
 		})
 			.then(() => history.push('/verify-email'))
@@ -92,7 +92,7 @@ export const loginUser = userData => (dispatch) => {
 	axios({
 		method: 'post',
 		// TODO: URL need to be modified before deployment
-		url: 'http://localhost:5000/api/users/login',
+		url: '/users/login',
 		data: userData,
 	}).then((res) => {
 		const { token } = res.data;

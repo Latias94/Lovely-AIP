@@ -26,7 +26,7 @@ export default class booksPage extends Component {
 	// }
 
 	componentDidMount() {
-		let requestURL = 'http://localhost:5000/api/categories/';
+		let requestURL = '/categories/';
 		requestURL += '5b69933780422c14325872a7';
 		console.log('didamount');
 		Axios({
@@ -49,7 +49,7 @@ export default class booksPage extends Component {
 		if (!this.props.categoriesID) { console.log(this.props.categoriesID); return null; }
 		if (this.props.categoriesID !== prevProps.categoriesID) {
 			this.setState({ books: { books: [] }, categoryID: this.props.categoriesID });
-			let requestURL = 'http://localhost:5000/api/categories/';
+			let requestURL = '/categories/';
 			requestURL += this.props.categoriesID;
 			console.log(requestURL);
 			Axios({

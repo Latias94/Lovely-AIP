@@ -38,34 +38,31 @@ const styles = theme => ({
   },
 });
 
+/**
+ * Log in with email and password.
+ * Support ENTER key in password box.
+ */
 class LoginForm extends Component {
 
   // init state
   state = {
-    // isLoggedIn : false,
     email: '',
     password: '',
     errors: {}
   }
 
+  /**
+   if the user has already logged in, redirect to home page.
+   */
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       this.props.history.push('/');
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/');
-    }
-
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
-  }
-
-  // TODO: how to use this in getDerivedStateFromProps
-  // static getDerivedStateFromProps(nextProps, prevState) {
+  /**
+   *  @todo: how to use this in getDerivedStateFromProps
+   // static getDerivedStateFromProps(nextProps, prevState) {
   //   if (nextProps.auth.isAuthenticated) {
   //     props.history.push('/welcome');
   //   }
@@ -74,6 +71,18 @@ class LoginForm extends Component {
   //     return{ errors: nextProps.errors };
   //   }
   // }
+   * @param nextProps
+   * @param nextState
+   */
+  componentWillReceiveProps(nextProps, nextState) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push('/');
+    }
+
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
 
   handleChange = e => {
     this.setState({ [e.target.id]: e.target.value });
@@ -89,7 +98,7 @@ class LoginForm extends Component {
   };
 
   handleEnter = e => {
-    if(e.keyCode===13) {this.handleSubmit()}
+    if(e.keyCode===13) {this.handleSubmit(e)}
   };
 
   render() {
@@ -97,8 +106,6 @@ class LoginForm extends Component {
     const { email, password, errors } = this.state;
     const { classes } = this.props;
 
-    // TODO: use conditional rendering
-    // if (!isLoggedIn) {
       return (
         <div className={classes.container}>
           <h1>Log in</h1>
@@ -134,9 +141,6 @@ class LoginForm extends Component {
           <a href="/retrieve-password" style={forgotPasswordStyle}>Forgot password?</a>
         </div>
       )
-    // } else if(this.state.isLoggedIn) {
-      // return <Redirect to='/home' />
-    // }
   }
 }
 

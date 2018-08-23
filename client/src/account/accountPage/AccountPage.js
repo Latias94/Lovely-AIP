@@ -77,7 +77,7 @@ class AccountPage extends React.Component {
 
     componentDidMount() {
 		// TODO: GET IT FROM TOKEN!!!
-		const URL = 'http://localhost:5000/api/users/current';
+		const URL = '/users/current';
 		axios.get(URL, {})
 			.then(((response) => {
 				if (response.status === 200) {

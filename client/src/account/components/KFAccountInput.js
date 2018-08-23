@@ -12,7 +12,7 @@ export default function KFAccountInput(props) {
 	return (
 		<FormControl className={className} error={!!error} aria-describedby={`${id}-helper-text`}>
 			<InputLabel htmlFor={`${id}-helper`}>{name}</InputLabel>
-			<Input id={id} value={value} type={type} onChange={onChange} onkeydown={onKeyDown}/>
+			<Input id={id} value={value} type={type} onChange={onChange} onKeyDown={onKeyDown}/>
 			{error && <FormHelperText id={`${id}-helper-text`}>{error}</FormHelperText>}
 		</FormControl>
 	);
