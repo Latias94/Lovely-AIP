@@ -188,7 +188,7 @@ router.get('/active/:activeToken', (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).json({
-          activationail: 'The token is invalid. Please Re-activate your email.',
+          activationfail: 'The token is invalid. Please Re-activate your email.',
         });
       }
       user.active = true;

@@ -6,8 +6,8 @@ import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
 
 /**
  * @todo use Redux for the validation
- * @param User data
- * @returns boolean
+ * @param data - User data
+ * @returns boolean is validated
  */
 // validation (temp)
 
