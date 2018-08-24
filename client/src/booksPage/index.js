@@ -36,6 +36,7 @@ class BooksPage extends Component {
 				'content-type': 'application/x-www-form-urlencoded',
 			},
 		}).then((response) => {
+			console.log(response);
 			this.setState({ bookDetailInformation: response.data });
 		}).catch((error) => {
 			console.log(error);
