@@ -26,7 +26,7 @@ class BooksPage extends Component {
 	}
 
 	componentDidMount() {
-		const requestURL = `http://localhost:5000/api/books/${this.props.match.params.id}`;
+		const requestURL = `/books/${this.props.match.params.id}`;
 
 		Axios({
 			method: 'get',
@@ -52,7 +52,7 @@ class BooksPage extends Component {
 	}
 
 	submmitReview = (review) => {
-		const requestURL = `http://localhost:5000/api/books/review/${this.props.match.params.id}`;
+		const requestURL = `/books/review/${this.props.match.params.id}`;
 		Axios({
 			method: 'post',
 			url: requestURL,

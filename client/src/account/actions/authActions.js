@@ -3,6 +3,12 @@ import jwt_decode from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
 import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
 
+
+/**
+ * @todo use Redux for the validation
+ * @param data - User data
+ * @returns boolean is validated
+ */
 // validation (temp)
 
 const validate = data => (dispatch) => {
@@ -73,10 +79,10 @@ export const registerUser = (userData, history) => (dispatch) => {
 	const isValid = validate(userData)(dispatch);
 	if (isValid) {
 		delete userData.password2;
+		sessionStorage.setItem('unactivatedEmail', userData.email);
 		axios({
 			method: 'post',
-			// TODO: URL need to be modified before deployment
-			url: 'http://localhost:5000/api/users/register',
+			url: '/users/register',
 			data: userData,
 		})
 			.then(() => history.push('/verify-email'))
@@ -91,16 +97,14 @@ export const registerUser = (userData, history) => (dispatch) => {
 export const loginUser = userData => (dispatch) => {
 	axios({
 		method: 'post',
-		// TODO: URL need to be modified before deployment
-		url: 'http://localhost:5000/api/users/login',
+		url: '/users/login',
 		data: userData,
 	}).then((res) => {
 		const { token } = res.data;
 		// Save to localStorage
 		localStorage.setItem('jwtToken', token);
-		// Set to axios header
+		// Set to axios global header
 		setAuthTokenInHeader(token);
-		// TODO: email?
 		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));
 	})

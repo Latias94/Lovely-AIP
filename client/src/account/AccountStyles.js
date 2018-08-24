@@ -5,8 +5,12 @@ export const styles = {
 		flexWrap: 'wrap',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-    padding: '6% 30%',
+    padding: '6% 30%'
 	},
+	emailVerificationHint: {
+    padding: '10%',
+		fontSize: '25px'
+	}
 };
 
 // export const styles = theme => ({

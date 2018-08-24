@@ -1,0 +1,26 @@
+[
+  {
+    "name": "validate",
+    "filePath": "src/account/actions/authActions.js",
+    "lines": [
+      {
+        "lineNumber": 11,
+        "line": "// validation (temp)"
+      },
+      {
+        "lineNumber": 12,
+        "line": ""
+      },
+      {
+        "lineNumber": 13,
+        "line": "const validate = data => (dispatch) => {"
+      }
+    ],
+    "codeParams": [
+      "data"
+    ],
+    "docParams": [
+      "User"
+    ]
+  }
+]

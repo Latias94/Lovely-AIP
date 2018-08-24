@@ -1,0 +1,41 @@
+{
+  "source": "./src",
+  "destination": "./app-docs",
+  "includes": [
+    "\\.(js|jsx|vue)$"
+  ],
+  "excludes": [
+    "(bundle\\.js|export\\.js)$"
+  ],
+  "index": "./README.md",
+  "package": "./package.json",
+  "outputAST": true,
+  "plugins": [
+    { "name": "esdoc-standard-plugin",
+      "option": {
+        "manual": {
+          "index": "./manual/index.md",
+          "files": [
+            "./manual/directory.md"
+          ]
+        }
+      }
+    },
+    { "name": "esdoc-jsx-plugin", "option": { "enable": true } },
+    { "name": "esdoc-ecmascript-proposal-plugin", "option": { "all": true } },
+    { "name": "esdoc-react-plugin" },
+    {
+      "name": "esdoc-importpath-plugin",
+      "option": {
+        "stripPackageName": true,
+        "replaces": [
+          {"from": "^app/page/", "to": "page/"},
+          {"from": "^app/component/", "to": "component/"},
+          {"from": "^app/module/", "to": "module/"},
+          {"from": "^app/reactTools/", "to": "tools/"},
+          {"from": "^app/middlewares/", "to": "middlewares/"}
+        ]
+      }
+    }
+  ]
+}
