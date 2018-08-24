@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../">
+  <title data-ice="title">Manual | onlinecommerce</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container manual-root manual-index" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div class="manual-toc-root">
+  
+<div data-ice="manual">
+    <ul class="manual-toc">
+      
+    <li data-ice="manualNav" class="indent-h1" data-link="manual/directory.html"><a href="manual/directory.html" data-ice="link">&#x76EE;&#x5F55;&#x4ECB;&#x7ECD;</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/directory.html"><a href="manual/directory.html#app" data-ice="link">app</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/directory.html"><a href="manual/directory.html#awletdist" data-ice="link">awletdist</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/directory.html"><a href="manual/directory.html#esdocs" data-ice="link">esdocs</a></li>
+<li data-ice="manualNav" class="indent-h2" data-link="manual/directory.html"><a href="manual/directory.html#manual" data-ice="link">manual</a></li>
+</ul>
+  </div>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div class="github-markdown">
+  <div class="manual-user-index" data-ice="manualUserIndex"><h2 id="&#x5E38;&#x7528;&#x6807;&#x7B7E;">&#x5E38;&#x7528;&#x6807;&#x7B7E;</h2><h3 id="-public--&#x5BF9;&#x5916;&#x63A5;&#x53E3;&#xFF0C;&#x4E00;&#x822C;&#x53EF;&#x4EE5;&#x7701;&#x7565;">@public--&#x5BF9;&#x5916;&#x63A5;&#x53E3;&#xFF0C;&#x4E00;&#x822C;&#x53EF;&#x4EE5;&#x7701;&#x7565;</h3><h3 id="-private--&#x5185;&#x90E8;&#x63A5;&#x53E3;&#xFF0C;&#x4F7F;&#x7528;--quot---quot--&#x53EF;&#x4EE5;&#x7701;&#x7565;">@private--&#x5185;&#x90E8;&#x63A5;&#x53E3;&#xFF0C;&#x4F7F;&#x7528; &quot;_&quot; &#x53EF;&#x4EE5;&#x7701;&#x7565;</h3><h3 id="-protected--&#x53D7;&#x4FDD;&#x62A4;&#x63A5;&#x53E3;">@protected--&#x53D7;&#x4FDD;&#x62A4;&#x63A5;&#x53E3;</h3><pre><code><code class="source-code prettyprint">/**
+ * @public
+ */
+class MyClass {
+    /**
+     * @private
+     */
+    _method(){...}
+
+    /**
+     * @protected
+     */
+    add(){...}
+}</code>
+</code></pre><h3 id="-deprecated--&#x63A5;&#x53E3;&#x5E9F;&#x5F03;&#xFF0C;&#x4F1A;&#x663E;&#x793A;&#x5728;&#x6587;&#x6863;&#x4E2D;">@deprecated--&#x63A5;&#x53E3;&#x5E9F;&#x5F03;&#xFF0C;&#x4F1A;&#x663E;&#x793A;&#x5728;&#x6587;&#x6863;&#x4E2D;</h3><pre><code><code class="source-code prettyprint">/**
+ * @deprecated &#x4F7F;&#x7528; MyClassEx &#x66FF;&#x6362;
+ */
+class MyClass{...}</code>
+</code></pre><h3 id="-ignore--&#x5FFD;&#x7565;&#x63A5;&#x53E3;&#xFF0C;&#x4E0D;&#x4F1A;&#x663E;&#x793A;&#x5728;&#x6587;&#x6863;&#x4E2D;">@ignore--&#x5FFD;&#x7565;&#x63A5;&#x53E3;&#xFF0C;&#x4E0D;&#x4F1A;&#x663E;&#x793A;&#x5728;&#x6587;&#x6863;&#x4E2D;</h3><pre><code><code class="source-code prettyprint">/**
+ * @ignore
+ */
+class MyClass{...}</code>
+</code></pre><h3 id="-version--&#x6807;&#x6CE8;&#x7248;&#x672C;&#x53F7;">@version--&#x6807;&#x6CE8;&#x7248;&#x672C;&#x53F7;</h3><pre><code><code class="source-code prettyprint">/**
+ * @version 0.0.1
+ */
+class MyClass{...}</code>
+</code></pre><h3 id="-todo--&#x540E;&#x671F;&#x9700;&#x8981;&#x5B9E;&#x73B0;&#x529F;&#x80FD;">@todo--&#x540E;&#x671F;&#x9700;&#x8981;&#x5B9E;&#x73B0;&#x529F;&#x80FD;</h3><pre><code><code class="source-code prettyprint">/**
+ * @todo &#x652F;&#x6301;&#x4FEE;&#x6539;
+ */
+class MyClass{...}</code>
+</code></pre><h3 id="-extends--&#x7EE7;&#x627F;&#x81EA;&#xFF0C;&#x4E00;&#x822C;&#x80FD;&#x81EA;&#x52A8;&#x8BC6;&#x522B;">@extends--&#x7EE7;&#x627F;&#x81EA;&#xFF0C;&#x4E00;&#x822C;&#x80FD;&#x81EA;&#x52A8;&#x8BC6;&#x522B;</h3><pre><code><code class="source-code prettyprint">/**
+ * @extends {SuperClass1}
+ * @extends {SuperClass2}
+ */
+class MyClass extends mix(SuperClass1, SuperClass2) {...}</code>
+</code></pre><h3 id="-param--&#x53C2;&#x6570;&#xFF0C;&#x652F;&#x6301;&#x5BF9;&#x8C61;">@param--&#x53C2;&#x6570;&#xFF0C;&#x652F;&#x6301;&#x5BF9;&#x8C61;</h3><pre><code><code class="source-code prettyprint">class App extends MFEComponent {
+    /**
+     * &#x521D;&#x59CB;&#x5316;
+     * @param {Object} props - &#x4F20;&#x5165;&#x5BF9;&#x8C61;
+     * @param {Number} props.foo - &#x63CF;&#x8FF0;
+     * @param {String} props.bar - &#x63CF;&#x8FF0;
+     */
+    constructor(props){...}
+}</code>
+</code></pre><h3 id="-return--&#x8FD4;&#x56DE;&#x503C;&#xFF0C;&#x652F;&#x6301;&#x5BF9;&#x8C61;">@return--&#x8FD4;&#x56DE;&#x503C;&#xFF0C;&#x652F;&#x6301;&#x5BF9;&#x8C61;</h3><pre><code><code class="source-code prettyprint">class MyClass {
+    /**
+     * @return {Object} &#x63CF;&#x8FF0;
+     * @property {number} foo - &#x63CF;&#x8FF0;
+     * @property {number} bar - &#x63CF;&#x8FF0;
+     */
+    method(){...}
+}</code>
+</code></pre><h3 id="-type--&#x7C7B;&#x578B;&#x5B9A;&#x4E49;">@type--&#x7C7B;&#x578B;&#x5B9A;&#x4E49;</h3><pre><code><code class="source-code prettyprint">// &#x5355;&#x4E2A;&#x5C5E;&#x6027;
+class MyClass {
+    constructor() {
+        /** @type {number} */
+        this.p = 123;
+
+        /**
+         * @type {Object}
+         * @property {number} res.foo - &#x63CF;&#x8FF0;
+         * @property {string} res.bar - &#x63CF;&#x8FF0;
+         */
+        this.res = {foo: 123, bar: &quot;abc&quot;};
+    }
+}
+
+// get/set
+class MyClass {
+  /** @type {string} */
+  get value() {}
+
+  /** @type {string} */
+  set value(v){}
+}</code>
+</code></pre><h3 id="&#x7C7B;&#x578B;&#x8BED;&#x6CD5;">&#x7C7B;&#x578B;&#x8BED;&#x6CD5;</h3><p>&#x6570;&#x7EC4;</p>
+<pre><code><code class="source-code prettyprint">/**
+ * @param {number[]} param - &#x63CF;&#x8FF0;
+ */
+function myFunc(param){...}</code>
+</code></pre><p>&#x5E76;&#x5B58;&#x7C7B;&#x578B;</p>
+<pre><code><code class="source-code prettyprint">/**
+ * @param {number|string} param - &#x63CF;&#x8FF0;
+ */
+function myFunc(param){...}</code>
+</code></pre></div>
+
+  
+
+  <div class="manual-cards">
+    
+  <div class="manual-card-wrap" data-ice="cards">
+      <div class="manual-card">
+        <div data-ice="card"><h1>&#x76EE;&#x5F55;&#x4ECB;&#x7ECD;</h1><h2>app</h2><p>&#x5B58;&#x653E;&#x4EE3;&#x7801;</p><h2>awletdist</h2><p>&#x5B58;&#x653E;&#x6253;&#x5305;&#x540E;&#x4EE3;&#x7801;</p><h2>esdocs</h2><p>&#x5B58;&#x653E;&#x4EE3;&#x7801;&#x7ED3;&#x6784;&#x8BF4;&#x660E;</p><h2>manual</h2><p>&#x5B58;&#x653E;&#x4E1A;&#x52A1;&#x8BF4;&#x660E;</p></div>
+        <a data-ice="link" href="manual/directory.html"></a>
+      </div>
+    </div>
+</div>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

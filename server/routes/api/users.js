@@ -251,17 +251,14 @@ router.post('/active/', (req, res) => {
           subject: 'Welcome to Knight Frank',
           html: `<p>Please click <a href="${link}"> Here </a> to activate your account.</p>`,
         });
-
-        user.save()
-          .then(() => {
-            return res.json({
-              success: true,
-              activateToken: user.activeToken,
-            });
-          })
-          .catch(error => res.status(404).json(error));
       });
-
+      user.save()
+        .then(() => {
+          return res.json({
+            success: true
+          });
+        })
+        .catch(err => res.status(404).json(err));
       return false;
     });
 });
@@ -317,9 +314,8 @@ router.post('/login', (req, res) => {
         .then((isMatch) => {
           if (isMatch) {
             if (!user.active) {
-              return res.status(404).json({
-                needactivate: 'Account is not activated',
-              });
+              errors.email = 'Account is not activated';
+              return res.status(404).json(errors);
             }
             // User Matched
             const payload = {
