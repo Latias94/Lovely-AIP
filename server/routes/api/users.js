@@ -3,7 +3,6 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const mailer = require('./../../utils/mailer');
 const keys = require('../../config/keys');

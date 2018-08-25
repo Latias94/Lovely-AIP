@@ -350,10 +350,15 @@ router.post(
               Review.findOne({ user: req.user.id, book: req.params.book_id })
                 .then((review) => {
                   const bookFields = {};
+
+                  if (review) {
+                    bookFields.review = review._id.toString();
+                    bookFields.reviewContent = review.content;
+                  }
                   bookFields.bookid = req.params.book_id;
+                  bookFields.title = book.title;
                   bookFields.description = book.description;
-                  bookFields.review = review._id.toString();
-                  bookFields.reviewContent = review.content;
+
                   bookFields.score = book.score;
                   bookFields.coverUrl = book.coverUrl;
 
@@ -372,7 +377,7 @@ router.post(
                         : res.json(bookListObject);
                     }
                   );
-                }).catch(() => res.status(404).json({ reviewnotfound: 'No reviews found' }));
+                });
             }).catch(() => res.status(404).json({ booknotfound: 'No books found' }));
         } else {
           errors.booklistnotfound = 'No booklists found';
