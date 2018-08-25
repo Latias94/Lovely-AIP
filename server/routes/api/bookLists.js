@@ -224,7 +224,7 @@ router.post(
       return res.json(bookList);
     });
     return false;
-  },
+  }
 );
 
 /**
@@ -290,7 +290,7 @@ router.post(
             (err, bookListObject) => {
               return err ? res.status(404).json(err)
                 : res.json(bookListObject);
-            },
+            }
           );
         } else {
           errors.booklistnotfound = 'No booklists found';
@@ -299,7 +299,7 @@ router.post(
         return false;
       });
     return false;
-  },
+  }
 );
 
 /**
@@ -370,7 +370,7 @@ router.post(
                     (err, bookListObject) => {
                       return err ? res.status(404).json(err)
                         : res.json(bookListObject);
-                    },
+                    }
                   );
                 }).catch(() => res.status(404).json({ reviewnotfound: 'No reviews found' }));
             }).catch(() => res.status(404).json({ booknotfound: 'No books found' }));
@@ -381,7 +381,7 @@ router.post(
         return false;
       });
     return false;
-  },
+  }
 );
 
 /**
@@ -448,7 +448,7 @@ router.delete(
         return false;
       });
     return false;
-  },
+  }
 );
 
 /**
@@ -503,7 +503,7 @@ router.post(
       .catch(() => res.status(404).json({
         booklistnotfound: 'No booklists found',
       }));
-  },
+  }
 );
 
 /**
@@ -562,7 +562,7 @@ router.post(
       .catch(() => res.status(404).json({
         booklistnotfound: 'No booklists found',
       }));
-  },
+  }
 );
 
 
@@ -616,7 +616,7 @@ router.delete(
         });
         return false;
       });
-  },
+  }
 );
 
 module.exports = router;

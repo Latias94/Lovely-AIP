@@ -144,7 +144,7 @@ router.get('/list', (req, res) => {
 router.get('/:id', (req, res) => {
   Book.findById(req.params.id)
     .then((book) => {
-      Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
+      Category.findOne({subCategories: {$elemMatch: {subid: book.category._id}}})
         .then((category) => {
           if (category) {
             book = book.toObject();
@@ -185,7 +185,7 @@ router.get('/:id', (req, res) => {
  *         description: No books found
  */
 router.get('/isbn/:isbn', (req, res) => {
-  Book.findOne({ isbn: req.params.isbn })
+  Book.findOne({isbn: req.params.isbn})
     .then(book => res.json(book))
     .catch(() => res.status(404).json({
       booknotfound: 'No books found',
@@ -248,14 +248,12 @@ router.get('/isbn/:isbn', (req, res) => {
  *       404:
  *         description: Cannot create the Book with invalid category ID
  */
-router.post(
-  '/',
+router.post('/',
   passport.authenticate('jwt', {
     session: false,
-  }),
-  (req, res) => {
+  }), (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
+    User.findOne({user: req.user.id}).then((user) => {
       if (user) {
         if (!user.isStaff) {
           return res.status(401).json({
@@ -279,10 +277,10 @@ router.post(
     // if not an array, there should be a list of authors
     if (Array.isArray(req.body.authors)) {
       req.body.authors.forEach((author) => {
-        authors.unshift({ name: author });
+        authors.unshift({name: author});
       });
     } else {
-      authors.push({ name: req.body.authors });
+      authors.push({name: req.body.authors});
     }
 
     if (req.body.category) {
@@ -318,7 +316,7 @@ router.post(
         });
     } else {
       // create with no category
-      Category.findOne({ slug: 'empty' })
+      Category.findOne({slug: 'empty'})
         .then((emptyCategory) => {
           const newBook = new Book({
             category: emptyCategory._id,
@@ -342,8 +340,7 @@ router.post(
     }
 
     return false;
-  },
-);
+  });
 
 /**
  * @swagger
@@ -370,7 +367,7 @@ router.post(
 router.get('/slug/:slug', (req, res) => {
   const errors = {};
 
-  Book.findOne({ slug: req.params.slug })
+  Book.findOne({slug: req.params.slug})
     .then((book) => {
       if (!book) {
         errors.booknotfound = 'No books found';
@@ -405,12 +402,11 @@ router.get('/slug/:slug', (req, res) => {
  *       404:
  *         description: No books found
  */
-router.delete(
-  '/:id',
-  passport.authenticate('jwt', { session: false }),
+router.delete('/:id',
+  passport.authenticate('jwt', {session: false}),
   (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
+    User.findOne({user: req.user.id}).then((user) => {
       if (user) {
         if (!user.isStaff) {
           return res.status(401).json({
@@ -423,11 +419,10 @@ router.delete(
 
     Book.findByIdAndRemove(req.params.id, (err) => {
       return err
-        ? res.status(404).json({ booknotfound: 'No books found' })
-        : res.json({ success: true });
+        ? res.status(404).json({booknotfound: 'No books found'})
+        : res.json({success: true});
     });
-  },
-);
+  });
 
 
 /**
@@ -470,8 +465,7 @@ router.delete(
  *       404:
  *         description: No books found or Review has existed
  */
-router.post(
-  '/review/:id',
+router.post('/review/:id',
   passport.authenticate('jwt', {
     session: false,
   }),
@@ -489,7 +483,7 @@ router.post(
 
     Book.findById(req.params.id)
       .then((book) => {
-        Review.findOne({ book: req.params.id, user: req.user.id })
+        Review.findOne({book: req.params.id, user: req.user.id})
           .then((review) => {
             if (!review) {
               const newReview = new Review({
@@ -507,9 +501,19 @@ router.post(
                     user: req.user.id,
                     username: req.user.name,
                   };
-
                   // Add to reviews array
                   book.reviews.unshift(reviewOfBook);
+
+                  // calculate book score
+                  let totalScore = 0;
+                  book.reviews.map((re) => {
+                    totalScore += re.star;
+                    return null;
+                  });
+                  const bookScore = totalScore / book.reviews.length;
+                  book.toObject();
+                  book.score = bookScore.toFixed(2);
+
                   // Save
                   book.save().then(bookObject => res.json(bookObject));
                 })
@@ -525,8 +529,7 @@ router.post(
         booknotfound: 'No books found',
       }));
     return false;
-  },
-);
+  });
 
 /**
  * @swagger
@@ -555,8 +558,7 @@ router.post(
  *       404:
  *         description: No books found or review does not exist
  */
-router.delete(
-  '/review/:id/:review_id',
+router.delete('/review/:id/:review_id',
   passport.authenticate('jwt', {
     session: false,
   }),
@@ -566,7 +568,7 @@ router.delete(
         if (book) {
           Review.findByIdAndRemove(req.params.review_id, (err) => {
             if (err) {
-              return res.status(404).json({ reviewnotfound: 'No Reviews found' });
+              return res.status(404).json({reviewnotfound: 'No Reviews found'});
             } else {
               // delete review success
               // Check to see if review exists
@@ -586,7 +588,17 @@ router.delete(
               // Splice review out of array
               book.reviews.splice(removeIndex, 1);
 
-              book.save().then(() => res.json({ success: true }));
+              // calculate book score
+              let totalScore = 0;
+              book.reviews.map((re) => {
+                totalScore += re.star;
+                return null;
+              });
+              const bookScore = totalScore / book.reviews.length;
+              book.toObject();
+              book.score = bookScore.toFixed(2);
+
+              book.save().then(() => res.json({success: true}));
               return false;
             }
           });
@@ -600,8 +612,7 @@ router.delete(
       .catch(() => res.status(404).json({
         booknotfound: 'No books found',
       }));
-  },
-);
+  });
 
 /**
  * @swagger
@@ -633,11 +644,10 @@ router.delete(
  *       404:
  *         description: No books found
  */
-router.post(
-  '/:id',
-  passport.authenticate('jwt', { session: false }),
+router.post('/:id',
+  passport.authenticate('jwt', {session: false}),
   (req, res) => {
-    User.findOne({ user: req.user.id }).then((user) => {
+    User.findOne({user: req.user.id}).then((user) => {
       if (user) {
         if (!user.isStaff) {
           return res.status(401).json({
@@ -676,10 +686,10 @@ router.post(
       bookFields.authors = [];
       if (Array.isArray(req.body.authors)) {
         req.body.authors.forEach((author) => {
-          bookFields.authors.unshift({ name: author });
+          bookFields.authors.unshift({name: author});
         });
       } else {
-        bookFields.authors.unshift({ name: req.body.authors });
+        bookFields.authors.unshift({name: req.body.authors});
       }
     }
     bookFields.updateDate = Date.now();
@@ -692,30 +702,29 @@ router.post(
             Book.findByIdAndUpdate(
               req.params.id,
               bookFields,
-              { new: true },
+              {new: true},
               (err, bookObject) => {
-                return err ? res.status(404).json({ booknotfound: 'No books found' })
+                return err ? res.status(404).json({booknotfound: 'No books found'})
                   : res.json(bookObject);
-              },
+              }
             );
             return false;
           } else {
-            return res.status(404).json({ categorynotfound: 'No categories found' });
+            return res.status(404).json({categorynotfound: 'No categories found'});
           }
         })
-        .catch(() => res.status(404).json({ categorynotfound: 'No categories found' }));
+        .catch(() => res.status(404).json({categorynotfound: 'No categories found'}));
     } else {
       Book.findByIdAndUpdate(
         req.params.id,
         bookFields,
-        { new: true },
+        {new: true},
         (err, bookObject) => {
-          return err ? res.status(404).json({ booknotfound: 'No books found' })
+          return err ? res.status(404).json({booknotfound: 'No books found'})
             : res.json(bookObject);
-        },
+        }
       );
     }
-  },
-);
+  });
 
 module.exports = router;

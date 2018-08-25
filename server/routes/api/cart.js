@@ -22,7 +22,7 @@ const router = express.Router();
  *       200:
  *         description: Cart Works
  */
-router.get('/test', (req, res) => res.json({ msg: 'Cart Works' }));
+router.get('/test', (req, res) => res.json({msg: 'Cart Works'}));
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ router.post(
             booknotfound: 'No books found',
           }));
       });
-  },
+  }
 );
 
 /**
@@ -166,7 +166,7 @@ router.post(
         return false;
       });
     return false;
-  },
+  }
 );
 
 /**
@@ -195,7 +195,7 @@ router.post(
  */
 router.delete(
   '/:id',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {session: false}),
   (req, res) => {
     User.findById(req.user.id)
       .then((user) => {
@@ -212,7 +212,7 @@ router.delete(
         user.save().then(currentUser => res.json(currentUser.cart));
         return true;
       });
-  },
+  }
 );
 
 module.exports = router;

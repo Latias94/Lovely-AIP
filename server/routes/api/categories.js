@@ -28,7 +28,7 @@ const router = express.Router();
  *       200:
  *         description: Category Works
  */
-router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
+router.get('/test', (req, res) => res.json({msg: 'Category Works'}));
 
 /**
  * @swagger
@@ -48,12 +48,12 @@ router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
  */
 router.get('/', (req, res) => {
   Category.find()
-    .sort({ name: 1 })
+    .sort({name: 1})
     .then((categories) => {
       return res.json(categories);
     })
     .catch(() => {
-      return res.status(404).json({ categorynotfound: 'No categories found' });
+      return res.status(404).json({categorynotfound: 'No categories found'});
     });
 });
 
@@ -77,10 +77,10 @@ router.get('/list', (req, res) => {
   const allCategories = [];
   let counter = 0;
   Category.find()
-    .sort({ name: 1 })
+    .sort({name: 1})
     .then((categories) => {
       categories.forEach((category) => {
-        Book.find({ category: category._id })
+        Book.find({category: category._id})
           .then((books) => {
             counter += 1;
             const categoryResult = {};
@@ -98,7 +98,7 @@ router.get('/list', (req, res) => {
       });
     })
     .catch(() => {
-      return res.status(404).json({ categorynotfound: 'No categories found' });
+      return res.status(404).json({categorynotfound: 'No categories found'});
     });
 });
 
@@ -147,7 +147,7 @@ router.get('/list', (req, res) => {
 router.get('/slug/:slug', (req, res) => {
   const errors = {};
 
-  Category.findOne({ slug: req.params.slug })
+  Category.findOne({slug: req.params.slug})
     .then((category) => {
       if (!category) {
         errors.categorynotfound = 'No categories found';
@@ -173,7 +173,7 @@ router.get('/slug/:slug', (req, res) => {
         sortParams.price = sortByPrice;
       }
       const interval = (page - 1) * pageSize;
-      Book.find({ category: category._id })
+      Book.find({category: category._id})
         .skip(interval)
         .limit(pageSize)
         .sort(sortParams)
@@ -258,7 +258,7 @@ router.get('/:id', (req, res) => {
         sortParams.price = sortByPrice;
       }
       const interval = (page - 1) * pageSize;
-      Book.find({ category: category._id })
+      Book.find({category: category._id})
         .skip(interval)
         .limit(pageSize)
         .sort(sortParams)
@@ -313,7 +313,7 @@ router.post(
   }),
   (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
+    User.findOne({user: req.user.id}).then((user) => {
       if (user) {
         if (!user.isStaff) {
           return res.status(401).json({
@@ -324,7 +324,7 @@ router.post(
       return true;
     });
 
-    Category.findOne({ name: req.body.name }).then((hasFound) => {
+    Category.findOne({name: req.body.name}).then((hasFound) => {
       if (hasFound) {
         return res.status(404).json({
           categoryexist: 'Category name has existed',
@@ -350,7 +350,7 @@ router.post(
     });
 
     return false;
-  },
+  }
 );
 
 /**
@@ -398,10 +398,10 @@ router.post(
  */
 router.post(
   '/:id',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {session: false}),
   (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
+    User.findOne({user: req.user.id}).then((user) => {
       if (user) {
         if (!user.isStaff) {
           return res.status(401).json({
@@ -417,7 +417,7 @@ router.post(
       .then((category) => {
         if (category) {
           if (req.body.slug) {
-            Category.findOne({ slug: req.body.slug })
+            Category.findOne({slug: req.body.slug})
               .then((subCategory) => {
                 category.updateDate = Date.now();
                 // Update
@@ -452,7 +452,7 @@ router.post(
         return false;
       });
     return false;
-  },
+  }
 );
 
 /**
@@ -481,7 +481,7 @@ router.post(
  */
 router.delete(
   '/:id',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {session: false}),
   (req, res) => {
     const errors = {};
 
@@ -495,13 +495,13 @@ router.delete(
         // user is staff
         Category.findByIdAndRemove(req.params.id, (err) => {
           return err
-            ? res.status(404).json({ categorynotfound: 'No categories found' })
-            : res.json({ success: true });
+            ? res.status(404).json({categorynotfound: 'No categories found'})
+            : res.json({success: true});
         });
       }
       return true;
     });
-  },
+  }
 );
 
 module.exports = router;
