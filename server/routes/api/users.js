@@ -256,7 +256,6 @@ router.post('/active/', (req, res) => {
           .then(() => {
             return res.json({
               success: true,
-              activateToken: user.activeToken,
             });
           })
           .catch(error => res.status(404).json(error));
