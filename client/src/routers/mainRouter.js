@@ -8,6 +8,7 @@ import BooksPage from '../booksPage';
 import Categories from '../allCategoriesPage';
 import AccountPage from '../account/accountPage/AccountPage';
 import EmailVerification from '../account/EmailVerification';
+import VerifyEmail from '../account/utils/verifyEmail';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
 
 const MainRoute = () => (
@@ -21,6 +22,7 @@ const MainRoute = () => (
 			<Route path="/categories/:categoryID?" component={Categories} />
 			<Route path={'/account'} component={AccountPage} />
 			<Route path={'/verify-email'} component={EmailVerification} />
+			<Route path={'/activate/:token'} component={VerifyEmail}/>
 		</Switch>
 	</Route>
 );

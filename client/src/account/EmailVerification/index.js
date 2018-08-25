@@ -1,24 +1,41 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import { styles } from '../AccountStyles';
+import axios from 'axios';
 
-function jumpToUsersMailbox() {
-	// route to new page by changing window.location
-	window.open('http://mail.google.com', '_blank');
-}
+/**
+ * Email verification page
+ * When the user click the activation link, the token will pass into this component.
+ * VerifyEmail will transfer the token to the back-end for checking.
+ * If success, the page will show a success message for 2s and direct to the login page.
+ * If failed, the page will show a failure message and go to the home page.
+ *
+ * @todo use Button property for onClick
+ * @todo countDown()
+ * @todo jumpToUsersMailbox() should support various mailbox
+ * @author AnLuoRidge
+ */
 
-// TODO
-function countDown() {
-	return '(60s)';
-}
-
-
-export default class EmailVerification extends Component {
-
-	sendActivationEmail = email => {
-alert("Sorry, this feature is under development.")
-		// TODO: api /active/
+class EmailVerification extends Component {
+	state = {
+		timer: ''
 	};
+
+	resendActivationEmail = () => {
+		axios({
+			method: 'post',
+			url: '/users/active/',
+			data: {email: sessionStorage.getItem('unactivatedEmail')}
+		})
+			.then(this.countDown)
+			.catch(() => {
+        alert('Fail to send email.');
+			})
+	};
+
+  countDown = () => {
+		this.setState({timer:'(60s)'})
+  };
 
 	render() {
 		const { container } = styles;
@@ -26,13 +43,17 @@ alert("Sorry, this feature is under development.")
 		return (
 			<div style={container}>
 				<h2>Thank you for signing up!</h2>
-				<p> We have sent an email with an activation link to your email address. In order to complete the sign-up process, please click the activation link. If you didn't receive the activation email, click on the button below to resend it.</p>
-				{/* TODO: button property for onClick
-					TODO: Gmail for now */}
+				<p> We have sent an email with an activation link to your email address. In order to complete the sign-up process, please click the activation link.
+					If you didn't receive the activation email, click on the button below to resend it.</p>
 				<div style={{ padding: '20px' }} onClick={jumpToUsersMailbox}><Button variant="contained" color="secondary" >Go to your mail box</Button></div>
-				{/* TODO: */}
-				<div onClick={this.sendActivationEmail}><Button variant="contained">Resend the verification email{countDown()}</Button></div>
+				<div onClick={this.resendActivationEmail}><Button variant="contained">Resend the verification email {this.state.timer.toString()}</Button></div>
 			</div>
 		);
 	}
 }
+
+function jumpToUsersMailbox() {
+  window.open('http://mail.google.com', '_blank');
+}
+
+export default EmailVerification;

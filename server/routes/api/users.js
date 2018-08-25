@@ -259,8 +259,8 @@ router.post('/active/', (req, res) => {
             });
           })
           .catch(error => res.status(404).json(error));
+        return false;
       });
-
       return false;
     });
 });
@@ -316,9 +316,8 @@ router.post('/login', (req, res) => {
         .then((isMatch) => {
           if (isMatch) {
             if (!user.active) {
-              return res.status(404).json({
-                needactivate: 'Account is not activated',
-              });
+              errors.email = 'Account is not activated';
+              return res.status(404).json(errors);
             }
             // User Matched
             const payload = {

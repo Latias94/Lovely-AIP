@@ -101,7 +101,7 @@ router.post(
             booknotfound: 'No books found',
           }));
       });
-  },
+  }
 );
 
 /**
@@ -166,7 +166,7 @@ router.post(
         return false;
       });
     return false;
-  },
+  }
 );
 
 /**
@@ -212,7 +212,7 @@ router.delete(
         user.save().then(currentUser => res.json(currentUser.cart));
         return true;
       });
-  },
+  }
 );
 
 module.exports = router;

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
+// import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 // temp
 import tempAvatar from "../../Img/uxceo-128.jpg";
@@ -77,7 +77,7 @@ class AccountPage extends React.Component {
 
     componentDidMount() {
 		// TODO: GET IT FROM TOKEN!!!
-		const URL = 'http://localhost:5000/api/users/current';
+		const URL = '/users/current';
 		axios.get(URL, {})
 			.then(((response) => {
 				if (response.status === 200) {

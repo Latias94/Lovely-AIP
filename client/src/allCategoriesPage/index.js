@@ -19,7 +19,7 @@ class allCategoriesPage extends Component {
 
 
 	componentDidMount() {
-		const requestURL = 'http://localhost:5000/api/categories';
+		const requestURL = '/categories';
 		console.log(this.props.match.params);
 
 		Axios({

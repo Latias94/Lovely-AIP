@@ -54,12 +54,10 @@ class headerPageIndex extends Component {
   }
 
   componentDidMount() {
-    const requestURL = `http://localhost:5000/api/cart`;
+    const requestURL = `/cart`;
 
-    Axios({
-      method: 'get',
-      url: requestURL,
-    }).then((response) => {
+    Axios.get(requestURL)
+      .then((response) => {
       this.setState({ cartNumber: response.data.length });
     }).catch((error) => {
       console.log(error);

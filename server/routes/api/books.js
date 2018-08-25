@@ -248,12 +248,10 @@ router.get('/isbn/:isbn', (req, res) => {
  *       404:
  *         description: Cannot create the Book with invalid category ID
  */
-router.post(
-  '/',
+router.post('/',
   passport.authenticate('jwt', {
     session: false,
-  }),
-  (req, res) => {
+  }), (req, res) => {
     // find out whether user is staff
     User.findOne({ user: req.user.id }).then((user) => {
       if (user) {
@@ -342,8 +340,7 @@ router.post(
     }
 
     return false;
-  },
-);
+  });
 
 /**
  * @swagger
@@ -405,8 +402,7 @@ router.get('/slug/:slug', (req, res) => {
  *       404:
  *         description: No books found
  */
-router.delete(
-  '/:id',
+router.delete('/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // find out whether user is staff
@@ -426,8 +422,7 @@ router.delete(
         ? res.status(404).json({ booknotfound: 'No books found' })
         : res.json({ success: true });
     });
-  },
-);
+  });
 
 
 /**
@@ -470,8 +465,7 @@ router.delete(
  *       404:
  *         description: No books found or Review has existed
  */
-router.post(
-  '/review/:id',
+router.post('/review/:id',
   passport.authenticate('jwt', {
     session: false,
   }),
@@ -507,9 +501,19 @@ router.post(
                     user: req.user.id,
                     username: req.user.name,
                   };
-
                   // Add to reviews array
                   book.reviews.unshift(reviewOfBook);
+
+                  // calculate book score
+                  let totalScore = 0;
+                  book.reviews.map((re) => {
+                    totalScore += re.star;
+                    return null;
+                  });
+                  const bookScore = totalScore / book.reviews.length;
+                  book.toObject();
+                  book.score = bookScore.toFixed(2);
+
                   // Save
                   book.save().then(bookObject => res.json(bookObject));
                 })
@@ -525,8 +529,7 @@ router.post(
         booknotfound: 'No books found',
       }));
     return false;
-  },
-);
+  });
 
 /**
  * @swagger
@@ -555,8 +558,7 @@ router.post(
  *       404:
  *         description: No books found or review does not exist
  */
-router.delete(
-  '/review/:id/:review_id',
+router.delete('/review/:id/:review_id',
   passport.authenticate('jwt', {
     session: false,
   }),
@@ -586,6 +588,16 @@ router.delete(
               // Splice review out of array
               book.reviews.splice(removeIndex, 1);
 
+              // calculate book score
+              let totalScore = 0;
+              book.reviews.map((re) => {
+                totalScore += re.star;
+                return null;
+              });
+              const bookScore = totalScore / book.reviews.length;
+              book.toObject();
+              book.score = bookScore.toFixed(2);
+
               book.save().then(() => res.json({ success: true }));
               return false;
             }
@@ -600,8 +612,7 @@ router.delete(
       .catch(() => res.status(404).json({
         booknotfound: 'No books found',
       }));
-  },
-);
+  });
 
 /**
  * @swagger
@@ -633,8 +644,7 @@ router.delete(
  *       404:
  *         description: No books found
  */
-router.post(
-  '/:id',
+router.post('/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     User.findOne({ user: req.user.id }).then((user) => {
@@ -696,7 +706,7 @@ router.post(
               (err, bookObject) => {
                 return err ? res.status(404).json({ booknotfound: 'No books found' })
                   : res.json(bookObject);
-              },
+              }
             );
             return false;
           } else {
@@ -712,10 +722,9 @@ router.post(
         (err, bookObject) => {
           return err ? res.status(404).json({ booknotfound: 'No books found' })
             : res.json(bookObject);
-        },
+        }
       );
     }
-  },
-);
+  });
 
 module.exports = router;
