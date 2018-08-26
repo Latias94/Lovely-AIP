@@ -588,15 +588,19 @@ router.delete('/review/:id/:review_id',
               // Splice review out of array
               book.reviews.splice(removeIndex, 1);
 
-              // calculate book score
-              let totalScore = 0;
-              book.reviews.map((re) => {
-                totalScore += re.star;
-                return null;
-              });
-              const bookScore = totalScore / book.reviews.length;
-              book.toObject();
-              book.score = bookScore.toFixed(2);
+              if (book.reviews.length === 0) {
+                book.score = 0;
+              } else {
+                // calculate book score
+                let totalScore = 0;
+                book.reviews.map((re) => {
+                  totalScore += re.star;
+                  return null;
+                });
+                const bookScore = totalScore / book.reviews.length;
+                book.toObject();
+                book.score = bookScore.toFixed(2);
+              }
 
               book.save().then(() => res.json({ success: true }));
               return false;

@@ -1,9 +1,22 @@
 const { app } = require('../../../server');
 const request = require('supertest').agent(app.listen());
-const { getToken, supertestWithJest } = require('../../../utils/testHelper');
+const {
+  getToken,
+  supertestWithJest,
+  connectTestDB,
+  disconnectTestDB
+} = require('../../../utils/testHelper');
 
 describe('Book Route testing', () => {
-  test('GET /api/books/test Tests books route', (done) => {
+  beforeAll(() => {
+    connectTestDB();
+  });
+
+  afterAll(() => {
+    disconnectTestDB();
+  });
+
+  it('GET /api/books/test Tests books route', (done) => {
     request
       .get('/api/books/test')
       .expect('Content-Type', /json/)
@@ -13,7 +26,7 @@ describe('Book Route testing', () => {
       .end(done);
   });
 
-  test('GET /api/books Get all books', (done) => {
+  it('GET /api/books Get all books', (done) => {
     request
       .get('/api/books')
       .expect('Content-Type', /json/)
@@ -21,7 +34,7 @@ describe('Book Route testing', () => {
       .end(done);
   });
 
-  test('POST /api/books Create Test book', (done) => {
+  it('POST /api/books Create Test book', (done) => {
     getToken().then((token) => {
       request
         .post('/api/books')
@@ -44,7 +57,7 @@ describe('Book Route testing', () => {
     });
   });
 
-  test('GET /api/books/slug/testgame Get Test book by slug', (done) => {
+  it('GET /api/books/slug/testgame Get Test book by slug', (done) => {
     request
       .get('/api/books/slug/testgame')
       .expect('Content-Type', /json/)
@@ -56,7 +69,7 @@ describe('Book Route testing', () => {
       });
   });
 
-  test('GET /api/books/{test id} Get Test book by id', (done) => {
+  it('GET /api/books/{test id} Get Test book by id', (done) => {
     request
       .get('/api/books/slug/testgame')
       .expect('Content-Type', /json/)
@@ -77,55 +90,7 @@ describe('Book Route testing', () => {
       });
   });
 
-  // test('POST /api/books/like/{test id} Like Test book', (done) => {
-  //   // get Test book id by slug
-  //   request
-  //     .get('/api/books/slug/testgame')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       getToken().then((token) => {
-  //         // edit book
-  //         request
-  //           .post(`/api/books/like/${res.body._id}`)
-  //           .set('Authorization', token)
-  //           .expect('Content-Type', /json/)
-  //           .expect(200)
-  //           .end((error, response) => {
-  //             supertestWithJest(error, response, done, () => {
-  //               // assert Test user id
-  //               expect(response.body.likes.length).toBe(1);
-  //             });
-  //           });
-  //       });
-  //     });
-  // });
-
-  // test('POST /api/books/unlike/{test id} Unlike Test book', (done) => {
-  //   // get Test book id by slug
-  //   request
-  //     .get('/api/books/slug/testgame')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       getToken().then((token) => {
-  //         // edit book
-  //         request
-  //           .post(`/api/books/unlike/${res.body._id}`)
-  //           .set('Authorization', token)
-  //           .expect('Content-Type', /json/)
-  //           .expect(200)
-  //           .end((error, response) => {
-  //             supertestWithJest(error, response, done, () => {
-  //               // assert Test user id
-  //               expect(response.body.likes.length).toBe(0);
-  //             });
-  //           });
-  //       });
-  //     });
-  // });
-
-  test('POST /api/books/review/{test id} Add review to Test book', (done) => {
+  it('POST /api/books/review/{test id} Add review to Test book', (done) => {
     // get Test book id by slug
     request
       .get('/api/books/slug/testgame')
@@ -144,7 +109,7 @@ describe('Book Route testing', () => {
             .end((error, response) => {
               supertestWithJest(error, response, done, () => {
                 // assert Test user id
-                expect(response.body.reviews.length).toBe(1);
+                expect(response.body.reviews).toHaveLength(1);
                 expect(response.body.reviews[0].content).toBe('For the Alliance!!!');
                 expect(response.body.reviews[0].star).toBe(5);
               });
@@ -153,7 +118,7 @@ describe('Book Route testing', () => {
       });
   });
 
-  test('DELETE /api/books/review/{test id}/{review_id} Delete review to Test book', (done) => {
+  it('DELETE /api/books/review/{test id}/{review_id} Delete review to Test book', (done) => {
     // get Test book id by slug
     request
       .get('/api/books/slug/testgame')
@@ -178,7 +143,7 @@ describe('Book Route testing', () => {
       });
   });
 
-  test('POST /api/books/{test id} Edit Test book', (done) => {
+  it('POST /api/books/{test id} Edit Test book', (done) => {
     // get Test book id by slug
     request
       .get('/api/books/slug/testgame')
@@ -211,7 +176,7 @@ describe('Book Route testing', () => {
       });
   });
 
-  test('DELETE /api/books/{test id} Delete Test book', (done) => {
+  it('DELETE /api/books/{test id} Delete Test book', (done) => {
     // get Test book id by slug
     request
       .get('/api/books/slug/testgame')
