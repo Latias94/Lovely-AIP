@@ -58,6 +58,10 @@ class DetailConfirm extends Component{
                             );
                         })}
                     </TableBody>
+                    <TableRow>
+                        <TableCell colSpan="3">Subtotal(AU$)</TableCell>
+                        <TableCell>1111</TableCell>
+                    </TableRow>
                 </Table>
         );
 

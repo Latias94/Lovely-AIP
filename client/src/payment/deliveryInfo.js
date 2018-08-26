@@ -40,7 +40,7 @@ const styles = theme => ({
 });
 
 
-class DeliveryInfor extends Component {
+class DeliveryInfo extends Component {
     state = {
         name: 'Jenny',
         Email: '',
@@ -70,13 +70,13 @@ class DeliveryInfor extends Component {
                                 />
                             </TableCell>
                             <TableCell>
-                                    <TextField
+                                <TextField
                                     id="Email"
                                     label="E-mail"
                                     className={classes.textField}
                                     type="E-mail"
                                     margin="normal"
-                                    />
+                                />
                             </TableCell>
                             <TableCell>
                                 <TextField
@@ -140,8 +140,8 @@ class DeliveryInfor extends Component {
     }
 }
 
-DeliveryInfor.propTypes = {
+DeliveryInfo.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(DeliveryInfor);
+export default withStyles(styles)(DeliveryInfo);

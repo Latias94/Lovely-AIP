@@ -90,7 +90,7 @@ class PaymentSelect extends Component {
                                         id="date"
                                         label="Expire Date"
                                         type="month"
-                                        defaultValue="2017-05"
+                                        defaultValue=" "
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
