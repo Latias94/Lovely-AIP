@@ -1,6 +1,9 @@
-Client
+# Client Side
 
-The program deals the intercation between users and the back-end service.
+We use React.js in client side.
+The documentation is placed in `documentation` branch under `client/app-docs`. You could also generate the documentation by running `npm run esdoc` under `/client` in `master` branch.
 
-The folder structure is divided by the functions, such as loign, account and bookpages.
-Each functional folder combines with the js, css and component files.
+For testing, we use [Puppetteer](https://github.com/GoogleChrome/puppeteer/) with [Jest](https://jestjs.io/).
+
+The project structure is divided by the feature(i.e. page), such as loign, account and books.
+Each feature folder may contains components, actions, reducers, and so on.
