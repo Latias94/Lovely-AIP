@@ -44,17 +44,15 @@ const mongooseConfig = {
   useNewUrlParser: true,
 };
 
-if (process.env.NODE_ENV === 'test') {
-  db = require('./config/keys').testMongoURL;
-  console.log('You are under the test Node environment');
-} else {
+if (process.env.NODE_ENV !== 'test') {
   db = require('./config/keys').mongoURI;
+  mongoose
+    .connect(db, mongooseConfig)
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
+} else {
+  console.log('You are under test environment');
 }
-
-mongoose
-  .connect(db, mongooseConfig)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -81,7 +79,7 @@ app.use('/api/cart', cart);
 
 // change port according to node environment
 const port = process.env.NODE_ENV === 'test'
-  ? require('./config/keys').test_port
+  ? require('./config/keys').testPort
   : require('./config/keys').port;
 
 if (!module.parent) {

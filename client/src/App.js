@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import MainRoute from './routers/mainRouter';
-
 import Header from './headerPage';
 import Footer from './footerPage';
 

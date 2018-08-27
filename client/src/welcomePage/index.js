@@ -16,11 +16,7 @@ export default class welcomePageIndex extends Component {
 	componentDidMount() {
 		Axios({
 			method: 'get',
-			url: 'http://localhost:5000/api/booklists',
-			header: {
-				'Access-Control-Allow-Origin': '*',
-				'content-type': 'application/x-www-form-urlencoded',
-			},
+			url: '/booklists',
 		}).then((response) => {
 			// TODO: error hint
 			this.setState({ bookListArray: response.data });

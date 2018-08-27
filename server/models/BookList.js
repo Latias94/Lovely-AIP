@@ -29,6 +29,10 @@ const BookListSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'reviews',
     },
+    title: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true,

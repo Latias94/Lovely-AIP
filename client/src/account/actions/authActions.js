@@ -1,8 +1,14 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
-import setAuthToken from '../utils/setAuthToken';
+import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
 
+
+/**
+ * @todo use Redux for the validation
+ * @param data - User data
+ * @returns boolean is validated
+ */
 // validation (temp)
 
 const validate = data => (dispatch) => {
@@ -73,13 +79,13 @@ export const registerUser = (userData, history) => (dispatch) => {
 	const isValid = validate(userData)(dispatch);
 	if (isValid) {
 		delete userData.password2;
+		sessionStorage.setItem('unactivatedEmail', userData.email);
 		axios({
 			method: 'post',
-			// TODO: URL need to be modified before deployment
-			url: 'http://localhost:5000/api/users/register',
+			url: '/users/register',
 			data: userData,
 		})
-			.then(() => history.push('/login'))
+			.then(() => history.push('/verify-email'))
 			.catch(err => dispatch({
 				type: GET_ERRORS,
 				payload: err.response.data,
@@ -91,16 +97,14 @@ export const registerUser = (userData, history) => (dispatch) => {
 export const loginUser = userData => (dispatch) => {
 	axios({
 		method: 'post',
-		// TODO: URL need to be modified before deployment
-		url: 'http://localhost:5000/api/users/login',
+		url: '/users/login',
 		data: userData,
 	}).then((res) => {
 		const { token } = res.data;
 		// Save to localStorage
 		localStorage.setItem('jwtToken', token);
-		// Set to axios header
-		setAuthToken(token);
-		// TODO: email?
+		// Set to axios global header
+		setAuthTokenInHeader(token);
 		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));
 	})
@@ -119,8 +123,10 @@ export const setCurrentUser = decoded => ({
 // log out
 export const logoutUser = () => (dispatch) => {
 	localStorage.removeItem('jwtToken');
-	// Remove auth header for future requests
-	setAuthToken(false);
-	// Set current user to {} which will set isAuthenticated to false
+	// Remove auth header from global
+	setAuthTokenInHeader(false);
+	// Set current user to {} which will set isAuthenticated to false as well
 	dispatch(setCurrentUser({}));
+	// return to home page
+	window.open('/', '_self');
 };

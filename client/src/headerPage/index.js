@@ -12,121 +12,116 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { connect } from 'react-redux';
 import { loginUser, logoutUser } from '../account/actions/authActions';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function MenuItems(props) {
-	const handleClose = props.closeHandle;
-	if (props.isAuthenticated) {
-		return (
-			<span>
-			{/* <MenuItem onClick={handleClose}><Redirect to={"/kk"}/>My account</MenuItem> */}
-			<MenuItem onClick={handleClose}><a href="/account">My account</a></MenuItem>
+  const handleClose = props.closeHandle;
+  if (props.isAuthenticated) {
+    return (
+      <span>
+			<MenuItem component={Link} to={"/account"} onClick={handleClose}>
+			My account
+			</MenuItem>
 
-			{/* <MenuItem onClick={handleClose}><Link to={"/cc"}>Log out</Link></MenuItem> */}
-			<MenuItem onClick={handleClose}>
-			<div onClick={props.logoutUser}>Log out</div>
+			<MenuItem onClick={props.logoutUser}>
+			<div onClick={handleClose}>Log out</div>
 			</MenuItem>
 			</span>
-		);
-	} else {
-		return (
-			<span>
-			<MenuItem onClick={handleClose}>
-			<a href="/login">Sign in</a>
+    );
+  } else {
+    return (
+      <span>
+        <MenuItem component={Link} to="/login" onClick={handleClose} >
+          Login in
 			</MenuItem>
-			<MenuItem onClick={handleClose}>
-			<a href="/register">New here?</a>
+
+			<MenuItem component={Link} to={"/register"} onClick={handleClose}>
+			New here?
 			</MenuItem>
 			</span>
-		);
-	}
+    );
+  }
 }
 
 class headerPageIndex extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			categories: [],
-			anchorEl: null,
-			cartNumber: 0,
-		};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      categories: [],
+      anchorEl: null,
+      cartNumber: 0,
+    };
+  }
 
+  componentDidMount() {
+    const requestURL = `/cart`;
 
-	componentDidMount() {
-		const requestURL = `http://localhost:5000/api/cart`;
+    Axios.get(requestURL)
+      .then((response) => {
+      this.setState({ cartNumber: response.data.length });
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
 
-		Axios({
-			method: 'get',
-			url: requestURL,
-		}).then((response) => {
-			this.setState({ cartNumber: response.data.length });
-		}).catch((error) => {
-			console.log(error);
-		});
-	}	
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
 
-	handleClick = event => {
-		this.setState({ anchorEl: event.currentTarget });
-	  };
-	
-	handleClose = () => {
-		this.setState({ anchorEl: null });
-	  };
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
 
-	render() {
-		const { anchorEl } = this.state;
-		const { 
-			background, 
-			containerDiv, 
-			logoPart,
-			iconLogo,
-			searchIcon,
-			rightIcon,
-			avatarStyle
-	 } = style;
+  render() {
+    const { anchorEl } = this.state;
+    const {
+      background,
+      containerDiv,
+      logoPart,
+      iconLogo,
+      searchIcon,
+      rightIcon,
+      avatarStyle
+    } = style;
 
-		return (
-			<div style={background}>
-				<div style={containerDiv}>
-					<div style={logoPart}>
-						<img src={Logo} style={iconLogo} />
-						<div style={searchIcon}>
-							<SearchInput/>
-							<Icon icon={ic_search} size={24} style={{ marginBottom: '8px' }} />
-						</div>
-						<div style={rightIcon}>
-							<div style={avatarStyle} 
-							onClick={this.handleClick}
-							// onMouseOver={this.handleClick}
-							// onMouseOut={this.handleClose}
-							><Icon icon={ic_account_circle} size={24} />
-							</div>
-							<Menu
-								id="simple-menu"
-								anchorEl={anchorEl}
-								open={Boolean(anchorEl)}
-								onClose={this.handleClose}
-							>
-								<MenuItems 
-								isAuthenticated={this.props.auth.isAuthenticated} 
-								closeHandle={this.handleClose} 
-								logoutUser={this.props.logoutUser}
-								/>
-							</Menu>
-							<Cart/>
-						</div>
-					</div>
-				</div>
-				<NavigationBar/>
-			</div>
-		);
-	}
+    return (
+      <div style={background}>
+        <div style={containerDiv}>
+          <div style={logoPart}>
+            <img src={Logo} style={iconLogo} />
+            <div style={searchIcon}>
+              <SearchInput/>
+              <Icon icon={ic_search} size={24} style={{ marginBottom: '8px' }} />
+            </div>
+            <div style={rightIcon}>
+              <div style={avatarStyle}
+                   onClick={this.handleClick}
+              ><Icon icon={ic_account_circle} size={24} />
+              </div>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={this.handleClose}
+              >
+                <MenuItems
+                  isAuthenticated={this.props.auth.isAuthenticated}
+                  closeHandle={this.handleClose}
+                  logoutUser={this.props.logoutUser}
+                />
+              </Menu>
+              <Cart/>
+            </div>
+          </div>
+        </div>
+        <NavigationBar/>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => ({
-	auth: state.auth,
-  })
+  auth: state.auth,
+});
 
 export default connect(mapStateToProps, { loginUser, logoutUser })(headerPageIndex);
-

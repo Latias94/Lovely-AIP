@@ -10,8 +10,8 @@ const { email, emailPwd } = require('../config/keys');
 // });
 
 const config = {
-  host: 'smtp.ethereal.email',
-  port: 587,
+  service: 'QQ',
+  // port: 465,
   // secureConnection: true,
   auth: {
     user: email,

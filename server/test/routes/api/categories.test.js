@@ -1,9 +1,22 @@
 const { app } = require('../../../server');
 const request = require('supertest').agent(app.listen());
-const { getToken, supertestWithJest } = require('../../../utils/testHelper');
+const {
+  getToken,
+  supertestWithJest,
+  connectTestDB,
+  disconnectTestDB
+} = require('../../../utils/testHelper');
 
 describe('Category Route testing', () => {
-  test('GET /api/categories/test Tests categories route', (done) => {
+  beforeAll(() => {
+    connectTestDB();
+  });
+
+  afterAll(() => {
+    disconnectTestDB();
+  });
+
+  it('GET /api/categories/test Tests categories route', (done) => {
     request
       .get('/api/categories/test')
       .expect('Content-Type', /json/)
@@ -13,7 +26,7 @@ describe('Category Route testing', () => {
       .end(done);
   });
 
-  test('GET /api/categories Get all categories', (done) => {
+  it('GET /api/categories Get all categories', (done) => {
     request
       .get('/api/categories')
       .expect('Content-Type', /json/)
@@ -21,7 +34,7 @@ describe('Category Route testing', () => {
       .end(done);
   });
 
-  test('GET /api/categories Get all categories with their books', (done) => {
+  it('GET /api/categories Get all categories with their books', (done) => {
     request
       .get('/api/categories/list')
       .expect(200)
@@ -29,7 +42,7 @@ describe('Category Route testing', () => {
       .end(done);
   });
 
-  test('POST /api/categories Create Test category', (done) => {
+  it('POST /api/categories Create Test category', (done) => {
     getToken(true).then((token) => {
       request
         .post('/api/categories')
@@ -45,7 +58,7 @@ describe('Category Route testing', () => {
     });
   });
 
-  test('GET /api/categories/slug/test Get Test category by slug', (done) => {
+  it('GET /api/categories/slug/test Get Test category by slug', (done) => {
     request
       .get('/api/categories/slug/test')
       .expect('Content-Type', /json/)
@@ -58,7 +71,7 @@ describe('Category Route testing', () => {
   });
 
 
-  test('GET /api/categories/{test id} Get Test category by id', (done) => {
+  it('GET /api/categories/{test id} Get Test category by id', (done) => {
     request
       .get('/api/categories/slug/test')
       .expect('Content-Type', /json/)
@@ -78,7 +91,7 @@ describe('Category Route testing', () => {
       });
   });
 
-  test('DELETE /api/categories/{test id} Delete Test category', (done) => {
+  it('DELETE /api/categories/{test id} Delete Test category', (done) => {
     // get Test category id by slug
     request
       .get('/api/categories/slug/test')
