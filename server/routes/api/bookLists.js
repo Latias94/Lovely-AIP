@@ -1,6 +1,5 @@
 const express = require('express');
 const passport = require('passport');
-
 const Book = require('../../models/Book');
 const Review = require('../../models/Review');
 const BookList = require('../../models/BookList');
@@ -152,14 +151,38 @@ router.get('/:id', (req, res) => {
   const errors = {};
 
   BookList.findById(req.params.id)
+    .lean()
     .then((bookList) => {
       if (!bookList) {
         errors.booklistnotfound = 'No booklists found';
         return res.status(404).json(errors);
       }
-      return res.json(bookList);
+
+      if (bookList.books.length > 0) {
+        // get bookid array
+        const bookIds = [];
+        bookList.books.forEach(book => bookIds.push(book.bookid));
+        Book.find({
+          _id: {
+            $in: bookIds,
+          }
+        })
+          .then((books) => {
+            // bookList.toObject();
+            const bookObjects = [];
+            books.forEach(book => bookObjects.push(book.toObject()));
+            bookList.books = bookObjects;
+            return res.json(bookList);
+          })
+          .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
+        return false;
+      } else {
+        return res.json(bookList);
+      }
     })
-    .catch(err => res.status(404).json(err));
+    .catch((err) => {
+      return res.status(404).json(err);
+    });
 });
 
 
@@ -347,37 +370,28 @@ router.post(
           }
           Book.findById(req.params.book_id)
             .then((book) => {
-              Review.findOne({ user: req.user.id, book: req.params.book_id })
-                .then((review) => {
-                  const bookFields = {};
+              if (!book) {
+                return res.status(404).json({ booknotfound: 'No books found' });
+              }
+              const bookFields = {};
+              bookFields.bookid = req.params.book_id;
 
-                  if (review) {
-                    bookFields.review = review._id.toString();
-                    bookFields.reviewContent = review.content;
-                  }
-                  bookFields.bookid = req.params.book_id;
-                  bookFields.title = book.title;
-                  bookFields.description = book.description;
+              const bookListFields = {};
+              bookListFields.books = bookList.books;
+              bookListFields.updateDate = Date.now();
+              bookListFields.books.unshift(bookFields);
 
-                  bookFields.score = book.score;
-                  bookFields.coverUrl = book.coverUrl;
-
-                  const bookListFields = {};
-                  bookListFields.books = bookList.books;
-                  bookListFields.updateDate = Date.now();
-                  bookListFields.books.unshift(bookFields);
-
-                  // Update
-                  BookList.findByIdAndUpdate(
-                    req.params.id,
-                    bookListFields,
-                    { new: true },
-                    (err, bookListObject) => {
-                      return err ? res.status(404).json(err)
-                        : res.json(bookListObject);
-                    }
-                  );
-                });
+              // Update
+              BookList.findByIdAndUpdate(
+                req.params.id,
+                bookListFields,
+                { new: true },
+                (err, bookListObject) => {
+                  return err ? res.status(404).json(err)
+                    : res.json(bookListObject);
+                }
+              );
+              return false;
             }).catch(() => res.status(404).json({ booknotfound: 'No books found' }));
         } else {
           errors.booklistnotfound = 'No booklists found';

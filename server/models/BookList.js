@@ -29,25 +29,8 @@ const BookListSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'reviews',
     },
-    title: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    coverUrl: {
-      type: String,
-    },
-    score: {
-      type: Number,
-      min: 0,
-      max: 5,
-    },
     reviewContent: {
       type: String,
-      required: true,
     },
   }],
   likes: [{
