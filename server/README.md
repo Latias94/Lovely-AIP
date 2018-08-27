@@ -17,11 +17,19 @@ When access some private route, you may need to add JWT to header.
 
 ### Register
 [http://localhost:5000/api/users/register](http://localhost:5000/api/users/register)
-![register](https://i.loli.net/2018/07/26/5b596e86b8e1b.jpg)
+![register](https://ws4.sinaimg.cn/large/0069RVTdly1fuo1mr1oc8j31hu0x40z9.jpg)
+
+### Confirm account
+After register a new user, the user have to activate his account via activation link in email. Or you can activate account thought the Api in the following.
+
+[http://localhost:5000/api/users/active/{activeToken}](http://localhost:5000/api/users/active/{activeToken})
+![Activate Account](https://ws1.sinaimg.cn/large/0069RVTdly1fuo1pd6opvj31i20hujuh.jpg)
+
+Then you can login successfully.
 
 ### Login
 [http://localhost:5000/api/users/login](http://localhost:5000/api/users/login)
-![login](https://i.loli.net/2018/07/26/5b596ef5ea93f.jpg)
+![login](https://ws3.sinaimg.cn/large/0069RVTdly1fuo1kr5lrhj31hm0pydky.jpg)
 
 ## Development
 

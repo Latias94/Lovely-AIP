@@ -38,7 +38,7 @@ describe('BookList Route testing', () => {
 
   afterAll((done) => {
     request
-      .get('/api/books/slug/testgame')
+      .get('/api/books/slug/testbook1')
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
@@ -228,7 +228,6 @@ describe('BookList Route testing', () => {
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end((error, response) => {
-                  console.log(response.toJSON());
                   supertestWithJest(error, response, done, () => {
                     expect(response.body.title).toBe('TestBookList2');
                     expect(response.body.description).toBe('After modified');

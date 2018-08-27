@@ -24,14 +24,7 @@ const BookListSchema = new Schema({
     bookid: {
       type: Schema.Types.ObjectId,
       ref: 'books',
-    },
-    review: {
-      type: Schema.Types.ObjectId,
-      ref: 'reviews',
-    },
-    reviewContent: {
-      type: String,
-    },
+    }
   }],
   likes: [{
     user: {
