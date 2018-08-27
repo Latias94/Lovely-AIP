@@ -3,7 +3,6 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const mailer = require('./../../utils/mailer');
 const keys = require('../../config/keys');
@@ -251,14 +250,16 @@ router.post('/active/', (req, res) => {
           subject: 'Welcome to Knight Frank',
           html: `<p>Please click <a href="${link}"> Here </a> to activate your account.</p>`,
         });
+
+        user.save()
+          .then(() => {
+            return res.json({
+              success: true,
+            });
+          })
+          .catch(error => res.status(404).json(error));
+        return false;
       });
-      user.save()
-        .then(() => {
-          return res.json({
-            success: true
-          });
-        })
-        .catch(err => res.status(404).json(err));
       return false;
     });
 });

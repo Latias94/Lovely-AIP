@@ -44,17 +44,15 @@ const mongooseConfig = {
   useNewUrlParser: true,
 };
 
-if (process.env.NODE_ENV === 'test') {
-  db = require('./config/keys').testMongoURL;
-  console.log('You are under the test Node environment');
-} else {
+if (process.env.NODE_ENV !== 'test') {
   db = require('./config/keys').mongoURI;
+  mongoose
+    .connect(db, mongooseConfig)
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
+} else {
+  console.log('You are under test environment');
 }
-
-mongoose
-  .connect(db, mongooseConfig)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
 
 // Passport middleware
 app.use(passport.initialize());

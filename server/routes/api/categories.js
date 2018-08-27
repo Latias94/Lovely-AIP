@@ -350,7 +350,7 @@ router.post(
     });
 
     return false;
-  },
+  }
 );
 
 /**
@@ -452,7 +452,7 @@ router.post(
         return false;
       });
     return false;
-  },
+  }
 );
 
 /**
@@ -501,7 +501,7 @@ router.delete(
       }
       return true;
     });
-  },
+  }
 );
 
 module.exports = router;
