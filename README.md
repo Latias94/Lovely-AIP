@@ -2,11 +2,11 @@
 AIP assignment 3
 #The website provides service to the customers who are keen on reading books. The users could recommend and organist the books. The site also offers the purchase service to the customer. The inspiration comes from the Amazon.au.
 
-More details
+For more details:
 
-Client:https://github.com/Latias94/Lovely-AIP/blob/master/client/README.md
+Client: [Client README.md](https://github.com/Latias94/Lovely-AIP/blob/master/client/README.md)
 
-Server:https://github.com/Latias94/Lovely-AIP/blob/master/server/README.md
+Server: [Server README.md](https://github.com/Latias94/Lovely-AIP/blob/master/server/README.md)
 
 
 ## Getting Started
@@ -15,7 +15,7 @@ Server:https://github.com/Latias94/Lovely-AIP/blob/master/server/README.md
 cd server
 # Install server's dependence
 npm install
-# Install client's dependence
+# Install client's dependence (or you can cd to ../client folder and do `npm install`)
 npm run install-client
 # Run server and client concurrently
 npm run dev
