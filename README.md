@@ -2,7 +2,8 @@
 AIP assignment 3
 #The website provides service to the customers who are keen on reading books. The users could recommend and organist the books. The site also offers the purchase service to the customer. The inspiration comes from the Amazon.au.
 
-More details:
+More details
+
 Client:https://github.com/Latias94/Lovely-AIP/blob/master/client/README.md
 Server:https://github.com/Latias94/Lovely-AIP/blob/master/server/README.md
 
