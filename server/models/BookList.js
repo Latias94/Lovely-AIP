@@ -33,6 +33,12 @@ const BookListSchema = new Schema({
       type: String,
       required: true,
     },
+    authors: [{
+      name: {
+        type: String,
+        required: true,
+      },
+    }],
     description: {
       type: String,
       required: true,

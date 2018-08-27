@@ -358,6 +358,7 @@ router.post(
                   bookFields.bookid = req.params.book_id;
                   bookFields.title = book.title;
                   bookFields.description = book.description;
+                  bookFields.authors = book.authors;
 
                   bookFields.score = book.score;
                   bookFields.coverUrl = book.coverUrl;
