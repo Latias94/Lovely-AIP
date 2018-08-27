@@ -3,6 +3,7 @@ AIP assignment 3
 
 ## Getting Started
 ```bash
+# Enter server folder
 cd server
 # Install server's dependence
 npm install
