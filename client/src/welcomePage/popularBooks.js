@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as style from './welcomePageCss';
+import Book from '../allCategoriesPage/aBook';
 
 const popularBooksComponent = props => (
 	<div style={{ marginTop: '10px', marginBottom: '10px', justifyContent: 'center' }}>
@@ -9,14 +10,15 @@ const popularBooksComponent = props => (
 				<h3>{obj.title}</h3>
 				<hr/>
 				<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+					{console.log(obj.books)}
 					{obj.books.map(smallobj => (
-						<Link to={`/book/${smallobj.bookid}`} key={smallobj._id} replace><div style={style.eachBook}>
-							<div style={{ backgroundColor: 'gray', height: '160px', width: '160px' }}></div>
-							<span>Name</span>
-							<span>Author</span>
-							<span>Rank</span>
-							<span>Awards</span>
-						</div></Link>
+						<Book
+							key={smallobj._id}
+							bookid={smallobj._id}
+							bookTitle={smallobj.title}
+							bookAuthor={smallobj.authors[0].name}
+							bookReviews={smallobj.reviews.length}
+						/>
 					))}
 				</div>
 			</div>
