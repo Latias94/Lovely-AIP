@@ -1,6 +1,5 @@
 const express = require('express');
 const passport = require('passport');
-
 const Book = require('../../models/Book');
 const Review = require('../../models/Review');
 const BookList = require('../../models/BookList');
@@ -128,6 +127,80 @@ router.get('/slug/:slug', (req, res) => {
 
 /**
  * @swagger
+ * /api/booklists/user/{id}:
+ *   get:
+ *     tags:
+ *       - BookList
+ *     summary: Get BookList with user review by id
+ *     description: Get BookList with user review by id. This can only be done by the logged in user (add JWT token to header).
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of BookList that needs to be fetched"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Get BookList successfully
+ *       404:
+ *         description: No booklists found
+ *     security:
+ *       - JWT: []
+ */
+router.get('/user/:id',
+  passport.authenticate('jwt', {
+    session: false,
+  }),
+  (req, res) => {
+    const errors = {};
+
+    BookList.findById(req.params.id)
+      .lean()
+      .then((bookList) => {
+        if (!bookList) {
+          errors.booklistnotfound = 'No booklists found';
+          return res.status(404).json(errors);
+        }
+
+        if (bookList.books.length > 0) {
+          // get bookid array
+          const bookIds = [];
+          bookList.books.forEach(book => bookIds.push(book.bookid));
+          Book.find({
+            _id: {
+              $in: bookIds,
+            }
+          })
+            .then((books) => {
+              // bookList.toObject();
+              const bookObjects = [];
+              books.forEach(book => bookObjects.push(book.toObject()));
+              bookObjects.forEach((book) => {
+                book.reviews.forEach((review) => {
+                  if (review.user.toString() === req.user.id) {
+                    book.reviewContent = review.content;
+                    book.reviewStar = review.star;
+                  }
+                });
+              });
+              bookList.books = bookObjects;
+              return res.json(bookList);
+            })
+            .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
+          return false;
+        } else {
+          return res.json(bookList);
+        }
+      })
+      .catch((err) => {
+        return res.status(404).json(err);
+      });
+  });
+
+/**
+ * @swagger
  * /api/booklists/{id}:
  *   get:
  *     tags:
@@ -148,19 +221,44 @@ router.get('/slug/:slug', (req, res) => {
  *       404:
  *         description: No booklists found
  */
-router.get('/:id', (req, res) => {
-  const errors = {};
+router.get('/:id',
+  (req, res) => {
+    const errors = {};
 
-  BookList.findById(req.params.id)
-    .then((bookList) => {
-      if (!bookList) {
-        errors.booklistnotfound = 'No booklists found';
-        return res.status(404).json(errors);
-      }
-      return res.json(bookList);
-    })
-    .catch(err => res.status(404).json(err));
-});
+    BookList.findById(req.params.id)
+      .lean()
+      .then((bookList) => {
+        if (!bookList) {
+          errors.booklistnotfound = 'No booklists found';
+          return res.status(404).json(errors);
+        }
+
+        if (bookList.books.length > 0) {
+          // get bookid array
+          const bookIds = [];
+          bookList.books.forEach(book => bookIds.push(book.bookid));
+          Book.find({
+            _id: {
+              $in: bookIds,
+            }
+          })
+            .then((books) => {
+              // bookList.toObject();
+              const bookObjects = [];
+              books.forEach(book => bookObjects.push(book.toObject()));
+              bookList.books = bookObjects;
+              return res.json(bookList);
+            })
+            .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
+          return false;
+        } else {
+          return res.json(bookList);
+        }
+      })
+      .catch((err) => {
+        return res.status(404).json(err);
+      });
+  });
 
 
 /**
@@ -199,6 +297,8 @@ router.get('/:id', (req, res) => {
  *         description: Cannot create the BookList
  *       404:
  *         description: BookList name has existed
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/',
@@ -256,6 +356,8 @@ router.post(
  *         description: Cannot edit the BookList
  *       404:
  *         description: No booklists found or BookList name has existed
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/:id',
@@ -328,6 +430,8 @@ router.post(
  *         description: Successfully Added
  *       404:
  *         description: No booklists found or other internal error
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/book/:id/:book_id',
@@ -347,38 +451,28 @@ router.post(
           }
           Book.findById(req.params.book_id)
             .then((book) => {
-              Review.findOne({ user: req.user.id, book: req.params.book_id })
-                .then((review) => {
-                  const bookFields = {};
+              if (!book) {
+                return res.status(404).json({ booknotfound: 'No books found' });
+              }
+              const bookFields = {};
+              bookFields.bookid = req.params.book_id;
 
-                  if (review) {
-                    bookFields.review = review._id.toString();
-                    bookFields.reviewContent = review.content;
-                  }
-                  bookFields.bookid = req.params.book_id;
-                  bookFields.title = book.title;
-                  bookFields.description = book.description;
-                  bookFields.authors = book.authors;
+              const bookListFields = {};
+              bookListFields.books = bookList.books;
+              bookListFields.updateDate = Date.now();
+              bookListFields.books.unshift(bookFields);
 
-                  bookFields.score = book.score;
-                  bookFields.coverUrl = book.coverUrl;
-
-                  const bookListFields = {};
-                  bookListFields.books = bookList.books;
-                  bookListFields.updateDate = Date.now();
-                  bookListFields.books.unshift(bookFields);
-
-                  // Update
-                  BookList.findByIdAndUpdate(
-                    req.params.id,
-                    bookListFields,
-                    { new: true },
-                    (err, bookListObject) => {
-                      return err ? res.status(404).json(err)
-                        : res.json(bookListObject);
-                    }
-                  );
-                });
+              // Update
+              BookList.findByIdAndUpdate(
+                req.params.id,
+                bookListFields,
+                { new: true },
+                (err, bookListObject) => {
+                  return err ? res.status(404).json(err)
+                    : res.json(bookListObject);
+                }
+              );
+              return false;
             }).catch(() => res.status(404).json({ booknotfound: 'No books found' }));
         } else {
           errors.booklistnotfound = 'No booklists found';
@@ -418,6 +512,8 @@ router.post(
  *         description: Cannot delete the BookList
  *       404:
  *         description: No booklists found or other internal error
+ *     security:
+ *       - JWT: []
  */
 router.delete(
   '/book/:id/:book_id',
@@ -480,6 +576,8 @@ router.delete(
  *         description: User already liked this BookList
  *       404:
  *         description: No BookLists found
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/like/:id',
@@ -535,6 +633,8 @@ router.post(
  *         description: You have not yet liked this bookList
  *       404:
  *         description: No bookLists found
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/unlike/:id',
@@ -601,6 +701,8 @@ router.post(
  *         description: Cannot delete the booklist
  *       404:
  *         description: No booklists found
+ *     security:
+ *       - JWT: []
  */
 router.delete(
   '/:id',

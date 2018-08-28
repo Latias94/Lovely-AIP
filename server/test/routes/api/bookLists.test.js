@@ -16,7 +16,7 @@ describe('BookList Route testing', () => {
         request
           .post('/api/books')
           .set('Authorization', token)
-          .send('title=TestGame')
+          .send('title=TestBook1')
           .send('description=Just for testing')
           .send('publishDate=1 1 1970')
           .send('stock=100')
@@ -27,7 +27,7 @@ describe('BookList Route testing', () => {
           .expect(200)
           .end((_, res) => {
             supertestWithJest(err, res, done, () => {
-              expect(res.body.title).toBe('TestGame');
+              expect(res.body.title).toBe('TestBook1');
               expect(res.body.description).toBe('Just for testing');
             });
           });
@@ -38,12 +38,11 @@ describe('BookList Route testing', () => {
 
   afterAll((done) => {
     request
-      .get('/api/books/slug/testgame')
+      .get('/api/books/slug/testbook1')
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
         getToken().then((token) => {
-          // edit book
           request
             .delete(`/api/books/${res.body._id}`)
             .set('Authorization', token)
@@ -215,7 +214,7 @@ describe('BookList Route testing', () => {
       .end((_, r) => {
         const booklistId = r.body._id;
         request
-          .get('/api/books/slug/testgame')
+          .get('/api/books/slug/testbook1')
           .expect('Content-Type', /json/)
           .expect(200)
           .end((err, res) => {

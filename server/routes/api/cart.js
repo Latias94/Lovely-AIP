@@ -77,6 +77,8 @@ router.get('/', passport.authenticate('jwt', {
  *         description: Unauthorized
  *       404:
  *         description: Book Id not exist or Something wrong
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/:id',
@@ -129,6 +131,8 @@ router.post(
  *         description: Unauthorized
  *       404:
  *         description: Book id not exist or Something wrong
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/:id/:quantity',
@@ -192,6 +196,8 @@ router.post(
  *         description: Unauthorized
  *       404:
  *         description: No books found
+ *     security:
+ *       - JWT: []
  */
 router.delete(
   '/:id',
