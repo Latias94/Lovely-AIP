@@ -132,7 +132,7 @@ router.get('/slug/:slug', (req, res) => {
  *     tags:
  *       - BookList
  *     summary: Get BookList with user review by id
- *     description: Get BookList with user review by id
+ *     description: Get BookList with user review by id. This can only be done by the logged in user (add JWT token to header).
  *     produces:
  *       - application/json
  *     parameters:
@@ -146,6 +146,8 @@ router.get('/slug/:slug', (req, res) => {
  *         description: Get BookList successfully
  *       404:
  *         description: No booklists found
+ *     security:
+ *       - JWT: []
  */
 router.get('/user/:id',
   passport.authenticate('jwt', {
@@ -295,6 +297,8 @@ router.get('/:id',
  *         description: Cannot create the BookList
  *       404:
  *         description: BookList name has existed
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/',
@@ -352,6 +356,8 @@ router.post(
  *         description: Cannot edit the BookList
  *       404:
  *         description: No booklists found or BookList name has existed
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/:id',
@@ -424,6 +430,8 @@ router.post(
  *         description: Successfully Added
  *       404:
  *         description: No booklists found or other internal error
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/book/:id/:book_id',
@@ -504,6 +512,8 @@ router.post(
  *         description: Cannot delete the BookList
  *       404:
  *         description: No booklists found or other internal error
+ *     security:
+ *       - JWT: []
  */
 router.delete(
   '/book/:id/:book_id',
@@ -566,6 +576,8 @@ router.delete(
  *         description: User already liked this BookList
  *       404:
  *         description: No BookLists found
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/like/:id',
@@ -621,6 +633,8 @@ router.post(
  *         description: You have not yet liked this bookList
  *       404:
  *         description: No bookLists found
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/unlike/:id',
@@ -687,6 +701,8 @@ router.post(
  *         description: Cannot delete the booklist
  *       404:
  *         description: No booklists found
+ *     security:
+ *       - JWT: []
  */
 router.delete(
   '/:id',

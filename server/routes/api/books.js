@@ -247,6 +247,8 @@ router.get('/isbn/:isbn', (req, res) => {
  *         description: Form validation fail
  *       404:
  *         description: Cannot create the Book with invalid category ID
+ *     security:
+ *       - JWT: []
  */
 router.post('/',
   passport.authenticate('jwt', {
@@ -401,6 +403,8 @@ router.get('/slug/:slug', (req, res) => {
  *         description: Cannot delete the book
  *       404:
  *         description: No books found
+ *     security:
+ *       - JWT: []
  */
 router.delete('/:id',
   passport.authenticate('jwt', { session: false }),
@@ -464,6 +468,8 @@ router.delete('/:id',
  *         description: Form validation fail
  *       404:
  *         description: No books found or Review has existed
+ *     security:
+ *       - JWT: []
  */
 router.post('/review/:id',
   passport.authenticate('jwt', {
@@ -557,6 +563,8 @@ router.post('/review/:id',
  *         description: Successfully removed review
  *       404:
  *         description: No books found or review does not exist
+ *     security:
+ *       - JWT: []
  */
 router.delete('/review/:id/:review_id',
   passport.authenticate('jwt', {
@@ -647,6 +655,8 @@ router.delete('/review/:id/:review_id',
  *         description: Cannot edit the book
  *       404:
  *         description: No books found
+ *     security:
+ *       - JWT: []
  */
 router.post('/:id',
   passport.authenticate('jwt', { session: false }),

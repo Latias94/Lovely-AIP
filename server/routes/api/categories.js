@@ -395,6 +395,8 @@ router.post(
  *         description: Cannot edit the category
  *       404:
  *         description: No categories found or Category name has existed
+ *     security:
+ *       - JWT: []
  */
 router.post(
   '/:id',
@@ -478,6 +480,8 @@ router.post(
  *         description: Cannot delete the category
  *       404:
  *         description: No categories found
+ *     security:
+ *       - JWT: []
  */
 router.delete(
   '/:id',
