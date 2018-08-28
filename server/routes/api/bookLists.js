@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const Book = require('../../models/Book');
+const Review = require('../../models/Review');
 const BookList = require('../../models/BookList');
 
 const router = express.Router();
@@ -126,6 +127,78 @@ router.get('/slug/:slug', (req, res) => {
 
 /**
  * @swagger
+ * /api/booklists/user/{id}:
+ *   get:
+ *     tags:
+ *       - BookList
+ *     summary: Get BookList with user review by id
+ *     description: Get BookList with user review by id
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of BookList that needs to be fetched"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Get BookList successfully
+ *       404:
+ *         description: No booklists found
+ */
+router.get('/user/:id',
+  passport.authenticate('jwt', {
+    session: false,
+  }),
+  (req, res) => {
+    const errors = {};
+
+    BookList.findById(req.params.id)
+      .lean()
+      .then((bookList) => {
+        if (!bookList) {
+          errors.booklistnotfound = 'No booklists found';
+          return res.status(404).json(errors);
+        }
+
+        if (bookList.books.length > 0) {
+          // get bookid array
+          const bookIds = [];
+          bookList.books.forEach(book => bookIds.push(book.bookid));
+          Book.find({
+            _id: {
+              $in: bookIds,
+            }
+          })
+            .then((books) => {
+              // bookList.toObject();
+              const bookObjects = [];
+              books.forEach(book => bookObjects.push(book.toObject()));
+              bookObjects.forEach((book) => {
+                book.reviews.forEach((review) => {
+                  if (review.user.toString() === req.user.id) {
+                    book.reviewContent = review.content;
+                    book.reviewStar = review.star;
+                  }
+                });
+              });
+              bookList.books = bookObjects;
+              return res.json(bookList);
+            })
+            .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
+          return false;
+        } else {
+          return res.json(bookList);
+        }
+      })
+      .catch((err) => {
+        return res.status(404).json(err);
+      });
+  });
+
+/**
+ * @swagger
  * /api/booklists/{id}:
  *   get:
  *     tags:
@@ -146,43 +219,44 @@ router.get('/slug/:slug', (req, res) => {
  *       404:
  *         description: No booklists found
  */
-router.get('/:id', (req, res) => {
-  const errors = {};
+router.get('/:id',
+  (req, res) => {
+    const errors = {};
 
-  BookList.findById(req.params.id)
-    .lean()
-    .then((bookList) => {
-      if (!bookList) {
-        errors.booklistnotfound = 'No booklists found';
-        return res.status(404).json(errors);
-      }
+    BookList.findById(req.params.id)
+      .lean()
+      .then((bookList) => {
+        if (!bookList) {
+          errors.booklistnotfound = 'No booklists found';
+          return res.status(404).json(errors);
+        }
 
-      if (bookList.books.length > 0) {
-        // get bookid array
-        const bookIds = [];
-        bookList.books.forEach(book => bookIds.push(book.bookid));
-        Book.find({
-          _id: {
-            $in: bookIds,
-          }
-        })
-          .then((books) => {
-            // bookList.toObject();
-            const bookObjects = [];
-            books.forEach(book => bookObjects.push(book.toObject()));
-            bookList.books = bookObjects;
-            return res.json(bookList);
+        if (bookList.books.length > 0) {
+          // get bookid array
+          const bookIds = [];
+          bookList.books.forEach(book => bookIds.push(book.bookid));
+          Book.find({
+            _id: {
+              $in: bookIds,
+            }
           })
-          .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
-        return false;
-      } else {
-        return res.json(bookList);
-      }
-    })
-    .catch((err) => {
-      return res.status(404).json(err);
-    });
-});
+            .then((books) => {
+              // bookList.toObject();
+              const bookObjects = [];
+              books.forEach(book => bookObjects.push(book.toObject()));
+              bookList.books = bookObjects;
+              return res.json(bookList);
+            })
+            .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
+          return false;
+        } else {
+          return res.json(bookList);
+        }
+      })
+      .catch((err) => {
+        return res.status(404).json(err);
+      });
+  });
 
 
 /**
