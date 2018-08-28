@@ -43,7 +43,6 @@ describe('BookList Route testing', () => {
       .expect(200)
       .end((err, res) => {
         getToken().then((token) => {
-          // edit book
           request
             .delete(`/api/books/${res.body._id}`)
             .set('Authorization', token)
