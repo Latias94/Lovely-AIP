@@ -77,7 +77,7 @@ class RegisterForm extends Component {
 
   uploadHandler = () => {
     const formData = new FormData();
-    formData.append('myFile', this.state.selectedFile, this.state.selectedFile.name);
+    formData.append('image', this.state.selectedFile, this.state.selectedFile.name);
     axios.post('/upload', formData, {
       onUploadProgress: progressEvent => {
         console.log(progressEvent.loaded / progressEvent.total)
