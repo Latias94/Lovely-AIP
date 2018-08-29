@@ -8,6 +8,7 @@ const books = require('./routes/api/books');
 const bookLists = require('./routes/api/bookLists');
 const categories = require('./routes/api/categories');
 const cart = require('./routes/api/cart');
+const upload = require('./routes/api/upload');
 const swaggerDefinition = require('./config/swagger');
 
 const app = express();
@@ -76,6 +77,7 @@ app.use('/api/books', books);
 app.use('/api/categories', categories);
 app.use('/api/booklists', bookLists);
 app.use('/api/cart', cart);
+app.use('/api/upload', upload);
 
 // change port according to node environment
 const port = process.env.NODE_ENV === 'test'

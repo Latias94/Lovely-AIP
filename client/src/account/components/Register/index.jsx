@@ -72,17 +72,18 @@ class RegisterForm extends Component {
   };
 
   fileChangedHandler = (event) => {
-    this.setState({selectedFile: event.target.files[0]})
+    this.setState({selectedFile: event.target.files[0]});
   };
 
   uploadHandler = () => {
     const formData = new FormData();
-    formData.append('myFile', this.state.selectedFile, this.state.selectedFile.name);
+    formData.append('image', this.state.selectedFile, this.state.selectedFile.name);
+
     axios.post('/upload', formData, {
       onUploadProgress: progressEvent => {
         console.log(progressEvent.loaded / progressEvent.total)
       }
-    })
+    }).then(res => console.log(res))
   };
 
   // TODO: !!!! validation action. State of error cannot be changed in the component.
