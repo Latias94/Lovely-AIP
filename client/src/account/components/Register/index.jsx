@@ -72,7 +72,7 @@ class RegisterForm extends Component {
   };
 
   fileChangedHandler = (event) => {
-    this.setState({selectedFile: event.target.files[0]})
+    this.setState({selectedFile: event.target.files[0]});
   };
 
   uploadHandler = () => {
@@ -82,7 +82,7 @@ class RegisterForm extends Component {
       onUploadProgress: progressEvent => {
         console.log(progressEvent.loaded / progressEvent.total)
       }
-    })
+    }).then(res => console.log(res))
   };
 
   // TODO: !!!! validation action. State of error cannot be changed in the component.
