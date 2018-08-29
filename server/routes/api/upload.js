@@ -19,10 +19,8 @@ function checkFileType(file, callback) {
   const fileTypes = /jpeg|jpg|png|gif/;
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
   // check mimeType
-  const mimeType = fileTypes.test(file.mimeType);
-  // if (mimeType && extName) {
-  console.log(mimeType);
-  if (extName) {
+  const mimeType = fileTypes.test(file.mimetype);
+  if (mimeType && extName) {
     return callback(null, true);
   } else {
     return callback('Error: Image Only');
