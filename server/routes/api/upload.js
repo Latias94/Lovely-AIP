@@ -6,7 +6,9 @@ const router = express.Router();
 
 // Upload engine
 const storage = multer.diskStorage({
-  destination: './public/uploads/',
+  destination: (req, file, callback) => {
+    callback(null, 'public/uploads/');
+  },
   filename: (req, file, callback) => {
     callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -18,7 +20,9 @@ function checkFileType(file, callback) {
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
   // check mimeType
   const mimeType = fileTypes.test(file.mimeType);
-  if (mimeType && extName) {
+  // if (mimeType && extName) {
+  console.log(mimeType);
+  if (extName) {
     return callback(null, true);
   } else {
     return callback('Error: Image Only');
@@ -34,14 +38,24 @@ const upload = multer({
 }).single('image');
 
 
-router.post('/upload', (req, res) => {
+router.post('/', (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       return res.status(404).json({
         msg: err,
       });
+    } else if (req.file === undefined) {
+      return res.status(404).json({
+        msg: 'Error: No File Selected!'
+      });
+    } else {
+      // console.log(req.file);
+      return res.json({
+        success: true,
+        file: `public/uploads/${req.file.filename}`
+      });
     }
-    console.log(req.file);
-    return true;
   });
 });
+
+module.exports = router;
