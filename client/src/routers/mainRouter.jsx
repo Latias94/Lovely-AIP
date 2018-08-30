@@ -10,6 +10,8 @@ import Account from '../account/components/Account';
 import EmailVerification from '../account/components/EmailVerification';
 import VerifyEmail from '../account/utils/verifyEmail';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
+import Payment from '../payment/index';
+
 
 const MainRoute = () => (
 
@@ -23,7 +25,8 @@ const MainRoute = () => (
 			<Route path={'/account'} component={Account} />
 			<Route path={'/verify-email'} component={EmailVerification} />
 			<Route path={'/activate/:token'} component={VerifyEmail}/>
-		</Switch>
+            <Route path={'/payment'} component={Payment}/>
+        </Switch>
 	</Route>
 );
 
