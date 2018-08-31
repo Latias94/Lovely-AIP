@@ -9,15 +9,15 @@ const popularBooksComponent = props => (
 			<div key={obj._id} style={{ marginTop: '5px' }}>
 				<h3>{obj.title}</h3>
 				<hr/>
-				<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+				<div style={style.bookRow}>
 					{console.log(obj.books)}
 					{obj.books.map(smallobj => (
 						<Book
 							key={smallobj._id}
 							bookid={smallobj._id}
 							bookTitle={smallobj.title}
-							bookAuthor={smallobj.authors[0].name}
-							bookReviews={smallobj.reviews.length}
+							bookAuthor='Author'
+							// bookAuthor={smallobj.authors[0].name}
 						/>
 					))}
 				</div>

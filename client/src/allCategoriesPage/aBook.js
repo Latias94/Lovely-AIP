@@ -43,7 +43,7 @@ function SimpleMediaCard(props) {
 					</Typography>
 					<Rate disabled value={5} style={{ fontSize: '7px' }} /><p style={{ display: 'inline' }}>{props.bookReviews}</p>
 					<Typography component="span" noWrap={true}>
-						{props.bookPrice ? `${props.bookPrice}$` : null}
+						{props.bookPrice ? `${props.bookPrice}` : null}
 					</Typography>
 				</CardContent>
 				{/* <CardActions>
