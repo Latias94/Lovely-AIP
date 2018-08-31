@@ -7,25 +7,27 @@ import {
 	CarouselCaption,
 } from 'reactstrap';
 import imageOne from '../Img/Banner1.png';
+import imageTwo from '../Img/Banner2.png';
+import imageThree from '../Img/Banner3.png';
 
 const items = [
 	{
 		id: 1,
 		src: imageOne,
-		altText: 'Slide 1',
-		caption: 'Slide 1',
+		altText: ' ',
+		caption: ' ',
 	},
 	{
 		id: 2,
-		src: imageOne,
-		altText: 'Slide 2',
-		caption: 'Slide 2',
+		src: imageTwo,
+		altText: ' ',
+		caption: ' ',
 	},
 	{
 		id: 3,
-		src: imageOne,
-		altText: 'Slide 3',
-		caption: 'Slide 3',
+		src: imageThree,
+		altText: ' ',
+		caption: ' ',
 	},
 ];
 
