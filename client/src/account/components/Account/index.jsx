@@ -2,8 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-// import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import AccountTab from './accountTab'
 // temp
 import tempAvatar from "../../../Img/uxceo-128.jpg";
 
@@ -102,6 +103,7 @@ class Account extends React.Component {
 		return <div style={styles.container}>
 			<h1>ACCOUNT INFO</h1>
 			<ShowAccountInfo isRetrieved={isRetrieved} username={username} email={email}/>
+			<AccountTab/>
 		</div>;
 	}
 }
