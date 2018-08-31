@@ -30,12 +30,12 @@ export default class booksPage extends Component {
 		requestURL += '5b69933780422c14325872a7';
 		console.log('did amount');
 		Axios.get(requestURL)
-      .then((response) => {
-			this.setState({ books: response.data });
-			console.log('did amount');
-		}).catch((error) => {
-			console.log(error);
-		});
+			.then((response) => {
+				this.setState({ books: response.data });
+				console.log(response.data);
+			}).catch((error) => {
+				console.log(error);
+			});
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -46,12 +46,12 @@ export default class booksPage extends Component {
 			requestURL += this.props.categoriesID;
 			console.log(requestURL);
 			Axios.get(requestURL)
-        .then((response) => {
-				console.log('didupdata'); this.setState({ books: response.data });
-			})
-        .catch((error) => {
-				console.log(error);
-			});
+				.then((response) => {
+					console.log('didupdata'); this.setState({ books: response.data });
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		}
 		return null;
 	}
@@ -77,6 +77,7 @@ export default class booksPage extends Component {
 								bookid={item._id}
 								bookTitle={item.title}
 								bookPrice={item.price}
+								imagePath={item.coverUrl}
 								bookAuthor={item.authors[0].name}
 								bookReviews={item.reviews.length}
 							/>

@@ -114,7 +114,7 @@ export const loginUser = userData => (dispatch) => {
 		}));
 };
 
-export const getUserCart
+// export const getUserCart
 
 // install logged-in user
 export const setCurrentUser = decoded => ({

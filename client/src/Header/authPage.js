@@ -5,7 +5,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Link } from 'react-router-dom';
 import * as style from './headerPageCss';
-import { loginUser, logoutUser } from '../account/actions/authActions';
 
 function MenuItems(props) {
 	const handleClose = props.closeHandle;
@@ -41,16 +40,18 @@ class AuthIcon extends Component {
 		this.state = {
 			anchorEl: null,
 		};
+		this.handleClick = this.handleClick.bind(this);
+		this.handleClose = this.handleClose.bind(this);
 	}
 
-    handleClick = event => {
-        this.setState({ anchorEl: event.currentTarget });
-      };
-    
-    handleClose = () => {
-        this.setState({ anchorEl: null });
-      };
-    
+	handleClick(event) {
+		this.setState({ anchorEl: event.currentTarget });
+	}
+
+	handleClose() {
+		this.setState({ anchorEl: null });
+	}
+
 	render() {
 		const { anchorEl } = this.state;
 		const {

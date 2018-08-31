@@ -18,6 +18,7 @@ class BooksPage extends Component {
 				description: '',
 				price: '',
 				stock: '',
+				coverUrl: '',
 			},
 			submittedReviewStar: 0,
 			submittedReviewcontent: '',
@@ -84,6 +85,7 @@ class BooksPage extends Component {
 			description,
 			price,
 			stock,
+			coverUrl,
 		} = this.state.bookDetailInformation;
 
 		if (this.state.bookDetailInformation !== {}) {
@@ -107,6 +109,7 @@ class BooksPage extends Component {
 					submittedReviewcontent={this.state.submittedReviewcontent}
 					reviewContentChange={this.reviewContentChange}
 					submitClick={this.submmitReview}
+					coverUrl={coverUrl}
 					authOrNot={auth}
 				/>
 			);

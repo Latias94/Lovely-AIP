@@ -31,7 +31,7 @@ function SimpleMediaCard(props) {
 			<Card className={classes.card}>
 				<CardMedia
 					className={classes.media}
-					image="http://localhost:3000/image/book01.jpg"
+					image={props.imagePath}
 					title={props.bookTitle}
 				/>
 				<CardContent>

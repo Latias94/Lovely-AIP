@@ -10,20 +10,24 @@ export default class welcomePageIndex extends Component {
 		this.state = {
 			bookListArray: [],
 			categoriesListArray: [],
+			booklistID: ['5b87b6da566163069154f729', '5b87b55f566163069154f705', '5b83eda73cf33874746df9b1'],
 		};
 	}
 
 	componentDidMount() {
-		Axios({
-			method: 'get',
-			url: '/booklists',
-		}).then((response) => {
-			// TODO: error hint
-			this.setState({ bookListArray: response.data });
-			console.log(this.state.bookListArray);
-		}).catch((error) => {
-			console.log(error);
-		});
+		const thisArray = this.state.bookListArray;
+		for (let item = 0; item < this.state.booklistID.length; item++) {
+			Axios({
+				method: 'get',
+				url: `http://localhost:5000/api/booklists/${this.state.booklistID[item]}`,
+			}).then((response) => {
+				// TODO: error hint
+				thisArray.push(response.data);
+				this.setState({ bookListArray: thisArray });
+			}).catch((error) => {
+				console.log(error);
+			});
+		}
 	}
 
 	render() {

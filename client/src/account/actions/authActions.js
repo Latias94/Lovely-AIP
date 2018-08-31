@@ -93,6 +93,12 @@ export const registerUser = (userData, history) => (dispatch) => {
 	}
 };
 
+// install logged-in user
+export const setCurrentUser = decoded => ({
+	type: SET_CURRENT_USER,
+	payload: decoded,
+});
+
 // Login and get the token
 export const loginUser = userData => (dispatch) => {
 	axios({
@@ -113,12 +119,6 @@ export const loginUser = userData => (dispatch) => {
 			payload: err.response.data,
 		}));
 };
-
-// install logged-in user
-export const setCurrentUser = decoded => ({
-	type: SET_CURRENT_USER,
-	payload: decoded,
-});
 
 // log out
 export const logoutUser = () => (dispatch) => {
