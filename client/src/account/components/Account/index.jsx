@@ -5,7 +5,7 @@ import classNames from 'classnames';
 // import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 // temp
-import tempAvatar from "../../Img/uxceo-128.jpg";
+import tempAvatar from "../../../Img/uxceo-128.jpg";
 
 const styles = {
   container: {
@@ -68,7 +68,7 @@ function ShowAccountInfo(props) {
 	return <div>PLEASE LOG IN</div>;
 }
 
-class AccountPage extends React.Component {
+class Account extends React.Component {
   state = {
     username: '',
     email: '',
@@ -106,5 +106,5 @@ class AccountPage extends React.Component {
 	}
 }
 
-export default AccountPage;
+export default Account;
 // export default withStyles(styles)(AccountPage);

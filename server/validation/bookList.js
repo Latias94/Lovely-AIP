@@ -23,8 +23,6 @@ module.exports = function validateBookListInput(bodyData) {
     errors.description = 'Description field is required';
   }
 
-
-
   return {
     errors,
     isValid: isEmpty(errors),

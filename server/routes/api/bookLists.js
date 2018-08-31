@@ -1,12 +1,12 @@
 const express = require('express');
 const passport = require('passport');
 const Book = require('../../models/Book');
-const Review = require('../../models/Review');
 const BookList = require('../../models/BookList');
 
 const router = express.Router();
 
 const validateBookListInput = require('../../validation/bookList');
+const validateAddBookToBookListInput = require('../../validation/addBookToBookList');
 
 /**
  * @swagger
@@ -127,86 +127,12 @@ router.get('/slug/:slug', (req, res) => {
 
 /**
  * @swagger
- * /api/booklists/user/{id}:
+ * /api/booklists/{id}:
  *   get:
  *     tags:
  *       - BookList
  *     summary: Get BookList with user review by id
  *     description: Get BookList with user review by id. This can only be done by the logged in user (add JWT token to header).
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: "id"
- *         in: "path"
- *         description: "ID of BookList that needs to be fetched"
- *         required: true
- *         type: "string"
- *     responses:
- *       200:
- *         description: Get BookList successfully
- *       404:
- *         description: No booklists found
- *     security:
- *       - JWT: []
- */
-router.get('/user/:id',
-  passport.authenticate('jwt', {
-    session: false,
-  }),
-  (req, res) => {
-    const errors = {};
-
-    BookList.findById(req.params.id)
-      .lean()
-      .then((bookList) => {
-        if (!bookList) {
-          errors.booklistnotfound = 'No booklists found';
-          return res.status(404).json(errors);
-        }
-
-        if (bookList.books.length > 0) {
-          // get bookid array
-          const bookIds = [];
-          bookList.books.forEach(book => bookIds.push(book.bookid));
-          Book.find({
-            _id: {
-              $in: bookIds,
-            }
-          })
-            .then((books) => {
-              // bookList.toObject();
-              const bookObjects = [];
-              books.forEach(book => bookObjects.push(book.toObject()));
-              bookObjects.forEach((book) => {
-                book.reviews.forEach((review) => {
-                  if (review.user.toString() === req.user.id) {
-                    book.reviewContent = review.content;
-                    book.reviewStar = review.star;
-                  }
-                });
-              });
-              bookList.books = bookObjects;
-              return res.json(bookList);
-            })
-            .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
-          return false;
-        } else {
-          return res.json(bookList);
-        }
-      })
-      .catch((err) => {
-        return res.status(404).json(err);
-      });
-  });
-
-/**
- * @swagger
- * /api/booklists/{id}:
- *   get:
- *     tags:
- *       - BookList
- *     summary: Get BookList by id
- *     description: Get BookList by id
  *     produces:
  *       - application/json
  *     parameters:
@@ -246,6 +172,21 @@ router.get('/:id',
               // bookList.toObject();
               const bookObjects = [];
               books.forEach(book => bookObjects.push(book.toObject()));
+              bookObjects.forEach((book) => {
+                book.reviews.forEach((review) => {
+                  if (review.user.toString() === bookList.user.toString()) {
+                    book.reviewContent = review.content;
+                    book.reviewStar = review.star;
+                  }
+                });
+              });
+              for (let i = 0; i < bookObjects.length; i += 1) {
+                bookList.books.forEach((book) => {
+                  if (book.recommendation !== undefined && bookObjects[i]._id.toString() === book.bookid.toString()) {
+                    bookObjects[i].recommendation = book.recommendation;
+                  }
+                });
+              }
               bookList.books = bookObjects;
               return res.json(bookList);
             })
@@ -406,6 +347,14 @@ router.post(
 
 /**
  * @swagger
+ * definitions:
+ *   AddBookToBookList:
+ *     properties:
+ *       recommendation:
+ *         type: string
+ */
+/**
+ * @swagger
  * /api/booklists/book/{id}/{book_id}:
  *   post:
  *     tags:
@@ -425,9 +374,16 @@ router.post(
  *         description: "ID of Book that needs to be added to BookList"
  *         required: true
  *         type: "string"
+ *       - name: body
+ *         description: Add recommendation for the book (optional)
+ *         in: body
+ *         schema:
+ *           $ref: '#/definitions/AddBookToBookList'
  *     responses:
  *       200:
  *         description: Successfully Added
+ *       400:
+ *         description: Form validation fail
  *       404:
  *         description: No booklists found or other internal error
  *     security:
@@ -437,7 +393,13 @@ router.post(
   '/book/:id/:book_id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    const errors = {};
+    const {
+      errors,
+      isValid,
+    } = validateAddBookToBookListInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
     BookList.findById(req.params.id)
       .then((bookList) => {
         if (bookList) {
@@ -456,6 +418,7 @@ router.post(
               }
               const bookFields = {};
               bookFields.bookid = req.params.book_id;
+              bookFields.recommendation = req.body.recommendation;
 
               const bookListFields = {};
               bookListFields.books = bookList.books;

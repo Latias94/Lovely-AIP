@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import KFAccountInput from '../components/KFAccountInput';
-import { loginUser } from '../actions/authActions';
+import KFAccountInput from '../KFAccountInput';
+import { loginUser } from '../../actions/authActions';
 import { connect } from 'react-redux';
 import { compose } from "redux";
 

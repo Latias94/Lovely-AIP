@@ -24,6 +24,9 @@ const BookListSchema = new Schema({
     bookid: {
       type: Schema.Types.ObjectId,
       ref: 'books',
+    },
+    recommendation: {
+      type: String,
     }
   }],
   likes: [{

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import { styles } from '../AccountStyles';
+import { styles } from '../../AccountStyles';
 import axios from 'axios';
 
 /**
