@@ -5,11 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import green from '@material-ui/core/colors/green';
 import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -40,21 +35,8 @@ const styles = theme => ({
     typography: {
         margin: theme.spacing.unit * 2,
     },
-    root: {
-        width: '100%',
-        marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto',
-    },
-    table: {
-        minWidth: 700,
-    },
     card: {
         minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
     },
     title: {
         marginBottom: 16,
@@ -75,7 +57,6 @@ const styles = theme => ({
     menu: {
         width: 200,
     },
-
 });
 
 const inlineStyles = {
@@ -101,60 +82,6 @@ const inlineStyles = {
             right: -5,
         },
     },
-};
-
-
-let id = 0;
-function createData(name, calories, fat, carbs, protein) {
-    id += 1;
-    return { id, name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-function TableList(props) {
-    const { classes } = props;
-
-    return (
-        <div>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell numeric>Calories</TableCell>
-                        <TableCell numeric>Fat (g)</TableCell>
-                        <TableCell numeric>Carbs (g)</TableCell>
-                        <TableCell numeric>Protein (g)</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map(row => {
-                        return (
-                            <TableRow key={row.id}>
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell numeric>{row.calories}</TableCell>
-                                <TableCell numeric>{row.fat}</TableCell>
-                                <TableCell numeric>{row.carbs}</TableCell>
-                                <TableCell numeric>{row.protein}</TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </div>
-    );
-}
-
-TableList.propTypes = {
-    classes: PropTypes.object.isRequired,
 };
 
 class MyList extends React.Component {
@@ -199,7 +126,14 @@ class MyList extends React.Component {
         return (
             <div>
                 <Grid container justify="center" spacing={0}>
-                    <Grid item className={classes.buttonWrapper}>
+                    <Grid item className={classes.buttonWrapper} style={{paddingTop:'20px'}}>
+                        <Button
+                            style={{outline:'none' ,marginRight:'20px'}}
+                            variant="contained"
+                            onClick={this.handleClickButton}
+                        >
+                            + Add a new book
+                        </Button>
                         <Button
                             style={{outline:'none'}}
                             buttonRef={node => {
@@ -208,7 +142,7 @@ class MyList extends React.Component {
                             variant="contained"
                             onClick={this.handleClickButton}
                         >
-                            + Add new Book list
+                            + Add new a Book list
                         </Button>
                         {anchorReference === 'anchorEl' && (
                             <div
@@ -262,7 +196,18 @@ class MyList extends React.Component {
                         </CardActions>
                     </Card>
                 </Popover>
-                <TableList/>
+                <div>
+                    <Card className={classes.card}>
+                        <CardContent>
+                            <Typography variant="subheading" style={{display:'inline'}}>
+                                Booklist Title
+                            </Typography>
+                            <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
+                                Update time
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         );
     }
