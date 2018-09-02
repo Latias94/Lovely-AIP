@@ -75,14 +75,32 @@ class RegisterForm extends Component {
     this.setState({selectedFile: event.target.files[0]});
   };
 
+  static dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+  }
+
   uploadHandler = () => {
+    const previewInFile = RegisterForm.dataURLtoFile(this.state.preview, "avatar.png");
+    console.log(previewInFile);
     const formData = new FormData();
-    formData.append('image', this.state.selectedFile, this.state.selectedFile.name);
-    axios.post('/upload', formData, {
-      onUploadProgress: progressEvent => {
-        console.log(progressEvent.loaded / progressEvent.total)
-      }
-    }).then(res => console.log(res))
+    formData.append('image', previewInFile, previewInFile.name);
+    axios({
+      method: 'POST',
+      // headers: { 'content-type': 'image/png' },
+      data: formData,
+      url: '/upload',
+    }).then(res => console.log(res));
+
+    // axios.post('/upload', formData, {
+    //   onUploadProgress: progressEvent => {
+    //     console.log(progressEvent.loaded / progressEvent.total)
+    //   }
+    // }).then(res => console.log(res))
   };
 
   // TODO: !!!! validation action. State of error cannot be changed in the component.
