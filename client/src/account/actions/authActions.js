@@ -3,7 +3,6 @@ import jwt_decode from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
 import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
 
-
 /**
  * @todo use Redux for the validation
  * @param data - User data

@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import Axios from 'axios';
 import ContentComponent from './component';
 import { selectBookNumberAction } from './actions';
 
 
-class BooksPage extends Component {
+class BooksPage extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -33,10 +33,6 @@ class BooksPage extends Component {
 		Axios({
 			method: 'get',
 			url: requestURL,
-			header: {
-				'Access-Control-Allow-Origin': '*',
-				'content-type': 'application/x-www-form-urlencoded',
-			},
 		}).then((response) => {
 			console.log(response);
 			this.setState({ bookDetailInformation: response.data });
@@ -58,20 +54,18 @@ class BooksPage extends Component {
 		Axios({
 			method: 'post',
 			url: requestURL,
-			header: {
-				'Access-Control-Allow-Origin': '*',
-				'content-type': 'application/x-www-form-urlencoded',
-			},
 			data: {
 				star:this.state.submittedReviewStar,
 				content:this.state.submittedReviewcontent,
 			}
-		}).then((response) => {
+		})
+		.then(() => {
 			alert('sdasdasd');
 			window.location.reload();
-			}).catch((error) => {
-			if(error.response.status===404)
-			alert(error.response.data.reviewexist);
+			})
+		.catch((error) => {
+		if(error.response.status===404)
+		alert(error.response.data.reviewexist);
 		});
 	}
 

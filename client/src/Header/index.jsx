@@ -35,7 +35,6 @@ class headerPageIndex extends Component {
 			iconLogo,
 			searchIcon,
 			rightIcon,
-			avatarStyle,
 		} = style;
 
 		return (

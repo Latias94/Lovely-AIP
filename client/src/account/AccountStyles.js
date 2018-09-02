@@ -5,11 +5,18 @@ export const styles = {
 		flexWrap: 'wrap',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-    padding: '6% 30%'
+    	padding: '5% 15%'
 	},
 	emailVerificationHint: {
-    padding: '10%',
+    	padding: '10%',
 		fontSize: '25px'
+	},
+	verticalCenter: {
+		display: 'flex',
+		flexDirection: 'column',
+		flexWrap: 'wrap',
+		justifyContent: 'space-between',
+		alignItems: 'center',
 	}
 };
 

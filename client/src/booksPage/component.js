@@ -52,6 +52,7 @@ const booksPageComponent = props => (
 			<div style={style.rightPart}>
 				<div style={{ width: '76%', marginLeft: '12%' }}>
 					<div>
+						<p>{`Price: $${totalPrice(props.bookSelectNumber, props.bookPrice)}`}</p>
 						<span style={{ marginRight: '15px' }}>Buy</span>
 						<InputNumber min={1} max={10} value={props.bookSelectNumber} onChange={value => props.onbookNumberChange(value)} />
 						<span style={{ marginLeft: '15px' }}>{`$${totalPrice(props.bookSelectNumber, props.bookPrice)}`}</span>
