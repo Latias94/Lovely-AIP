@@ -8,8 +8,6 @@ import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KFAccountInput from '../KFAccountInput';
 import axios from 'axios';
-import Avatar from 'react-avatar-edit'
-
 
 const styles = theme => ({
   container: {
@@ -37,9 +35,6 @@ class RegisterForm extends Component {
       password: '',
       password2: '',
       errors: {},
-      selectedFile: null,
-      preview: null,
-      src: ''
     }
   };
 
@@ -66,59 +61,19 @@ class RegisterForm extends Component {
       password2
     };
 
-    // if (this.validate(this.state)) {
     this.props.registerUser(newUser, this.props.history);
-    // }
   };
-
-  fileChangedHandler = (event) => {
-    this.setState({selectedFile: event.target.files[0]});
-  };
-
-  uploadHandler = () => {
-    const formData = new FormData();
-    formData.append('image', this.state.selectedFile, this.state.selectedFile.name);
-    axios.post('/upload', formData, {
-      onUploadProgress: progressEvent => {
-        console.log(progressEvent.loaded / progressEvent.total)
-      }
-    }).then(res => console.log(res))
-  };
-
+  
   // TODO: !!!! validation action. State of error cannot be changed in the component.
   // TODO: move validation out, return errors not boolean.
 // TODO: implement better validation approach
-  onClose = () => {
-    this.setState({preview: null})
-  };
-
-  onCrop = (preview) => {
-    this.setState({preview})
-  };
-
   render() {
     const {underlineStyle} = styles;
     const {email, name, password, password2, errors} = this.state;
     const {classes} = this.props;
 
-    // TODO: refactor to conditional rendering
-    // if(!isSignedUp) {
     return <div className={classes.container}>
       <h1>Sign up</h1>
-
-      <div>
-        <Avatar
-          width={390}
-          height={295}
-          onCrop={this.onCrop}
-          onClose={this.onClose}
-          src={this.state.src}
-        />
-        <img src={this.state.preview} alt="Preview"/>
-      </div>
-
-      <input type="file" onChange={this.fileChangedHandler}/>
-      <Button onClick={this.uploadHandler}>Upload!</Button>
 
       <KFAccountInput
         name={"Email*"}
@@ -171,10 +126,6 @@ class RegisterForm extends Component {
         <a href="/login" style={underlineStyle}>Already signed up?</a>
       </div>
     </div>
-    // }
-    // else if(isSignedUp) {
-    //   return <div id={"success"} style={ containerLayout }><h1>Account created</h1></div>
-    // }
   }
 }
 
