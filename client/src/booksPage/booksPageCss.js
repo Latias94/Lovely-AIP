@@ -29,6 +29,9 @@ export const bookInfo = {
 
 export const rightPart = {
 	minWidth: '270px',
+	margin: '20px',
+	border: '3px solid gray',
+	borderRadius: '5px'
 	// display: 'flex',
 	// flexDirection: 'column',
 	// alignItems: 'center',

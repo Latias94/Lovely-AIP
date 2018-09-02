@@ -9,7 +9,7 @@ import * as style from './booksPageCss';
 
 
 const totalPrice = (unitPrice, number) => (unitPrice * number);
-const isInstock = number => (number ? 'In Stock.' : 'Out of Stock');
+const isInstock = number => (number ? 'In Stock' : 'Out of Stock');
 const menu = (
 	<Menu>
 		<Menu.Item key="0">
@@ -50,11 +50,11 @@ const booksPageComponent = props => (
 				</div>
 			</div>
 			<div style={style.rightPart}>
-				<div style={{ width: '70%', marginLeft: '15%' }}>
+				<div style={{ width: '70%', marginLeft: '15%', marginTop: '10%' }}>
 					<div>
+						<p>{`Price: $${totalPrice(props.bookSelectNumber, props.bookPrice)}`}</p>
 						<span style={{ marginRight: '15px' }}>Buy</span>
 						<InputNumber min={1} max={10} value={props.bookSelectNumber} onChange={value => props.onbookNumberChange(value)} />
-						<span style={{ marginLeft: '15px' }}>{`${totalPrice(props.bookSelectNumber, props.bookPrice)}$`}</span>
 					</div>
 					<h4 style={{ marginTop: '15px' }}>{isInstock(props.stockNumber)}</h4>
 					<span>Deliver to Australia</span>
