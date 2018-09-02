@@ -18,6 +18,7 @@ class BooksPage extends Component {
 				description: '',
 				price: '',
 				stock: '',
+				coverUrl: '',
 			},
 			submittedReviewStar: 0,
 			submittedReviewcontent: '',
@@ -36,6 +37,7 @@ class BooksPage extends Component {
 				'content-type': 'application/x-www-form-urlencoded',
 			},
 		}).then((response) => {
+			console.log(response);
 			this.setState({ bookDetailInformation: response.data });
 		}).catch((error) => {
 			console.log(error);
@@ -83,6 +85,7 @@ class BooksPage extends Component {
 			description,
 			price,
 			stock,
+			coverUrl,
 		} = this.state.bookDetailInformation;
 
 		if (this.state.bookDetailInformation !== {}) {
@@ -106,6 +109,7 @@ class BooksPage extends Component {
 					submittedReviewcontent={this.state.submittedReviewcontent}
 					reviewContentChange={this.reviewContentChange}
 					submitClick={this.submmitReview}
+					coverUrl={coverUrl}
 					authOrNot={auth}
 				/>
 			);

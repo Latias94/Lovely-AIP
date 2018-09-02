@@ -9,6 +9,7 @@ const styles = theme => ({
 		margin: theme.spacing.unit,
 	},
 	cssLabel: {
+		color: '#FFFFFF',
 		'&$cssFocused': {
 			color: '#FFFFFF',
 		},

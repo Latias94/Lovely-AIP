@@ -31,7 +31,7 @@ function SimpleMediaCard(props) {
 			<Card className={classes.card}>
 				<CardMedia
 					className={classes.media}
-					image="http://localhost:3000/image/book01.jpg"
+					image={props.imagePath}
 					title={props.bookTitle}
 				/>
 				<CardContent>
@@ -43,7 +43,7 @@ function SimpleMediaCard(props) {
 					</Typography>
 					<Rate disabled value={5} style={{ fontSize: '7px' }} /><p style={{ display: 'inline' }}>{props.bookReviews}</p>
 					<Typography component="span" noWrap={true}>
-						{`${props.bookPrice}$`}
+						{props.bookPrice ? `${props.bookPrice}` : null}
 					</Typography>
 				</CardContent>
 				{/* <CardActions>
