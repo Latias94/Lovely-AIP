@@ -22,6 +22,15 @@ const styles = {
 		paddingTop: '100%', // 1:1
 		backgroundSize: 'contain',
 	},
+	bookTitle: {
+		fontSize: '0.9rem',
+		overflow: 'hidden',
+		margin: '0px',
+		textOverflow: 'ellipsis',
+		display: '-webkit-box',
+		WebkitLineClamp: '3',
+		WebkitBoxOrient: 'vertical',
+	},
 };
 
 function SimpleMediaCard(props) {
@@ -35,15 +44,15 @@ function SimpleMediaCard(props) {
 					title={props.bookTitle}
 				/>
 				<CardContent>
-					<Typography gutterBottom variant="headline" component="span" style={{ fontSize: '0.9rem', margin: '0' }}>
+					<Typography gutterBottom variant="headline" component="span" className={classes.bookTitle}>
 						{props.bookTitle}
 					</Typography>
-					<Typography component="span" noWrap={true}>
+					<Typography component="span" noWrap={true} style={{ fontSize: '0.8rem', color: '#757575' }}>
 						{props.bookAuthor}
 					</Typography>
-					<Rate disabled value={5} style={{ fontSize: '7px' }} /><p style={{ display: 'inline' }}>{props.bookReviews}</p>
+					<Rate disabled value={props.reviewScore} style={{ fontSize: '0.8rem' }} /><p style={{ display: 'inline' }}>{props.bookReviews}</p>
 					<Typography component="span" noWrap={true}>
-						{props.bookPrice ? `${props.bookPrice}` : null}
+						{props.bookPrice ? `$${props.bookPrice}` : null}
 					</Typography>
 				</CardContent>
 				{/* <CardActions>

@@ -18,7 +18,10 @@ const popularBooksComponent = props => (
 							bookTitle={smallobj.title}
 							// bookAuthor='Author'
 							bookAuthor={smallobj.authors[0].name}
-							imagePath = {smallobj.coverUrl}
+							imagePath={smallobj.coverUrl}
+							bookPrice={smallobj.price}
+							reviewScore={smallobj.score}
+							bookReviews={smallobj.reviews.length}
 						/>
 					))}
 				</div>

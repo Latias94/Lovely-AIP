@@ -80,6 +80,7 @@ export default class booksPage extends Component {
 								imagePath={item.coverUrl}
 								bookAuthor={item.authors[0].name}
 								bookReviews={item.reviews.length}
+								reviewScore={item.score}
 							/>
 						),
 					)}
