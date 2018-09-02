@@ -28,6 +28,10 @@ const styles = theme => ({
   }
 });
 
+export const Preview = (props) => {
+  return (props.dataURL === null ? <div></div> : <img src={props.dataURL} alt="Preview"/>);
+};
+
 class RegisterForm extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +41,6 @@ class RegisterForm extends Component {
       password: '',
       password2: '',
       errors: {},
-      selectedFile: null,
       preview: null,
       src: ''
     }
@@ -71,13 +74,14 @@ class RegisterForm extends Component {
     // }
   };
 
-  fileChangedHandler = (event) => {
-    this.setState({selectedFile: event.target.files[0]});
-  };
-
-  static dataURLtoFile(dataurl, filename) {
-    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  static dataURLtoFile(dataURL, filename) {
+    var arr = dataURL.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      // remove the header of URL and covert to byte
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    // handle exceptions. convert <0 to >0 in ascii
     while(n--){
       u8arr[n] = bstr.charCodeAt(n);
     }
@@ -86,21 +90,13 @@ class RegisterForm extends Component {
 
   uploadHandler = () => {
     const previewInFile = RegisterForm.dataURLtoFile(this.state.preview, "avatar.png");
-    console.log(previewInFile);
     const formData = new FormData();
     formData.append('image', previewInFile, previewInFile.name);
     axios({
       method: 'POST',
-      // headers: { 'content-type': 'image/png' },
       data: formData,
       url: '/upload',
     }).then(res => console.log(res));
-
-    // axios.post('/upload', formData, {
-    //   onUploadProgress: progressEvent => {
-    //     console.log(progressEvent.loaded / progressEvent.total)
-    //   }
-    // }).then(res => console.log(res))
   };
 
   // TODO: !!!! validation action. State of error cannot be changed in the component.
@@ -116,7 +112,7 @@ class RegisterForm extends Component {
 
   render() {
     const {underlineStyle} = styles;
-    const {email, name, password, password2, errors} = this.state;
+    const {email, name, password, password2, errors, preview} = this.state;
     const {classes} = this.props;
 
     // TODO: refactor to conditional rendering
@@ -132,10 +128,11 @@ class RegisterForm extends Component {
           onClose={this.onClose}
           src={this.state.src}
         />
-        <img src={this.state.preview} alt="Preview"/>
+        <Preview dataURL={preview}/>
+        {/*{this.state.preview ? <img src={this.state.preview} alt="Preview"/> : <div></div>}*/}
       </div>
 
-      <input type="file" onChange={this.fileChangedHandler}/>
+      {/*<input type="file" onChange={this.fileChangedHandler}/>*/}
       <Button onClick={this.uploadHandler}>Upload!</Button>
 
       <KFAccountInput
