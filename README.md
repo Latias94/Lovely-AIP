@@ -1,12 +1,15 @@
 # Lovely-AIP
-AIP assignment 3
-#The website provides service to the customers who are keen on reading books. The users could recommend and organist the books. The site also offers the purchase service to the customer. The inspiration comes from the Amazon.au.
+This project is an internet programming assignment.
+
+It is a reader's website which allows them to purchase, recommend and manage the books in it. 
+
+Our inspiration comes from the Amazon.
 
 For more details:
 
-Client: [Client README.md](https://github.com/Latias94/Lovely-AIP/blob/master/client/README.md)
+Client: [README](https://github.com/Latias94/Lovely-AIP/blob/master/client/README.md)
 
-Server: [Server README.md](https://github.com/Latias94/Lovely-AIP/blob/master/server/README.md)
+Server: [README](https://github.com/Latias94/Lovely-AIP/blob/master/server/README.md)
 
 
 ## Getting Started

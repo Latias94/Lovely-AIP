@@ -11,6 +11,8 @@ import EmailVerification from '../account/components/EmailVerification';
 import VerifyEmail from '../account/utils/verifyEmail';
 import Avatar from '../account/components/Avatar';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
+import Payment from '../Payment/index';
+
 
 const MainRoute = () => (
 
@@ -25,7 +27,8 @@ const MainRoute = () => (
 			<Route path={'/verify-email'} component={EmailVerification} />
 			<Route path={'/activate/:token'} component={VerifyEmail}/>
 			<Route path={'/avatar'} component={Avatar}/> {/*modal?*/}
-		</Switch>
+			<Route path={'/payment'} component={Payment}/>
+    </Switch>
 	</Route>
 );
 

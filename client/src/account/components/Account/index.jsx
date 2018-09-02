@@ -2,12 +2,23 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import AccountTab from './AccountTab'
 import { Link } from 'react-router-dom';
 import { styles } from '../../AccountStyles';
 // temp
 import tempAvatar from "../../../Img/uxceo-128.jpg";
-// import { withStyles } from '@material-ui/core/styles';
+
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+};
 
 function ImageAvatars() {
   const classes = {
@@ -54,7 +65,7 @@ function ShowAccountInfo(props) {
 				</div>
 				<br/><br/>
 				<p>Username: {username}</p>
-				<p>Email: {email}</p>	
+				<p>Email: {email}</p>
 			</div>);
 	}
 	return <div>PLEASE LOG IN</div>;
@@ -93,10 +104,12 @@ class Account extends React.PureComponent {
 
 		return <div style={styles.container}>
 			<h1>ACCOUNT INFO</h1>
-			<ShowAccountInfo 
-			isRetrieved={isRetrieved} 
-			username={username} 
+			<ShowAccountInfo
+			isRetrieved={isRetrieved}
+			username={username}
 			email={email}/>
+			<ShowAccountInfo isRetrieved={isRetrieved} username={username} email={email}/>
+			<AccountTab/>
 		</div>;
 	}
 }
