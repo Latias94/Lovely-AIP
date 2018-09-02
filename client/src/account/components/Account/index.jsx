@@ -2,10 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-// import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import { Link } from 'react-router-dom';
 // temp
 import tempAvatar from "../../../Img/uxceo-128.jpg";
+// import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
   container: {
@@ -56,13 +57,11 @@ function ShowAccountInfo(props) {
 		return (
 			<div>
 				<ImageAvatars />
-				{/*<div style={{*/}
-					{/*display: 'flex', textAlign: 'center', width: '100px', height: '100px', backgroundColor: 'gray', color: 'white', borderRadius: '50px', margin: '70px',*/}
-				{/*}}>Avatar</div>*/}
+				<Link to={'/avatar'}>Change picture</Link>
 				<p>Username: {props.username}</p>
 				<label>Email: {props.email}</label>
 				<div>Favourite Books:</div>
-				<div>...</div>
+				<div>...</div>			
 			</div>);
 	}
 	return <div>PLEASE LOG IN</div>;
@@ -98,7 +97,7 @@ class Account extends React.Component {
 	render() {
 		// const {} = styles
 		const { isRetrieved, username, email } = this.state;
-		// style is diff from classNames
+
 		return <div style={styles.container}>
 			<h1>ACCOUNT INFO</h1>
 			<ShowAccountInfo isRetrieved={isRetrieved} username={username} email={email}/>

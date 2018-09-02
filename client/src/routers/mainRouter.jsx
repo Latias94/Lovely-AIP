@@ -9,6 +9,7 @@ import Categories from '../allCategoriesPage';
 import Account from '../account/components/Account';
 import EmailVerification from '../account/components/EmailVerification';
 import VerifyEmail from '../account/utils/verifyEmail';
+import Avatar from '../account/components/Avatar';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
 
 const MainRoute = () => (
@@ -23,6 +24,7 @@ const MainRoute = () => (
 			<Route path={'/account'} component={Account} />
 			<Route path={'/verify-email'} component={EmailVerification} />
 			<Route path={'/activate/:token'} component={VerifyEmail}/>
+			<Route path={'/avatar'} component={Avatar}/> {/*modal?*/}
 		</Switch>
 	</Route>
 );
