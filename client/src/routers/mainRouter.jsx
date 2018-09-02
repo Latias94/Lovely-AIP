@@ -10,7 +10,7 @@ import Account from '../account/components/Account';
 import EmailVerification from '../account/components/EmailVerification';
 import VerifyEmail from '../account/utils/verifyEmail';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
-import Payment from '../payment/index';
+import Payment from '../Payment/index';
 
 
 const MainRoute = () => (

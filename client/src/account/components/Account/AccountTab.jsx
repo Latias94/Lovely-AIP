@@ -6,7 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import '../../accountPage/accountPage.css';
 import Typography from '@material-ui/core/Typography';
-import MyList from './myList'
+import MyList from './MyList'
 
 
 const styles = theme => ({

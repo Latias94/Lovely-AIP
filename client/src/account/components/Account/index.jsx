@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import AccountTab from './accountTab'
+import AccountTab from './AccountTab'
 // temp
 import tempAvatar from "../../../Img/uxceo-128.jpg";
 
