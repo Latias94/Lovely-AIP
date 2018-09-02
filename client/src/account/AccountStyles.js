@@ -5,7 +5,7 @@ export const styles = {
 		flexWrap: 'wrap',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-    	padding: '5% 30%'
+    	padding: '5% 15%'
 	},
 	emailVerificationHint: {
     	padding: '10%',

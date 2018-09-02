@@ -2,23 +2,13 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
+// import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AccountTab from './AccountTab'
 import { Link } from 'react-router-dom';
 import { styles } from '../../AccountStyles';
 // temp
 import tempAvatar from "../../../Img/uxceo-128.jpg";
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-};
 
 function ImageAvatars() {
   const classes = {
@@ -38,12 +28,9 @@ function ImageAvatars() {
   // const { classes } = props;
   return (
     <div className={classes.row}>
-      {/*<Avatar alt="Remy Sharp" src="/static/images/remy.jpg" className={classes.avatar} />*/}
       <Avatar
         alt="Adelle Charles"
 				src={tempAvatar}
-				// src={"https://i.imgur.com/20NRc7Y.jpg"}
-        // src="../../../public/avatars/uxceo-128.jpg"
         className={classNames(classes.avatar, classes.bigAvatar)}
       />
     </div>
@@ -103,12 +90,10 @@ class Account extends React.PureComponent {
 		const { isRetrieved, username, email } = this.state;
 
 		return <div style={styles.container}>
-			<h1>ACCOUNT INFO</h1>
 			<ShowAccountInfo
 			isRetrieved={isRetrieved}
 			username={username}
 			email={email}/>
-			<ShowAccountInfo isRetrieved={isRetrieved} username={username} email={email}/>
 			<AccountTab/>
 		</div>;
 	}
