@@ -366,11 +366,28 @@ router.post('/login', (req, res) => {
 router.get('/current', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  res.json({
-    id: req.user.id,
-    name: req.user.name,
-    email: req.user.email,
-  });
+  User.findById(req.user.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          usernotfound: 'No user found'
+        });
+      } else if (user.avatar !== null) {
+        res.json({
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+          avatar: user.avatar
+        });
+      } else {
+        res.json({
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+        });
+      }
+      return false;
+    });
 });
 
 /**
@@ -405,6 +422,43 @@ router.get('/current/like/booklist', passport.authenticate('jwt', {
     .catch(() => res.status(404).json({
       booklistnotfound: 'No booklists found',
     }));
+});
+
+/**
+ * @swagger
+ * /api/users/avatar/{id}:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get user avatar according to user id
+ *     description: Get user avatar according to user id
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "id of the user"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Successfully get the avatar
+ *       404:
+ *         description: No avatars found
+ */
+router.get('/avatar/:id', (req, res) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      if (user.avatar) {
+        return res.json({
+          avatar: user.avatar,
+        });
+      } else {
+        return res.status(404).json({
+          avatarnotfound: 'No avatars found',
+        });
+      }
+    });
 });
 
 module.exports = router;
