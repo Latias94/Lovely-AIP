@@ -1,6 +1,8 @@
 const multer = require('multer');
 const path = require('path');
 const express = require('express');
+const passport = require('passport');
+const User = require('../../models/User');
 
 const router = express.Router();
 
@@ -10,7 +12,7 @@ const storage = multer.diskStorage({
     callback(null, 'public/uploads/');
   },
   filename: (req, file, callback) => {
-    callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -35,8 +37,29 @@ const upload = multer({
   },
 }).single('image');
 
-
-router.post('/', (req, res) => {
+/**
+ * @swagger
+ * /api/upload/avatar:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Upload avatar for current user
+ *     description: Upload avatar for current user. This can only be done by the logged in user (add JWT token to header)
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Successfully send activate email
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: No user found Or No File Selected!
+ *     security:
+ *       - JWT: []
+ */
+router.post('/avatar', passport.authenticate('jwt', {
+  session: false,
+}), (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       return res.status(404).json({
@@ -48,10 +71,19 @@ router.post('/', (req, res) => {
       });
     } else {
       // console.log(req.file);
-      return res.json({
-        success: true,
-        file: `public/uploads/${req.file.filename}`
-      });
+      User.findById(req.user.id)
+        .then((user) => {
+          if (user) {
+            user.avatar = `/uploads/${req.file.filename}`;
+            user.save().then(currentUser => res.json(currentUser));
+          } else {
+            return res.status(404).json({
+              usernotfound: 'No user found'
+            });
+          }
+          return false;
+        });
+      return false;
     }
   });
 });

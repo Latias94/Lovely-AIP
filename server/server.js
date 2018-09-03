@@ -78,6 +78,10 @@ app.use('/api/categories', categories);
 app.use('/api/booklists', bookLists);
 app.use('/api/cart', cart);
 app.use('/api/upload', upload);
+// Public Folder
+// To get image in public folder, you can do as follow
+// http://localhost:5000/uploads/image-1535933860912.jpg
+app.use(express.static('./public'));
 
 // change port according to node environment
 const port = process.env.NODE_ENV === 'test'

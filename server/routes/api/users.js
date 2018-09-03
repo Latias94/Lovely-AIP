@@ -366,11 +366,28 @@ router.post('/login', (req, res) => {
 router.get('/current', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  res.json({
-    id: req.user.id,
-    name: req.user.name,
-    email: req.user.email,
-  });
+  User.findById(req.user.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          usernotfound: 'No user found'
+        });
+      } else if (user.avatar !== null) {
+        res.json({
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+          avatar: user.avatar
+        });
+      } else {
+        res.json({
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+        });
+      }
+      return false;
+    });
 });
 
 /**
