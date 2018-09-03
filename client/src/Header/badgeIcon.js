@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
 	badge: {
@@ -20,10 +21,16 @@ function CustomizedBadge(props) {
 	const { classes } = props;
 
 	return (
-		<IconButton aria-label="Cart">
-			<Badge badgeContent={4} color="primary" classes={{ badge: classes.badge }}>
-				<ShoppingCartIcon />
-			</Badge>
+		<IconButton aria-label="Cart" component={Link} to={'/cart'}>
+			{
+				props.number === 0 ? (
+					<ShoppingCartIcon />
+				) : (
+					<Badge badgeContent={props.number} color="primary" classes={{ badge: classes.badge }}>
+						<ShoppingCartIcon />
+					</Badge>
+				)
+			}
 		</IconButton>
 	);
 }

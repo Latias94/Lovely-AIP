@@ -19,6 +19,7 @@ class BooksPage extends PureComponent {
 				price: '',
 				stock: '',
 				coverUrl: '',
+				score:0,
 			},
 			submittedReviewStar: 0,
 			submittedReviewcontent: '',
@@ -80,6 +81,7 @@ class BooksPage extends PureComponent {
 			price,
 			stock,
 			coverUrl,
+			score,
 		} = this.state.bookDetailInformation;
 
 		if (this.state.bookDetailInformation !== {}) {
@@ -91,6 +93,7 @@ class BooksPage extends PureComponent {
 					bookImagePath={'#'}
 					bookAuthor={authors[0].name}
 					// bookRate={reviews[0].star}
+					reviewScore={score}
 					bookReviews={reviews.length}
 					description={description}
 					bookPrice={price}
