@@ -461,4 +461,41 @@ router.get('/avatar/:id', (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /api/users/:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get all users
+ *     description: Get all users. This can only be done by the staff.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Successfully get the users
+ *       401:
+ *         description: Cannot get the data
+ *     security:
+ *       - JWT: []
+ */
+router.get('/', passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findById(req.user.id).then((user) => {
+      if (user) {
+        if (!user.isStaff) {
+          return res.status(401).json({
+            unauthorized: 'Cannot not get data',
+          });
+        } else {
+          User.find()
+            .then((users) => {
+              return res.json(users);
+            });
+        }
+      }
+      return true;
+    });
+  });
+
 module.exports = router;
