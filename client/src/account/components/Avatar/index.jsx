@@ -5,6 +5,7 @@ import { default as AvatarEdit }from 'react-avatar-edit';
 import dataURLtoFile from "../../utils/dataURLtoFile";
 import { styles } from "../../AccountStyles";
 import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 class Avatar extends PureComponent {
     constructor(props) {
@@ -60,5 +61,12 @@ class Avatar extends PureComponent {
 const Preview = (props) => {
     return (props.dataURL === null ? <div></div> : <img src={props.dataURL} alt="Preview"/>);
   };
+
+Avatar.propTypes = {
+    dataURL: PropTypes.string,
+    onCrop: PropTypes.object,
+    onClose: PropTypes.object,
+    src: PropTypes.string
+};
 
 export default withRouter(Avatar);

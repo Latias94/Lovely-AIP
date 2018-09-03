@@ -70,8 +70,6 @@ class Account extends React.PureComponent {
 		axios.get(URL, {})
 			.then(((response) => {
 				if (response.status === 200) {
-					console.log(response.data);
-
 					const { name: username, email } = response.data;
 					this.setState({
 						username,
