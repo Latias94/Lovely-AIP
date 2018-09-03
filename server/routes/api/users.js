@@ -424,4 +424,41 @@ router.get('/current/like/booklist', passport.authenticate('jwt', {
     }));
 });
 
+/**
+ * @swagger
+ * /api/users/avatar/{id}:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get user avatar according to user id
+ *     description: Get user avatar according to user id
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "id of the user"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Successfully get the avatar
+ *       404:
+ *         description: No avatars found
+ */
+router.get('/avatar/:id', (req, res) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      if (user.avatar) {
+        return res.json({
+          avatar: user.avatar,
+        });
+      } else {
+        return res.status(404).json({
+          avatarnotfound: 'No avatars found',
+        });
+      }
+    });
+});
+
 module.exports = router;
