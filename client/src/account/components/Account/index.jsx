@@ -2,30 +2,30 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-// import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AccountTab from './AccountTab'
 import { Link } from 'react-router-dom';
-import { styles } from '../../AccountStyles';
+import { styles as accountStyles } from '../../AccountStyles';
 // temp
 import tempAvatar from "../../../Img/uxceo-128.jpg";
 
-function ImageAvatars() {
-  const classes = {
-    row: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    avatar: {
-      margin: 10,
-    },
-    bigAvatar: {
-      width: 60,
-      height: 60,
-    },
-  };
-  // const classes = styles;
-  // const { classes } = props;
+const styles = {
+	row: {
+		display: 'flex',
+		justifyContent: 'center',
+	},
+	avatar: {
+		margin: 10,
+	},
+	bigAvatar: {
+		width: 160,
+		height: 160,
+	},
+};
+
+function ImageAvatars(props) {
+  const { classes } = props;
   return (
     <div className={classes.row}>
       <Avatar
@@ -37,17 +37,13 @@ function ImageAvatars() {
   );
 }
 
-ImageAvatars.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 function ShowAccountInfo(props) {
-	const { isRetrieved, username, email } = props;
+	const { isRetrieved, username, email, classes } = props;
 	if (isRetrieved) {
 		return (
 			<div>
-				<div style={styles.verticalCenter}>
-					<ImageAvatars />
+				<div style={accountStyles.verticalCenter}>
+					<ImageAvatars classes={classes}/>
 					<Link to={'/avatar'}>Change picture</Link>
 				</div>
 				<br/><br/>
@@ -59,11 +55,14 @@ function ShowAccountInfo(props) {
 }
 
 class Account extends React.PureComponent {
-  state = {
-    username: '',
-    email: '',
-    isRetrieved: false, // TODO: when it is true at first, the empty state cannot be transfer to the state in render stage
-  };
+		constructor(props) {
+			super(props);
+			this.state = {
+				username: '',
+				email: '',
+				isRetrieved: false, // TODO: when it is true at first, the empty state cannot be transfer to the state in render stage
+			};
+		}
 
     componentDidMount() {
 		// TODO: GET basic info FROM TOKEN and other from certain API
@@ -89,15 +88,19 @@ class Account extends React.PureComponent {
 		// const {} = styles
 		const { isRetrieved, username, email } = this.state;
 
-		return <div style={styles.container}>
+		return <div style={accountStyles.container}>
 			<ShowAccountInfo
 			isRetrieved={isRetrieved}
 			username={username}
-			email={email}/>
+			email={email}
+			classes={this.props.classes}/>
 			<AccountTab/>
 		</div>;
 	}
 }
 
-export default Account;
-// export default withStyles(styles)(AccountPage);
+ImageAvatars.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Account);
