@@ -116,8 +116,7 @@ router.post('/register', (req, res) => {
       errors.email = 'Email already exists';
       return res.status(400).json(errors);
     }
-    // TODO
-    // const avatar = 'temp';
+
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
@@ -142,7 +141,7 @@ router.post('/register', (req, res) => {
       });
     });
 
-    bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.genSalt(12, (err, salt) => {
       bcrypt.hash(newUser.password, salt, (error, hash) => {
         if (error) throw error;
         newUser.password = hash;
