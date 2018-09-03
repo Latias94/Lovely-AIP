@@ -10,7 +10,6 @@ const popularBooksComponent = props => (
 				<h3>{obj.title}</h3>
 				<hr/>
 				<div style={style.bookRow}>
-					{console.log(obj.books)}
 					{obj.books.map(smallobj => (
 						<Book
 							key={smallobj._id}

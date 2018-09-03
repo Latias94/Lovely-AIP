@@ -51,7 +51,7 @@ class headerPageIndex extends Component {
 								isAuthenticated={this.props.auth.isAuthenticated}
 								logoutUser={this.props.logoutUser}
 							/>
-							<Cart number={this.props.cartCount} />
+							<Cart number={this.props.cartCount} auth={this.props.auth.isAuthenticated} />
 						</div>
 					</div>
 				</div>
