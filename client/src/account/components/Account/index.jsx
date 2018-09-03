@@ -38,8 +38,8 @@ function ImageAvatars(props) {
 }
 
 function ShowAccountInfo(props) {
-	const { isRetrieved, username, email, classes } = props;
-	if (isRetrieved) {
+	const { username, email, classes } = props;
+	// if (isLoggedIn) {
 		return (
 			<div>
 				<div style={accountStyles.verticalCenter}>
@@ -50,8 +50,8 @@ function ShowAccountInfo(props) {
 				<p>Username: {username}</p>
 				<p>Email: {email}</p>
 			</div>);
-	}
-	return <div>PLEASE LOG IN</div>;
+	// }
+	// return <div>PLEASE LOG IN</div>;
 }
 
 class Account extends React.PureComponent {
@@ -60,7 +60,7 @@ class Account extends React.PureComponent {
 			this.state = {
 				username: '',
 				email: '',
-				isRetrieved: false, // TODO: when it is true at first, the empty state cannot be transfer to the state in render stage
+				isLoggedIn: false, // TODO: when it is true at first, the empty state cannot be transfer to the state in render stage
 			};
 		}
 
@@ -74,7 +74,7 @@ class Account extends React.PureComponent {
 					this.setState({
 						username,
 						email,
-						isRetrieved: true,
+						isLoggedIn: true,
 					});
 				}
 			}))
@@ -84,15 +84,22 @@ class Account extends React.PureComponent {
 
 	render() {
 		// const {} = styles
-		const { isRetrieved, username, email } = this.state;
+		const { isLoggedIn, username, email } = this.state;
 
 		return <div style={accountStyles.container}>
-			<ShowAccountInfo
-			isRetrieved={isRetrieved}
+		{/* THIS IS UGLY */}
+		{isLoggedIn 
+			? 
+		(// WHY I HAVE TO SET THE STYLE AGAIN?
+		<span style={accountStyles.container}>
+		<ShowAccountInfo
 			username={username}
 			email={email}
 			classes={this.props.classes}/>
-			<AccountTab/>
+			<AccountTab/></span>)
+			:
+			<Link to={'login'}>PLEASE LOG IN</Link>
+		}
 		</div>;
 	}
 }

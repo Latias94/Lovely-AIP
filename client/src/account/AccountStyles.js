@@ -17,6 +17,13 @@ export const styles = {
 		flexWrap: 'wrap',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+	},
+	horizontalCenter: {
+		display: 'flex',
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'space-between',
+		alignItems: 'center',
 	}
 };
 

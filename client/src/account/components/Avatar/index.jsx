@@ -23,8 +23,12 @@ class Avatar extends PureComponent {
     axios({
         method: 'POST',
         data: formData,
-        url: '/upload',
-    }).then(this.props.history.push('account'));
+        url: '/upload/avatar',
+    })
+    .then(res =>{
+        console.log(res.data.avatar);
+        this.props.history.push('account');
+    });
     };
 
     onClose = () => {
@@ -41,6 +45,7 @@ class Avatar extends PureComponent {
         return(
         <div style={styles.container}>
         <h1>My Avatar</h1>
+        <div style={styles.horizontalCenter}>
         <AvatarEdit
           width={390}
           height={295}
@@ -48,9 +53,8 @@ class Avatar extends PureComponent {
           onClose={this.onClose}
           src={src}
         />
-        <br/>
         <Preview dataURL={preview}/>
-        <br/>
+        </div>
         <Button variant="contained" color="secondary" id={"upload"} onClick={this.uploadHandler}>Upload</Button>
       </div>
       )
@@ -59,7 +63,7 @@ class Avatar extends PureComponent {
 
 // show the preivew of the cropped avatar
 const Preview = (props) => {
-    return (props.dataURL === null ? <div></div> : <img src={props.dataURL} alt="Preview"/>);
+    return (props.dataURL === null ? <div></div> : <img style={{'margin': '50px'}} src={props.dataURL} alt="Preview"/>);
   };
 
 Avatar.propTypes = {
