@@ -7,10 +7,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
 import CartTableRow from './cartTableRow';
 
 const styles = theme => ({
@@ -31,31 +27,32 @@ function cartTable(props) {
 
 	return (
 		<Paper className={classes.root}>
-			{props.cartBooks === 0 ? (<h2>Nothing Here</h2>) : (
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow className={classes.header}>
-							<TableCell style={{ width: '230px' }}> </TableCell>
-							<TableCell> </TableCell>
-							<TableCell numeric>Price</TableCell>
-							<TableCell numeric>Quantity</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{props.cartBooks.map(row => (
+			<Table className={classes.table}>
+				<TableHead>
+					<TableRow className={classes.header}>
+						<TableCell style={{ width: '230px' }}> </TableCell>
+						<TableCell> </TableCell>
+						<TableCell numeric>Price</TableCell>
+						<TableCell numeric>Quantity</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{props.cartBooks.length === 0 ? (<TableRow><TableCell><h3>Nothing Here</h3></TableCell></TableRow>) : (
+						props.cartBooks.map(row => (
 							<CartTableRow
 								key={row._id}
-								id={row._id}
+								id={row.bookid}
 								coverUrl={row.coverUrl}
 								title={row.title}
 								author={row.authors[0].name}
 								price={row.price}
 								number={row.quantity}
 							/>
-						))}
-					</TableBody>
-				</Table>
-			)}
+						))
+
+					)}
+				</TableBody>
+			</Table>
 		</Paper>
 
 	);

@@ -66,6 +66,7 @@ app.use((req, res, next) => {
   // BEFORE CHANGING, MAKE SURE THE ACCOUNT PAGE WORKS!!!
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', 'POST, GET, DELETE');
   next();
 });
 

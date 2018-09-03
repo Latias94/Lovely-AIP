@@ -22,6 +22,7 @@ function CustomizedBadge(props) {
 
 	return (
 		<IconButton aria-label="Cart" component={Link} to={props.auth ? '/cart' : '/login'}>
+			{console.log(props.number)}
 			{
 				props.number === 0 ? (
 					<ShoppingCartIcon style={{ color: 'white' }} />

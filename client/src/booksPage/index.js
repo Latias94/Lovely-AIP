@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Axios from 'axios';
 import ContentComponent from './component';
 import { selectBookNumberAction } from './actions';
-
+import { addBookToCartData, trysss } from '../Header/actions';
 
 class BooksPage extends PureComponent {
 	constructor(props) {
@@ -25,6 +25,8 @@ class BooksPage extends PureComponent {
 			submittedReviewcontent: '',
 
 		};
+		// this.props.addBookToCartData(2);
+		this.addToCartClick = this.addToCartClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -47,6 +49,17 @@ class BooksPage extends PureComponent {
 	
 	reviewContentChange = (content) => {
 		this.setState({ submittedReviewcontent: content });
+	}
+
+	addToCartClick = (id) => {
+		console.log(id)
+		console.log(this.props.auth)
+		if (this.props.auth) {
+			this.props.addBookToCartData(id);
+			console.log('sss');
+		} else {
+			window.location.pathname = './login';
+		}
 	}
 
 	submmitReview = (review) => {
@@ -108,6 +121,7 @@ class BooksPage extends PureComponent {
 					submitClick={this.submmitReview}
 					coverUrl={coverUrl}
 					authOrNot={auth}
+					addToCartClick={id=>this.addToCartClick(id)}
 				/>
 			);
 		}
@@ -124,13 +138,13 @@ function mapStateToProps(state) {
 	};
 }
 
-function mapDispatchToProps(dispatch) {
-	return {
-		onbookNumberChange: (number) => { dispatch(selectBookNumberAction(number)); },
-	};
-}
+// function mapDispatchToProps(dispatch) {
+// 	return {
+// 		onbookNumberChange: (number) => { dispatch(selectBookNumberAction(number)); },
+// 	};
+// }
 
 export default connect(
 	mapStateToProps,
-	mapDispatchToProps,
+	{addBookToCartData, onbookNumberChange: number => dispatch => { dispatch(selectBookNumberAction(number)) } }
 )(BooksPage);

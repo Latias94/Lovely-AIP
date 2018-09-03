@@ -60,7 +60,7 @@ const booksPageComponent = props => (
 					<h4 style={{ marginTop: '15px' }}>{isInstock(props.stockNumber)}</h4>
 					<span>Deliver to Australia</span>
 					<hr />
-					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }}> Add to Cart </Button>
+					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }} onClick={() => props.addToCartClick(props.id)}> Add to Cart </Button>
 					<Dropdown overlay={dropdown(props.authOrNot)} trigger={['click']} >
 						<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', marginTop: '15px' }}>
 							Add to your List<Icon type="down" />

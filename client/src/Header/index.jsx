@@ -26,6 +26,12 @@ class headerPageIndex extends Component {
 		this.props.getUsersCart();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (this.props.auth.isAuthenticated != prevProps.auth.isAuthenticated) {
+			this.props.getUsersCart();
+		}
+	}
+
 	render() {
 		const { anchorEl } = this.state;
 		const {
