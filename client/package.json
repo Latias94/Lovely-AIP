@@ -18,6 +18,7 @@
     "react-icons-kit": "^1.1.7",
     "react-images-upload": "^1.2.2",
     "react-redux": "^5.0.7",
+    "react-responsive-modal": "^3.3.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
