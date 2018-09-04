@@ -4,9 +4,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import Modal from 'react-responsive-modal';
 import AccountTab from './AccountTab'
 import { Link } from 'react-router-dom';
 import { styles as accountStyles } from '../../AccountStyles';
+import { default as AvatarEditor } from "../Avatar";
+import { connect } from 'react-redux';
+import { compose } from "redux";
 // temp
 import tempAvatar from "../../../Img/uxceo-128.jpg";
 
@@ -30,28 +34,20 @@ function ImageAvatars(props) {
     <div className={classes.row}>
       <Avatar
         alt="Adelle Charles"
-				src={tempAvatar}
+				src={props.avatar}
         className={classNames(classes.avatar, classes.bigAvatar)}
       />
     </div>
   );
 }
 
-function ShowAccountInfo(props) {
-	const { username, email, classes } = props;
-	// if (isLoggedIn) {
+function AccountInfo(props) {
+	const { username, email } = props;
 		return (
 			<div>
-				<div style={accountStyles.verticalCenter}>
-					<ImageAvatars classes={classes}/>
-					<Link to={'/avatar'}>Change picture</Link>
-				</div>
-				<br/><br/>
 				<p>Username: {username}</p>
 				<p>Email: {email}</p>
 			</div>);
-	// }
-	// return <div>PLEASE LOG IN</div>;
 }
 
 class Account extends React.PureComponent {
@@ -60,10 +56,15 @@ class Account extends React.PureComponent {
 			this.state = {
 				username: '',
 				email: '',
-				isLoggedIn: false, // TODO: when it is true at first, the empty state cannot be transfer to the state in render stage
+				isLoggedIn: false,
+				avatarPageOpened: false,
+				avatar: tempAvatar
 			};
 		}
 
+		componentWillReceiveProps(nextProps, prevState) {
+			this.setState({avatar: nextProps.avatar});
+}
     componentDidMount() {
 		// TODO: GET basic info FROM TOKEN and other from certain API
 		const URL = '/users/current';
@@ -82,9 +83,22 @@ class Account extends React.PureComponent {
 			});
 	}
 
+  onOpenModal = () => {
+    this.setState({ avatarPageOpened: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ avatarPageOpened: false });
+	};
+	
 	render() {
 		// const {} = styles
-		const { isLoggedIn, username, email } = this.state;
+		const { 
+			isLoggedIn, 
+			avatarPageOpened, 
+			username, 
+			email, 
+			avatar } = this.state;
 
 		return <div style={accountStyles.container}>
 		{/* THIS IS UGLY */}
@@ -92,7 +106,17 @@ class Account extends React.PureComponent {
 			? 
 		(// WHY I HAVE TO SET THE STYLE AGAIN?
 		<span style={accountStyles.container}>
-		<ShowAccountInfo
+				<div style={accountStyles.verticalCenter}>
+					<ImageAvatars classes={this.props.classes} avatar={avatar} />
+					{/* TODO: MAKE IT AS A BANNER ABOVE THE AVATAR */}
+					<button onClick={this.onOpenModal}>Change picture</button>
+				</div>
+				
+        <Modal open={avatarPageOpened} onClose={this.onCloseModal} center>
+          <AvatarEditor/>
+        </Modal>
+				
+		<AccountInfo
 			username={username}
 			email={email}
 			classes={this.props.classes}/>
@@ -108,4 +132,11 @@ ImageAvatars.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Account);
+const mapStateToProps = state => ({
+	avatar: state.avatar
+});
+
+export default compose(
+	withStyles(styles),
+	connect(mapStateToProps),
+)(Account);

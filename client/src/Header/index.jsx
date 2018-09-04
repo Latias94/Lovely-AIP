@@ -66,4 +66,7 @@ const mapStateToProps = state => ({
 	cartCount: state.headerReducer.cartNumber,
 });
 
-export default connect(mapStateToProps, { loginUser, logoutUser, getUsersCart })(headerPageIndex);
+export default connect(mapStateToProps, { 
+	loginUser, 
+	logoutUser, 
+	getUsersCart })(headerPageIndex);

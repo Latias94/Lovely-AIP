@@ -6,13 +6,16 @@ import dataURLtoFile from "../../utils/dataURLtoFile";
 import { styles } from "../../AccountStyles";
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { setAvatar } from "./actions";
+import { connect } from 'react-redux';
+import { compose } from "redux";
 
 class Avatar extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             preview: null,
-            src: ''
+            src: '',
           }
     }
 
@@ -29,6 +32,7 @@ class Avatar extends PureComponent {
         console.log(res.data.avatar);
         this.props.history.push('account');
     });
+    setAvatar(previewInFile);
     };
 
     onClose = () => {
@@ -73,4 +77,8 @@ Avatar.propTypes = {
     src: PropTypes.string
 };
 
-export default withRouter(Avatar);
+// export default withRouter(Avatar)
+export default compose(
+    withRouter,
+    connect(null, { setAvatar }),
+  )(Avatar);

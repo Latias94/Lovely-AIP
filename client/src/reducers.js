@@ -4,12 +4,14 @@ import errorReducer from './account/reducers/errorReducer';
 import booksPageReducer from './booksPage/booksPageReducer';
 import categoryPageReducer from './allCategoriesPage/categoriesPageReducer';
 import headerReducer from './Header/headerPageReducer';
+import avatarReducers from "./account/components/Avatar/avatarReducers";
 
+// root reducer
 export default combineReducers({
 	auth: authReducer,
 	errors: errorReducer,
 	booksPageReducer,
 	categoryPageReducer,
 	headerReducer,
+	avatarReducers
 });
-// root reducer
