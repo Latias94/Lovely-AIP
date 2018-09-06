@@ -7,6 +7,7 @@ const users = require('./routes/api/users');
 const books = require('./routes/api/books');
 const bookLists = require('./routes/api/bookLists');
 const categories = require('./routes/api/categories');
+const recommendation = require('./routes/api/recommendation');
 const cart = require('./routes/api/cart');
 const upload = require('./routes/api/upload');
 const swaggerDefinition = require('./config/swagger');
@@ -77,6 +78,7 @@ app.use('/api/users', users);
 app.use('/api/books', books);
 app.use('/api/categories', categories);
 app.use('/api/booklists', bookLists);
+app.use('/api/recommendation', recommendation);
 app.use('/api/cart', cart);
 app.use('/api/upload', upload);
 // Public Folder

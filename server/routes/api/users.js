@@ -13,6 +13,7 @@ const validationLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
 const BookList = require('../../models/BookList');
+const Review = require('../../models/Review');
 
 const router = express.Router();
 
@@ -391,11 +392,11 @@ router.get('/current', passport.authenticate('jwt', {
 
 /**
  * @swagger
- * /api/users/current/like/booklist:
+ * /api/users/current/booklist:
  *   get:
  *     tags:
- *       - BookList
- *     summary: Return the bookLists current user liked
+ *       - User
+ *     summary: Return the bookLists current user created
  *     description: This can only be done by the logged in user (add JWT token to header)
  *     produces:
  *       - application/json
@@ -405,7 +406,7 @@ router.get('/current', passport.authenticate('jwt', {
  *     security:
  *       - JWT: []
  */
-router.get('/current/like/booklist', passport.authenticate('jwt', {
+router.get('/current/booklist', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
   BookList.find({ user: req.user.id })
@@ -420,6 +421,40 @@ router.get('/current/like/booklist', passport.authenticate('jwt', {
     })
     .catch(() => res.status(404).json({
       booklistnotfound: 'No booklists found',
+    }));
+});
+
+/**
+ * @swagger
+ * /api/users/current/review:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Return the reviews current user created
+ *     description: This can only be done by the logged in user (add JWT token to header)
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: return reviews successfully
+ *     security:
+ *       - JWT: []
+ */
+router.get('/current/review', passport.authenticate('jwt', {
+  session: false,
+}), (req, res) => {
+  Review.findById({ user: req.user.id })
+    .then((reviews) => {
+      if (reviews) {
+        return res.json(reviews);
+      } else {
+        return res.status(404).json({
+          reviewnotfound: 'No reviews found',
+        });
+      }
+    })
+    .catch(() => res.status(404).json({
+      reviewnotfound: 'No reviews found',
     }));
 });
 
