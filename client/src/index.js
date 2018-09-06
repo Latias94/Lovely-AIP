@@ -24,7 +24,7 @@ if (localStorage.jwtToken) {
 	const decoded = jwt_decode(localStorage.jwtToken);
 	// install user
 	store.dispatch(setCurrentUser(decoded));
-	store.dispatch(loadAvatar('/api/users/avatar/5b791a8c7bbf64bf3d023719'));
+	store.dispatch(loadAvatar('/uploads/image-1536224249263.png'));
 	// Check for expired token
 	const currentTime = Date.now() / 1000;
 	if (decoded.exp < currentTime) {

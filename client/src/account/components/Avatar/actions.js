@@ -1,5 +1,6 @@
 import { SET_AVATAR } from "./types";
 import axios from "axios";
+import { config } from '../../../config';
 
 export const setAvatar = img => dispatch => dispatch({
     type: SET_AVATAR,
@@ -7,7 +8,9 @@ export const setAvatar = img => dispatch => dispatch({
 })
 
 export const loadAvatar = imgURL => dispatch => {
-    axios.get(imgURL)
+  axios({
+    url: config.DEV_UPLOAD_BASE_URL + imgURL
+  })
     .then(res => {
         console.log('structure of the res', res);
         if (res.status === 200) {
