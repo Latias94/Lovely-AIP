@@ -46,3 +46,17 @@ To execute tests:
 ```bash
 npm run test
 ```
+
+### Book Recommendation
+
+The Book Recommendation Engine bases on [k-nearest neighbors algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm).
+
+Basically it depends on the star of book review provided by other users.
+
+Related Code can be referred to [Lovely-AIP/server/recommendation/](https://github.com/Latias94/Lovely-AIP/tree/master/server/recommendation).
+
+Related API document can be referred to [http://localhost:5000/swagger/#/Recommendation](http://localhost:5000/swagger/#/Recommendation).
+
+You can test API by the following link:
+
+[http://localhost:5000/api/recommendation/book/5b5c0edc1e744f9760543a07](http://localhost:5000/api/recommendation/book/5b5c0edc1e744f9760543a07)
