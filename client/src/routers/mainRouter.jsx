@@ -10,9 +10,8 @@ import Account from '../account/components/Account';
 import EmailVerification from '../account/components/EmailVerification';
 import VerifyEmail from '../account/utils/verifyEmail';
 import Avatar from '../account/components/Avatar';
-import BookInCategory from '../allCategoriesPage/booksInCategory';
 import Payment from '../Payment';
-import Admin from '../Admin/index';
+import Admin from '../Admin';
 
 
 const MainRoute = () => (
