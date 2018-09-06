@@ -26,6 +26,12 @@ class headerPageIndex extends Component {
 		this.props.getUsersCart();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (this.props.auth.isAuthenticated != prevProps.auth.isAuthenticated) {
+			this.props.getUsersCart();
+		}
+	}
+
 	render() {
 		const { anchorEl } = this.state;
 		const {
@@ -51,7 +57,7 @@ class headerPageIndex extends Component {
 								isAuthenticated={this.props.auth.isAuthenticated}
 								logoutUser={this.props.logoutUser}
 							/>
-							<Cart number={this.props.cartCount} />
+							<Cart number={this.props.cartCount} auth={this.props.auth.isAuthenticated} />
 						</div>
 					</div>
 				</div>
@@ -66,7 +72,7 @@ const mapStateToProps = state => ({
 	cartCount: state.headerReducer.cartNumber,
 });
 
-export default connect(mapStateToProps, { 
-	loginUser, 
-	logoutUser, 
+export default connect(mapStateToProps, {
+	loginUser,
+	logoutUser,
 	getUsersCart })(headerPageIndex);
