@@ -11,9 +11,8 @@ import EmailVerification from '../account/components/EmailVerification';
 import VerifyEmail from '../account/utils/verifyEmail';
 import Avatar from '../account/components/Avatar';
 import BookInCategory from '../allCategoriesPage/booksInCategory';
-import Payment from '../payment/index';
+import Payment from '../Payment';
 import Admin from '../Admin/index';
-
 
 
 const MainRoute = () => (
@@ -30,8 +29,7 @@ const MainRoute = () => (
 			<Route path={'/activate/:token'} component={VerifyEmail}/>
 			<Route path={'/avatar'} component={Avatar}/> {/*modal?*/}
 			<Route path={'/payment'} component={Payment}/>
-            <Route path={'/admin'} component={Admin}/>
-
+			<Route path={'/admin'} component={Admin}/> {/*TODO: move to another route*/}
 		</Switch>
 	</Route>
 );
