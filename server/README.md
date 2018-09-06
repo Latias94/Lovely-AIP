@@ -47,7 +47,7 @@ To execute tests:
 npm run test
 ```
 
-### Book Recommendation
+## Book Recommendation
 
 The Book Recommendation Engine bases on [k-nearest neighbors algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm).
 
