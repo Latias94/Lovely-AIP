@@ -58,13 +58,13 @@ class Account extends React.PureComponent {
 				email: '',
 				isLoggedIn: false,
 				avatarPageOpened: false,
-				avatar: tempAvatar
+				// avatar: tempAvatar
 			};
 		}
 
-		componentWillReceiveProps(nextProps, prevState) {
-			this.setState({avatar: nextProps.avatar});
-}
+// 		componentWillReceiveProps(nextProps, prevState) {
+// 			this.setState({avatar: nextProps.avatar});
+// }
     componentDidMount() {
 		// TODO: GET basic info FROM TOKEN and other from certain API
 		const URL = '/users/current';
@@ -97,9 +97,8 @@ class Account extends React.PureComponent {
 			isLoggedIn, 
 			avatarPageOpened, 
 			username, 
-			email, 
-			avatar } = this.state;
-
+			email } = this.state;
+console.log("temp pic to remove", tempAvatar)
 		return <div style={accountStyles.container}>
 		{/* THIS IS UGLY */}
 		{isLoggedIn 
@@ -107,7 +106,7 @@ class Account extends React.PureComponent {
 		(// WHY I HAVE TO SET THE STYLE AGAIN?
 		<span style={accountStyles.container}>
 				<div style={accountStyles.verticalCenter}>
-					<ImageAvatars classes={this.props.classes} avatar={avatar} />
+					<ImageAvatars classes={this.props.classes} avatar={this.props.avatar} />
 					{/* TODO: MAKE IT AS A BANNER ABOVE THE AVATAR */}
 					<button onClick={this.onOpenModal}>Change picture</button>
 				</div>
@@ -133,7 +132,7 @@ ImageAvatars.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	avatar: state.avatar
+	avatar: state.avatarReducers.avatar
 });
 
 export default compose(

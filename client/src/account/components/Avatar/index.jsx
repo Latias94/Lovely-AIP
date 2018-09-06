@@ -11,16 +11,14 @@ import { connect } from 'react-redux';
 import { compose } from "redux";
 
 class Avatar extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            preview: null,
-            src: '',
-          }
-    }
+    state = {
+        preview: null,
+        src: '',
+      }
 
     uploadHandler = () => {
     const previewInFile = dataURLtoFile(this.state.preview, "avatar.png");
+    const { preview: avatar } = this.state;
     const formData = new FormData();
     formData.append('image', previewInFile, previewInFile.name);
     axios({
@@ -32,7 +30,7 @@ class Avatar extends PureComponent {
         console.log(res.data.avatar);
         this.props.history.push('account');
     });
-    setAvatar(previewInFile);
+    this.props.setAvatar(avatar);
     };
 
     onClose = () => {
@@ -74,7 +72,7 @@ Avatar.propTypes = {
     dataURL: PropTypes.string,
     onCrop: PropTypes.object,
     onClose: PropTypes.object,
-    src: PropTypes.string
+    src: PropTypes.string,
 };
 
 // export default withRouter(Avatar)

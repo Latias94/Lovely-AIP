@@ -12,6 +12,7 @@ import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
 import { config } from './config';
+import { loadAvatar } from "./account/components/Avatar/actions";
 
 // set base URL in request
 axios.defaults.baseURL = (config.ENV === 'production') ? config.REL_API_BASE_URL : config.DEV_API_BASE_URL;
@@ -23,7 +24,7 @@ if (localStorage.jwtToken) {
 	const decoded = jwt_decode(localStorage.jwtToken);
 	// install user
 	store.dispatch(setCurrentUser(decoded));
-
+	store.dispatch(loadAvatar('/api/users/avatar/5b791a8c7bbf64bf3d023719'));
 	// Check for expired token
 	const currentTime = Date.now() / 1000;
 	if (decoded.exp < currentTime) {

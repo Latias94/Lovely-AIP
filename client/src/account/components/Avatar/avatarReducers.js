@@ -1,7 +1,9 @@
 import { SET_AVATAR } from './types';
 
+// TODO: 
 const initialState = {
-	avatar: null,
+	avatar: 'use axios to get the pic OR set a default pic',
+	// avatarURL: 'axios'
 };
 
 export default function (state = initialState, action) {
@@ -9,7 +11,8 @@ export default function (state = initialState, action) {
 	case SET_AVATAR:
 		return {
 			...state,
-			avatar: action.payload,
+			avatar: action.img
+			// avatarURL: action.imgURL
 		};
 	default:
 		return state;
