@@ -106,7 +106,7 @@ console.log("temp pic to remove", tempAvatar)
 		(// WHY I HAVE TO SET THE STYLE AGAIN?
 		<span style={accountStyles.container}>
 				<div style={accountStyles.verticalCenter}>
-					<ImageAvatars classes={this.props.classes} avatar={this.props.avatar} />
+					<ImageAvatars classes={this.props.classes} avatar={'http://localhost:5000/uploads/image-1535933860912.jpg'} />
 					{/* TODO: MAKE IT AS A BANNER ABOVE THE AVATAR */}
 					<button onClick={this.onOpenModal}>Change picture</button>
 				</div>
