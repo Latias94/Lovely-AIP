@@ -23,7 +23,6 @@ const MainRoute = () => (
 			<Route path="/login" component={LoginForm} />
 			<Route path="/book/:id" component={BooksPage} />
 			<Route path="/categories/:categoryID?" component={Categories} />
-            <Route path="/cart" component={Cart} />
 			<Route path={'/account'} component={Account} />
 			<Route path={'/verify-email'} component={EmailVerification} />
 			<Route path={'/activate/:token'} component={VerifyEmail}/>

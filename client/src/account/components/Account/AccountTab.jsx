@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import './accountPage.css';
 import Typography from '@material-ui/core/Typography';
 import MyList from './MyList'
+import MySetting from './mySetting'
 
 
 const styles = theme => ({
@@ -53,7 +54,7 @@ class AccountTab extends React.Component {
         const { value } = this.state;
 
         return (
-            <div className={classes.root} style={{width:'80%'}}>
+            <div className={classes.root} style={{width:'100%'}}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
                         <Tab label="My BookList" style={{outline:'none'}} />
@@ -65,7 +66,7 @@ class AccountTab extends React.Component {
                 {value === 0 && <MyList />}
                 {value === 1 && <TabContainer>Item Three</TabContainer>}
                 {value === 2 && <TabContainer>Item Three</TabContainer>}
-                {value === 3 && <TabContainer>Item Four</TabContainer>}
+                {value === 3 && <MySetting />}
             </div>
         );
     }
