@@ -30,6 +30,23 @@ const router = express.Router();
  */
 router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
 
+function filterSubCategories(categories) {
+  let result = categories.slice();
+  categories.forEach((category) => {
+    if (category.subCategories.length > 0) {
+      category.subCategories.forEach((subCategory) => {
+        categories.forEach((c, index) => {
+          if (c.name === subCategory.subname) {
+            result.splice(index, 1, null);
+          }
+        });
+      });
+    }
+  });
+  result = result.filter(v => v);
+  return result;
+}
+
 /**
  * @swagger
  * /api/categories:
@@ -50,29 +67,13 @@ router.get('/', (req, res) => {
   Category.find()
     .sort({ name: 1 })
     .then((categories) => {
+      categories = filterSubCategories(categories);
       return res.json(categories);
     })
     .catch(() => {
       return res.status(404).json({ categorynotfound: 'No categories found' });
     });
 });
-
-function filterSubCategories(categories) {
-  let result = categories.slice();
-  categories.forEach((category) => {
-    if (category.subCategories.length > 0) {
-      category.subCategories.forEach((subCategory) => {
-        categories.forEach((c, index) => {
-          if (c.name === subCategory.subname) {
-            result.splice(index, 1, null);
-          }
-        });
-      });
-    }
-  });
-  result = result.filter(v => v);
-  return result;
-}
 
 /**
  * @swagger
