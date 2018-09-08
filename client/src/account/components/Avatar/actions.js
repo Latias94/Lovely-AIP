@@ -1,11 +1,11 @@
 import { SET_AVATAR } from './types';
-import { config } from '../../../config';
-
-const baseURL = (config.ENV === 'production') ? config.REL_API_BASE_URL : config.DEV_API_BASE_URL;
+// import { config } from '../../../config';
+//
+// const baseURL = (config.ENV === 'production') ? config.REL_API_BASE_URL : config.DEV_API_BASE_URL;
 
 export const setAvatar = imgURL => dispatch => dispatch({
 	type: SET_AVATAR,
-	imgURL: baseURL + imgURL,
+	imgURL,
 });
 
 // export const loadAvatar = imgURL => dispatch => {

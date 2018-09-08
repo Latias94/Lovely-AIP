@@ -1,5 +1,6 @@
 import isEmpty from '../validation/isEmpty';
 import { SET_CURRENT_USER } from '../actions/types';
+import { SET_AVATAR } from "../components/Avatar/types";
 
 const initialState = {
 	isAuthenticated: false,
@@ -14,6 +15,11 @@ export default function (state = initialState, action) {
 			isAuthenticated: !isEmpty(action.payload),
 			user: action.payload,
 		};
+		case SET_AVATAR:
+			return {
+				...state,
+				avatar: action.imgURL
+			}
 	default:
 		return state;
 	}

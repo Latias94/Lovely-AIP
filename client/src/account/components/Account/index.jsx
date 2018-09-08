@@ -13,7 +13,9 @@ import {connect} from 'react-redux';
 import {compose} from "redux";
 import {getCurrentUserInfo} from '../../actions/authActions';
 import isEmpty from '../../validation/isEmpty'
+import { config } from '../../../config';
 
+const baseURL = (config.ENV === 'production') ? config.REL_UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
 const styles = {
     row: {
         display: 'flex',
@@ -137,8 +139,8 @@ ImageAvatars.propTypes = {
 const mapStateToProps = state => {
     // install user info
     if (!isEmpty(state.auth.user)) {
-        const {username, email} = state.auth.user;
-        const {imgURL: avatarURL} = state.avatar;
+        const {username, email, avatar: avatarURL} = state.auth.user;
+        // const {imgURL: avatarURL} = state.avatar;
         let props = {
             username,
             email,
@@ -146,7 +148,8 @@ const mapStateToProps = state => {
         };
         if (avatarURL) {
             props.avatarType = 'image';
-            props.avatarURL = avatarURL;
+            props.avatarURL = baseURL + avatarURL;
+            console.log(props.avatarURL)
         } else {
             props.avatarType = 'letter';
         }
