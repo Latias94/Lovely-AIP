@@ -1,11 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Axios from 'axios';
 import ContentComponent from './component';
-import { selectBookNumberAction } from './actions';
+// import { selectBookNumberAction } from './actions';
+import { addBookToCartData } from '../Header/actions';
 
-
-class BooksPage extends PureComponent {
+class BooksPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -19,23 +19,24 @@ class BooksPage extends PureComponent {
 				price: '',
 				stock: '',
 				coverUrl: '',
+				score:0,
 			},
+			quantity: 1,
 			submittedReviewStar: 0,
 			submittedReviewcontent: '',
-
 		};
+		this.addToCartClick = this.addToCartClick.bind(this);
 	}
 
 	componentDidMount() {
 		const requestURL = `/books/${this.props.match.params.id}`;
 
-		Axios({
-			method: 'get',
-			url: requestURL,
-		}).then((response) => {
+		Axios.get(requestURL)
+		.then((response) => {
 			console.log(response);
 			this.setState({ bookDetailInformation: response.data });
-		}).catch((error) => {
+		})
+		.catch((error) => {
 			console.log(error);
 		});
 	}
@@ -48,14 +49,26 @@ class BooksPage extends PureComponent {
 		this.setState({ submittedReviewcontent: content });
 	}
 
+	addToCartClick = (id) => {
+		console.log(id)
+		console.log(this.props.auth)
+		if (this.props.auth) {
+			this.props.addBookToCartData(id);
+			console.log('sss');
+		} else {
+			window.location.pathname = './login';
+		}
+	}
+
 	submmitReview = (review) => {
 		const requestURL = `/books/review/${this.props.match.params.id}`;
+		const { submittedReviewStar, submittedReviewcontent } = this.state;
 		Axios({
 			method: 'post',
 			url: requestURL,
 			data: {
-				star:this.state.submittedReviewStar,
-				content:this.state.submittedReviewcontent,
+				star: submittedReviewStar,
+				content: submittedReviewcontent,
 			}
 		})
 		.then(() => {
@@ -63,13 +76,13 @@ class BooksPage extends PureComponent {
 			window.location.reload();
 			})
 		.catch((error) => {
-		if(error.response.status===404)
+		if(error.response.status === 404)
 		alert(error.response.data.reviewexist);
 		});
 	}
 
 	render() {
-		const { booknumber, onbookNumberChange, auth } = this.props;
+		const { auth } = this.props;
 		const {
 			_id,
 			categoryName,
@@ -80,7 +93,13 @@ class BooksPage extends PureComponent {
 			price,
 			stock,
 			coverUrl,
+			score,
 		} = this.state.bookDetailInformation;
+
+		const { 
+			quantity, 
+			submittedReviewStar, 
+			submittedReviewcontent } = this.state;
 
 		if (this.state.bookDetailInformation !== {}) {
 			return (
@@ -91,20 +110,22 @@ class BooksPage extends PureComponent {
 					bookImagePath={'#'}
 					bookAuthor={authors[0].name}
 					// bookRate={reviews[0].star}
+					reviewScore={score}
 					bookReviews={reviews.length}
 					description={description}
 					bookPrice={price}
-					bookSelectNumber={booknumber}
-					onbookNumberChange={onbookNumberChange}
+					quantity={quantity}
+					onQuantityChange={(quantity) => {this.setState({quantity})}}
 					stockNumber={stock}
 					views={reviews}
-					submittedReviewStar={this.state.submittedReviewStar}
+					submittedReviewStar={submittedReviewStar}
 					reviewStarChange={this.reviewStarChange}
-					submittedReviewcontent={this.state.submittedReviewcontent}
+					submittedReviewcontent={submittedReviewcontent}
 					reviewContentChange={this.reviewContentChange}
 					submitClick={this.submmitReview}
 					coverUrl={coverUrl}
 					authOrNot={auth}
+					addToCartClick={id=>this.addToCartClick(id)}
 				/>
 			);
 		}
@@ -116,18 +137,16 @@ class BooksPage extends PureComponent {
 
 function mapStateToProps(state) {
 	return {
-		booknumber: state.booksPageReducer.bookNumber,
+		// booknumber: state.booksPageReducer.bookNumber,
 		auth: state.auth.isAuthenticated,
 	};
 }
 
-function mapDispatchToProps(dispatch) {
-	return {
-		onbookNumberChange: (number) => { dispatch(selectBookNumberAction(number)); },
-	};
-}
+// function mapDispatchToProps(dispatch) {
+// 	return {
+// 		// onbookNumberChange: (number) => { dispatch(selectBookNumberAction(number)); },
+// 		addBookToCartData: (bookid) => { addBookToCartData(bookid); } // should add booknumber as second param
+// 	};
+// }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(BooksPage);
+export default connect(mapStateToProps, { addBookToCartData })(BooksPage);

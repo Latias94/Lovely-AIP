@@ -17,9 +17,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  // avatar: {
-  //   type: String,
-  // },
+  avatar: {
+    type: String,
+  },
   date: {
     type: Date,
     default: Date.now,
@@ -43,6 +43,12 @@ const UserSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'books',
     },
+    authors: [{
+      name: {
+        type: String,
+        required: true,
+      },
+    }],
     title: {
       type: String,
       required: true,

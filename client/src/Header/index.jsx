@@ -10,6 +10,7 @@ import Cart from './badgeIcon';
 import SearchInput from './searchIcon';
 import NavigationBar from './navigationBar';
 import { loginUser, logoutUser } from '../account/actions/authActions';
+import { getUsersCart } from './actions';
 import AuthIcon from './authPage';
 
 class headerPageIndex extends Component {
@@ -19,6 +20,16 @@ class headerPageIndex extends Component {
 			categories: [],
 			cartNumber: 0,
 		};
+	}
+
+	componentDidMount() {
+		this.props.getUsersCart();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.auth.isAuthenticated != prevProps.auth.isAuthenticated) {
+			this.props.getUsersCart();
+		}
 	}
 
 	render() {
@@ -44,8 +55,9 @@ class headerPageIndex extends Component {
 						<div style={rightIcon}>
 							<AuthIcon
 								isAuthenticated={this.props.auth.isAuthenticated}
+								logoutUser={this.props.logoutUser}
 							/>
-							<Cart />
+							<Cart number={this.props.cartCount} auth={this.props.auth.isAuthenticated} />
 						</div>
 					</div>
 				</div>
@@ -57,6 +69,7 @@ class headerPageIndex extends Component {
 
 const mapStateToProps = state => ({
 	auth: state.auth,
+	cartCount: state.headerReducer.cartNumber,
 });
 
-export default connect(mapStateToProps, { loginUser, logoutUser })(headerPageIndex);
+export default connect(mapStateToProps, { loginUser, logoutUser, getUsersCart })(headerPageIndex);

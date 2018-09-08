@@ -10,7 +10,6 @@ const popularBooksComponent = props => (
 				<h3>{obj.title}</h3>
 				<hr/>
 				<div style={style.bookRow}>
-					{console.log(obj.books)}
 					{obj.books.map(smallobj => (
 						<Book
 							key={smallobj._id}
@@ -18,7 +17,10 @@ const popularBooksComponent = props => (
 							bookTitle={smallobj.title}
 							// bookAuthor='Author'
 							bookAuthor={smallobj.authors[0].name}
-							imagePath = {smallobj.coverUrl}
+							imagePath={smallobj.coverUrl}
+							bookPrice={smallobj.price}
+							reviewScore={smallobj.score}
+							bookReviews={smallobj.reviews.length}
 						/>
 					))}
 				</div>

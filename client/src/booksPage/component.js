@@ -8,8 +8,8 @@ import * as style from './booksPageCss';
 // import PopularBooks from '../welcomePage/popularBooks';
 
 
-const totalPrice = (unitPrice, number) => (unitPrice * number);
-const isInstock = number => (number ? 'In Stock' : 'Out of Stock');
+const totalPrice = (unitPrice, number) => (unitPrice * number).toFixed(2);
+const isInstock = number => (number ? 'In Stock.' : 'Out of Stock');
 const menu = (
 	<Menu>
 		<Menu.Item key="0">
@@ -44,22 +44,23 @@ const booksPageComponent = props => (
 				<h3>{props.bookName}</h3>
 				<div style={style.bookInfo}>
 					<h5>{`by: ${props.bookAuthor}(Author)`}</h5>
-					<div ><Rate disabled value={5} /><span>{props.bookReviews}</span><span style={{ marginLeft: '5px' }}>customer reviews</span></div>
+					<div ><Rate disabled value={props.reviewScore} /><span>{props.bookReviews}</span><span style={{ marginLeft: '5px' }}>customer reviews</span></div>
 					<hr />
 					<div>{props.description}</div>
 				</div>
 			</div>
 			<div style={style.rightPart}>
-				<div style={{ width: '70%', marginLeft: '15%', marginTop: '10%' }}>
+				<div style={{ width: '76%', marginLeft: '12%' }}>
 					<div>
-						<p>{`Price: $${totalPrice(props.bookSelectNumber, props.bookPrice)}`}</p>
+						<p>{`Price: $${totalPrice(props.quantity, props.bookPrice)}`}</p>
 						<span style={{ marginRight: '15px' }}>Buy</span>
-						<InputNumber min={1} max={10} value={props.bookSelectNumber} onChange={value => props.onbookNumberChange(value)} />
+						<InputNumber min={1} max={10} value={props.quantity} onChange={value => props.onQuantityChange(value)} />
+						<span style={{ marginLeft: '15px' }}>{`$${totalPrice(props.quantity, props.bookPrice)}`}</span>
 					</div>
 					<h4 style={{ marginTop: '15px' }}>{isInstock(props.stockNumber)}</h4>
 					<span>Deliver to Australia</span>
 					<hr />
-					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }}> Add to Cart </Button>
+					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }} onClick={() => props.addToCartClick(props.id)}> Add to Cart </Button>
 					<Dropdown overlay={dropdown(props.authOrNot)} trigger={['click']} >
 						<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', marginTop: '15px' }}>
 							Add to your List<Icon type="down" />

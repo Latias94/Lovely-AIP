@@ -95,6 +95,7 @@ router.post(
             newBook.title = book.title;
             newBook.price = book.price;
             newBook.coverUrl = book.coverUrl;
+            newBook.authors = book.authors;
             newBook.quantity = 1;
             user.cart.unshift(newBook);
             user.save().then(currentUser => res.json(currentUser.cart));

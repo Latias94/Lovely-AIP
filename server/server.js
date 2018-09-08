@@ -7,6 +7,8 @@ const users = require('./routes/api/users');
 const books = require('./routes/api/books');
 const bookLists = require('./routes/api/bookLists');
 const categories = require('./routes/api/categories');
+const recommendation = require('./routes/api/recommendation');
+const rss = require('./routes/api/rss');
 const cart = require('./routes/api/cart');
 const upload = require('./routes/api/upload');
 const swaggerDefinition = require('./config/swagger');
@@ -66,6 +68,7 @@ app.use((req, res, next) => {
   // BEFORE CHANGING, MAKE SURE THE ACCOUNT PAGE WORKS!!!
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', 'POST, GET, DELETE');
   next();
 });
 
@@ -76,8 +79,14 @@ app.use('/api/users', users);
 app.use('/api/books', books);
 app.use('/api/categories', categories);
 app.use('/api/booklists', bookLists);
+app.use('/api/recommendation', recommendation);
 app.use('/api/cart', cart);
 app.use('/api/upload', upload);
+app.use('/api/feed', rss);
+// Public Folder
+// To get image in public folder, you can do as follow
+// http://localhost:5000/uploads/image-1535933860912.jpg
+app.use(express.static('./public'));
 
 // change port according to node environment
 const port = process.env.NODE_ENV === 'test'

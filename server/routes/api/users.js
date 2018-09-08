@@ -13,6 +13,7 @@ const validationLoginInput = require('../../validation/login');
 
 const User = require('../../models/User');
 const BookList = require('../../models/BookList');
+const Review = require('../../models/Review');
 
 const router = express.Router();
 
@@ -116,8 +117,7 @@ router.post('/register', (req, res) => {
       errors.email = 'Email already exists';
       return res.status(400).json(errors);
     }
-    // TODO
-    // const avatar = 'temp';
+
     const newUser = new User({
       name: req.body.name,
       email: req.body.email,
@@ -142,7 +142,7 @@ router.post('/register', (req, res) => {
       });
     });
 
-    bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.genSalt(12, (err, salt) => {
       bcrypt.hash(newUser.password, salt, (error, hash) => {
         if (error) throw error;
         newUser.password = hash;
@@ -366,20 +366,37 @@ router.post('/login', (req, res) => {
 router.get('/current', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  res.json({
-    id: req.user.id,
-    name: req.user.name,
-    email: req.user.email,
-  });
+  User.findById(req.user.id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          usernotfound: 'No user found'
+        });
+      } else if (user.avatar !== null) {
+        res.json({
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+          avatar: user.avatar
+        });
+      } else {
+        res.json({
+          id: req.user.id,
+          name: req.user.name,
+          email: req.user.email,
+        });
+      }
+      return false;
+    });
 });
 
 /**
  * @swagger
- * /api/users/current/like/booklist:
+ * /api/users/current/booklist:
  *   get:
  *     tags:
- *       - BookList
- *     summary: Return the bookLists current user liked
+ *       - User
+ *     summary: Return the bookLists current user created
  *     description: This can only be done by the logged in user (add JWT token to header)
  *     produces:
  *       - application/json
@@ -389,7 +406,7 @@ router.get('/current', passport.authenticate('jwt', {
  *     security:
  *       - JWT: []
  */
-router.get('/current/like/booklist', passport.authenticate('jwt', {
+router.get('/current/booklist', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
   BookList.find({ user: req.user.id })
@@ -406,5 +423,113 @@ router.get('/current/like/booklist', passport.authenticate('jwt', {
       booklistnotfound: 'No booklists found',
     }));
 });
+
+/**
+ * @swagger
+ * /api/users/current/review:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Return the reviews current user created
+ *     description: This can only be done by the logged in user (add JWT token to header)
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: return reviews successfully
+ *     security:
+ *       - JWT: []
+ */
+router.get('/current/review', passport.authenticate('jwt', {
+  session: false,
+}), (req, res) => {
+  Review.findById({ user: req.user.id })
+    .then((reviews) => {
+      if (reviews) {
+        return res.json(reviews);
+      } else {
+        return res.status(404).json({
+          reviewnotfound: 'No reviews found',
+        });
+      }
+    })
+    .catch(() => res.status(404).json({
+      reviewnotfound: 'No reviews found',
+    }));
+});
+
+/**
+ * @swagger
+ * /api/users/avatar/{id}:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get user avatar according to user id
+ *     description: Get user avatar according to user id
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "id of the user"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Successfully get the avatar
+ *       404:
+ *         description: No avatars found
+ */
+router.get('/avatar/:id', (req, res) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      if (user.avatar) {
+        return res.json({
+          avatar: user.avatar,
+        });
+      } else {
+        return res.status(404).json({
+          avatarnotfound: 'No avatars found',
+        });
+      }
+    });
+});
+
+/**
+ * @swagger
+ * /api/users/:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get all users
+ *     description: Get all users. This can only be done by the staff.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Successfully get the users
+ *       401:
+ *         description: Cannot get the data
+ *     security:
+ *       - JWT: []
+ */
+router.get('/', passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findById(req.user.id).then((user) => {
+      if (user) {
+        if (!user.isStaff) {
+          return res.status(401).json({
+            unauthorized: 'Cannot not get data',
+          });
+        } else {
+          User.find()
+            .then((users) => {
+              return res.json(users);
+            });
+        }
+      }
+      return true;
+    });
+  });
 
 module.exports = router;

@@ -52,9 +52,10 @@ router.get('/', (req, res) => {
       date: -1,
     })
     .then(books => res.json(books))
-    .catch(() => res.status(404).json({
-      booknotfound: 'No books found',
-    }));
+    .catch(() => res.status(404)
+      .json({
+        booknotfound: 'No books found',
+      }));
 });
 
 /**
@@ -114,9 +115,10 @@ router.get('/list', (req, res) => {
     .limit(pageSize)
     .sort(sortParams)
     .then(books => res.json(books))
-    .catch(() => res.status(404).json({
-      booknotfound: 'No books found',
-    }));
+    .catch(() => res.status(404)
+      .json({
+        booknotfound: 'No books found',
+      }));
 });
 
 /**
@@ -157,9 +159,80 @@ router.get('/:id', (req, res) => {
         })
         .catch(err => console.log(err));
     })
-    .catch(() => res.status(404).json({
-      booknotfound: 'No books found',
-    }));
+    .catch(() => res.status(404)
+      .json({
+        booknotfound: 'No books found',
+      }));
+});
+
+/**
+ * @swagger
+ * /api/books/search/{keyword}:
+ *   get:
+ *     tags:
+ *       - Book
+ *     summary: Get books by keyword with condition
+ *     description: Get book by keyword with condition. (search in book title and description with weight)
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "keyword"
+ *         in: "path"
+ *         description: "keyword of books that needs to be fetched"
+ *         required: true
+ *         type: "string"
+ *       - name: "page"
+ *         in: "query"
+ *         description: "the page you are query (powered by pageSize)"
+ *         required: true
+ *         type: "integer"
+ *       - name: "pageSize"
+ *         in: "query"
+ *         description: "How many books you want to show in one page"
+ *         required: true
+ *         type: "integer"
+ *       - name: "publish"
+ *         in: "query"
+ *         description: "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest"
+ *         required: false
+ *         type: "integer"
+ *       - name: "price"
+ *         in: "query"
+ *         description: "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest"
+ *         required: false
+ *         type: "integer"
+ *     responses:
+ *       200:
+ *         description: Get books successfully
+ *       404:
+ *         description: No books found with that keyword
+ */
+router.get('/search/:keyword', (req, res) => {
+  const page = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10);
+  // 1 for oldest to newest, -1 for newest to oldest
+  const sortByPublish = parseInt(req.query.publish, 10);
+  // 1 for cheapest to most expensive
+  const sortByPrice = parseInt(req.query.price, 10);
+  const sortParams = {};
+  if (sortByPublish) {
+    sortParams.publishDate = sortByPublish;
+  }
+  if (sortByPrice) {
+    sortParams.price = sortByPrice;
+  }
+  const interval = (page - 1) * pageSize;
+  Book.find({ $text: { $search: req.params.keyword } })
+    .skip(interval)
+    .limit(pageSize)
+    .sort(sortParams)
+    .then((books) => {
+      return res.json(books);
+    })
+    .catch(() => res.status(404)
+      .json({
+        booknotfound: 'No books found',
+      }));
 });
 
 /**
@@ -187,9 +260,10 @@ router.get('/:id', (req, res) => {
 router.get('/isbn/:isbn', (req, res) => {
   Book.findOne({ isbn: req.params.isbn })
     .then(book => res.json(book))
-    .catch(() => res.status(404).json({
-      booknotfound: 'No books found',
-    }));
+    .catch(() => res.status(404)
+      .json({
+        booknotfound: 'No books found',
+      }));
 });
 
 /**
@@ -255,16 +329,18 @@ router.post('/',
     session: false,
   }), (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
-      if (user) {
-        if (!user.isStaff) {
-          return res.status(401).json({
-            unauthorized: 'Cannot create the book',
-          });
+    User.findOne({ user: req.user.id })
+      .then((user) => {
+        if (user) {
+          if (!user.isStaff) {
+            return res.status(401)
+              .json({
+                unauthorized: 'Cannot create the book',
+              });
+          }
         }
-      }
-      return true;
-    });
+        return true;
+      });
 
     const {
       errors,
@@ -273,7 +349,8 @@ router.post('/',
 
     if (!isValid) {
       // If any errors, send 400 with errors object
-      return res.status(400).json(errors);
+      return res.status(400)
+        .json(errors);
     }
     const authors = [];
     // if not an array, there should be a list of authors
@@ -290,7 +367,8 @@ router.post('/',
         .then((category) => {
           if (!category) {
             errors.categorynotfound = 'No categories found';
-            return res.status(404).json(errors);
+            return res.status(404)
+              .json(errors);
           } else {
             // category exist
             const newBook = new Book({
@@ -305,16 +383,18 @@ router.post('/',
               publishDate: new Date(req.body.publishDate),
               authors,
             });
-            newBook.save().then((book) => {
-              return res.json(book);
-            });
+            newBook.save()
+              .then((book) => {
+                return res.json(book);
+              });
           }
           return false;
         })
         .catch(() => {
-          return res.status(404).json({
-            categorynotfound: 'No categories found',
-          });
+          return res.status(404)
+            .json({
+              categorynotfound: 'No categories found',
+            });
         });
     } else {
       // create with no category
@@ -332,13 +412,15 @@ router.post('/',
             publishDate: new Date(req.body.publishDate),
             authors,
           });
-          newBook.save().then((book) => {
-            return res.json(book);
-          });
+          newBook.save()
+            .then((book) => {
+              return res.json(book);
+            });
         })
-        .catch(() => res.status(404).json({
-          categorynotfound: 'No categories found',
-        }));
+        .catch(() => res.status(404)
+          .json({
+            categorynotfound: 'No categories found',
+          }));
     }
 
     return false;
@@ -373,11 +455,13 @@ router.get('/slug/:slug', (req, res) => {
     .then((book) => {
       if (!book) {
         errors.booknotfound = 'No books found';
-        return res.status(404).json(errors);
+        return res.status(404)
+          .json(errors);
       }
       return res.json(book);
     })
-    .catch(err => res.status(404).json(err));
+    .catch(err => res.status(404)
+      .json(err));
 });
 
 /**
@@ -410,20 +494,23 @@ router.delete('/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
-      if (user) {
-        if (!user.isStaff) {
-          return res.status(401).json({
-            unauthorized: 'Cannot delete the book',
-          });
+    User.findOne({ user: req.user.id })
+      .then((user) => {
+        if (user) {
+          if (!user.isStaff) {
+            return res.status(401)
+              .json({
+                unauthorized: 'Cannot delete the book',
+              });
+          }
         }
-      }
-      return true;
-    });
+        return true;
+      });
 
     Book.findByIdAndRemove(req.params.id, (err) => {
       return err
-        ? res.status(404).json({ booknotfound: 'No books found' })
+        ? res.status(404)
+          .json({ booknotfound: 'No books found' })
         : res.json({ success: true });
     });
   });
@@ -484,12 +571,16 @@ router.post('/review/:id',
     // Check Validation
     if (!isValid) {
       // If any errors, send 400 with errors object
-      return res.status(400).json(errors);
+      return res.status(400)
+        .json(errors);
     }
 
     Book.findById(req.params.id)
       .then((book) => {
-        Review.findOne({ book: req.params.id, user: req.user.id })
+        Review.findOne({
+          book: req.params.id,
+          user: req.user.id
+        })
           .then((review) => {
             if (!review) {
               const newReview = new Review({
@@ -521,19 +612,25 @@ router.post('/review/:id',
                   book.score = bookScore.toFixed(2);
 
                   // Save
-                  book.save().then(bookObject => res.json(bookObject));
+                  book.save()
+                    .then(bookObject => res.json(bookObject));
                 })
-                .catch(err => res.status(404).json(err));
+                .catch(err => res.status(404)
+                  .json(err));
               return false;
             } else {
               errors.reviewexist = 'Review has existed';
-              return res.status(404).json(errors);
+              return res.status(404)
+                .json(errors);
             }
-          }).catch(err => res.status(404).json(err));
+          })
+          .catch(err => res.status(404)
+            .json(err));
       })
-      .catch(() => res.status(404).json({
-        booknotfound: 'No books found',
-      }));
+      .catch(() => res.status(404)
+        .json({
+          booknotfound: 'No books found',
+        }));
     return false;
   });
 
@@ -576,7 +673,8 @@ router.delete('/review/:id/:review_id',
         if (book) {
           Review.findByIdAndRemove(req.params.review_id, (err) => {
             if (err) {
-              return res.status(404).json({ reviewnotfound: 'No Reviews found' });
+              return res.status(404)
+                .json({ reviewnotfound: 'No Reviews found' });
             } else {
               // delete review success
               // Check to see if review exists
@@ -610,20 +708,23 @@ router.delete('/review/:id/:review_id',
                 book.score = bookScore.toFixed(2);
               }
 
-              book.save().then(() => res.json({ success: true }));
+              book.save()
+                .then(() => res.json({ success: true }));
               return false;
             }
           });
         } else {
-          return res.status(404).json({
-            booknotfound: 'No books found',
-          });
+          return res.status(404)
+            .json({
+              booknotfound: 'No books found',
+            });
         }
         return false;
       })
-      .catch(() => res.status(404).json({
-        booknotfound: 'No books found',
-      }));
+      .catch(() => res.status(404)
+        .json({
+          booknotfound: 'No books found',
+        }));
   });
 
 /**
@@ -661,16 +762,18 @@ router.delete('/review/:id/:review_id',
 router.post('/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    User.findOne({ user: req.user.id }).then((user) => {
-      if (user) {
-        if (!user.isStaff) {
-          return res.status(401).json({
-            unauthorized: 'Cannot edit the book',
-          });
+    User.findOne({ user: req.user.id })
+      .then((user) => {
+        if (user) {
+          if (!user.isStaff) {
+            return res.status(401)
+              .json({
+                unauthorized: 'Cannot edit the book',
+              });
+          }
         }
-      }
-      return true;
-    });
+        return true;
+      });
 
     const bookFields = {};
     // Get fields
@@ -718,23 +821,27 @@ router.post('/:id',
               bookFields,
               { new: true },
               (err, bookObject) => {
-                return err ? res.status(404).json({ booknotfound: 'No books found' })
+                return err ? res.status(404)
+                    .json({ booknotfound: 'No books found' })
                   : res.json(bookObject);
               }
             );
             return false;
           } else {
-            return res.status(404).json({ categorynotfound: 'No categories found' });
+            return res.status(404)
+              .json({ categorynotfound: 'No categories found' });
           }
         })
-        .catch(() => res.status(404).json({ categorynotfound: 'No categories found' }));
+        .catch(() => res.status(404)
+          .json({ categorynotfound: 'No categories found' }));
     } else {
       Book.findByIdAndUpdate(
         req.params.id,
         bookFields,
         { new: true },
         (err, bookObject) => {
-          return err ? res.status(404).json({ booknotfound: 'No books found' })
+          return err ? res.status(404)
+              .json({ booknotfound: 'No books found' })
             : res.json(bookObject);
         }
       );

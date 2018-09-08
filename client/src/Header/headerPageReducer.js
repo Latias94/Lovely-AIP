@@ -1,17 +1,17 @@
-import { SET_CURRENT_USER } from '../actions/types';
-
 const initialState = {
-	isAuthenticated: false,
-	user: {},
+	cartNumber: 0,
 };
 
-export default function (state = initialState, action) {
+export default function (state = { cartNumber: 0 }, action) {
+	const cartNumber = state.cartNumber;
 	switch (action.type) {
-	case SET_CURRENT_USER:
+	case 'SET_CART_NUMBER':
 		return {
-			...state,
-			isAuthenticated: !isEmpty(action.payload),
-			user: action.payload,
+			cartNumber: action.cartNumber,
+		};
+	case 'ADD_CART_NUMBER':
+		return {
+			cartNumber: cartNumber + 1,
 		};
 	default:
 		return state;

@@ -221,7 +221,7 @@ class MyList extends React.Component {
                     <Card className={classes.card}>
                         <CardContent>
                             <Typography variant="subheading" style={{display:'inline'}}>
-                                Booklist Title
+                                Book list Title
                             </Typography>
                             <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
                                 Update time
