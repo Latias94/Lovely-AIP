@@ -1,10 +1,11 @@
-import { SET_AVATAR } from "./types";
-import axios from "axios";
+import { SET_AVATAR } from './types';
 import { config } from '../../../config';
 
-export const setAvatar = avatarURL => dispatch => dispatch({
-    type: SET_AVATAR,
-    avatarURL
+const baseURL = (config.ENV === 'production') ? config.REL_API_BASE_URL : config.DEV_API_BASE_URL;
+
+export const setAvatar = imgURL => dispatch => dispatch({
+	type: SET_AVATAR,
+	imgURL: baseURL + imgURL,
 });
 
 // export const loadAvatar = imgURL => dispatch => {

@@ -14,6 +14,6 @@ export default combineReducers({
 	booksPageReducer,
 	categoryPageReducer,
 	headerReducer,
-	avatarReducers,
+	avatar: avatarReducers,
 	cartPageTableRowReducer,
 });

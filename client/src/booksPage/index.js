@@ -23,7 +23,7 @@ class BooksPage extends Component {
 			},
 			quantity: 1,
 			submittedReviewStar: 0,
-			submittedReviewcontent: '',
+			submittedReviewContent: '',
 		};
 		this.addToCartClick = this.addToCartClick.bind(this);
 	}
@@ -46,7 +46,7 @@ class BooksPage extends Component {
 	}
 	
 	reviewContentChange = (content) => {
-		this.setState({ submittedReviewcontent: content });
+		this.setState({ submittedReviewContent: content });
 	}
 
 	addToCartClick = (id) => {
@@ -62,13 +62,13 @@ class BooksPage extends Component {
 
 	submmitReview = (review) => {
 		const requestURL = `/books/review/${this.props.match.params.id}`;
-		const { submittedReviewStar, submittedReviewcontent } = this.state;
+		const { submittedReviewStar, submittedReviewContent } = this.state;
 		Axios({
 			method: 'post',
 			url: requestURL,
 			data: {
 				star: submittedReviewStar,
-				content: submittedReviewcontent,
+				content: submittedReviewContent,
 			}
 		})
 		.then(() => {
@@ -99,7 +99,7 @@ class BooksPage extends Component {
 		const { 
 			quantity, 
 			submittedReviewStar, 
-			submittedReviewcontent } = this.state;
+			submittedReviewContent } = this.state;
 
 		if (this.state.bookDetailInformation !== {}) {
 			return (
@@ -120,7 +120,7 @@ class BooksPage extends Component {
 					views={reviews}
 					submittedReviewStar={submittedReviewStar}
 					reviewStarChange={this.reviewStarChange}
-					submittedReviewcontent={submittedReviewcontent}
+					submittedReviewcontent={submittedReviewContent}
 					reviewContentChange={this.reviewContentChange}
 					submitClick={this.submmitReview}
 					coverUrl={coverUrl}

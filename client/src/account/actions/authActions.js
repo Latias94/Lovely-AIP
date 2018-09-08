@@ -129,3 +129,14 @@ export const logoutUser = () => (dispatch) => {
 	// return to home page
 	window.open('/', '_self');
 };
+
+export const getCurrentUserInfo = () => (dispatch) => {
+	axios.get('/users/current')
+		.then((res) => {
+			dispatch(setCurrentUser(res.data));
+		})
+        .catch(err => dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data,
+        }));
+};

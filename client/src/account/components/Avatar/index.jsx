@@ -11,10 +11,13 @@ import { connect } from 'react-redux';
 import { compose } from "redux";
 
 class Avatar extends PureComponent {
-    state = {
-        preview: null,
-        src: '',
-      }
+    constructor(props) {
+        super(props);
+        this.state = {
+            preview: null,
+            src: this.props.avatarURL,
+        };
+}
 
     uploadHandler = () => {
     const previewInFile = dataURLtoFile(this.state.preview, "avatar.png");
@@ -73,6 +76,7 @@ Avatar.propTypes = {
     onCrop: PropTypes.object,
     onClose: PropTypes.object,
     src: PropTypes.string,
+    avatarURL: PropTypes.string.isRequired
 };
 
 // export default withRouter(Avatar)
