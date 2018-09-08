@@ -4,10 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import './accountPage.css';
 import Typography from '@material-ui/core/Typography';
-import MyList from './MyList'
-import MySetting from './mySetting'
+import CustomerManage from './CustomerManage';
+import BookManage from './BookManage';
+import Home from '@material-ui/icons/Home';
+import AdminHome from './AdminHome'
 
 
 const styles = theme => ({
@@ -36,11 +37,13 @@ function TabContainer(props) {
     );
 }
 
+
+
 TabContainer.propTypes = {
     children: PropTypes.node.isRequired,
 };
 
-class AccountTab extends React.Component {
+class Admin extends React.Component {
     state = {
         value: 0,
     };
@@ -57,23 +60,21 @@ class AccountTab extends React.Component {
             <div className={classes.root} style={{width:'100%'}}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
-                        <Tab label="My BookList" style={{outline:'none'}} />
-                        <Tab label="My Order" style={{outline:'none'}} />
-                        <Tab label="My Payment" style={{outline:'none'}} />
-                        <Tab label="My Setting" style={{outline:'none'}}  />
+                        <Tab label=" " style={{outline:'none'}} icon={<Home />}/>
+                        <Tab label="Customer" style={{outline:'none'}} />
+                        <Tab label="Books" style={{outline:'none'}} />
                     </Tabs>
                 </AppBar>
-                {value === 0 && <MyList />}
-                {value === 1 && <TabContainer>Item Three</TabContainer>}
-                {value === 2 && <TabContainer>Item Three</TabContainer>}
-                {value === 3 && <MySetting />}
+                {value === 0 && <AdminHome/>}
+                {value === 1 && <CustomerManage/>}
+                {value === 2 && <BookManage />}
             </div>
         );
     }
 }
 
-AccountTab.propTypes = {
+Admin.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AccountTab);
+export default withStyles(styles)(Admin);
