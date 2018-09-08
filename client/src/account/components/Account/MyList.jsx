@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
 
-
 const styles = theme => ({
     buttonWrapper: {
         position: 'relative',
@@ -145,7 +144,6 @@ class MyList extends React.Component {
                         <Button
                             style={{outline:'none' ,marginRight:'20px'}}
                             variant="contained"
-                            href={'http://localhost:3000/categories'}
                         >
                             + Add a new book
                         </Button>
