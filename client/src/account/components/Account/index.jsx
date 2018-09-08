@@ -149,7 +149,7 @@ const mapStateToProps = state => {
         if (avatarURL) {
             props.avatarType = 'image';
             props.avatarURL = baseURL + avatarURL;
-            console.log(props.avatarURL)
+            console.log('mapStateToProps: avatar', props.avatarURL)
         } else {
             props.avatarType = 'letter';
         }

@@ -13,15 +13,18 @@ import { compose } from "redux";
 class Avatar extends PureComponent {
     constructor(props) {
         super(props);
+        // TODO: props.avatarURL -> base64 URL
+        // var reader  = new FileReader();
+        // reader.readAsDataURL(file);
         this.state = {
             preview: null,
-            src: this.props.avatarURL,
+            src: '',
         };
 }
 
     uploadHandler = () => {
     const previewInFile = dataURLtoFile(this.state.preview, "avatar.png");
-    const { preview: avatar } = this.state;
+    // const { preview: avatar } = this.state;
     const formData = new FormData();
     formData.append('image', previewInFile, previewInFile.name);
     axios({
@@ -30,10 +33,10 @@ class Avatar extends PureComponent {
         url: '/upload/avatar',
     })
     .then(res =>{
-        console.log(res.data.avatar);
+        console.log('upload', res.data.avatar);
+        this.props.setAvatar(res.data.avatar);
         this.props.history.push('account');
     });
-    this.props.setAvatar(avatar);
     };
 
     onClose = () => {

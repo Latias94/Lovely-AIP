@@ -8,6 +8,7 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
+	// TODO: redux-actions
 	switch (action.type) {
 	case SET_CURRENT_USER:
 		return {
@@ -16,9 +17,12 @@ export default function (state = initialState, action) {
 			user: action.payload,
 		};
 		case SET_AVATAR:
+			// TODO: refine this
+			const newUser = state.user;
+			newUser.avatar = action.imgURL;
 			return {
 				...state,
-				avatar: action.imgURL
+				user: newUser
 			}
 	default:
 		return state;
