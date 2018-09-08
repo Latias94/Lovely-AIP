@@ -108,7 +108,7 @@ export const loginUser = userData => (dispatch) => {
 		const { token } = res.data;
 		// Save to localStorage
 		localStorage.setItem('jwtToken', token);
-		// Set to axios global header
+		// Set to Axios global header
 		setAuthTokenInHeader(token);
 		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import axios from 'axios';
+import Axios from 'axios';
 import Button from '@material-ui/core/Button';
 import { default as AvatarEdit }from 'react-avatar-edit';
 import dataURLtoFile from "../../utils/dataURLtoFile";
@@ -10,15 +10,13 @@ import { setAvatar } from "./actions";
 import { connect } from 'react-redux';
 import { compose } from "redux";
 
-class Avatar extends PureComponent {
+
+class AvatarUploader extends PureComponent {
     constructor(props) {
         super(props);
-        // TODO: props.avatarURL -> base64 URL
-        // var reader  = new FileReader();
-        // reader.readAsDataURL(file);
         this.state = {
             preview: null,
-            src: '',
+            src: null,
         };
 }
 
@@ -27,7 +25,7 @@ class Avatar extends PureComponent {
     // const { preview: avatar } = this.state;
     const formData = new FormData();
     formData.append('image', previewInFile, previewInFile.name);
-    axios({
+    Axios({
         method: 'POST',
         data: formData,
         url: '/upload/avatar',
@@ -37,6 +35,7 @@ class Avatar extends PureComponent {
         this.props.setAvatar(res.data.avatar);
         this.props.history.push('account');
     });
+    this.props.handleCompletion();
     };
 
     onClose = () => {
@@ -61,7 +60,7 @@ class Avatar extends PureComponent {
           onClose={this.onClose}
           src={src}
         />
-        <Preview dataURL={preview}/>
+        <Preview srcDataURL={preview}/>
         </div>
         <Button variant="contained" color="secondary" id={"upload"} onClick={this.uploadHandler}>Upload</Button>
       </div>
@@ -69,21 +68,28 @@ class Avatar extends PureComponent {
     }
 }
 
-// show the preivew of the cropped avatar
+// show the preview of the cropped avatar
+/**
+ *
+ * @param srcDataURL
+ * base64 url
+ * @returns {*}
+ * @constructor
+ */
 const Preview = (props) => {
-    return (props.dataURL === null ? <div></div> : <img style={{'margin': '50px'}} src={props.dataURL} alt="Preview"/>);
+    return (props.srcDataURL === null ? <div></div> : <img style={{'margin': '50px'}} src={props.srcDataURL} alt="Preview"/>);
   };
 
-Avatar.propTypes = {
-    dataURL: PropTypes.string,
-    onCrop: PropTypes.object,
-    onClose: PropTypes.object,
-    src: PropTypes.string,
-    avatarURL: PropTypes.string.isRequired
+Preview.propTypes = {
+    srcDataURL: PropTypes.string,
+};
+
+AvatarUploader.propTypes = {
+    handleCompletion: PropTypes.func
 };
 
 // export default withRouter(Avatar)
 export default compose(
     withRouter,
     connect(null, { setAvatar }),
-  )(Avatar);
+  )(AvatarUploader);

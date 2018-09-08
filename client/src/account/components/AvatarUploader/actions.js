@@ -9,7 +9,7 @@ export const setAvatar = imgURL => dispatch => dispatch({
 });
 
 // export const loadAvatar = imgURL => dispatch => {
-//   axios({
+//   Axios({
 //     url: 'https://m03s6dh33i0jtc3uzfml36au-wpengine.netdna-ssl.com/wp-content/uploads/photo-1461080639469-66d73688fb21-1024x608.jpg',
 //     responseType: 'arraybuffer'
 //   })

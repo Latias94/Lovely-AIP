@@ -3,7 +3,7 @@ import { SET_AVATAR } from './types';
 // TODO: 
 const initialState = {
 	imgURL: null
-	// avatarURL: 'axios'
+	// avatarURL: 'Axios'
 };
 
 export default function (state = initialState, action) {

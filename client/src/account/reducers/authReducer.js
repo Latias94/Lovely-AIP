@@ -1,6 +1,6 @@
 import isEmpty from '../validation/isEmpty';
 import { SET_CURRENT_USER } from '../actions/types';
-import { SET_AVATAR } from "../components/Avatar/types";
+import { SET_AVATAR } from "../components/AvatarUploader/types";
 
 const initialState = {
 	isAuthenticated: false,
