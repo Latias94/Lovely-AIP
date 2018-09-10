@@ -31,11 +31,11 @@ const styles = {
 };
 
 function AccountInfo(props) {
-    const {username, email} = props;
+    const {username} = props;
     return (
-        <div style={{'margin':'15px'}}>
-            <p>Username: {username}</p>
-            <p>Email: {email}</p>
+        <div style={{'marginBottom':'15px'}}>
+            <p style={{'fontSize':'24px','fontWeight':'bold'}}>{username}</p>
+            {/*<p>Email: {email}</p>*/}
         </div>);
 }
 
