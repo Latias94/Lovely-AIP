@@ -8,6 +8,7 @@ const books = require('./routes/api/books');
 const bookLists = require('./routes/api/bookLists');
 const categories = require('./routes/api/categories');
 const recommendation = require('./routes/api/recommendation');
+const rss = require('./routes/api/rss');
 const cart = require('./routes/api/cart');
 const upload = require('./routes/api/upload');
 const swaggerDefinition = require('./config/swagger');
@@ -80,6 +81,7 @@ app.use('/api/booklists', bookLists);
 app.use('/api/recommendation', recommendation);
 app.use('/api/cart', cart);
 app.use('/api/upload', upload);
+app.use('/api/feed', rss);
 // Public Folder
 // To get image in public folder, you can do as follow
 // http://localhost:5000/uploads/image-1535933860912.jpg

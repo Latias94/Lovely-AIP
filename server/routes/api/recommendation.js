@@ -1,5 +1,4 @@
 const express = require('express');
-const passport = require('passport');
 
 const Review = require('../../models/Review');
 const Book = require('../../models/Book');
@@ -101,7 +100,8 @@ router.get('/book/:id', (req, res) => {
   )
     .then((reviews) => {
       if (!reviews) {
-        return res.status(404).json([]);
+        return res.status(404)
+          .json([]);
       } else {
         const groupByUser = group(reviews);
         const scores = similarityList(groupByUser, req.params.id, euclidean);
@@ -112,36 +112,44 @@ router.get('/book/:id', (req, res) => {
           .then((userReviews) => {
             if (userReviews) {
               Review.find({ user: { $in: similarUser } })
+                .where('star')
+                .gte(4) // star more than or equal to 4
                 .then((otherReviews) => {
                   if (otherReviews) {
                     const result = removeSameBook(userReviews, otherReviews);
                     console.log(result);
-
                     Book.find({ _id: { $in: result } })
                       .then((books) => {
                         if (books) {
                           return res.json(books);
                         } else {
-                          return res.status(404).json([]);
+                          return res.status(404)
+                            .json([]);
                         }
                       })
-                      .catch(() => res.status(404).json([]));
+                      .catch(() => res.status(404)
+                        .json([]));
                   } else {
-                    return res.status(404).json([]);
+                    return res.status(404)
+                      .json([]);
                   }
                   return false;
                 })
-                .catch(() => res.status(404).json([]));
+                .catch(() => res.status(404)
+                  .json([]));
             } else {
-              return res.status(404).json([]);
+              return res.status(404)
+                .json([]);
             }
             return false;
           })
-          .catch(() => res.status(404).json([]));
+          .catch(() => res.status(404)
+            .json([]));
       }
       return false;
     })
-    .catch(() => res.status(404).json([]));
+    .catch(() => res.status(404)
+      .json([]));
 });
 
 module.exports = router;

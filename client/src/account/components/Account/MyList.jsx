@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 
 
-
 const styles = theme => ({
     buttonWrapper: {
         position: 'relative',
@@ -95,6 +94,9 @@ class MyList extends React.Component {
         transformOriginHorizontal: 'center',
         positionTop: 200, // Just so the popover can be spotted more easily
         positionLeft: 400, // Same as above
+        createBooklist:[],
+        title:''
+
     };
 
 
@@ -108,6 +110,18 @@ class MyList extends React.Component {
             open: false,
         });
     };
+
+    handleConfirmButton(){
+        this.setState({
+            createBooklist:[...this.state.createBooklist, this.state.title]
+        })
+    }
+
+    handleBooklist(e){
+        this.setState({
+            title: e.target.value
+        })
+    }
 
     render() {
         const { classes } = this.props;
@@ -130,7 +144,6 @@ class MyList extends React.Component {
                         <Button
                             style={{outline:'none' ,marginRight:'20px'}}
                             variant="contained"
-                            onClick={this.handleClickButton}
                         >
                             + Add a new book
                         </Button>
@@ -181,6 +194,7 @@ class MyList extends React.Component {
                                 type="Booklist"
                                 className={classes.textField}
                                 margin="normal"
+                                onChange={this.handleBooklist.bind(this)}
                             />
                             <TextField
                                 id="search"
@@ -192,7 +206,12 @@ class MyList extends React.Component {
                         </CardContent>
                         <CardActions>
                             <Button variant="contained" onClick={this.handleClickButton}>Cancel</Button>
-                            <Button variant="contained" color="primary" onClick={this.handleClickButton}>Confirm</Button>
+                            <Button variant="contained" color="primary" onClick={this.handleConfirmButton.bind(this)}>Confirm</Button>
+                            <ul>
+                                {this.state.createBooklist.map((item, index)=>{
+                                    return<li key={index}>{item}</li>
+                                })}
+                            </ul>
                         </CardActions>
                     </Card>
                 </Popover>
@@ -200,7 +219,7 @@ class MyList extends React.Component {
                     <Card className={classes.card}>
                         <CardContent>
                             <Typography variant="subheading" style={{display:'inline'}}>
-                                Booklist Title
+                                Book list Title
                             </Typography>
                             <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
                                 Update time

@@ -3,6 +3,8 @@ const URLSlugs = require('mongoose-url-slugs');
 
 const { Schema } = mongoose;
 
+mongoose.set('useCreateIndex', true);
+
 const BookSchema = new Schema({
   category: {
     type: Schema.Types.ObjectId,
@@ -88,5 +90,14 @@ const BookSchema = new Schema({
   },
 });
 BookSchema.plugin(URLSlugs('title', { field: 'slug' }));
+BookSchema.index({
+  title: 'text',
+  description: 'description',
+}, {
+  weights: {
+    name: 5,
+    description: 1,
+  }
+});
 
 module.exports = mongoose.model('books', BookSchema);
