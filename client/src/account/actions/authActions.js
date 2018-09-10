@@ -98,6 +98,7 @@ export const setCurrentUser = decoded => ({
 	payload: decoded,
 });
 
+// TODO: split it to the right page folder
 // Login and get the token
 export const loginUser = userData => (dispatch) => {
 	axios({
