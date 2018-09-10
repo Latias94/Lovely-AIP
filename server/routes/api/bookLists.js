@@ -131,14 +131,14 @@ router.get('/slug/:slug', (req, res) => {
  *   get:
  *     tags:
  *       - BookList
- *     summary: Get BookList with user review by id
- *     description: Get BookList with user review by id. This can only be done by the logged in user (add JWT token to header).
+ *     summary: Get a BookList with the user reviews by id
+ *     description: Get a BookList with the user reviews by id. This can only be done by the logged in user (JWT token required in the header).
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: "id"
  *         in: "path"
- *         description: "ID of BookList that needs to be fetched"
+ *         description: "The ID of the BookList"
  *         required: true
  *         type: "string"
  *     responses:
@@ -453,8 +453,8 @@ router.post(
  *   delete:
  *     tags:
  *       - BookList
- *     summary: Delete Book to BookList
- *     description: Delete Book from a exist BookList. Both BookList id and Book id fields are required.
+ *     summary: Delete a Book from a BookList
+ *     description: Delete a Book from a exist BookList. Both BookList id and Book id fields are required.
  *     produces:
  *       - application/json
  *     parameters:

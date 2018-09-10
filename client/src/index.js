@@ -17,13 +17,12 @@ import { config } from './config';
 axios.defaults.baseURL = (config.ENV === 'production') ? config.REL_API_BASE_URL : config.DEV_API_BASE_URL;
 // Check for token
 if (localStorage.jwtToken) {
-	// Set token header in axios
+	// Set token header in Axios
 	setAuthTokenInHeader(localStorage.jwtToken);
 	// set baseURL in header
 	const decoded = jwt_decode(localStorage.jwtToken);
 	// install user
 	store.dispatch(setCurrentUser(decoded));
-
 	// Check for expired token
 	const currentTime = Date.now() / 1000;
 	if (decoded.exp < currentTime) {
