@@ -12,6 +12,8 @@ import {getCurrentUserInfo} from '../../actions/authActions';
 import isEmpty from '../../validation/isEmpty'
 import {config} from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
+import './avatar-uploader.css';
+
 
 const baseURL = (config.ENV === 'production') ? config.REL_UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
 const styles = {
@@ -84,7 +86,11 @@ class Account extends React.Component {
                     <button onClick={this.onOpenModal}>Change picture</button>
 				</div>
 				
-        <Modal open={avatarPageOpened} onClose={this.onCloseModal} center>
+        <Modal
+            open={avatarPageOpened}
+            onClose={this.onCloseModal}
+            classNames={{ modal: 'avatar-modal' }}
+        >
           <AvatarUploader handleCompletion={this.onCloseModal}/>
         </Modal>
 				
