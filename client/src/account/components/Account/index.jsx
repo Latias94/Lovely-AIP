@@ -33,7 +33,7 @@ const styles = {
 function AccountInfo(props) {
     const {username, email} = props;
     return (
-        <div>
+        <div style={{'margin':'15px'}}>
             <p>Username: {username}</p>
             <p>Email: {email}</p>
         </div>);
@@ -98,7 +98,7 @@ class Account extends React.Component {
             username={username}
             email={email}
             classes={classes}/>
-			<AccountTab/></span>)
+        <AccountTab/></span>)
                 :
                 <Link to={'login'}>PLEASE LOG IN</Link>
             }

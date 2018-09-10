@@ -52,13 +52,14 @@ class AvatarUploader extends PureComponent {
         return(
         <div style={styles.container}>
         <h1>My Avatar</h1>
-        <div style={styles.horizontalCenter}>
+        <div style={styles.verticalCenter}>
         <AvatarEdit
           width={390}
           height={295}
           onCrop={this.onCrop}
           onClose={this.onClose}
           src={src}
+          style={{'marginBottom': '10px'}}
         />
         <Preview srcDataURL={preview}/>
         </div>

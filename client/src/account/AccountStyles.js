@@ -1,3 +1,4 @@
+// separate this into each page folder
 export const styles = {
 	container: {
 		display: 'flex',
@@ -17,12 +18,13 @@ export const styles = {
 		flexWrap: 'wrap',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		marginBottom: '15px'
 	},
 	horizontalCenter: {
 		display: 'flex',
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		justifyContent: 'space-between',
+		justifyItems: 'space-between',
 		alignItems: 'center',
 	}
 };
