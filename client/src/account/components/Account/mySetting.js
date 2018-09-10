@@ -112,7 +112,7 @@ class MySetting extends React.Component {
                         <Typography className={classes.heading}>General settings</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails style={{height:300}}>
-                        <table>
+                        <table style={{width:'100%'}}>
                             <thead></thead>
                             <tbody>
                             <tr>
