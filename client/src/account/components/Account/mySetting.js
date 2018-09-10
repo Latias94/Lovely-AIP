@@ -45,7 +45,7 @@ const styles = theme => ({
     },
 });
 
-const AUS_state = [
+const AUS_states = [
     {
         value: 'Australian Capital Territory',
         label: 'Australian Capital Territory',
@@ -86,7 +86,7 @@ class MySetting extends React.Component {
         name: 'Jenny',
         email: '',
         Phone: '04234234234',
-        State: 'None',
+        AUS_state: '2',
         City: 'Sydney',
     };
 
@@ -146,31 +146,26 @@ class MySetting extends React.Component {
                             </tr>
                             <tr>
                                 <td>
-                                     <TextField
-                                        id="State"
+                                    <TextField
+                                        id="select-AUS_state"
                                         select
                                         label="State"
                                         className={classes.textField}
-                                        value={this.state.currency}
+                                        value={this.state.AUS_state}
                                         onChange={this.handleChangeState('AUS_state')}
                                         SelectProps={{
                                             MenuProps: {
                                                 className: classes.menu,
                                             },
                                         }}
-                                        SelectProps={{
-                                            MenuProps: {
-                                                className: classes.menu,
-                                            },
-                                        }}
                                         margin="normal"
-                                     >
-                                         {AUS_state.map(option => (
-                                             <MenuItem key={option.value} value={option.value}>
-                                                 {option.label}
-                                             </MenuItem>
-                                         ))}
-                                     </TextField>
+                                    >
+                                        {AUS_states.map(option => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </td>
                                 <td>
                                         <TextField
