@@ -1,5 +1,6 @@
 import isEmpty from '../validation/isEmpty';
 import { SET_CURRENT_USER } from '../actions/types';
+import { SET_AVATAR } from "../components/AvatarUploader/types";
 
 const initialState = {
 	isAuthenticated: false,
@@ -7,6 +8,7 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
+	// TODO: redux-actions
 	switch (action.type) {
 	case SET_CURRENT_USER:
 		return {
@@ -14,6 +16,14 @@ export default function (state = initialState, action) {
 			isAuthenticated: !isEmpty(action.payload),
 			user: action.payload,
 		};
+		case SET_AVATAR:
+			// TODO: refine this
+			const newUser = state.user;
+			newUser.avatar = action.imgURL;
+			return {
+				...state,
+				user: newUser
+			}
 	default:
 		return state;
 	}

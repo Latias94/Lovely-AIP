@@ -63,8 +63,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(passport.initialize());
 
 // Public Folder
-app.use(express.static('./public'));
-
+app.use(express.static('public'));
 // cross origin
 app.use((req, res, next) => {
   // BEFORE CHANGING, MAKE SURE THE ACCOUNT PAGE WORKS!!!

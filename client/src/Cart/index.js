@@ -14,10 +14,7 @@ class CartTablePage extends Component {
 	}
 
 	componentDidMount() {
-		axios({
-			method: 'get',
-			url: 'http://localhost:5000/api/cart',
-		})
+		axios.get('/cart')
 			.then((res) => {
 				this.setState({ booksInCart: res.data });
 				console.log(res);

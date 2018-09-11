@@ -98,6 +98,7 @@ export const setCurrentUser = decoded => ({
 	payload: decoded,
 });
 
+// TODO: split it to the right page folder
 // Login and get the token
 export const loginUser = userData => (dispatch) => {
 	axios({
@@ -108,7 +109,7 @@ export const loginUser = userData => (dispatch) => {
 		const { token } = res.data;
 		// Save to localStorage
 		localStorage.setItem('jwtToken', token);
-		// Set to axios global header
+		// Set to Axios global header
 		setAuthTokenInHeader(token);
 		const decoded = jwt_decode(token);
 		dispatch(setCurrentUser(decoded));
@@ -128,4 +129,15 @@ export const logoutUser = () => (dispatch) => {
 	dispatch(setCurrentUser({}));
 	// return to home page
 	window.open('/', '_self');
+};
+
+export const getCurrentUserInfo = () => (dispatch) => {
+	axios.get('/users/current')
+		.then((res) => {
+			dispatch(setCurrentUser(res.data));
+		})
+        .catch(err => dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data,
+        }));
 };

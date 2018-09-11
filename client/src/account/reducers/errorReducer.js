@@ -5,6 +5,7 @@ const initialState = {};
 export default function (state = initialState, action) {
 	switch (action.type) {
 	case GET_ERRORS:
+		// use the key value in the payload directly
 		return action.payload;
 	default:
 		return state;
