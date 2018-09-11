@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const helmet = require('helmet');
 const swaggerJSDoc = require('swagger-jsdoc');
 const users = require('./routes/api/users');
 const books = require('./routes/api/books');
@@ -40,6 +41,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
+app.use(helmet());
 
 let db;
 // Connect to MongoDB

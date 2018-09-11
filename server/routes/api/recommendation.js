@@ -55,7 +55,7 @@ function getMostSimilarUserByNum(scores, numOfUser) {
   numOfUser = scores.length < numOfUser ? scores.length : numOfUser;
 
   for (let i = 0; i < numOfUser; i += 1) {
-    result.push(scores[i].name);
+    result.push(scores[i].user);
   }
   return result;
 }
