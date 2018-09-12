@@ -5,6 +5,8 @@ const Book = require('../../models/Book');
 const Category = require('../../models/Category');
 const User = require('../../models/User');
 const Review = require('../../models/Review');
+const cleanCache = require('../../middlewares/cleanCache');
+const { clearHash } = require('../../config/cache');
 
 // Validation
 const validateBookInput = require('../../validation/book');
@@ -111,6 +113,7 @@ router.get('/list', (req, res) => {
   }
   const interval = (page - 1) * pageSize;
   Book.find()
+    .cache()
     .skip(interval)
     .limit(pageSize)
     .sort(sortParams)
@@ -145,17 +148,17 @@ router.get('/list', (req, res) => {
  */
 router.get('/:id', (req, res) => {
   Book.findById(req.params.id)
+    .cache({ key: req.params.id })
     .then((book) => {
       Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
+        .cache()
         .then((category) => {
           if (category) {
             book = book.toObject();
             book.parentCategory = category.name;
             book.parentCategoryId = category._id;
-            return res.json(book);
-          } else {
-            return res.json(book);
           }
+          return res.json(book);
         })
         .catch(err => console.log(err));
     })
@@ -163,6 +166,7 @@ router.get('/:id', (req, res) => {
       .json({
         booknotfound: 'No books found',
       }));
+  return false;
 });
 
 /**
@@ -172,7 +176,7 @@ router.get('/:id', (req, res) => {
  *     tags:
  *       - Book
  *     summary: Get books by keyword with condition
- *     description: Get book by keyword with condition. (search in book title and description with weight)
+ *     description: Get book by keyword with condition. (search in book title and description with weight).
  *     produces:
  *       - application/json
  *     parameters:
@@ -223,6 +227,7 @@ router.get('/search/:keyword', (req, res) => {
   }
   const interval = (page - 1) * pageSize;
   Book.find({ $text: { $search: req.params.keyword } })
+    .cache()
     .skip(interval)
     .limit(pageSize)
     .sort(sortParams)
@@ -330,6 +335,7 @@ router.post('/',
   }), (req, res) => {
     // find out whether user is staff
     User.findOne({ user: req.user.id })
+      .cache({ key: req.user.id })
       .then((user) => {
         if (user) {
           if (!user.isStaff) {
@@ -364,6 +370,7 @@ router.post('/',
 
     if (req.body.category) {
       Category.findById(req.body.category)
+        .cache({ key: req.body.category })
         .then((category) => {
           if (!category) {
             errors.categorynotfound = 'No categories found';
@@ -399,6 +406,7 @@ router.post('/',
     } else {
       // create with no category
       Category.findOne({ slug: 'empty' })
+        .cache()
         .then((emptyCategory) => {
           const newBook = new Book({
             category: emptyCategory._id,
@@ -495,6 +503,7 @@ router.delete('/:id',
   (req, res) => {
     // find out whether user is staff
     User.findOne({ user: req.user.id })
+      .cache({ key: req.user.id })
       .then((user) => {
         if (user) {
           if (!user.isStaff) {
@@ -508,6 +517,7 @@ router.delete('/:id',
       });
 
     Book.findByIdAndRemove(req.params.id, (err) => {
+      clearHash(req.params.id);
       return err
         ? res.status(404)
           .json({ booknotfound: 'No books found' })
@@ -562,6 +572,7 @@ router.post('/review/:id',
   passport.authenticate('jwt', {
     session: false,
   }),
+  cleanCache,
   (req, res) => {
     const {
       errors,
@@ -610,6 +621,8 @@ router.post('/review/:id',
                   const bookScore = totalScore / book.reviews.length;
                   book.toObject();
                   book.score = bookScore.toFixed(2);
+
+                  clearHash(req.params.id);
 
                   // Save
                   book.save()
@@ -667,6 +680,7 @@ router.delete('/review/:id/:review_id',
   passport.authenticate('jwt', {
     session: false,
   }),
+  cleanCache,
   (req, res) => {
     Book.findById(req.params.id)
       .then((book) => {
@@ -707,7 +721,7 @@ router.delete('/review/:id/:review_id',
                 book.toObject();
                 book.score = bookScore.toFixed(2);
               }
-
+              clearHash(req.params.id);
               book.save()
                 .then(() => res.json({ success: true }));
               return false;
@@ -763,6 +777,7 @@ router.post('/:id',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     User.findOne({ user: req.user.id })
+      .cache({ key: req.user.id })
       .then((user) => {
         if (user) {
           if (!user.isStaff) {
@@ -812,6 +827,7 @@ router.post('/:id',
     bookFields.updateDate = Date.now();
     if (req.body.category) {
       Category.findById(req.body.category)
+        .cache({ key: req.body.category })
         .then((category) => {
           if (category) {
             bookFields.category = req.body.category;
@@ -821,6 +837,7 @@ router.post('/:id',
               bookFields,
               { new: true },
               (err, bookObject) => {
+                clearHash(req.params.id);
                 return err ? res.status(404)
                     .json({ booknotfound: 'No books found' })
                   : res.json(bookObject);
@@ -840,6 +857,7 @@ router.post('/:id',
         bookFields,
         { new: true },
         (err, bookObject) => {
+          clearHash(req.params.id);
           return err ? res.status(404)
               .json({ booknotfound: 'No books found' })
             : res.json(bookObject);

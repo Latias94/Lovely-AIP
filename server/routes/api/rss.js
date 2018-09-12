@@ -36,6 +36,7 @@ router.get('/rss/booklists', (req, res) => {
     .sort({
       updateDate: -1
     })
+    .cache()
     .then((booklists) => {
       if (booklists) {
         // TODO change frontend route

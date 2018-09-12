@@ -444,6 +444,7 @@ router.get('/current/review', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
   Review.findById({ user: req.user.id })
+    .cache({ key: req.params.id })
     .then((reviews) => {
       if (reviews) {
         return res.json(reviews);
@@ -482,6 +483,7 @@ router.get('/current/review', passport.authenticate('jwt', {
  */
 router.get('/avatar/:id', (req, res) => {
   User.findById(req.params.id)
+    .cache({ key: req.params.id })
     .then((user) => {
       if (user.avatar) {
         return res.json({

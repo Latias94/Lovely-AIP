@@ -13,6 +13,7 @@ const rss = require('./routes/api/rss');
 const cart = require('./routes/api/cart');
 const upload = require('./routes/api/upload');
 const swaggerDefinition = require('./config/swagger');
+require('./config/cache');
 
 const app = express();
 // for compress http header

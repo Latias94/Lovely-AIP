@@ -60,3 +60,7 @@ Related API document can be referred to [http://localhost:5000/swagger/#/Recomme
 You can test API by the following link:
 
 [http://localhost:5000/api/recommendation/book/5b5c0edc1e744f9760543a07](http://localhost:5000/api/recommendation/book/5b5c0edc1e744f9760543a07)
+
+## Redis
+
+![](https://i.loli.net/2018/09/12/5b98811a057e3.png)

@@ -109,6 +109,7 @@ router.get('/book/:id', (req, res) => {
 
         const similarUser = getMostSimilarUserByNum(scores, 3);
         Review.find({ user: req.params.id })
+          .cache({ key: req.params.id })
           .then((userReviews) => {
             if (userReviews) {
               Review.find({ user: { $in: similarUser } })
@@ -119,6 +120,7 @@ router.get('/book/:id', (req, res) => {
                     const result = removeSameBook(userReviews, otherReviews);
                     console.log(result);
                     Book.find({ _id: { $in: result } })
+                      .cache()
                       .then((books) => {
                         if (books) {
                           return res.json(books);

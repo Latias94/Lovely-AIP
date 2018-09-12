@@ -3,6 +3,7 @@ const passport = require('passport');
 
 const User = require('../../models/User');
 const Book = require('../../models/Book');
+const cleanCache = require('../../middlewares/cleanCache');
 const validateCartInput = require('../../validation/cart');
 
 const router = express.Router();
@@ -48,6 +49,7 @@ router.get('/', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
   User.findById(req.user.id)
+    .cache({ key: req.user.id })
     .then((user) => {
       return res.json(user.cart);
     })
@@ -85,6 +87,7 @@ router.post(
   passport.authenticate('jwt', {
     session: false,
   }),
+  cleanCache,
   (req, res) => {
     User.findById(req.user.id)
       .then((user) => {
@@ -140,6 +143,7 @@ router.post(
   passport.authenticate('jwt', {
     session: false,
   }),
+  cleanCache,
   (req, res) => {
     const {
       errors,
@@ -203,6 +207,7 @@ router.post(
 router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
+  cleanCache,
   (req, res) => {
     User.findById(req.user.id)
       .then((user) => {
