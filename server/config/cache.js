@@ -10,9 +10,13 @@ const client = redis.createClient({
 
 client.hget = util.promisify(client.hget);
 const { exec } = mongoose.Query.prototype;
+const underTestEnv = process.env.NODE_ENV === 'test';
 
 mongoose.Query.prototype.cache = function (options = {}) {
-  this.useCache = true;
+  // do not use caching when the app is under test env
+  if (!underTestEnv) {
+    this.useCache = true;
+  }
   this.hashKey = JSON.stringify(options.key || '');
   return this;
 };

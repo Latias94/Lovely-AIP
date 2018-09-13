@@ -113,10 +113,10 @@ router.get('/list', (req, res) => {
   }
   const interval = (page - 1) * pageSize;
   Book.find()
-    .cache()
     .skip(interval)
     .limit(pageSize)
     .sort(sortParams)
+    .cache()
     .then(books => res.json(books))
     .catch(() => res.status(404)
       .json({
