@@ -1,18 +1,17 @@
-- [Server](#server)
-    - [Set Up Environment Variable](#set-up-environment-variable)
-    - [API](#api)
-        - [Using Swagger](#using-swagger)
-        - [Register](#register)
-        - [Confirm account](#confirm-account)
-        - [Login](#login)
-    - [Development](#development)
-        - [Testing](#testing)
-    - [Book Recommendation](#book-recommendation)
-    - [Redis](#redis)
-        - [Caching Data](#caching-data)
-        - [Rate Limit](#rate-limit)
-
 # Server
+
+- [Set Up Environment Variable](#set-up-environment-variable)
+- [API](#api)
+    - [Using Swagger](#using-swagger)
+    - [Register](#register)
+    - [Confirm account](#confirm-account)
+    - [Login](#login)
+- [Development](#development)
+    - [Testing](#testing)
+- [Book Recommendation](#book-recommendation)
+- [Redis](#redis)
+    - [Caching Data](#caching-data)
+    - [Rate Limit](#rate-limit)
 
 ## Set Up Environment Variable
 Before start the server, you ought to set up environment variables as the following table.
@@ -104,3 +103,5 @@ Redis Lab provides free Redis database with AWS region endpoint of 'ap-southeast
 Provide ability to limit the rate of API request in a period of time.  
 In this project, APIs of 'Create User' and 'Send Validation Email' are under limitation of two request each minutes.   
 If reach the limitation, server will respond a status code of 429 which stands for 'Too Many Request'.
+
+Related Code can be referred to [Lovely-AIP/server/middlewares/rateLimit.js](https://github.com/Latias94/Lovely-AIP/blob/master/server/middlewares/rateLimit.js).
