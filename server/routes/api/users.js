@@ -6,6 +6,7 @@ const passport = require('passport');
 const crypto = require('crypto');
 const mailer = require('./../../utils/mailer');
 const keys = require('../../config/keys');
+const { authLimiter } = require('../../middlewares/rateLimit');
 
 // Load Input Validation
 const validationRegisterInput = require('../../validation/register');
@@ -84,7 +85,7 @@ router.get('/test', (req, res) => res.json({
  *     tags:
  *       - User
  *     summary: Register user
- *     description: Registers a new user with different email from database, and send email for activation.
+ *     description: Registers a new user with different email from database, and send email for activation. Allow 2 request each minute only (Rate Limit).
  *     produces:
  *       - application/json
  *     parameters:
@@ -100,7 +101,7 @@ router.get('/test', (req, res) => res.json({
  *       400:
  *         description: Form validation fail
  */
-router.post('/register', (req, res) => {
+router.post('/register', authLimiter, (req, res) => {
   const {
     errors,
     isValid,
@@ -206,8 +207,8 @@ router.get('/active/:activeToken', (req, res) => {
  *   post:
  *     tags:
  *       - User
- *     summary: send activate email to user email
- *     description: send activate email to user email
+ *     summary: Send activate email to user email
+ *     description: Send activate email to user email. Allow 2 request each minute only (Rate Limit).
  *     produces:
  *       - application/json
  *     parameters:
@@ -223,7 +224,7 @@ router.get('/active/:activeToken', (req, res) => {
  *       404:
  *         description: No user found Or Account has activated
  */
-router.post('/active/', (req, res) => {
+router.post('/active/', authLimiter, (req, res) => {
   User.findOne({
     email: req.body.email,
   })
