@@ -2,7 +2,7 @@ const RateLimit = require('express-rate-limit');
 const RedisStore = require('rate-limit-redis');
 const { client } = require('../config/cache');
 
-// for register and resend validation email
+// rate limitation for register account and resend validation email
 const authLimiter = new RateLimit({
   store: new RedisStore({
     client,

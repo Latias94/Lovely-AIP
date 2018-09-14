@@ -101,7 +101,7 @@ Redis Lab provides free Redis database with AWS region endpoint of 'ap-southeast
 
 ### Rate Limit
 Provide ability to limit the rate of API request in a period of time.  
-In this project, APIs of 'Create User' and 'Send Validation Email' are under limitation of two request each minutes.   
+In this project, APIs of 'Create User' and 'Send Validation Email' are under limitation of two requests each minute.   
 If reach the limitation, server will respond a status code of 429 which stands for 'Too Many Request'.
 
 Related Code can be referred to [Lovely-AIP/server/middlewares/rateLimit.js](https://github.com/Latias94/Lovely-AIP/blob/master/server/middlewares/rateLimit.js).
