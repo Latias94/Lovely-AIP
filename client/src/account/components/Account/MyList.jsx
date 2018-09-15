@@ -78,12 +78,6 @@ class MyList extends React.Component {
                 <Grid container justify="center" spacing={0}>
                     <Grid item className={classes.buttonWrapper} style={{paddingTop:'20px'}}>
                         <Button
-                            style={{outline:'none' ,marginRight:'20px'}}
-                            variant="contained"
-                        >
-                            + Add a new book
-                        </Button>
-                        <Button
                             style={{outline:'none'}}
                             variant="contained"
                             onClick={this.handleClickButton}
@@ -140,7 +134,9 @@ class MyList extends React.Component {
                     <Card className={classes.card}>
                         <CardContent>
                             <Typography variant="subheading" style={{display:'inline'}}>
-                                Book list Title
+                                <a href={'/booklist'}>
+                                    BookList Title
+                                </a>
                             </Typography>
                             <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
                                 Update time
