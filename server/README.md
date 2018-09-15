@@ -12,6 +12,9 @@
 - [Redis](#redis)
     - [Caching Data](#caching-data)
     - [Rate Limit](#rate-limit)
+- [Docker](#docker)
+    - [Build](#build)
+    - [Run](#run)
 
 ## Set Up Environment Variable
 Before start the server, you ought to set up environment variables as the following table.
@@ -105,3 +108,18 @@ In this project, APIs of 'Create User' and 'Send Validation Email' are under lim
 If reach the limitation, server will respond a status code of 429 which stands for 'Too Many Request'.
 
 Related Code can be referred to [Lovely-AIP/server/middlewares/rateLimit.js](https://github.com/Latias94/Lovely-AIP/blob/master/server/middlewares/rateLimit.js).
+
+## Docker
+Set environment valuables inside of Dockerfile.
+
+### Build
+
+```shell
+cd server/
+docker build -t server .
+```
+
+### Run
+
+```shell
+docker run -p 5000:5000 -d --restart=always server```
