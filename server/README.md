@@ -122,4 +122,5 @@ docker build -t server .
 ### Run
 
 ```shell
-docker run -p 5000:5000 -d --restart=always server```
+docker run -p 5000:5000 -d --restart=always server
+```
