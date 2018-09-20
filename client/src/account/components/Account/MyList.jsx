@@ -141,12 +141,12 @@ class MyList extends React.Component {
             <div>
                 <Grid container justify="center" spacing={0}>
                     <Grid item className={classes.buttonWrapper} style={{paddingTop:'20px'}}>
-                        <Button
-                            style={{outline:'none' ,marginRight:'20px'}}
-                            variant="contained"
-                        >
-                            + Add a new book
-                        </Button>
+                        {/*<Button*/}
+                            {/*style={{outline:'none', marginRight:'20px'}}*/}
+                            {/*variant="contained"*/}
+                        {/*>*/}
+                            {/*+ Add a new book*/}
+                        {/*</Button>*/}
                         <Button
                             style={{outline:'none'}}
                             buttonRef={node => {
@@ -155,7 +155,7 @@ class MyList extends React.Component {
                             variant="contained"
                             onClick={this.handleClickButton}
                         >
-                            + Add new a Book list
+                            + Add a new book list
                         </Button>
                         {anchorReference === 'anchorEl' && (
                             <div

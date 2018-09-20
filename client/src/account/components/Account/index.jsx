@@ -12,7 +12,7 @@ import isEmpty from '../../validation/isEmpty'
 import {config} from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
-
+import { getCurrentUserBookLists } from './actions';
 
 const baseURL = (config.ENV === 'production') ? config.REL_UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
 const styles = {
@@ -43,11 +43,17 @@ class Account extends React.Component {
         super(props);
         this.state = {
             avatarPageOpened: false,
+            bookLists: null
         };
     }
 
     componentDidMount() {
         this.props.getCurrentUserInfo();
+        getCurrentUserBookLists(this.setBookLists);
+    };
+
+    setBookLists = lists => {
+        this.setState({bookLists: lists})
     };
 
     onOpenModal = () => {
@@ -108,8 +114,9 @@ class Account extends React.Component {
 const mapStateToProps = state => {
     // install user info
     if (!isEmpty(state.auth.user)) {
-        const {name: username, email, avatar: avatarURL} = state.auth.user;
+        const {id: userId, name: username, email, avatar: avatarURL} = state.auth.user;
         let props = {
+            userId,
             username,
             email,
             isLoggedIn: true
