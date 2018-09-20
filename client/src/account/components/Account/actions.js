@@ -6,13 +6,17 @@ import Axios from 'axios';
 export const getCurrentUserBookLists = (setter) => {
 	Axios.get('/users/current/booklist')
 		.then((res) => {
+            console.log("current booklist", res.data);
 			setter(res.data);
 		})
 		.catch(err => console.log(err.data));
 };
 
-export const createBookList = (name) => (description) => {
-    Axios.post('/booklists', { title: name, description })
-        .then(res => {})
+export const createBookList = (title) => (description) => {
+    Axios.post('/booklists', { title, description })
+        .then(res => {
+            // TODO: transfer error msg to UI
+            // console.log(res.data)
+        })
         .catch(()=>{})
-}
+};

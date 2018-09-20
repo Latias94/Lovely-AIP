@@ -10,6 +10,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import { createBookList } from './actions';
 
 
 const styles = theme => ({
@@ -85,6 +86,7 @@ const inlineStyles = {
 
 class MyList extends React.Component {
     anchorEl = null;
+    descriptionMinLength = 8;
 
     state = {
         open: false,
@@ -94,17 +96,22 @@ class MyList extends React.Component {
         transformOriginHorizontal: 'center',
         positionTop: 200, // Just so the popover can be spotted more easily
         positionLeft: 400, // Same as above
-        createBooklist:[],
-        title:''
-
+        isDescriptionWrong: false,
+        descriptionError: null
     };
 
-
     handleClickButton = () => {
+        // init error msg
+        this.setState({
+            isDescriptionWrong: false,
+            descriptionError: null
+        });
+
         this.setState(state => ({
             open: !state.open,
         }));
     };
+
     handleClose = () => {
         this.setState({
             open: false,
@@ -112,16 +119,21 @@ class MyList extends React.Component {
     };
 
     handleConfirmButton(){
-        this.setState({
-            createBooklist:[...this.state.createBooklist, this.state.title]
-        })
-    }
-
-    handleBooklist(e){
-        this.setState({
-            title: e.target.value
-        })
-    }
+        const { description, title } = this;
+        if (description.value.length > this.descriptionMinLength) {
+            // post
+            createBookList(title.value)(description.value);
+            // close
+            this.setState({
+                open: false,
+            });
+        } else {
+            this.setState({
+                isDescriptionWrong: true,
+                descriptionError: 'Too short!'
+            })
+        }
+    };
 
     render() {
         const { classes } = this.props;
@@ -155,7 +167,7 @@ class MyList extends React.Component {
                             variant="contained"
                             onClick={this.handleClickButton}
                         >
-                            + Add a new book list
+                            + New book list
                         </Button>
                         {anchorReference === 'anchorEl' && (
                             <div
@@ -189,29 +201,32 @@ class MyList extends React.Component {
                                 Create a new booklist
                             </Typography>
                             <TextField
-                                id="search"
+                                id="Name"
                                 label="Name"
-                                type="Booklist"
+                                type="BookList"
                                 className={classes.textField}
                                 margin="normal"
-                                onChange={this.handleBooklist.bind(this)}
+                                // TODO: how about using setState here?
+                                inputRef={title => this.title = title}
+                                required
+                                // onChange={this.handleBookList.bind(this)}
                             />
                             <TextField
-                                id="search"
-                                label="Description"
-                                type="Booklist"
+                                id="Description"
+                                // TODO: confirm the length limit later. Convert to word length is better.
+                                label={`Description (more than ${this.descriptionMinLength} letters)`}
+                                type="BookList"
                                 className={classes.textField}
                                 margin="normal"
+                                inputRef={description => this.description = description}
+                                error={this.state.isDescriptionWrong}
+                                helperText={this.state.descriptionError}
+                                required
                             />
                         </CardContent>
                         <CardActions>
                             <Button variant="contained" onClick={this.handleClickButton}>Cancel</Button>
                             <Button variant="contained" color="primary" onClick={this.handleConfirmButton.bind(this)}>Confirm</Button>
-                            <ul>
-                                {this.state.createBooklist.map((item, index)=>{
-                                    return<li key={index}>{item}</li>
-                                })}
-                            </ul>
                         </CardActions>
                     </Card>
                 </Popover>
