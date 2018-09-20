@@ -16,6 +16,10 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import Modal from '@material-ui/core/Modal';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+
 
 const actionsStyles = theme => ({
     root: {
@@ -54,6 +58,29 @@ const styles = theme => ({
     },
     iconSmall: {
         fontSize: 20,
+    },
+    paper: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        minWidth: '90%',
+    },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2,
+        minWidth:200,
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 100,
+    },
+    card: {
+        minWidth: 275,
     },
 });
 
@@ -150,7 +177,21 @@ class BookManage extends React.Component {
 
         ],
         page: 0,
+
         rowsPerPage: 5,
+
+        open: false,
+        expanded: null,
+
+    };
+
+
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
     };
 
     handleChangePage = (event, page) => {
@@ -161,6 +202,12 @@ class BookManage extends React.Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
+    handleClickButton = () => {
+        this.setState(state => ({
+            open: !state.open,
+        }));
+    };
+
     render() {
         const { classes } = this.props;
         const { rows, rowsPerPage, page } = this.state;
@@ -168,10 +215,123 @@ class BookManage extends React.Component {
 
         return (
             <div>
-                <Button variant="contained" color="primary" className={classes.button}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    style={{outline:'none'}}
+                    onClick={this.handleOpen}>
                     <AddIcon />
                     ADD a New Book
                 </Button>
+                <Modal
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                >
+                    <div className={classes.paper} style={{top:'17%', left:'23%', width:'60%', height:'60%'}}>
+                        <Typography variant="title" id="modal-title">
+                            Add a new book
+                        </Typography>
+                        <Typography variant="subheading" id="simple-modal-description">
+                            <table style={{width:'100%'}}>
+                                <thead></thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <TextField
+                                            id="BookTitle"
+                                            label="Book Title"
+                                            multiline
+                                            className={classes.textField}
+                                        />
+                                    </td>
+                                    <td>
+                                        <TextField
+                                            id="Author"
+                                            label="Author"
+                                            className={classes.textField}
+                                            type="text"
+                                            placeholder='Author A , Author B'
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <TextField
+                                            id="Category1"
+                                            label="First Category"
+                                            className={classes.textField}
+                                            type="text"
+                                        />
+                                    </td>
+                                    <td>
+                                        <TextField
+                                            id="Category2"
+                                            label="Second Category"
+                                            className={classes.textField}
+                                            type="text"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <TextField
+                                            id="Stock"
+                                            label="In stock"
+                                            className={classes.textField}
+                                            type="text"
+                                        />
+                                    </td>
+                                    <td>
+                                        <TextField
+                                            id="ISBN"
+                                            label="ISBN"
+                                            className={classes.textField}
+                                            type="ISBN"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <TextField
+                                            id="Price"
+                                            label="Price"
+                                            className={classes.textField}
+                                            type="text"
+                                        />
+                                    </td>
+                                    <td>
+                                        <TextField
+                                            id="PublishDate"
+                                            label="PublishDate"
+                                            className={classes.textField}
+                                            type="ISBN"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                        <TextField
+                                            id="Description"
+                                            label="Description"
+                                            className={classes.textField}
+                                            type="Description"
+                                        />
+                                        </td>
+                                </tr>
+                                </tbody>
+                            </table >
+                            <Button
+                                variant="contained"
+                                onClick={this.handleClickButton}
+                                style={{margin:'2%'}}
+                            >Cancel</Button>
+                            <Button variant="contained" color="primary" onClick={this.handleClickButton}>Confirm</Button>
+                        </Typography>
+                    </div>
+                </Modal>
             <Paper className={classes.root}>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table}>

@@ -4,12 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import green from '@material-ui/core/colors/green';
 import Button from '@material-ui/core/Button';
-import Popover from '@material-ui/core/Popover';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Modal from '@material-ui/core/Modal';
 import { createBookList } from './actions';
 
 
@@ -18,19 +17,7 @@ const styles = theme => ({
         position: 'relative',
         marginBottom: theme.spacing.unit * 4,
     },
-    anchor: {
-        backgroundColor: green[500],
-        width: 10,
-        height: 10,
-        borderRadius: '50%',
-        position: 'absolute',
-    },
-    radioAnchor: {
-        color: green[600],
-        '&$checked': {
-            color: green[500],
-        },
-    },
+
     checked: {},
     typography: {
         margin: theme.spacing.unit * 2,
@@ -57,32 +44,16 @@ const styles = theme => ({
     menu: {
         width: 200,
     },
+    paper: {
+        position: 'absolute',
+        width: theme.spacing.unit * 50,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+    },
+
 });
 
-const inlineStyles = {
-    anchorVertical: {
-        top: {
-            top: -5,
-        },
-        center: {
-            top: 'calc(50% - 5px)',
-        },
-        bottom: {
-            bottom: -5,
-        },
-    },
-    anchorHorizontal: {
-        left: {
-            left: -5,
-        },
-        center: {
-            left: 'calc(50% - 5px)',
-        },
-        right: {
-            right: -5,
-        },
-    },
-};
 
 class MyList extends React.Component {
     anchorEl = null;
@@ -90,26 +61,18 @@ class MyList extends React.Component {
 
     state = {
         open: false,
-        anchorOriginVertical: 'center',
-        anchorOriginHorizontal: 'center',
-        transformOriginVertical: 'center',
-        transformOriginHorizontal: 'center',
-        positionTop: 200, // Just so the popover can be spotted more easily
-        positionLeft: 400, // Same as above
         isDescriptionWrong: false,
         descriptionError: null
     };
 
-    handleClickButton = () => {
+    handleCancelButton = () => {
         // init error msg
         this.setState({
             isDescriptionWrong: false,
             descriptionError: null
         });
 
-        this.setState(state => ({
-            open: !state.open,
-        }));
+        this.handleClose();
     };
 
     handleClose = () => {
@@ -118,15 +81,12 @@ class MyList extends React.Component {
         });
     };
 
-    handleConfirmButton(){
+    handleConfirmButton = () => {
         const { description, title } = this;
         if (description.value.length > this.descriptionMinLength) {
             // post
             createBookList(title.value)(description.value);
-            // close
-            this.setState({
-                open: false,
-            });
+            this.handleClose();
         } else {
             this.setState({
                 isDescriptionWrong: true,
@@ -137,104 +97,85 @@ class MyList extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const {
-            open,
-            anchorOriginVertical,
-            anchorOriginHorizontal,
-            transformOriginVertical,
-            transformOriginHorizontal,
-            positionTop,
-            positionLeft,
-            anchorReference,
-        } = this.state;
+
 
 
         return (
             <div>
                 <Grid container justify="center" spacing={0}>
                     <Grid item className={classes.buttonWrapper} style={{paddingTop:'20px'}}>
-                        {/*<Button*/}
-                            {/*style={{outline:'none', marginRight:'20px'}}*/}
-                            {/*variant="contained"*/}
-                        {/*>*/}
-                            {/*+ Add a new book*/}
-                        {/*</Button>*/}
                         <Button
                             style={{outline:'none'}}
-                            buttonRef={node => {
-                                this.anchorEl = node;
-                            }}
                             variant="contained"
                             onClick={this.handleClickButton}
                         >
                             + New book list
                         </Button>
-                        {anchorReference === 'anchorEl' && (
-                            <div
-                                className={classes.anchor}
-                                style={{
-                                    ...inlineStyles.anchorVertical[anchorOriginVertical],
-                                    ...inlineStyles.anchorHorizontal[anchorOriginHorizontal],
-                                }}
-                            />
-                        )}
+                        <Modal
+                            aria-labelledby="simple-modal-title"
+                            aria-describedby="simple-modal-description"
+                            open={this.state.open}
+                            onClose={this.handleClose}
+                        >
+                            <div className={classes.paper} style={{top:'30%', left:'30%', width:'44%', height:'24%'}}>
+                                <Typography variant="title" id="modal-title">
+                                    Create a new book list
+                                </Typography>
+                                <Typography variant="subheading" id="simple-modal-description">
+                                    <table style={{width:'100%'}}>
+                                        <thead></thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <TextField
+                                                    id="BooklistTitle"
+                                                    label="Title"
+                                                    multiline
+                                                    className={classes.textField}
+                                                    // TODO: how about using setState here?
+                                                    inputRef={title => this.title = title}
+                                                    required
+                                                />
+                                            </td>
+                                            <td>
+                                                <TextField
+                                                    id="BooklistDescription"
+                                                    label={`Description (more than ${this.descriptionMinLength} letters)`}
+                                                    className={classes.textField}
+                                                    type="text"
+                                                    inputRef={description => this.description = description}
+                                                    error={this.state.isDescriptionWrong}
+                                                    helperText={this.state.descriptionError}
+                                                    required
+                                                />
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table >
+                                    <Button
+                                        variant="contained"
+                                        onClick={this.handleCancelButton}
+                                        style={{margin:'2%'}}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="contained"
+                                            color="primary"
+                                            onClick={this.handleConfirmButton}>
+                                        Confirm
+                                    </Button>
+                                </Typography>
+                            </div>
+                        </Modal>
                     </Grid>
                 </Grid>
-                <Popover
-                    open={open}
-                    anchorEl={this.anchorEl}
-                    anchorReference={anchorReference}
-                    anchorPosition={{ top: positionTop, left: positionLeft }}
-                    onClose={this.handleClose}
-                    anchorOrigin={{
-                        vertical: anchorOriginVertical,
-                        horizontal: anchorOriginHorizontal,
-                    }}
-                    transformOrigin={{
-                        vertical: transformOriginVertical,
-                        horizontal: transformOriginHorizontal,
-                    }}
-                >
-                    <Card className={classes.card}>
-                        <CardContent>
-                            <Typography variant="headline" component="h2">
-                                Create a new booklist
-                            </Typography>
-                            <TextField
-                                id="Name"
-                                label="Name"
-                                type="BookList"
-                                className={classes.textField}
-                                margin="normal"
-                                // TODO: how about using setState here?
-                                inputRef={title => this.title = title}
-                                required
-                                // onChange={this.handleBookList.bind(this)}
-                            />
-                            <TextField
-                                id="Description"
-                                // TODO: confirm the length limit later. Convert to word length is better.
-                                label={`Description (more than ${this.descriptionMinLength} letters)`}
-                                type="BookList"
-                                className={classes.textField}
-                                margin="normal"
-                                inputRef={description => this.description = description}
-                                error={this.state.isDescriptionWrong}
-                                helperText={this.state.descriptionError}
-                                required
-                            />
-                        </CardContent>
-                        <CardActions>
-                            <Button variant="contained" onClick={this.handleClickButton}>Cancel</Button>
-                            <Button variant="contained" color="primary" onClick={this.handleConfirmButton.bind(this)}>Confirm</Button>
-                        </CardActions>
-                    </Card>
-                </Popover>
+
                 <div>
                     <Card className={classes.card}>
                         <CardContent>
                             <Typography variant="subheading" style={{display:'inline'}}>
-                                Book list Title
+                                <a href={'/booklist'}>
+                                    BookList Title
+                                </a>
                             </Typography>
                             <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
                                 Update time
