@@ -56,7 +56,6 @@ const styles = theme => ({
 
 
 class MyList extends React.Component {
-    anchorEl = null;
     descriptionMinLength = 8;
 
     state = {
@@ -81,6 +80,12 @@ class MyList extends React.Component {
         });
     };
 
+    handleOpen = () => {
+        this.setState({
+            open: true,
+        });
+    };
+
     handleConfirmButton = () => {
         const { description, title } = this;
         if (description.value.length > this.descriptionMinLength) {
@@ -98,8 +103,6 @@ class MyList extends React.Component {
     render() {
         const { classes } = this.props;
 
-
-
         return (
             <div>
                 <Grid container justify="center" spacing={0}>
@@ -107,7 +110,7 @@ class MyList extends React.Component {
                         <Button
                             style={{outline:'none'}}
                             variant="contained"
-                            onClick={this.handleClickButton}
+                            onClick={this.handleOpen}
                         >
                             + New book list
                         </Button>
@@ -128,7 +131,7 @@ class MyList extends React.Component {
                                         <tr>
                                             <td>
                                                 <TextField
-                                                    id="BooklistTitle"
+                                                    id="BookListTitle"
                                                     label="Title"
                                                     multiline
                                                     className={classes.textField}
@@ -139,7 +142,7 @@ class MyList extends React.Component {
                                             </td>
                                             <td>
                                                 <TextField
-                                                    id="BooklistDescription"
+                                                    id="BookListDescription"
                                                     label={`Description (more than ${this.descriptionMinLength} letters)`}
                                                     className={classes.textField}
                                                     type="text"
@@ -170,18 +173,33 @@ class MyList extends React.Component {
                 </Grid>
 
                 <div>
-                    <Card className={classes.card}>
-                        <CardContent>
-                            <Typography variant="subheading" style={{display:'inline'}}>
-                                <a href={'/booklist'}>
-                                    BookList Title
-                                </a>
-                            </Typography>
-                            <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
-                                Update time
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    {
+                        // uncomment this.props.bookLists && this.props.bookLists.map(
+                        [
+                            {
+                                title: 'Book List 1',
+                                updateTime: '2018-09-18'
+
+                            },{
+                            title: 'Book List 2',
+                            updateTime: '2018-09-20'
+                        }].map(
+                            (bookList)=>{
+                                return <Card className={classes.card}>
+                                    <CardContent>
+                                        <Typography variant="subheading" style={{display:'inline'}}>
+                                            <a href={'/booklist'}>
+                                                {bookList.title}
+                                            </a>
+                                        </Typography>
+                                        <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
+                                            {bookList.updateTime}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            }
+                        )
+                    }
                 </div>
             </div>
         );
@@ -189,6 +207,7 @@ class MyList extends React.Component {
 }
 
 MyList.propTypes = {
+    bookLists: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired,
 };
 

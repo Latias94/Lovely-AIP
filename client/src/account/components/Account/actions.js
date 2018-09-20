@@ -5,7 +5,8 @@ import Axios from 'axios';
 // TODO: refactor it to Promise
 export const getCurrentUserBookLists = (setter) => {
 	Axios.get('/users/current/booklist')
-		.then((res) => {
+		.then(res => {
+			// save to Redux
             console.log("current booklist", res.data);
 			setter(res.data);
 		})

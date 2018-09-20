@@ -49,11 +49,7 @@ class Account extends React.Component {
 
     componentDidMount() {
         this.props.getCurrentUserInfo();
-        getCurrentUserBookLists(this.setBookLists);
-    };
-
-    setBookLists = lists => {
-        this.setState({bookLists: lists})
+        getCurrentUserBookLists();
     };
 
     onOpenModal = () => {
@@ -82,7 +78,7 @@ class Account extends React.Component {
             {/* THIS IS UGLY */}
             {isLoggedIn
                 ?
-                (// WHY I HAVE TO SET THE STYLE AGAIN?
+                (// TODO: WHY I HAVE TO SET THE STYLE AGAIN?
                     <span style={container}>
 				<div style={verticalCenter}>
 					{avatarType === 'letter' ? <LetterAvatar classes={classes} username={username}/> :
@@ -103,6 +99,7 @@ class Account extends React.Component {
             username={username}
             email={email}
             classes={classes}/>
+                        {/*book list*/}
         <AccountTab/></span>)
                 :
                 <Link to={'login'}>PLEASE LOG IN</Link>
