@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const { clearHash } = require('../../config/cache');
 
 // Load Validation
 const validateCategoryInput = require('../../validation/category');
@@ -96,10 +97,12 @@ router.get('/list', (req, res) => {
   let counter = 0;
   Category.find()
     .sort({ name: 1 })
+    .cache()
     .then((categories) => {
       categories = filterSubCategories(categories);
       categories.forEach((category) => {
         Book.find({ category: category._id })
+          .cache({ key: category._id })
           .then((books) => {
             counter += 1;
             const categoryResult = {};
@@ -251,6 +254,7 @@ router.get('/:id', (req, res) => {
   const errors = {};
 
   Category.findById(req.params.id)
+    .cache({ key: req.params.id })
     .then((category) => {
       if (!category) {
         errors.categorynotfound = 'No categories found';
@@ -281,6 +285,7 @@ router.get('/:id', (req, res) => {
         .skip(interval)
         .limit(pageSize)
         .sort(sortParams)
+        .cache({ key: category._id })
         .then((books) => {
           categoryResult.books = books;
           return res.json(categoryResult);
@@ -332,16 +337,18 @@ router.post(
   }),
   (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
-      if (user) {
-        if (!user.isStaff) {
-          return res.status(401).json({
-            unauthorized: 'Cannot create the category',
-          });
+    User.findOne({ user: req.user.id })
+      .cache({ key: req.user.id })
+      .then((user) => {
+        if (user) {
+          if (!user.isStaff) {
+            return res.status(401).json({
+              unauthorized: 'Cannot create the category',
+            });
+          }
         }
-      }
-      return true;
-    });
+        return true;
+      });
 
     Category.findOne({ name: req.body.name }).then((hasFound) => {
       if (hasFound) {
@@ -422,16 +429,18 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     // find out whether user is staff
-    User.findOne({ user: req.user.id }).then((user) => {
-      if (user) {
-        if (!user.isStaff) {
-          return res.status(401).json({
-            unauthorized: 'Cannot delete the category',
-          });
+    User.findById(req.user.id)
+      .cache({ key: req.user.id })
+      .then((user) => {
+        if (user) {
+          if (!user.isStaff) {
+            return res.status(401).json({
+              unauthorized: 'Cannot delete the category',
+            });
+          }
         }
-      }
-      return true;
-    });
+        return true;
+      });
 
     const errors = {};
     Category.findById(req.params.id)
@@ -446,6 +455,7 @@ router.post(
                   subid: subCategory._id,
                   subname: subCategory.name,
                 });
+                clearHash('');
                 category.save().then(categoryObject => res.json(categoryObject));
               })
               .catch(() => res.status(404).json({
@@ -460,6 +470,7 @@ router.post(
                   subid: subCategory._id,
                   subname: subCategory.name,
                 });
+                clearHash(req.body.id);
                 category.save().then(categoryObject => res.json(categoryObject));
               })
               .catch(() => res.status(404).json({
@@ -509,21 +520,24 @@ router.delete(
     const errors = {};
 
     // find out whether user is staff
-    User.findById(req.user.id).then((user) => {
-      if (user) {
-        if (!user.isStaff) {
-          errors.unauthorized = 'Cannot delete the category';
-          return res.status(401).json(errors);
+    User.findById(req.user.id)
+      .cache({ key: req.user.id })
+      .then((user) => {
+        if (user) {
+          if (!user.isStaff) {
+            errors.unauthorized = 'Cannot delete the category';
+            return res.status(401).json(errors);
+          }
+          // user is staff
+          Category.findByIdAndRemove(req.params.id, (err) => {
+            clearHash(req.params.id);
+            return err
+              ? res.status(404).json({ categorynotfound: 'No categories found' })
+              : res.json({ success: true });
+          });
         }
-        // user is staff
-        Category.findByIdAndRemove(req.params.id, (err) => {
-          return err
-            ? res.status(404).json({ categorynotfound: 'No categories found' })
-            : res.json({ success: true });
-        });
-      }
-      return true;
-    });
+        return true;
+      });
   }
 );
 

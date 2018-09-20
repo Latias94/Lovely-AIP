@@ -12,7 +12,7 @@ function similarityList(ratings, person, similarity) {
       const sim = similarity(ratings, person, other);
       // Add to array
       scores.push({
-        name: other,
+        user: other,
         score: sim
       });
     }

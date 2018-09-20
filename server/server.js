@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const helmet = require('helmet');
 const swaggerJSDoc = require('swagger-jsdoc');
 const users = require('./routes/api/users');
 const books = require('./routes/api/books');
@@ -12,6 +13,7 @@ const rss = require('./routes/api/rss');
 const cart = require('./routes/api/cart');
 const upload = require('./routes/api/upload');
 const swaggerDefinition = require('./config/swagger');
+require('./config/cache');
 
 const app = express();
 // for compress http header
@@ -40,6 +42,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
+app.use(helmet());
 
 let db;
 // Connect to MongoDB

@@ -1,4 +1,33 @@
 # Server
+
+- [Set Up Environment Variable](#set-up-environment-variable)
+- [API](#api)
+    - [Using Swagger](#using-swagger)
+    - [Register](#register)
+    - [Confirm account](#confirm-account)
+    - [Login](#login)
+- [Development](#development)
+    - [Testing](#testing)
+- [Book Recommendation](#book-recommendation)
+- [Redis](#redis)
+    - [Caching Data](#caching-data)
+    - [Rate Limit](#rate-limit)
+- [Docker](#docker)
+    - [Build](#build)
+    - [Run](#run)
+
+## Set Up Environment Variable
+Before start the server, you ought to set up environment variables as the following table.
+
+| Variable       | Value                                                           |
+| ---------- | ------------------------------------------------------------ |
+| MONGO_URI  | { Your Mongo URI, we recommend to use 'mlab' for free MongoDB server } |
+| REDIS_PORT | { Your Redis Port, we recommend to use 'RedisLabs' for free Redis service  } |
+| REDIS_PWD  | { Your Redis Password } |
+| REDIS_URI  | { Your Redis URI } |
+| EMAIL      | { Email account that support SMTP protocol, for the usage of send validation email }   |
+| EMAIL_PWD  | { Email password } |
+
 ## API
 Recommend REST API Testing Tools: [Postman](https://www.getpostman.com/) or [Restlet](https://chrome.google.com/webstore/detail/restlet-client-rest-api-t/aejoelaoggembcahagimdiliamlcdmfm).
 
@@ -60,3 +89,38 @@ Related API document can be referred to [http://localhost:5000/swagger/#/Recomme
 You can test API by the following link:
 
 [http://localhost:5000/api/recommendation/book/5b5c0edc1e744f9760543a07](http://localhost:5000/api/recommendation/book/5b5c0edc1e744f9760543a07)
+
+## Redis
+We implement some advance features base on Redis.
+
+![](https://i.loli.net/2018/09/12/5b98811a057e3.png)
+
+Related Code can be referred to [Lovely-AIP/server/config/cache.js](https://github.com/Latias94/Lovely-AIP/blob/master/server/config/cache.js).
+
+### Caching Data
+Redis Lab provides free Redis database with AWS region endpoint of 'ap-southeast-2', which is located in Sydney.
+
+![](https://i.loli.net/2018/09/13/5b99dafd4186c.png)
+
+### Rate Limit
+Provide ability to limit the rate of API request in a period of time.  
+In this project, APIs of 'Create User' and 'Send Validation Email' are under limitation of two requests each minute.   
+If reach the limitation, server will respond a status code of 429 which stands for 'Too Many Request'.
+
+Related Code can be referred to [Lovely-AIP/server/middlewares/rateLimit.js](https://github.com/Latias94/Lovely-AIP/blob/master/server/middlewares/rateLimit.js).
+
+## Docker
+Set environment valuables inside of Dockerfile.
+
+### Build
+
+```shell
+cd server/
+docker build -t server .
+```
+
+### Run
+
+```shell
+docker run -p 5000:5000 -d --restart=always server
+```
