@@ -10,6 +10,8 @@ package-lock.json
 .idea/
 .code/
 
+Dockerfile
+
 # jest coverage report
 coverage/
 

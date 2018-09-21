@@ -10,11 +10,9 @@ import Account from '../account/components/Account';
 import EmailVerification from '../account/components/EmailVerification';
 import VerifyEmail from '../account/utils/verifyEmail';
 import Cart from '../Cart';
-import Avatar from '../account/components/Avatar';
 import Payment from '../Payment';
 import Admin from '../Admin';
 import BookListDetail from '../account/components/Account/BookList';
-
 
 const MainRoute = () => (
 
@@ -29,7 +27,6 @@ const MainRoute = () => (
 			<Route path={'/account'} component={Account} />
 			<Route path={'/verify-email'} component={EmailVerification} />
 			<Route path={'/activate/:token'} component={VerifyEmail}/>
-			<Route path={'/avatar'} component={Avatar}/> {/* modal? */}
 			<Route path={'/payment'} component={Payment}/>
             <Route path={'/booklist'} component={BookListDetail}/> {/* modal? */}
 			<Route path={'/admin'} component={Admin}/> {/*TODO: move to another route*/}

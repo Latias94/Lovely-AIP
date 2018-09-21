@@ -43,14 +43,14 @@ const styles = theme => ({
  * Support ENTER key in password box.
  */
 class LoginForm extends Component {
-
-  // init state
-  state = {
-    email: '',
-    password: '',
-    errors: {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      errors: {}
+    }
   }
-
   /**
    if the user has already logged in, redirect to home page.
    */
@@ -61,7 +61,7 @@ class LoginForm extends Component {
   }
 
   /**
-   *  @todo: how to use this in getDerivedStateFromProps
+   *  @todo: how to use 'this' in getDerivedStateFromProps
    // static getDerivedStateFromProps(nextProps, prevState) {
   //   if (nextProps.auth.isAuthenticated) {
   //     props.history.push('/welcome');

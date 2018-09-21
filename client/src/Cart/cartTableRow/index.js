@@ -37,7 +37,7 @@ class cartTableRow extends Component {
 			.catch((err) => {
 				console.log(err);
 			});
-		// axios.delete(`http://localhost:5000/api/cart/${id}`)
+		// Axios.delete(`http://localhost:5000/api/cart/${id}`)
 		// 	.then(() => { window.location.reload(true); });
 	}
 

@@ -7,7 +7,6 @@ import {withRouter} from "react-router-dom";
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KFAccountInput from '../KFAccountInput';
-import axios from 'axios';
 
 const styles = theme => ({
   container: {
@@ -143,5 +142,5 @@ const mapStateToProps = (state) => ({
 
 export default compose(
   withStyles(styles),
-  connect(mapStateToProps, {registerUser}),
+  connect(mapStateToProps, { registerUser }),
 )(withRouter(RegisterForm));

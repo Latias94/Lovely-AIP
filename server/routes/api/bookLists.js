@@ -2,6 +2,8 @@ const express = require('express');
 const passport = require('passport');
 const Book = require('../../models/Book');
 const BookList = require('../../models/BookList');
+const cleanCache = require('../../middlewares/cleanCache');
+const { clearHash } = require('../../config/cache');
 
 const router = express.Router();
 
@@ -84,6 +86,7 @@ router.get('/', (req, res) => {
     .skip(interval)
     .limit(pageSize)
     .sort(sortParams)
+    .cache()
     .then((bookLists) => {
       if (!bookLists) {
         errors.booklistnotfound = 'No bookLists found';
@@ -131,14 +134,14 @@ router.get('/slug/:slug', (req, res) => {
  *   get:
  *     tags:
  *       - BookList
- *     summary: Get BookList with user review by id
- *     description: Get BookList with user review by id. This can only be done by the logged in user (add JWT token to header).
+ *     summary: Get a BookList with the user reviews by id
+ *     description: Get a BookList with the user reviews by id. This can only be done by the logged in user (JWT token required in the header).
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: "id"
  *         in: "path"
- *         description: "ID of BookList that needs to be fetched"
+ *         description: "The ID of the BookList"
  *         required: true
  *         type: "string"
  *     responses:
@@ -152,6 +155,7 @@ router.get('/:id',
     const errors = {};
 
     BookList.findById(req.params.id)
+      .cache({ key: req.params.id })
       .lean()
       .then((bookList) => {
         if (!bookList) {
@@ -246,6 +250,7 @@ router.post(
   passport.authenticate('jwt', {
     session: false,
   }),
+  cleanCache,
   (req, res) => {
     const {
       errors,
@@ -303,6 +308,7 @@ router.post(
 router.post(
   '/:id',
   passport.authenticate('jwt', { session: false }),
+  cleanCache,
   (req, res) => {
     const {
       errors,
@@ -325,6 +331,7 @@ router.post(
           }
 
           bookListFields.updateDate = Date.now();
+          clearHash(req.params.id);
           // Update
           BookList.findByIdAndUpdate(
             req.params.id,
@@ -392,6 +399,7 @@ router.post(
 router.post(
   '/book/:id/:book_id',
   passport.authenticate('jwt', { session: false }),
+  cleanCache,
   (req, res) => {
     const {
       errors,
@@ -412,6 +420,7 @@ router.post(
               });
           }
           Book.findById(req.params.book_id)
+            .cache({ key: req.params.book_id })
             .then((book) => {
               if (!book) {
                 return res.status(404).json({ booknotfound: 'No books found' });
@@ -431,6 +440,7 @@ router.post(
                 bookListFields,
                 { new: true },
                 (err, bookListObject) => {
+                  clearHash({ key: req.params.id });
                   return err ? res.status(404).json(err)
                     : res.json(bookListObject);
                 }
@@ -453,8 +463,8 @@ router.post(
  *   delete:
  *     tags:
  *       - BookList
- *     summary: Delete Book to BookList
- *     description: Delete Book from a exist BookList. Both BookList id and Book id fields are required.
+ *     summary: Delete a Book from a BookList
+ *     description: Delete a Book from a exist BookList. Both BookList id and Book id fields are required.
  *     produces:
  *       - application/json
  *     parameters:
@@ -481,6 +491,7 @@ router.post(
 router.delete(
   '/book/:id/:book_id',
   passport.authenticate('jwt', { session: false }),
+  cleanCache,
   (req, res) => {
     const errors = {};
     BookList.findById(req.params.id)
@@ -505,6 +516,7 @@ router.delete(
             .map(book => book._id.toString())
             .indexOf(req.params.book_id);
           bookList.books.splice(removeIndex, 1);
+          clearHash(req.params.id);
           bookList.save().then(bookListObject => res.json(bookListObject));
         } else {
           errors.booklistnotfound = 'No booklists found';
@@ -547,6 +559,7 @@ router.post(
   passport.authenticate('jwt', {
     session: false,
   }),
+  cleanCache,
   (req, res) => {
     BookList.findById(req.params.id)
       .then((bookList) => {
@@ -604,6 +617,7 @@ router.post(
   passport.authenticate('jwt', {
     session: false,
   }),
+  cleanCache,
   (req, res) => {
     BookList.findById(req.params.id)
       .then((bookList) => {
@@ -670,6 +684,7 @@ router.post(
 router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
+  cleanCache,
   (req, res) => {
     const errors = {};
     BookList.findById(req.params.id)
@@ -681,6 +696,7 @@ router.delete(
         }
 
         BookList.findByIdAndRemove(req.params.id, (err) => {
+          clearHash(req.params.id);
           return err
             ? res.status(404).json({ booklistnotfound: 'No booklists found' })
             : res.json({ success: true });

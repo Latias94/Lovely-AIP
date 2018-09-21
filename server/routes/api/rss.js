@@ -22,7 +22,21 @@ router.get('/test', (req, res) => res.json({
   msg: 'RSS Works',
 }));
 
-router.get('/rss/booklists', (req, res) => {
+/**
+ * @swagger
+ * /api/feed/test:
+ *   get:
+ *     tags:
+ *       - RSS
+ *     summary: Get RSS of 10 of newest BookLists
+ *     description: Get RSS of 10 of newest BookLists
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: return newest booklist RSS
+ */
+router.get('/booklists', (req, res) => {
   const feed = new RSS({
     title: 'Knight Frank Booklist',
     description: 'The newest booklist from Knight Frank',
@@ -36,6 +50,7 @@ router.get('/rss/booklists', (req, res) => {
     .sort({
       updateDate: -1
     })
+    .cache()
     .then((booklists) => {
       if (booklists) {
         // TODO change frontend route

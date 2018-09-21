@@ -106,7 +106,7 @@ const booksPageComponent = props => (
 			<div style={{
 				width: '90%', marginLeft: '5%',
 			}}>
-				<TextField onChange={event => props.reviewContentChange(event.target.value)} multiline fullWidth rows='4' style={{ backgroundColor: '#EEEEEE', marginTop: '5px', marginBottom: '12px' }} value={props.submittedReviewcontent} />
+				<TextField onChange={event => props.reviewContentChange(event.target.value)} multiline fullWidth rows='4' style={{ backgroundColor: '#EEEEEE', marginTop: '5px', marginBottom: '12px' }} value={props.submittedReviewContent} />
 			</div>
 			<Button size="medium" variant="contained" color="default" onClick={props.submitClick} style={{ backgroundColor: 'gray', color: 'white' }}>Review</Button>
 		</div>
