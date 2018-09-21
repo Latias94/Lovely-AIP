@@ -1,13 +1,12 @@
 import { handleActions } from 'redux-actions';
-import { setCurrentUserBookListsRequest } from './actions';
+import { setCurrentUserBookLists } from './actions';
 
 const initialState = {
     bookLists: []
 };
 
 const accountReducer = handleActions({
-	[setCurrentUserBookListsRequest](state, { payload }) {
-        console.log(payload)
+	[setCurrentUserBookLists](state, { payload }) {
 		return {
 			...state,
 			bookLists: payload,
