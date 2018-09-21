@@ -34,7 +34,7 @@ const booksPageComponent = props => (
 		<div>
 			<ul className="booksClassList">
 				<li>{props.categaryName}</li>
-				<li>›</li>
+				<li> ›</li>
 				<li>{props.bookName}</li>
 			</ul>
 		</div>
@@ -50,19 +50,19 @@ const booksPageComponent = props => (
 				</div>
 			</div>
 			<div style={style.rightPart}>
-				<div style={{ width: '76%', marginLeft: '12%' }}>
+				<div style={{ width: '76%', margin: '12%' }}>
 					<div>
-						<p>{`Price: $${totalPrice(props.quantity, props.bookPrice)}`}</p>
+						<p>{`Price: $${props.bookPrice}`}</p>
 						<span style={{ marginRight: '15px' }}>Buy</span>
 						<InputNumber min={1} max={10} value={props.quantity} onChange={value => props.onQuantityChange(value)} />
-						<span style={{ marginLeft: '15px' }}>{`$${totalPrice(props.quantity, props.bookPrice)}`}</span>
+						<div>{`$${totalPrice(props.quantity, props.bookPrice)}`}</div>
 					</div>
 					<h4 style={{ marginTop: '15px' }}>{isInstock(props.stockNumber)}</h4>
 					<span>Deliver to Australia</span>
 					<hr />
-					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white' }} onClick={() => props.addToCartClick(props.id)}> Add to Cart </Button>
+					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', outline:'none' }} onClick={() => props.addToCartClick(props.id)}> Add to Cart </Button>
 					<Dropdown overlay={dropdown(props.authOrNot)} trigger={['click']} >
-						<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', marginTop: '15px' }}>
+						<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', marginTop: '15px', outline:'none' }}>
 							Add to your List<Icon type="down" />
 						</Button>
 					</Dropdown>
@@ -91,7 +91,7 @@ const booksPageComponent = props => (
 						</div>
 						<div style={style.reviewContent}>
 							<span>{item.createDate}</span>
-							<span>Already buied</span>
+							<span>Already Bought</span>
 							<span style={{ fontSize: '15px' }}>{item.content}</span>
 						</div>
 					</div>
