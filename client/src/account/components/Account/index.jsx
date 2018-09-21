@@ -49,7 +49,7 @@ class Account extends React.Component {
 
     componentDidMount() {
         this.props.getCurrentUserInfo();
-        getCurrentUserBookLists();
+        this.props.getCurrentUserBookLists();
     };
 
     onOpenModal = () => {
@@ -116,7 +116,7 @@ const mapStateToProps = state => {
             userId,
             username,
             email,
-            isLoggedIn: true
+            isLoggedIn: true,
         };
         if (avatarURL) {
             props.avatarType = 'image';
@@ -131,5 +131,5 @@ const mapStateToProps = state => {
 
 export default compose(
     withStyles(styles),
-    connect(mapStateToProps, {getCurrentUserInfo}),
+    connect(mapStateToProps, {getCurrentUserInfo, getCurrentUserBookLists}),
 )(Account);

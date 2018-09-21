@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import green from '@material-ui/core/colors/green';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -10,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
 import { createBookList } from './actions';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
 
 const styles = theme => ({
@@ -90,7 +91,7 @@ class MyList extends React.Component {
         const { description, title } = this;
         if (description.value.length > this.descriptionMinLength) {
             // post
-            createBookList(title.value)(description.value);
+            this.props.createBookList(title.value, description.value);
             this.handleClose();
         } else {
             this.setState({
@@ -174,16 +175,7 @@ class MyList extends React.Component {
 
                 <div>
                     {
-                        // uncomment this.props.bookLists && this.props.bookLists.map(
-                        [
-                            {
-                                title: 'Book List 1',
-                                updateTime: '2018-09-18'
-
-                            },{
-                            title: 'Book List 2',
-                            updateTime: '2018-09-20'
-                        }].map(
+                        this.props.bookLists.map(
                             (bookList)=>{
                                 return <Card className={classes.card}>
                                     <CardContent>
@@ -193,7 +185,7 @@ class MyList extends React.Component {
                                             </a>
                                         </Typography>
                                         <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
-                                            {bookList.updateTime}
+                                            {bookList.updateDate.substring(0,10)}
                                         </Typography>
                                     </CardContent>
                                 </Card>
@@ -211,4 +203,7 @@ MyList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MyList);
+export default compose(
+    withStyles(styles),
+    connect( state => ({bookLists: state.account.bookLists}), { createBookList })
+)(MyList);
