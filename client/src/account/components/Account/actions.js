@@ -1,7 +1,23 @@
 import Axios from 'axios';
+import { createAction } from 'redux-actions';
 
-const GET_CURRENT_USER_BOOKLISTS = 'GET__CURRENT_USER_BOOKLISTS';
 
-export const getCurrentUserBooklists = id => {
+export const setCurrentUserBookLists = createAction('SET_CURRENT_USER_BOOKLISTS');
 
+export const getCurrentUserBookLists = () => (dispatch) => {
+	Axios.get('/users/current/booklist')
+		.then((res) => {
+			dispatch(setCurrentUserBookLists(res.data));
+		})
+		.catch(err => console.log(err.data));
+};
+
+export const createBookList = (title, description) => (dispatch) => {
+	Axios.post('/booklists', { title, description })
+		.then((res) => {
+			// refresh
+			getCurrentUserBookLists()(dispatch);
+		})
+	// TODO: transfer error msg to UI
+		.catch(() => {});
 };

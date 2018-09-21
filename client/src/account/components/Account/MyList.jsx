@@ -8,6 +8,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
+import { createBookList } from './actions';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
 
 const styles = theme => ({
@@ -54,23 +57,52 @@ const styles = theme => ({
 
 
 class MyList extends React.Component {
+    descriptionMinLength = 8;
 
-
-    handleClickButton = () => {
-        this.setState(state => ({
-            open: !state.open,
-        }));
-    };
     state = {
         open: false,
+        isDescriptionWrong: false,
+        descriptionError: null
     };
 
+    handleCancelButton = () => {
+        // init error msg
+        this.setState({
+            isDescriptionWrong: false,
+            descriptionError: null
+        });
 
+        this.handleClose();
+    };
+
+    handleClose = () => {
+        this.setState({
+            open: false,
+        });
+    };
+
+    handleOpen = () => {
+        this.setState({
+            open: true,
+        });
+    };
+
+    handleConfirmButton = () => {
+        const { description, title } = this;
+        if (description.value.length > this.descriptionMinLength) {
+            // post
+            this.props.createBookList(title.value, description.value);
+            this.handleClose();
+        } else {
+            this.setState({
+                isDescriptionWrong: true,
+                descriptionError: 'Too short!'
+            })
+        }
+    };
 
     render() {
         const { classes } = this.props;
-
-
 
         return (
             <div>
@@ -79,9 +111,9 @@ class MyList extends React.Component {
                         <Button
                             style={{outline:'none'}}
                             variant="contained"
-                            onClick={this.handleClickButton}
+                            onClick={this.handleOpen}
                         >
-                            + Add new a Book list
+                            + New book list
                         </Button>
                         <Modal
                             aria-labelledby="simple-modal-title"
@@ -100,18 +132,25 @@ class MyList extends React.Component {
                                         <tr>
                                             <td>
                                                 <TextField
-                                                    id="BooklistTitle"
+                                                    id="BookListTitle"
                                                     label="Title"
                                                     multiline
                                                     className={classes.textField}
+                                                    // TODO: how about using setState here?
+                                                    inputRef={title => this.title = title}
+                                                    required
                                                 />
                                             </td>
                                             <td>
                                                 <TextField
-                                                    id="BooklistDescription"
-                                                    label="Description"
+                                                    id="BookListDescription"
+                                                    label={`Description (more than ${this.descriptionMinLength} letters)`}
                                                     className={classes.textField}
                                                     type="text"
+                                                    inputRef={description => this.description = description}
+                                                    error={this.state.isDescriptionWrong}
+                                                    helperText={this.state.descriptionError}
+                                                    required
                                                 />
                                             </td>
                                         </tr>
@@ -119,10 +158,15 @@ class MyList extends React.Component {
                                     </table >
                                     <Button
                                         variant="contained"
-                                        onClick={this.handleClickButton}
-                                        style={{margin:'2%'}}
-                                    >Cancel</Button>
-                                    <Button variant="contained" color="primary" onClick={this.handleClickButton}>Confirm</Button>
+                                        onClick={this.handleCancelButton}
+                                        style={{margin:'2%'}}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="contained"
+                                            color="primary"
+                                            onClick={this.handleConfirmButton}>
+                                        Confirm
+                                    </Button>
                                 </Typography>
                             </div>
                         </Modal>
@@ -130,18 +174,24 @@ class MyList extends React.Component {
                 </Grid>
 
                 <div>
-                    <Card className={classes.card}>
-                        <CardContent>
-                            <Typography variant="subheading" style={{display:'inline'}}>
-                                <a href={'/booklist'}>
-                                    BookList Title
-                                </a>
-                            </Typography>
-                            <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
-                                Update time
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    {
+                        this.props.bookLists.map(
+                            (bookList)=>{
+                                return <Card className={classes.card}>
+                                    <CardContent>
+                                        <Typography variant="subheading" style={{display:'inline'}}>
+                                            <a href={'/booklist'}>
+                                                {bookList.title}
+                                            </a>
+                                        </Typography>
+                                        <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
+                                            {bookList.updateDate.substring(0,10)}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            }
+                        )
+                    }
                 </div>
             </div>
         );
@@ -149,7 +199,11 @@ class MyList extends React.Component {
 }
 
 MyList.propTypes = {
+    bookLists: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MyList);
+export default compose(
+    withStyles(styles),
+    connect( state => ({bookLists: state.account.bookLists}), { createBookList })
+)(MyList);

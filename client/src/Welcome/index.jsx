@@ -17,11 +17,8 @@ export default class welcomePageIndex extends Component {
 	componentDidMount() {
 		const thisArray = this.state.bookListArray;
 		for (let item = 0; item < this.state.booklistID.length; item++) {
-			Axios({
-				method: 'get',
-				url: `http://localhost:5000/api/booklists/${this.state.booklistID[item]}`,
-			}).then((response) => {
-				// TODO: error hint
+			Axios.get(`http://localhost:5000/api/booklists/${this.state.booklistID[item]}`)
+				.then((response) => {
 				thisArray.push(response.data);
 				this.setState({ bookListArray: thisArray });
 			}).catch((error) => {
