@@ -175,9 +175,9 @@ class MyList extends React.Component {
 
                 <div>
                     {
-                        this.props.bookLists.map(
+                        this.props.bookLists.length > 0 && this.props.bookLists.map(
                             (bookList)=>{
-                                return <Card className={classes.card}>
+                                return <Card key={bookList._id} className={classes.card}>
                                     <CardContent>
                                         <Typography variant="subheading" style={{display:'inline'}}>
                                             <a href={'/booklist'}>
