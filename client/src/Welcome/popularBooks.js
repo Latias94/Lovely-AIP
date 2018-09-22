@@ -9,19 +9,22 @@ const PopularBooks = props => (
 				<h3>{obj.title}</h3>
 				<hr/>
 				<div style={style.bookRow}>
-					{obj.books.map((smallobj) => {
+					{obj.books.map((book) => {
 						// FIX:
-						return <Book
-						key={smallobj._id}
-						// bookid={smallobj._id}
-						// bookTitle={smallobj.title}
-						// bookAuthor='Author'
-						// bookAuthor={smallobj.authors[0].name}
-						imagePath={smallobj.coverUrl}
-						// bookPrice={smallobj.price}
-						// reviewScore={smallobj.score}
-						// bookReviews={smallobj.reviews.length}
-						/>
+						if (book.title) {
+							return <Book
+							key={book._id}
+							bookid={book._id}
+							bookTitle={book.title}
+							bookAuthor={book.authers ? book.authors[0].name : ''}
+							imagePath={book.coverUrl}
+							bookPrice={book.price}
+							reviewScore={book.score}
+							bookReviews={book.reviews ? book.reviews.length: 0}
+							/>
+						} else {
+							console.log('Fail to load books');
+						}
 					})}
 				</div>
 			</div>
