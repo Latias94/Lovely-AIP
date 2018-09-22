@@ -172,10 +172,9 @@ class MyList extends React.Component {
                         </Modal>
                     </Grid>
                 </Grid>
-
                 <div>
                     {
-                        this.props.bookLists.length > 0 && this.props.bookLists.map(
+                        this.props.bookLists.map(
                             (bookList)=>{
                                 return <Card key={bookList._id} className={classes.card}>
                                     <CardContent>

@@ -19,11 +19,11 @@ export default class welcomePageIndex extends Component {
 		for (let item = 0; item < this.state.booklistID.length; item++) {
 			Axios.get(`http://localhost:5000/api/booklists/${this.state.booklistID[item]}`)
 				.then((response) => {
-				thisArray.push(response.data);
-				this.setState({ bookListArray: thisArray });
-			}).catch((error) => {
-				console.log(error);
-			});
+					thisArray.push(response.data);
+					this.setState({ bookListArray: thisArray });
+				}).catch((error) => {
+					console.log(error);
+				});
 		}
 	}
 
@@ -35,8 +35,8 @@ export default class welcomePageIndex extends Component {
 				<CarouselDIV/>
 				<PopularBooks
 					bookList= {this.state.bookListArray}
-					categoriesList= {[1, 2, 3, 4, 5]}
-				/>
+                    // categoriesList= {[1, 2, 3, 4, 5]}
+                />
 			</div>
 		);
 	}
