@@ -9,20 +9,20 @@ const PopularBooks = props => (
 				<h3>{obj.title}</h3>
 				<hr/>
 				<div style={style.bookRow}>
-					{obj.books.map(smallobj => (
+					{obj.books.map((smallobj) => {
 						// FIX:
-						{/*<Book*/}
-							{/*key={smallobj._id}*/}
-							{/*bookid={smallobj._id}*/}
-							{/*bookTitle={smallobj.title}*/}
-							{/*// bookAuthor='Author'*/}
-							{/*bookAuthor={smallobj.authors[0].name}*/}
-							{/*imagePath={smallobj.coverUrl}*/}
-							{/*bookPrice={smallobj.price}*/}
-							{/*reviewScore={smallobj.score}*/}
-							{/*bookReviews={smallobj.reviews.length}*/}
-						{/*/>*/}
-					))}
+						return <Book
+						key={smallobj._id}
+						// bookid={smallobj._id}
+						// bookTitle={smallobj.title}
+						// bookAuthor='Author'
+						// bookAuthor={smallobj.authors[0].name}
+						imagePath={smallobj.coverUrl}
+						// bookPrice={smallobj.price}
+						// reviewScore={smallobj.score}
+						// bookReviews={smallobj.reviews.length}
+						/>
+					})}
 				</div>
 			</div>
 		))}
