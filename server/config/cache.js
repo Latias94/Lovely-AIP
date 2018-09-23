@@ -8,10 +8,13 @@ const client = redis.createClient({
   auth_pass: require('../config/keys').redisPwd,
 });
 
+// Add promise feature to client.hget
 client.hget = util.promisify(client.hget);
 const { exec } = mongoose.Query.prototype;
 const underTestEnv = process.env.NODE_ENV === 'test';
 
+// Add hook to mongoose Query, provide a new method for caching data easily
+// Book.find().cache().then()...Caching data of this query
 mongoose.Query.prototype.cache = function (options = {}) {
   // do not use caching when the app is under test env
   if (!underTestEnv) {
@@ -21,13 +24,17 @@ mongoose.Query.prototype.cache = function (options = {}) {
   return this;
 };
 
+// add hook to exec function, this function will be call after query
+// caching data according to the flag which set in cache function
 mongoose.Query.prototype.exec = async function (...args) {
+  // If don't use cache, don't do anything to query
   if (!this.useCache) {
     return exec.apply(this, args);
   }
+  // Generate unique key from query condition
   const key = JSON.stringify(
     Object.assign({}, this.getQuery(), {
-      // generate cache key
+      // add collection name to specify condition
       collection: this.collection.name,
     })
   );

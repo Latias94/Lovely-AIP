@@ -1,9 +1,9 @@
 # Lovely-AIP
 This project is an internet programming assignment.
 
-It is a reader's website which allows them to purchase, recommend and manage the books in it. 
+It is a website for readers to purchase, review and manage the books in it. 
 
-Our inspiration comes from the Amazon.
+Our inspiration comes from the Amazon and Douban (the equivalent of Goodreads in China).
 
 For more details:
 

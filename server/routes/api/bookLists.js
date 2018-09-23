@@ -155,7 +155,6 @@ router.get('/:id',
     const errors = {};
 
     BookList.findById(req.params.id)
-      .cache({ key: req.params.id })
       .lean()
       .then((bookList) => {
         if (!bookList) {
@@ -172,6 +171,7 @@ router.get('/:id',
               $in: bookIds,
             }
           })
+            .cache({ key: req.params.id })
             .then((books) => {
               // bookList.toObject();
               const bookObjects = [];

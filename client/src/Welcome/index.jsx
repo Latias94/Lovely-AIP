@@ -15,8 +15,9 @@ export default class welcomePageIndex extends Component {
 	}
 
 	componentDidMount() {
-		const thisArray = this.state.bookListArray;
+		const thisArray = [];
 		for (let item = 0; item < this.state.booklistID.length; item++) {
+			console.log(`/booklists/${this.state.booklistID[item]}`);
 			Axios({
 				method: 'get',
 				url: `/booklists/${this.state.booklistID[item]}`,
@@ -30,6 +31,7 @@ export default class welcomePageIndex extends Component {
 		}
 	}
 
+
 	render() {
 		return (
 			<div style={{
@@ -38,7 +40,6 @@ export default class welcomePageIndex extends Component {
 				<CarouselDIV/>
 				<PopularBooks
 					bookList= {this.state.bookListArray}
-					categoriesList= {[1, 2, 3, 4, 5]}
 				/>
 			</div>
 		);

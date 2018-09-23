@@ -12,7 +12,7 @@ import isEmpty from '../../validation/isEmpty'
 import {config} from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
-
+import { getCurrentUserBookLists } from './actions';
 
 const baseURL = (config.ENV === 'production') ? config.REL_UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
 const styles = {
@@ -43,11 +43,13 @@ class Account extends React.Component {
         super(props);
         this.state = {
             avatarPageOpened: false,
+            bookLists: null
         };
     }
 
     componentDidMount() {
         this.props.getCurrentUserInfo();
+        this.props.getCurrentUserBookLists();
     };
 
     onOpenModal = () => {
@@ -76,7 +78,7 @@ class Account extends React.Component {
             {/* THIS IS UGLY */}
             {isLoggedIn
                 ?
-                (// WHY I HAVE TO SET THE STYLE AGAIN?
+                (// TODO: WHY I HAVE TO SET THE STYLE AGAIN?
                     <span style={container}>
 				<div style={verticalCenter}>
 					{avatarType === 'letter' ? <LetterAvatar classes={classes} username={username}/> :
@@ -97,6 +99,7 @@ class Account extends React.Component {
             username={username}
             email={email}
             classes={classes}/>
+                        {/*book list*/}
         <AccountTab/></span>)
                 :
                 <Link to={'login'}>PLEASE LOG IN</Link>
@@ -108,11 +111,12 @@ class Account extends React.Component {
 const mapStateToProps = state => {
     // install user info
     if (!isEmpty(state.auth.user)) {
-        const {name: username, email, avatar: avatarURL} = state.auth.user;
+        const {id: userId, name: username, email, avatar: avatarURL} = state.auth.user;
         let props = {
+            userId,
             username,
             email,
-            isLoggedIn: true
+            isLoggedIn: true,
         };
         if (avatarURL) {
             props.avatarType = 'image';
@@ -127,5 +131,5 @@ const mapStateToProps = state => {
 
 export default compose(
     withStyles(styles),
-    connect(mapStateToProps, {getCurrentUserInfo}),
+    connect(mapStateToProps, {getCurrentUserInfo, getCurrentUserBookLists}),
 )(Account);

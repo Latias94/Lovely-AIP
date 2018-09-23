@@ -131,6 +131,7 @@ export const logoutUser = () => (dispatch) => {
 	window.open('/', '_self');
 };
 
+// TODO: move this to account folder
 export const getCurrentUserInfo = () => (dispatch) => {
 	axios.get('/users/current')
 		.then((res) => {
