@@ -91,7 +91,7 @@ const booksPageComponent = props => (
 						</div>
 						<div style={style.reviewContent}>
 							<span>{item.createDate}</span>
-							<span>Already buied</span>
+							<span>Already bought</span>
 							<span style={{ fontSize: '15px' }}>{item.content}</span>
 						</div>
 					</div>

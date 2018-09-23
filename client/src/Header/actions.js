@@ -7,7 +7,7 @@ export const addBookToCart = { type: 'ADD_CART_NUMBER' };
 export const getUsersCart = () => (dispatch) => {
 	axios({
 		method: 'get',
-		url: 'http://localhost:5000/api/cart',
+		url: '/cart',
 	})
 		.then((res) => {
 			dispatch(setCartNumberAction(res.data.length));
@@ -20,7 +20,7 @@ export const getUsersCart = () => (dispatch) => {
 export const addBookToCartData = bookid => (dispatch) => {
 	axios({
 		method: 'post',
-		url: `http://localhost:5000/api/cart/${bookid}`,
+		url: `/cart/${bookid}`,
 	})
 		.then(() => {
 			dispatch(addBookToCart);

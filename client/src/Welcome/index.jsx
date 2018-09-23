@@ -19,7 +19,7 @@ export default class welcomePageIndex extends Component {
 		for (let item = 0; item < this.state.booklistID.length; item++) {
 			Axios({
 				method: 'get',
-				url: `http://localhost:5000/api/booklists/${this.state.booklistID[item]}`,
+				url: `/booklists/${this.state.booklistID[item]}`,
 			}).then((response) => {
 				// TODO: error hint
 				thisArray.push(response.data);
