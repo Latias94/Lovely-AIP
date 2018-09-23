@@ -1,36 +1,58 @@
 import React from 'react';
 import {
-	Rate, InputNumber, Menu, Dropdown, Icon,
+	Rate, InputNumber, Dropdown, Icon,
 } from 'antd';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Paper from '@material-ui/core/Paper';
 import * as style from './booksPageCss';
+import Modal from './moudel';
 // import PopularBooks from '../welcomePage/popularBooks';
 
 
 const totalPrice = (unitPrice, number) => (unitPrice * number).toFixed(2);
 const isInstock = number => (number ? 'In Stock.' : 'Out of Stock');
-const menu = (
-	<Menu>
-		<Menu.Item key="0">
-			<a href="#">1st menu item</a>
-		</Menu.Item>
-		<Menu.Item key="1">
-			<a href="#">2nd menu item</a>
-		</Menu.Item>
-		<Menu.Divider />
-		<Menu.Item key="3">3rd menu item</Menu.Item>
-	</Menu>
+const menu = (booklist, open, addBookIntoBooklist, bookid) => (
+	<div>
+		<Paper style={style.dropDownList}>
+			<List>
+				{
+					booklist.map(item => (
+						<ListItem style={style.dropDownItem} button key={item._id} onClick={() => addBookIntoBooklist(item._id, bookid)}>
+							{item.title}
+						</ListItem >
+					))
+				}
+				<Divider/>
+				<ListItem style={style.dropDownItem} onClick={open} button key="3">Creat a new booklist</ListItem >
+			</List>
+		</Paper>
+	</div>
 );
-const dropdown = isLogin => (!isLogin ? (
-	<Menu>
-		<Menu.Item key="0">
-			<a href="#">You need to login</a>
-		</Menu.Item>
-	</Menu>) : menu
+const dropdown = (isLogin, booklist, open, addBookIntoBooklist, bookid) => (!isLogin ? (
+	<div>
+		<Paper style={style.dropDownList}>
+			<List>
+				<ListItem button style={style.dropDownItem} key="0">
+				You need to login
+				</ListItem >
+			</List>
+		</Paper>
+	</div>
+) : menu(booklist, open, addBookIntoBooklist, bookid)
 );
 const booksPageComponent = props => (
 	<div style={style.container}>
+		<Modal
+			handleClose={props.handleClose}
+			openMoudal={props.openMoudal}
+			createANewBookList={props.createANewBookList}
+		/>
 		<div>
 			<ul className="booksClassList">
 				<li>{props.categaryName}</li>
@@ -61,10 +83,10 @@ const booksPageComponent = props => (
 					<span>Deliver to Australia</span>
 					<hr />
 					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', outline: 'none' }} onClick={() => props.addToCartClick(props.id)}> Add to Cart </Button>
-					<Dropdown overlay={dropdown(props.authOrNot)} trigger={['click']} >
+					<Dropdown overlay={dropdown(props.authOrNot, props.usersBookList, props.handleOpen, props.addBookIntoBooklist, props.id)} trigger={['click']} >
 						<Button variant="contained" color="default" style={{
- backgroundColor: 'gray', color: 'white', marginTop: '15px', outline: 'none' 
-}}>
+							backgroundColor: 'gray', color: 'white', marginTop: '15px', outline: 'none',
+						}}>
 							Add to your List<Icon type="down" />
 						</Button>
 					</Dropdown>

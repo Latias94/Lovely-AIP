@@ -31,7 +31,7 @@ export const rightPart = {
 	minWidth: '270px',
 	margin: '20px',
 	border: '3px solid gray',
-	borderRadius: '5px'
+	borderRadius: '5px',
 	// display: 'flex',
 	// flexDirection: 'column',
 	// alignItems: 'center',
@@ -58,4 +58,15 @@ export const reviewContent = {
 
 export const containerOfPersonalReview = {
 	margin: '10px 0px 10px 0px',
+};
+
+export const dropDownList = {
+	backgroundColor: 'white',
+};
+
+export const dropDownItem = {
+	fontSize: '15px',
+	paddingTop: '6px',
+	paddingBottom: '6px',
+	fontWeight: '500',
 };

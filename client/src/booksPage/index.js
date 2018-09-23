@@ -9,6 +9,7 @@ class BooksPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			usersBookList: [],
 			bookDetailInformation: {
 				_id: '',
 				categoryName: '',
@@ -19,60 +20,100 @@ class BooksPage extends Component {
 				price: '',
 				stock: '',
 				coverUrl: '',
-				score:0,
+				score: 0,
 			},
 			quantity: 1,
 			submittedReviewStar: 0,
 			submittedReviewContent: '',
+			open: false,
 		};
 		this.addToCartClick = this.addToCartClick.bind(this);
+		this.reviewStarChange = this.reviewStarChange.bind(this);
+		this.reviewContentChange = this.reviewContentChange.bind(this);
+		this.addToCartClickw = this.addToCartClick.bind(this);
+		this.submitReview = this.submitReview.bind(this);
+		this.getUserBookList = this.getUserBookList.bind(this);
+		this.handleOpen = this.handleOpen.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+		this.createANewBookList = this.createANewBookList.bind(this);
+	}
+
+	handleOpen() {
+		this.setState({ open: true });
+	}
+
+	handleClose() {
+		this.setState({ open: false });
+	}
+
+	createANewBookList(title) {
+		Axios.post('/booklists', { title, description: 'tryyyyyyyyyyy' })
+			.then((response) => { console.log('success'); this.getUserBookList(); this.handleClose(); })
+			.catch((error => console.log(error)));
+	}
+
+	addBookIntoBooklist(booklistId, bookId) {
+		const url = `/booklists/book/${booklistId}/${bookId}`;
+		Axios.post(url)
+			.then((response) => { console.log('success'); alert('add book successful'); })
+			.catch((error => console.log(error)));
 	}
 
 	componentDidMount() {
 		const requestURL = `/books/${this.props.match.params.id}`;
-
+		this.getUserBookList();
 		Axios.get(requestURL)
-		.then((response) => {
-			console.log(response);
-			this.setState({ bookDetailInformation: response.data });
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+			.then((response) => {
+				console.log(response);
+				this.setState({ bookDetailInformation: response.data });
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}
 
-	reviewStarChange = (star) => {
+	reviewStarChange(star) {
 		this.setState({ submittedReviewStar: star });
-	};
-	
-	reviewContentChange = (content) => {
-		this.setState({ submittedReviewContent: content });
-	};
+	}
 
-	addToCartClick = (id) => {
+	reviewContentChange(content) {
+		this.setState({ submittedReviewContent: content });
+	}
+
+	addToCartClick(id) {
 		if (this.props.auth) {
 			this.props.addBookToCartData(id);
 			console.log('sss');
 		} else {
 			window.location.pathname = './login';
 		}
-	};
+	}
 
-	submitReview = () => {
+	getUserBookList() {
+		Axios.get('/users/current/booklist')
+			.then((response) => {
+				console.log(response.data);
+				this.setState({ usersBookList: response.data });
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+
+	submitReview() {
 		const requestURL = `/books/review/${this.props.match.params.id}`;
 		const { submittedReviewStar, submittedReviewContent } = this.state;
 		Axios.post(requestURL, {
-            star: submittedReviewStar,
-            content: submittedReviewContent,
-        })
-		.then(() => {
-			window.location.reload();
+			star: submittedReviewStar,
+			content: submittedReviewContent,
+		})
+			.then(() => {
+				window.location.reload();
 			})
-		.catch((error) => {
-		if(error.response.status === 404)
-		alert(error.response.data.reviewexist);
-		});
-	};
+			.catch((error) => {
+				if (error.response.status === 404) { alert(error.response.data.reviewexist); }
+			});
+	}
 
 	render() {
 		const { auth } = this.props;
@@ -89,10 +130,11 @@ class BooksPage extends Component {
 			score,
 		} = this.state.bookDetailInformation;
 
-		const { 
-			quantity, 
-			submittedReviewStar, 
-			submittedReviewContent } = this.state;
+		const {
+			quantity,
+			submittedReviewStar,
+			submittedReviewContent,
+		} = this.state;
 
 		if (this.state.bookDetailInformation !== {}) {
 			return (
@@ -108,7 +150,7 @@ class BooksPage extends Component {
 					description={description}
 					bookPrice={price}
 					quantity={quantity}
-					onQuantityChange={(quantity) => {this.setState({quantity})}}
+					onQuantityChange={(quantity) => { this.setState({ quantity }); }}
 					stockNumber={stock}
 					views={reviews}
 					submittedReviewStar={submittedReviewStar}
@@ -118,7 +160,13 @@ class BooksPage extends Component {
 					submitClick={this.submitReview}
 					coverUrl={coverUrl}
 					authOrNot={auth}
-					addToCartClick={id=>this.addToCartClick(id)}
+					addToCartClick={id => this.addToCartClick(id)}
+					usersBookList={this.state.usersBookList}
+					handleOpen={this.handleOpen}
+					handleClose={this.handleClose}
+					openMoudal={this.state.open}
+					createANewBookList={this.createANewBookList}
+					addBookIntoBooklist={this.addBookIntoBooklist}
 				/>
 			);
 		}
@@ -127,19 +175,11 @@ class BooksPage extends Component {
 }
 
 
-
 function mapStateToProps(state) {
 	return {
 		// booknumber: state.booksPageReducer.bookNumber,
 		auth: state.auth.isAuthenticated,
 	};
 }
-
-// function mapDispatchToProps(dispatch) {
-// 	return {
-// 		// onbookNumberChange: (number) => { dispatch(selectBookNumberAction(number)); },
-// 		addBookToCartData: (bookid) => { addBookToCartData(bookid); } // should add booknumber as second param
-// 	};
-// }
 
 export default connect(mapStateToProps, { addBookToCartData })(BooksPage);
