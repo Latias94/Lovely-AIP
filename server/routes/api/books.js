@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const _ = require('lodash');
 
 const Book = require('../../models/Book');
 const Category = require('../../models/Category');
@@ -124,6 +125,16 @@ router.get('/list', (req, res) => {
       }));
 });
 
+function mapAvatarToReviews(reviews, users) {
+  for (let i = 0; i < reviews.length; i += 1) {
+    for (let j = 0; j < users.length; j += 1) {
+      if (reviews[i].user.toString() === users[j]._id.toString()) {
+        _.assign(reviews[i], { avatar: users[j].avatar });
+      }
+    }
+  }
+}
+
 /**
  * @swagger
  * /api/books/{id}:
@@ -148,19 +159,37 @@ router.get('/list', (req, res) => {
  */
 router.get('/:id', (req, res) => {
   Book.findById(req.params.id)
-    .cache({ key: req.params.id })
+    // .cache({ key: req.params.id })
+    .lean()
     .then((book) => {
       Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
-        .cache()
         .then((category) => {
           if (category) {
-            book = book.toObject();
             book.parentCategory = category.name;
             book.parentCategoryId = category._id;
+            if (book.reviews.length > 0) {
+              const userIds = [];
+              book.reviews.forEach(review => userIds.push(review.user));
+              User.find({ _id: { $in: userIds } })
+                .cache()
+                .then((users) => {
+                  if (users) {
+                    mapAvatarToReviews(book.reviews, users);
+                    console.log(book);
+                    console.log(book.reviews);
+                  }
+                  return res.json(book);
+                });
+            } else {
+              return res.json(book);
+            }
           }
-          return res.json(book);
+          return false;
         })
-        .catch(err => console.log(err));
+        .catch(() => res.status(404)
+          .json({
+            categorynotfound: 'No categories found',
+          }));
     })
     .catch(() => res.status(404)
       .json({
