@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { setAvatar } from "./actions";
 import { connect } from 'react-redux';
 import { compose } from "redux";
-
+import isEmpty, {  } from "../../validation/isEmpty";
 
 class AvatarUploader extends PureComponent {
     constructor(props) {
@@ -63,7 +63,7 @@ class AvatarUploader extends PureComponent {
         />
         <Preview srcDataURL={preview}/>
         </div>
-        <Button variant="contained" color="secondary" id={"upload"} onClick={this.uploadHandler}>Upload</Button>
+        <Button variant="contained" color="secondary" id={"upload"} onClick={this.uploadHandler} disabled={!this.state.preview}>Upload</Button>
       </div>
       )
     }
