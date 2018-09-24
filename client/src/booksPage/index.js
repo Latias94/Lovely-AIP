@@ -21,11 +21,13 @@ class BooksPage extends Component {
 				stock: '',
 				coverUrl: '',
 				score: 0,
+				category:'',
 			},
 			quantity: 1,
 			submittedReviewStar: 0,
 			submittedReviewContent: '',
 			open: false,
+			realtedBookList: '',
 		};
 		this.addToCartClick = this.addToCartClick.bind(this);
 		this.reviewStarChange = this.reviewStarChange.bind(this);
@@ -59,6 +61,12 @@ class BooksPage extends Component {
 			.catch((error => console.log(error)));
 	}
 
+	getRelateBookList(category) {
+		Axios.get(`/categories/${category}`)
+			.then((response) => { console.log('aaaaaaaaaaaaaaaaaaaaaa',response.data); this.setState({realtedBookList: response.data}) })
+			.catch(error => console.log(error));
+	}
+
 	componentDidMount() {
 		const requestURL = `/books/${this.props.match.params.id}`;
 		this.getUserBookList();
@@ -66,6 +74,8 @@ class BooksPage extends Component {
 			.then((response) => {
 				console.log(response);
 				this.setState({ bookDetailInformation: response.data });
+				console.log('ccccccccccccccccccccccccccc',this.state.bookDetailInformation.category)
+				this.getRelateBookList(this.state.bookDetailInformation.category);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -167,6 +177,7 @@ class BooksPage extends Component {
 					openMoudal={this.state.open}
 					createANewBookList={this.createANewBookList}
 					addBookIntoBooklist={this.addBookIntoBooklist}
+					realtedBookList={this.state.realtedBookList}
 				/>
 			);
 		}
