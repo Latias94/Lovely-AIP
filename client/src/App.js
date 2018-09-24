@@ -8,13 +8,10 @@ import { withRouter } from 'react-router';
 
 class App extends Component {
 
-    componentDidMount(){
-        document.title="Week 9"
-    }
 	render() {
 		const isUser = this.props.location.pathname !== "/admin"
       return (
-        <div className='app' style={{backgroundColor:'#ff0'}}>
+        <div className='app'>
 					{isUser && <Header/>}
           <div className="router"><MainRoute/></div>
 					{isUser && <Footer/>}
