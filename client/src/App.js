@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
-import MainRoute from './routers/mainRouter';
-import Header from './Header/index';
-import Footer from './Footer/index';
 import { withRouter } from 'react-router';
+import MainRoute from './routers/mainRouter';
+import Header from './Header';
+import Footer from './Footer';
 
 
 class App extends Component {
+  componentDidMount() {
+    document.title = 'Knight Frank';
+  }
 
 	render() {
 		const isUser = this.props.location.pathname !== "/admin"
