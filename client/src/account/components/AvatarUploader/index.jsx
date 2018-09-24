@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { setAvatar } from "./actions";
 import { connect } from 'react-redux';
 import { compose } from "redux";
-import isEmpty, {  } from "../../validation/isEmpty";
+
 
 class AvatarUploader extends PureComponent {
     constructor(props) {
