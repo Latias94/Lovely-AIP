@@ -1,6 +1,5 @@
 const express = require('express');
 const passport = require('passport');
-const _ = require('lodash');
 
 const Book = require('../../models/Book');
 const Category = require('../../models/Category');
@@ -129,7 +128,7 @@ function mapAvatarToReviews(reviews, users) {
   for (let i = 0; i < reviews.length; i += 1) {
     for (let j = 0; j < users.length; j += 1) {
       if (reviews[i].user.toString() === users[j]._id.toString()) {
-        _.assign(reviews[i], { avatar: users[j].avatar });
+        Object.assign(reviews[i], { avatar: users[j].avatar });
       }
     }
   }
@@ -175,8 +174,6 @@ router.get('/:id', (req, res) => {
                 .then((users) => {
                   if (users) {
                     mapAvatarToReviews(book.reviews, users);
-                    console.log(book);
-                    console.log(book.reviews);
                   }
                   return res.json(book);
                 });
