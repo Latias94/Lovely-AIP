@@ -21,7 +21,7 @@ class headerPageIndex extends Component {
 	}
 
 	componentDidMount() {
-		this.props.getUsersCart();
+		this.props.auth.isAuthenticated && this.props.getUsersCart();
 	}
 
 	componentDidUpdate(prevProps) {

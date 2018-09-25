@@ -19,7 +19,6 @@ class allCategoriesPage extends Component {
 
 	componentDidMount() {
 		const requestURL = '/categories';
-		console.log(this.props.match.params);
 
 		Axios({
 			method: 'get',
@@ -53,7 +52,6 @@ class allCategoriesPage extends Component {
 				<CategoriesBar
 					categoriesList={this.state.allCategories}
 					onCategoryNumberChange={(name) => {
-						console.log('categoriesList');
 						onCategoryNumberChange(name);
 					}}
 				/>

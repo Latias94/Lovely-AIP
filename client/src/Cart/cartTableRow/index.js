@@ -25,13 +25,11 @@ class cartTableRow extends Component {
 	}
 
 	deleateRow(id) {
-		console.log(`http://localhost:5000/api/cart/${id}`);
 		axios({
 			method: 'delete',
 			url: `http://localhost:5000/api/cart/${id}`,
 		})
 			.then((res) => {
-				console.log(res);
 				window.location.reload(true);
 			})
 			.catch((err) => {

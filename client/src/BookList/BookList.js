@@ -75,7 +75,6 @@ class BookList extends React.PureComponent {
 	}
 
 	deleteBookList(id) {
-		console.log('id', id);
 		if (window.confirm('Do you really want to delete it?') && id) {
 			Axios.delete(`/booklists/${id}`)
 				.then((res) => {
@@ -90,11 +89,7 @@ class BookList extends React.PureComponent {
 	updateBookList(title, description) {
 		Axios.post(`/booklists/${this.state.bookListId}`, { title, description })
 			.then((res) => {
-				console.log(res);
 				window.location.href = `/booklist/${res.data.slug}`;
-				// window.open("/account", "Success!");
-				// window.location.href = '/account'; // TODO: redirect without history
-				// this.props.history.location('/account')
 			})
 			.catch(err => console.log(err));
 	}

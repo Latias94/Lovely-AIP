@@ -13,41 +13,28 @@ export default class booksPage extends Component {
 			books: { books: [] },
 			categoryID: '5b69933780422c14325872a7',
 		};
-		console.log('constructore');
 	}
-
-	// shouldComponentUpdate(nextState) {
-	// 	console.log('should');
-	// 	console.log(nextState);
-	// 	console.log(this.state.books);
-	// 	console.log('over');
-	// 	console.log(nextState.books !== this.state.books);
-	// 	return nextState.books !== this.state.books;
-	// }
 
 	componentDidMount() {
 		let requestURL = '/categories/';
 		requestURL += '5b69933780422c14325872a7';
-		console.log('did amount');
 		Axios.get(requestURL)
 			.then((response) => {
 				this.setState({ books: response.data });
-				console.log(response.data);
 			}).catch((error) => {
 				console.log(error);
 			});
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (!this.props.categoriesID) { console.log(this.props.categoriesID); return null; }
+		if (!this.props.categoriesID) { return null; }
 		if (this.props.categoriesID !== prevProps.categoriesID) {
 			this.setState({ books: { books: [] }, categoryID: this.props.categoriesID });
 			let requestURL = '/categories/';
 			requestURL += this.props.categoriesID;
-			console.log(requestURL);
 			Axios.get(requestURL)
 				.then((response) => {
-					console.log('didupdata'); this.setState({ books: response.data });
+					this.setState({ books: response.data });
 				})
 				.catch((error) => {
 					console.log(error);

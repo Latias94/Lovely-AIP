@@ -97,7 +97,7 @@ class BooksPage extends Component {
 	}
 
 	getUserBookList() {
-		Axios.get('/users/current/booklist')
+		this.isAuthenticated && Axios.get('/users/current/booklist')
 			.then((response) => {
 				this.setState({ usersBookList: response.data });
 			})
