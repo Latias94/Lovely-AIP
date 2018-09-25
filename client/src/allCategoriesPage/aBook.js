@@ -36,7 +36,8 @@ const styles = {
 function SimpleMediaCard(props) {
 	const { classes } = props;
 	return (
-		<Link to={`/book/${props.bookid}`} key={props.bookid} replace>
+		<Link to={`/book/${props.bookid}`} key={props.bookid} style={{ marginLeft:'0px', marginRight: `${props.bookMarginRight-1}px` }} replace>
+			{console.log(props.bookMarginRight)}
 			<Card className={classes.card}>
 				<CardMedia
 					className={classes.media}

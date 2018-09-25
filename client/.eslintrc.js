@@ -22,14 +22,20 @@ module.exports = {
     "rules": {
         "indent": [
             "error",
-            "space"
+            "tab"
         ],
-        "linebreak-style": 0,
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
         "quotes": [
             "error",
             "single"
         ],
-        "semi": 0,
+        "semi": [
+            "error",
+            "always"
+        ],
         "no-tabs":"off"
     }
 };

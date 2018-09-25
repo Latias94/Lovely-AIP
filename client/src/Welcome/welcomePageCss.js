@@ -13,18 +13,13 @@ export const eachBook = {
 	flexDirection: 'column',
 };
 
-export const bookRow = {
-	// display: 'flex',
-	// flexDirection: 'row',
-	// justifyContent: 'space-around',
-	// marginBottom: '35px',
+export let bookRow = {
+	display: 'flex',
+	flexDirection: 'row',
+	//justifyContent: 'space-around',
+	marginBottom: '35px',
 	boxSizing: 'border-box',
 	borderLeftStyle: 'solid',
-	borderLeftWidth: '20px',
+	borderLeftWidth: '2px',
 	borderColor: 'white',
-	display: 'grid',
-	gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
-	justifyItems: 'center',
-	alignItems: 'center',
-	gridGap: '40px 40px',
 };
