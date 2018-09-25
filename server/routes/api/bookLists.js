@@ -262,8 +262,8 @@ router.get('/:id',
  *   post:
  *     tags:
  *       - BookList
- *     summary: Create BookList
- *     description: Create a new BookList. Title and description field is required. This can only be done by the logged in user (add JWT token to header).
+ *     summary: Create a BookList
+ *     description: Create a new BookList. Title and description field is required. Description must be between 10 and 500 characters. This can only be done by the logged in user (add JWT token to header).
  *     produces:
  *       - application/json
  *     parameters:
