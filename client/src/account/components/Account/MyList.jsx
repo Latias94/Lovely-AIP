@@ -57,7 +57,7 @@ const styles = theme => ({
 
 
 class MyList extends React.Component {
-    descriptionMinLength = 8;
+    descriptionMinLength = 10;
 
     state = {
         open: false,

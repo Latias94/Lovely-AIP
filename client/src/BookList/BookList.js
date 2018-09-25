@@ -35,7 +35,7 @@ const styles = theme => ({
     container: KFStyles.container
 });
 
-class BookListDetail extends React.PureComponent {
+class BookList extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -191,8 +191,8 @@ class BookListDetail extends React.PureComponent {
     }
 }
 
-BookListDetail.propTypes = {
+BookList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(BookListDetail);
+export default withStyles(styles)(BookList);
