@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Axios from 'axios';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -33,15 +34,34 @@ function createData(name, author, recommendation, ) {
 }
 
 const rows = [
-    createData('BookA','Jack', 'recommendation11111'),
+    createData('Book A','Jack', 'recommendation11111'),
     createData('BookB', 'Book', 'recommendation1112312312312312'),
 ];
 
-function BookListDetail(props) {
-    const { classes } = props;
+class BookListDetail extends React.PureComponent {
+    constructor(props) {
+        super(props)
+        this.state = {
+            books: []
+        }
+        this.getBooksInBookList.bind(this)
+    }
 
+    getBooksInBookList(slug) {
+        Axios.get(`/book/${slug}`)
+        .then((res) => {
+            this.setState({
+                books: res.data
+            })
+        })
+        .catch((err) => (console.log(err)))
+    }
+    
+    render() {
+    const { classes } = this.props;
     return (
         <div style={{padding:'20px'}}>
+        {this.props.match.params.slug}
             <Button
                 style={{outline:'none'}}
                 variant="contained"
@@ -75,7 +95,7 @@ function BookListDetail(props) {
             </Table>
         </Paper>
         </div>
-    );
+    )}
 }
 
 BookListDetail.propTypes = {

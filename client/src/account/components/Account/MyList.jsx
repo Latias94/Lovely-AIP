@@ -147,6 +147,7 @@ class MyList extends React.Component {
                                                     label={`Description (more than ${this.descriptionMinLength} letters)`}
                                                     className={classes.textField}
                                                     type="text"
+                                                    multiline
                                                     inputRef={description => this.description = description}
                                                     error={this.state.isDescriptionWrong}
                                                     helperText={this.state.descriptionError}
@@ -204,5 +205,5 @@ MyList.propTypes = {
 
 export default compose(
     withStyles(styles),
-    connect( state => ({bookLists: state.account.bookLists}), { createBookList })
+    connect( state => ({bookLists: state.user.bookLists}), { createBookList })
 )(MyList);
