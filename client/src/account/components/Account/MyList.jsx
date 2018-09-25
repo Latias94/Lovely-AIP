@@ -180,7 +180,7 @@ class MyList extends React.Component {
                                 return <Card key={bookList._id} className={classes.card}>
                                     <CardContent>
                                         <Typography variant="subheading" style={{display:'inline'}}>
-                                            <a href={'/booklist'}>
+                                            <a href={'/booklist/'+bookList.slug}>
                                                 {bookList.title}
                                             </a>
                                         </Typography>

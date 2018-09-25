@@ -9,6 +9,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import KFStyles from '../KFStyles';
+import {Rate} from "antd";
+import BookListEditorModal from './BookListEditorModal';
 
 const styles = theme => ({
     root: {
@@ -25,77 +28,172 @@ const styles = theme => ({
     input: {
         display: 'none',
     },
+    tableHeader: {
+        fontWeight:'bold',
+        fontSize:'15px'
+    },
+    container: KFStyles.container
 });
-
-let id = 0;
-function createData(name, author, recommendation, ) {
-    id += 1;
-    return { id, name, author, recommendation,};
-}
-
-const rows = [
-    createData('Book A','Jack', 'recommendation11111'),
-    createData('BookB', 'Book', 'recommendation1112312312312312'),
-];
 
 class BookListDetail extends React.PureComponent {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            books: []
-        }
-        this.getBooksInBookList.bind(this)
+            bookListTitle:'Book List',
+            description: '',
+            books: [],
+            totalBooks: 0,
+            bookListId:0,
+            openBookListEditorModal: false,
+        };
+        // this.getBooksInBookList.bind(this);
+        this.deleteBookList = this.deleteBookList.bind(this);
+        this.updateBookList = this.updateBookList.bind(this);
+        this.handleBookListEditorModalClose = this.handleBookListEditorModalClose.bind(this);
+    }
+
+    componentDidMount() {
+        this.getBooksInBookList(this.props.match.params.slug);
     }
 
     getBooksInBookList(slug) {
-        Axios.get(`/book/${slug}`)
+        Axios.get(`/booklists/slug/${slug}`)
         .then((res) => {
+            const { title: bookListTitle, books, description, _id: bookListId } = res.data;
+
             this.setState({
-                books: res.data
-            })
+                bookListTitle,
+                books,
+                totalBooks: books.length,
+                description,
+                bookListId
+            });
         })
         .catch((err) => (console.log(err)))
     }
-    
+
+    deleteBookList(id) {
+        console.log('id', id)
+        if (window.confirm("Do you really want to delete it?") && id) {
+            Axios.delete('/booklists/'+id)
+                .then(res => {
+                    // window.open("/account", "Success!");
+                    window.location.href = '/account'; // TODO: redirect without history
+                    // this.props.history.location('/account')
+                })
+                .catch(err => console.log(err))
+        }
+    }
+
+    updateBookList(title, description) {
+        // check length description > 10
+        Axios.post('/booklists/'+this.state.bookListId, {title, description})
+            .then(res => {
+                console.log(res);
+                window.location.href = '/booklist/' + res.data.slug;
+                // window.open("/account", "Success!");
+                // window.location.href = '/account'; // TODO: redirect without history
+                // this.props.history.location('/account')
+            })
+            .catch(err => console.log(err))
+    }
+
+    handleBookListEditorModalClose() {
+        this.setState({ openBookListEditorModal: false });
+    }
+
     render() {
-    const { classes } = this.props;
+    const { root, table, tableHeader, container } = this.props.classes;
+    const { bookListTitle, books, totalBooks, description, bookListId } = this.state;
+// TODO: testing -> check title of the page under 0/1/2
+    if (totalBooks > 1 || totalBooks === 0) {
+        document.title = `${bookListTitle} (${totalBooks} books)`;
+    } else if (totalBooks === 1) {
+        document.title = `${bookListTitle} (${totalBooks} book)`
+    }
+    if (this.state.bookListId) {
     return (
-        <div style={{padding:'20px'}}>
-        {this.props.match.params.slug}
+        <div className={container}>
+            <BookListEditorModal
+                title={bookListTitle}
+                description={description}
+                handleClose={this.handleBookListEditorModalClose}
+                openModal={this.state.openBookListEditorModal}
+                updateBookList={this.updateBookList}
+                />
+            <h1>{bookListTitle}</h1>
+            <p style={{fontSize: '14px', fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif'}}>{description}</p>
+            <div style={{flexDirection: 'row'}}>
             <Button
-                style={{outline:'none'}}
+                style={{outline:'none', width:'170px'}}
                 variant="contained"
                 href={'/'}
             >
-                + Add a new book
+                + A new book
             </Button>
-        <Paper className={classes.root}>
-            <Table className={classes.table}>
+            <Button
+                style={{outline:'none', width:'170px'}}
+                variant="contained"
+                onClick={() => {this.setState({ openBookListEditorModal: true })}}
+                title={'Edit the list title and description'}
+            >
+                Edit
+            </Button>
+            <Button
+                title={'Delete this book list'}
+                style={{outline:'none', width:'170px'}}
+                variant="contained"
+                onClick={() => {this.deleteBookList(bookListId)}}
+            >
+                Delete list
+            </Button>
+            </div>
+            {/*
+            TODO: add sort func in table: https://material-ui.com/demos/tables/
+            TODO: Book cover
+            */}
+        <Paper className={root}>
+            <Table className={table}>
 
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Book Title</TableCell>
-                        <TableCell numeric>Author</TableCell>
-                        <TableCell numeric>Recommendation</TableCell>
-                    </TableRow>
-                </TableHead>
+                {/*<TableHead>*/}
+                    {/*<TableRow>*/}
+                        {/*<TableCell className={tableHeader}></TableCell>*/}
+                        {/*<TableCell className={tableHeader}>Book(s)</TableCell>*/}
+                        {/*/!*<TableCell className={tableHeader}>Author</TableCell>*!/*/}
+                        {/*<TableCell className={tableHeader}>Review(s)</TableCell>*/}
+                        {/*/!*<TableCell className={tableHeader} numeric>Star</TableCell>*!/*/}
+                    {/*</TableRow>*/}
+                {/*</TableHead>*/}
                 <TableBody>
-                    {rows.map(row => {
+                    {books.length ? books.map(book => {
                         return (
-                            <TableRow key={row.id}>
-                                <TableCell component="th" scope="row">
-                                    {row.name}
+                            <TableRow key={book._id}>
+                                <TableCell component="a" scope="row" href={`http://localhost:3000/book/${book._id}`}>
+                                    <img src={book.coverUrl} alt={book.title} style={{width: '55px'}} title=""/>
                                 </TableCell>
-                                <TableCell numeric>{row.author}</TableCell>
-                                <TableCell numeric>{row.recommendation}</TableCell>
+                                <TableCell>
+                                    <a scope="row" href={`http://localhost:3000/book/${book._id}`}>{book.title}</a>
+                                    <div>{'by ' + book.authors[0].name}</div> {/*TODO: join authors' names*/}
+                                    <Rate disabled value={book.reviewStar} />
+                                </TableCell>
+                                {/*<TableCell>*/}
+                                    {/*{book.authors[0].name}*/}
+                                {/*</TableCell>*/}
+                                <TableCell>
+                                    {book.reviewContent ? book.reviewContent : ''}
+                                </TableCell>
+                                {/*<TableCell numeric>{book.reviewStar}</TableCell>*/}
                             </TableRow>
                         );
-                    })}
+                    }) : <div>No books yet.</div>}
                 </TableBody>
             </Table>
         </Paper>
         </div>
-    )}
+    )} else {
+    return null
+    }
+    }
 }
 
 BookListDetail.propTypes = {
