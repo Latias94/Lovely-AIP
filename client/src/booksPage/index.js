@@ -21,7 +21,7 @@ class BooksPage extends Component {
 				stock: '',
 				coverUrl: '',
 				score: 0,
-				category:'',
+				category: '',
 			},
 			quantity: 1,
 			submittedReviewStar: 0,
@@ -50,20 +50,20 @@ class BooksPage extends Component {
 
 	createANewBookList(title) {
 		Axios.post('/booklists', { title, description: 'tryyyyyyyyyyy' })
-			.then((response) => { console.log('success'); this.getUserBookList(); this.handleClose(); })
+			.then((response) => { this.getUserBookList(); this.handleClose(); })
 			.catch((error => console.log(error)));
 	}
 
 	addBookIntoBooklist(booklistId, bookId) {
 		const url = `/booklists/book/${booklistId}/${bookId}`;
 		Axios.post(url)
-			.then((response) => { console.log('success'); alert('add book successful'); })
+			.then((response) => { alert('add book successful'); })
 			.catch((error => console.log(error)));
 	}
 
 	getRelateBookList(category) {
 		Axios.get(`/categories/${category}`)
-			.then((response) => { console.log('aaaaaaaaaaaaaaaaaaaaaa',response.data); this.setState({realtedBookList: response.data}) })
+			.then((response) => { this.setState({ realtedBookList: response.data }); })
 			.catch(error => console.log(error));
 	}
 
@@ -72,9 +72,7 @@ class BooksPage extends Component {
 		this.getUserBookList();
 		Axios.get(requestURL)
 			.then((response) => {
-				console.log(response);
 				this.setState({ bookDetailInformation: response.data });
-				console.log('ccccccccccccccccccccccccccc',this.state.bookDetailInformation.category)
 				this.getRelateBookList(this.state.bookDetailInformation.category);
 			})
 			.catch((error) => {
@@ -93,7 +91,6 @@ class BooksPage extends Component {
 	addToCartClick(id) {
 		if (this.props.auth) {
 			this.props.addBookToCartData(id);
-			console.log('sss');
 		} else {
 			window.location.pathname = './login';
 		}
@@ -102,7 +99,6 @@ class BooksPage extends Component {
 	getUserBookList() {
 		Axios.get('/users/current/booklist')
 			.then((response) => {
-				console.log(response.data);
 				this.setState({ usersBookList: response.data });
 			})
 			.catch((error) => {

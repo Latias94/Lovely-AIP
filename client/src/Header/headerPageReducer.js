@@ -1,7 +1,3 @@
-const initialState = {
-	cartNumber: 0,
-};
-
 export default function (state = { cartNumber: 0 }, action) {
 	const cartNumber = state.cartNumber;
 	switch (action.type) {

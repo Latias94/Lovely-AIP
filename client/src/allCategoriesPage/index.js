@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Axios from 'axios';
 import CategoriesBar from './categoriesBar';
@@ -53,9 +52,9 @@ class allCategoriesPage extends Component {
 			<div style={style.categoriesContainer}>
 				<CategoriesBar
 					categoriesList={this.state.allCategories}
-					onCategoryNumberChange={name => {
-						console.log('categoriesList')
-						onCategoryNumberChange(name)
+					onCategoryNumberChange={(name) => {
+						console.log('categoriesList');
+						onCategoryNumberChange(name);
 					}}
 				/>
 				<Books

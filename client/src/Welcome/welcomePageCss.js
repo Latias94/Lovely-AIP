@@ -13,10 +13,10 @@ export const eachBook = {
 	flexDirection: 'column',
 };
 
-export let bookRow = {
+export const bookRow = {
 	display: 'flex',
 	flexDirection: 'row',
-	//justifyContent: 'space-around',
+	// justifyContent: 'space-around',
 	marginBottom: '35px',
 	boxSizing: 'border-box',
 	borderLeftStyle: 'solid',

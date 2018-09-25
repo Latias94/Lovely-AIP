@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -51,7 +50,7 @@ class FullWidthTabs extends React.Component {
 	}
 
 	render() {
-		const { classes, theme } = this.props;
+		const { classes } = this.props;
 		return (
 			<div className={classes.root}>
 				<AppBar position="sticky" color="default" style={appStyle.navigation}>
@@ -67,7 +66,7 @@ class FullWidthTabs extends React.Component {
 					>
 						<Tab label="Home" component={Link} to="/" />
 						<Tab label="All Categories" component={Link} to="/categories" />
-						<Tab label="Recommendation" style={{ outline: 'none' }} />
+						<Tab label="Recommendation" component={Link} to="/recommendation" />
 						<Tab label="Awards" style={{ outline: 'none' }} />
 					</Tabs>
 				</AppBar>

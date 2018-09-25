@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as style from './welcomePageCss';
 import Row from './rowOfBookComponent';
 
 export default class PopularBooks extends Component {

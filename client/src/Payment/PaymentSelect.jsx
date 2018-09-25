@@ -6,12 +6,6 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { DatePicker } from 'antd';
-
-
-const { MonthPicker } = DatePicker;
-
-const monthFormat = 'YYYY/MM';
 
 const styles = theme => ({
     container: {

@@ -13,6 +13,7 @@ import Cart from '../Cart';
 import Payment from '../Payment';
 import Admin from '../Admin';
 import BookListDetail from '../BookList/BookList';
+import Recommendation from '../Recommendation';
 
 const MainRoute = () => (
 
@@ -29,7 +30,8 @@ const MainRoute = () => (
 			<Route path={'/activate/:token'} component={VerifyEmail}/>
 			<Route path={'/payment'} component={Payment}/>
 			<Route path={'/booklist/:slug'} component={BookListDetail}/> {/* modal? */}
-			<Route path={'/admin'} component={Admin}/> {/* TODO: move to another route */}
+			<Route path={'/admin'} component={Admin} /> {/* TODO: move to another route */}
+			<Route path={'/recommendation'} component={Recommendation} /> {/* TODO: move to another route */}
 		</Switch>
 	</Route>
 );

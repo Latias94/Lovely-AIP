@@ -43,7 +43,7 @@ const styles = {
 		minWidth: '270px',
 		margin: '20px',
 		border: '3px solid gray',
-		borderRadius: '5px'
+		borderRadius: '5px',
 		// display: 'flex',
 		// flexDirection: 'column',
 		// alignItems: 'center',
@@ -59,16 +59,13 @@ const styles = {
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 	},
-	containerOfPersonalReview: {
-		margin: '10px 0px 10px 0px',
+	normailAvatar: {
+		margin: 10,
 	},
-    normailAvatar: {
-        margin: 10,
-    },
-    bigAvatar: {
-        width: 160,
-        height: 160,
-    },
+	bigAvatar: {
+		width: 160,
+		height: 160,
+	},
 };
 
 export default styles;

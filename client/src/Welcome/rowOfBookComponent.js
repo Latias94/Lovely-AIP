@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
-import * as style from './welcomePageCss';
 import Book from '../allCategoriesPage/aBook';
 
 export default class rowOfBookComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			windowWidth: window.document.body.scrollWidth - 17,
+			windowWidth: window.innerWidth - 17,
 			divTransformation: 0,
 			decreaseButtonTransform: -65,
 			increaseButtonTransform: 65,
@@ -56,14 +55,13 @@ export default class rowOfBookComponent extends Component {
 	}
 
 	handleResize() {
-		this.setState({ windowWidth: window.document.body.scrollWidth, divTransformation: 0 });
-		console.log(window.document.body.scrollWidth);
+		this.setState({ windowWidth: window.innerWidth - 17, divTransformation: 0 });
 	}
 
 	resizeWindowChange(windowWidth) {
 		let bookMarginRight;
 		windowWidth *= 0.80;
-		let numberOfCard = parseInt(windowWidth / 200);
+		let numberOfCard = parseInt(windowWidth / 200, 10);
 		if (numberOfCard > 1) {
 			bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
 			if (bookMarginRight <= 20) {
@@ -71,11 +69,10 @@ export default class rowOfBookComponent extends Component {
 				bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
 			}
 		} else if (windowWidth > 200 && windowWidth < 400) {
-			 bookMarginRight = windowWidth - 200;
+			bookMarginRight = windowWidth - 200;
 		} else {
-			 bookMarginRight = 5;
+			bookMarginRight = 5;
 		}
-
 		const transformation = numberOfCard * (200 + bookMarginRight);
 		return {
 			windowWidth, numberOfCard, bookMarginRight, transformation,
@@ -83,7 +80,6 @@ export default class rowOfBookComponent extends Component {
 	}
 
 	render() {
-		console.log(this.state.windowWidth);
 		return (
 			<div style={{ position: 'relative' }}>
 				<Button

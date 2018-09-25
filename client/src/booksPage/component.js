@@ -51,7 +51,7 @@ const dropdown = (isLogin, booklist, open, addBookIntoBooklist, bookid) => (!isL
 const convertDate = (isoDate) => {
 	const date = new Date(isoDate);
 	return date.toUTCString();
-}
+};
 
 const BooksPageComponent = props => (
 	<div style={styles.container}>
@@ -101,7 +101,6 @@ const BooksPageComponent = props => (
 			</div>
 		</div>
 		<hr />
-		{console.log('sssssssssssssssssssss', props.realtedBookList)}
 		{!props.realtedBookList ? null : (<PopularBooks
 			bookList={[props.realtedBookList]}
 		/>)}
@@ -133,23 +132,23 @@ const BooksPageComponent = props => (
 			<span style={{
 				fontSize: '20px', fontWeight: '400', color: 'black', marginRight: '10px',
 			}}>Rate:</span>
-			<Rate 
-			onChange={value => props.reviewStarChange(value)} 
-			value={props.submittedReviewStar} 
-			style={{ marginTop: '5px' }} isRequired/>
+			<Rate
+				onChange={value => props.reviewStarChange(value)}
+				value={props.submittedReviewStar}
+				style={{ marginTop: '5px' }} isRequired/>
 			<h5 style={{ margin: '0' }}>Content:</h5>
 			<div style={{
 				width: '90%', marginLeft: '5%',
 			}}>
-			{/*TODO: Check is it rated*/}
-				<TextField 
-				placeholder={'Please rate first.'}
-				onChange={event => props.reviewContentChange(event.target.value)} 
-				multiline 
-				fullWidth 
-				rows='4' 
-				style={{ backgroundColor: '#EEEEEE', marginTop: '5px', marginBottom: '12px' }} 
-				value={props.submittedReviewContent} 
+				{/* TODO: Check is it rated*/}
+				<TextField
+					placeholder={'Please rate first.'}
+					onChange={event => props.reviewContentChange(event.target.value)}
+					multiline
+					fullWidth
+					rows='4'
+					style={{ backgroundColor: '#EEEEEE', marginTop: '5px', marginBottom: '12px' }}
+					value={props.submittedReviewContent}
 				/>
 			</div>
 			<Button size="medium" variant="contained" color="default" onClick={props.submitClick} style={{ backgroundColor: 'gray', color: 'white' }}>

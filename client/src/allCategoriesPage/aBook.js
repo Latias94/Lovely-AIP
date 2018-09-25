@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Rate } from 'antd';
 import { Link } from 'react-router-dom';
@@ -36,8 +34,7 @@ const styles = {
 function SimpleMediaCard(props) {
 	const { classes } = props;
 	return (
-		<Link to={`/book/${props.bookid}`} key={props.bookid} style={{ marginLeft:'0px', marginRight: `${props.bookMarginRight-1}px` }} replace>
-			{console.log(props.bookMarginRight)}
+		<Link to={`/book/${props.bookid}`} key={props.bookid} style={{ marginLeft: '0px', marginRight: `${props.bookMarginRight - 1}px` }} replace>
 			<Card className={classes.card}>
 				<CardMedia
 					className={classes.media}
