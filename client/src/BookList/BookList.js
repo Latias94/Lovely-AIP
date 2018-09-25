@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import KFStyles from '../KFStyles';
-import {Rate} from "antd";
+import { Rate } from "antd";
 import BookListEditorModal from './BookListEditorModal';
 
 const styles = theme => ({
@@ -46,7 +46,6 @@ class BookListDetail extends React.PureComponent {
             bookListId:0,
             openBookListEditorModal: false,
         };
-        // this.getBooksInBookList.bind(this);
         this.deleteBookList = this.deleteBookList.bind(this);
         this.updateBookList = this.updateBookList.bind(this);
         this.handleBookListEditorModalClose = this.handleBookListEditorModalClose.bind(this);
@@ -59,7 +58,10 @@ class BookListDetail extends React.PureComponent {
     getBooksInBookList(slug) {
         Axios.get(`/booklists/slug/${slug}`)
         .then((res) => {
-            const { title: bookListTitle, books, description, _id: bookListId } = res.data;
+            const {
+                title: bookListTitle,
+                books, description,
+                _id: bookListId } = res.data;
 
             this.setState({
                 bookListTitle,
@@ -86,7 +88,6 @@ class BookListDetail extends React.PureComponent {
     }
 
     updateBookList(title, description) {
-        // check length description > 10
         Axios.post('/booklists/'+this.state.bookListId, {title, description})
             .then(res => {
                 console.log(res);
@@ -150,11 +151,9 @@ class BookListDetail extends React.PureComponent {
             </div>
             {/*
             TODO: add sort func in table: https://material-ui.com/demos/tables/
-            TODO: Book cover
             */}
         <Paper className={root}>
-            <Table className={table}>
-
+            <Table className={table} padding={'dense'}>
                 {/*<TableHead>*/}
                     {/*<TableRow>*/}
                         {/*<TableCell className={tableHeader}></TableCell>*/}
@@ -172,17 +171,13 @@ class BookListDetail extends React.PureComponent {
                                     <img src={book.coverUrl} alt={book.title} style={{width: '55px'}} title=""/>
                                 </TableCell>
                                 <TableCell>
-                                    <a scope="row" href={`http://localhost:3000/book/${book._id}`}>{book.title}</a>
+                                    <a href={`http://localhost:3000/book/${book._id}`}>{book.title}</a>
                                     <div>{'by ' + book.authors[0].name}</div> {/*TODO: join authors' names*/}
                                     <Rate disabled value={book.reviewStar} />
                                 </TableCell>
-                                {/*<TableCell>*/}
-                                    {/*{book.authors[0].name}*/}
-                                {/*</TableCell>*/}
                                 <TableCell>
                                     {book.reviewContent ? book.reviewContent : ''}
                                 </TableCell>
-                                {/*<TableCell numeric>{book.reviewStar}</TableCell>*/}
                             </TableRow>
                         );
                     }) : <div>No books yet.</div>}
