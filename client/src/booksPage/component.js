@@ -107,7 +107,13 @@ const BooksPageComponent = props => (
 					<h4 style={{ marginTop: '15px' }}>{isInstock(props.stockNumber)}</h4>
 					<span>Deliver to Australia</span>
 					<hr />
-					<Button variant="contained" color="default" style={{ backgroundColor: 'gray', color: 'white', outline: 'none' }} onClick={() => props.addToCartClick(props.id)}> Add to Cart </Button>
+					<Button
+                        variant="contained"
+                        color="default"
+                        style={{ backgroundColor: 'gray', color: 'white', outline: 'none' }}
+                        onClick={() => props.addToCartClick(props.id)}>
+                        Add to Cart
+                    </Button>
 					<Dropdown overlay={dropdown(props.authOrNot, props.usersBookList, props.handleOpen, props.addBookIntoBooklist, props.id)} trigger={['click']} >
 						<Button variant="contained" color="default" style={{
 							backgroundColor: 'gray', color: 'white', marginTop: '15px', outline: 'none',
@@ -141,12 +147,13 @@ const BooksPageComponent = props => (
 						</div>
 						<div style={styles.viewPersonalInfromation}>
 							<Rate disabled value={item.star} />
-							<span>{item.content}</span>
+							{/*<span>{item.content}</span>*/}
 						</div>
 						<div style={styles.reviewContent}>
 							<span>{convertDate(item.createDate)}</span>
-							<span>Already Bought</span>
-							<span style={{ fontSize: '15px' }}>{item.content}</span>
+							<p style={{ color: 'rebeccapurple' }}>
+                                Verified Purchase</p>
+							<div style={{ fontSize: '15px' }}>{item.content}</div>
 						</div>
 					</div>
 				)))

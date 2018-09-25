@@ -14,7 +14,6 @@ import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
 import { getCurrentUserBookLists } from './actions';
 
-const baseURL = (process.env.NODE_ENV === 'production') ? config.API_BASE_URL : config.DEV_API_BASE_URL;
 const styles = {
     row: {
         display: 'flex',
@@ -109,6 +108,8 @@ class Account extends React.Component {
 }
 
 const mapStateToProps = state => {
+    const baseURL = (process.env.NODE_ENV === 'production') ? config.UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
+    console.log(baseURL)
     // install user info
     if (!isEmpty(state.auth.user)) {
         const {id: userId, name: username, email, avatar: avatarURL} = state.auth.user;
