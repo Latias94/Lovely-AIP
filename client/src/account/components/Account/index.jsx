@@ -9,12 +9,12 @@ import {connect} from 'react-redux';
 import {compose} from "redux";
 import {getCurrentUserInfo} from '../../actions/authActions';
 import isEmpty from '../../validation/isEmpty'
-import {config} from '../../../config';
+import config from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
 import { getCurrentUserBookLists } from './actions';
 
-const baseURL = (config.ENV === 'production') ? config.REL_UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
+const baseURL = (process.env.NODE_ENV === 'production') ? config.API_BASE_URL : config.DEV_API_BASE_URL;
 const styles = {
     row: {
         display: 'flex',

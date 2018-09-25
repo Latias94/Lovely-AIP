@@ -12,24 +12,42 @@ import Paper from '@material-ui/core/Paper';
 import styles from './booksPageCss';
 import Modal from './moudel';
 import PopularBooks from '../Welcome/popularBooks';
+import { LetterAvatar, ImageAvatar } from "../account/components/AvatarUploader/Avatars";
+import config from "../config";
 
 
 const totalPrice = (unitPrice, number) => (unitPrice * number).toFixed(2);
 const isInstock = number => (number ? 'In Stock.' : 'Out of Stock');
+const uploadBaseURL = process.env.NODE_ENV === 'production' ? config.UPLOAD_BASE_URL: config.DEV_UPLOAD_BASE_URL;
 
-const menu = (booklist, open, addBookIntoBooklist, bookid) => (
+// style for avatar
+const classes = {
+    row: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    avatar: {
+        margin: 10,
+    },
+    bigAvatar: {
+        width: 160,
+        height: 160,
+    },
+};
+
+const menu = (bookList, open, addBookIntoBooklist, bookid) => (
 	<div>
 		<Paper style={styles.dropDownList}>
 			<List>
 				{
-					booklist.map(item => (
+					bookList.map(item => (
 						<ListItem style={styles.dropDownItem} button key={item._id} onClick={() => addBookIntoBooklist(item._id, bookid)}>
 							{item.title}
 						</ListItem >
 					))
 				}
 				<Divider/>
-				<ListItem style={styles.dropDownItem} onClick={open} button key="3">Creat a new booklist</ListItem >
+				<ListItem style={styles.dropDownItem} onClick={open} button key="3">Create a new book list</ListItem >
 			</List>
 		</Paper>
 	</div>
@@ -111,8 +129,15 @@ const BooksPageComponent = props => (
 				props.views.map(item => (
 					<div style={styles.containerOfPersonalReview} key={item._id}>
 						<div style={styles.viewPersonalInfromation}>
-							<div style={styles.userHeadImage}></div>
-							<span>{item.username}</span>
+						{item.avatar ? 
+						<ImageAvatar 
+						classes={classes} 
+						avatarURL={uploadBaseURL+item.avatar} 
+						alt={item.username}/> :
+						<LetterAvatar classes={classes} username={item.username}/>
+                        }
+							{/* <div style={styles.userHeadImage}></div> */}
+							<span style={{marginLeft:'10px'}}>{item.username}</span>
 						</div>
 						<div style={styles.viewPersonalInfromation}>
 							<Rate disabled value={item.star} />
@@ -140,7 +165,7 @@ const BooksPageComponent = props => (
 			<div style={{
 				width: '90%', marginLeft: '5%',
 			}}>
-				{/* TODO: Check is it rated*/}
+				{/* TODO: Check is it rated?*/}
 				<TextField
 					placeholder={'Please rate first.'}
 					onChange={event => props.reviewContentChange(event.target.value)}
@@ -151,7 +176,12 @@ const BooksPageComponent = props => (
 					value={props.submittedReviewContent}
 				/>
 			</div>
-			<Button size="medium" variant="contained" color="default" onClick={props.submitClick} style={{ backgroundColor: 'gray', color: 'white' }}>
+			<Button
+				size="medium"
+				variant="contained"
+				color="default"
+				onClick={props.submitClick}
+				style={{ backgroundColor: 'gray', color: 'white' }}>
 			Review
 			</Button>
 		</div>
