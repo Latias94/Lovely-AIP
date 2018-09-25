@@ -118,14 +118,54 @@ router.get('/slug/:slug', (req, res) => {
   const errors = {};
 
   BookList.findOne({ slug: req.params.slug })
+    .lean()
     .then((bookList) => {
       if (!bookList) {
         errors.booklistnotfound = 'No booklists found';
         return res.status(404).json(errors);
       }
-      return res.json(bookList);
+
+      if (bookList.books.length > 0) {
+        // get bookid array
+        const bookIds = [];
+        bookList.books.forEach(book => bookIds.push(book.bookid));
+        Book.find({
+          _id: {
+            $in: bookIds,
+          }
+        })
+          .cache({ key: req.params.id })
+          .then((books) => {
+            // bookList.toObject();
+            const bookObjects = [];
+            books.forEach(book => bookObjects.push(book.toObject()));
+            bookObjects.forEach((book) => {
+              book.reviews.forEach((review) => {
+                if (review.user.toString() === bookList.user.toString()) {
+                  book.reviewContent = review.content;
+                  book.reviewStar = review.star;
+                }
+              });
+            });
+            for (let i = 0; i < bookObjects.length; i += 1) {
+              bookList.books.forEach((book) => {
+                if (book.recommendation !== undefined && bookObjects[i]._id.toString() === book.bookid.toString()) {
+                  bookObjects[i].recommendation = book.recommendation;
+                }
+              });
+            }
+            bookList.books = bookObjects;
+            return res.json(bookList);
+          })
+          .catch(() => res.status(404).json({ booknotfound: 'No books found' }));
+        return false;
+      } else {
+        return res.json(bookList);
+      }
     })
-    .catch(err => res.status(404).json(err));
+    .catch((err) => {
+      return res.status(404).json(err);
+    });
 });
 
 /**
@@ -222,8 +262,8 @@ router.get('/:id',
  *   post:
  *     tags:
  *       - BookList
- *     summary: Create BookList
- *     description: Create a new BookList. Title and description field is required. This can only be done by the logged in user (add JWT token to header).
+ *     summary: Create a BookList
+ *     description: Create a new BookList. Title and description field is required. Description must be between 10 and 500 characters. This can only be done by the logged in user (add JWT token to header).
  *     produces:
  *       - application/json
  *     parameters:

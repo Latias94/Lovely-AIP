@@ -5,7 +5,7 @@ import booksPageReducer from './booksPage/booksPageReducer';
 import categoryPageReducer from './allCategoriesPage/categoriesPageReducer';
 import headerReducer from './Header/headerPageReducer';
 import cartPageTableRowReducer from './Cart/cartTableRow/cartTableRowReducer';
-import accountReducer from './account/components/Account/reducers';
+import userReducer from './account/components/Account/reducers';
 
 // root reducer
 export default combineReducers({
@@ -14,6 +14,6 @@ export default combineReducers({
 	booksPageReducer,
 	categoryPageReducer,
 	headerReducer,
-	account: accountReducer,
+	user: userReducer,
 	cartPageTableRowReducer
 });

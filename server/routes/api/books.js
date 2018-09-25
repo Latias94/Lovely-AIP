@@ -124,6 +124,16 @@ router.get('/list', (req, res) => {
       }));
 });
 
+function mapAvatarToReviews(reviews, users) {
+  for (let i = 0; i < reviews.length; i += 1) {
+    for (let j = 0; j < users.length; j += 1) {
+      if (reviews[i].user.toString() === users[j]._id.toString()) {
+        Object.assign(reviews[i], { avatar: users[j].avatar });
+      }
+    }
+  }
+}
+
 /**
  * @swagger
  * /api/books/{id}:
@@ -148,19 +158,35 @@ router.get('/list', (req, res) => {
  */
 router.get('/:id', (req, res) => {
   Book.findById(req.params.id)
-    .cache({ key: req.params.id })
+  // .cache({ key: req.params.id })
+    .lean()
     .then((book) => {
       Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
-        .cache()
         .then((category) => {
           if (category) {
-            book = book.toObject();
             book.parentCategory = category.name;
             book.parentCategoryId = category._id;
+            if (book.reviews.length > 0) {
+              const userIds = [];
+              book.reviews.forEach(review => userIds.push(review.user));
+              User.find({ _id: { $in: userIds } })
+                .cache()
+                .then((users) => {
+                  if (users) {
+                    mapAvatarToReviews(book.reviews, users);
+                  }
+                  return res.json(book);
+                });
+            } else {
+              return res.json(book);
+            }
           }
-          return res.json(book);
+          return false;
         })
-        .catch(err => console.log(err));
+        .catch(() => res.status(404)
+          .json({
+            categorynotfound: 'No categories found',
+          }));
     })
     .catch(() => res.status(404)
       .json({
@@ -457,19 +483,42 @@ router.post('/',
  *         description: No books found
  */
 router.get('/slug/:slug', (req, res) => {
-  const errors = {};
-
   Book.findOne({ slug: req.params.slug })
+  // .cache({ key: req.params.id })
+    .lean()
     .then((book) => {
-      if (!book) {
-        errors.booknotfound = 'No books found';
-        return res.status(404)
-          .json(errors);
-      }
-      return res.json(book);
+      Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
+        .then((category) => {
+          if (category) {
+            book.parentCategory = category.name;
+            book.parentCategoryId = category._id;
+            if (book.reviews.length > 0) {
+              const userIds = [];
+              book.reviews.forEach(review => userIds.push(review.user));
+              User.find({ _id: { $in: userIds } })
+                .cache()
+                .then((users) => {
+                  if (users) {
+                    mapAvatarToReviews(book.reviews, users);
+                  }
+                  return res.json(book);
+                });
+            } else {
+              return res.json(book);
+            }
+          }
+          return false;
+        })
+        .catch(() => res.status(404)
+          .json({
+            categorynotfound: 'No categories found',
+          }));
     })
-    .catch(err => res.status(404)
-      .json(err));
+    .catch(() => res.status(404)
+      .json({
+        booknotfound: 'No books found',
+      }));
+  return false;
 });
 
 /**

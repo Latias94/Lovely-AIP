@@ -57,7 +57,7 @@ const styles = theme => ({
 
 
 class MyList extends React.Component {
-    descriptionMinLength = 8;
+    descriptionMinLength = 10;
 
     state = {
         open: false,
@@ -147,6 +147,7 @@ class MyList extends React.Component {
                                                     label={`Description (more than ${this.descriptionMinLength} letters)`}
                                                     className={classes.textField}
                                                     type="text"
+                                                    multiline
                                                     inputRef={description => this.description = description}
                                                     error={this.state.isDescriptionWrong}
                                                     helperText={this.state.descriptionError}
@@ -179,7 +180,7 @@ class MyList extends React.Component {
                                 return <Card key={bookList._id} className={classes.card}>
                                     <CardContent>
                                         <Typography variant="subheading" style={{display:'inline'}}>
-                                            <a href={'/booklist'}>
+                                            <a href={'/booklist/'+bookList.slug}>
                                                 {bookList.title}
                                             </a>
                                         </Typography>
@@ -204,5 +205,5 @@ MyList.propTypes = {
 
 export default compose(
     withStyles(styles),
-    connect( state => ({bookLists: state.account.bookLists}), { createBookList })
+    connect( state => ({bookLists: state.user.bookLists}), { createBookList })
 )(MyList);

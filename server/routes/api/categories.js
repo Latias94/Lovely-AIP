@@ -170,13 +170,15 @@ router.get('/slug/:slug', (req, res) => {
   const errors = {};
 
   Category.findOne({ slug: req.params.slug })
+    .cache({ key: req.params.id })
     .then((category) => {
       if (!category) {
         errors.categorynotfound = 'No categories found';
         return res.status(404).json(errors);
       }
+
       const categoryResult = {};
-      categoryResult._id = category._id;
+      categoryResult.id = category._id;
       categoryResult.slug = category.slug;
       categoryResult.name = category.name;
       categoryResult.subCategories = category.subCategories;
@@ -199,6 +201,7 @@ router.get('/slug/:slug', (req, res) => {
         .skip(interval)
         .limit(pageSize)
         .sort(sortParams)
+        .cache({ key: category._id })
         .then((books) => {
           categoryResult.books = books;
           return res.json(categoryResult);
