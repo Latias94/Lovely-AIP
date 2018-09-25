@@ -90,7 +90,7 @@ const BooksPageComponent = props => (
 			<div style={styles.center}>
 				<h3>{props.bookName}</h3>
 				<div style={styles.bookInfo}>
-					<h5>{`by: ${props.bookAuthor}(Author)`}</h5>
+					<h5>{`by ${props.bookAuthor} (Author)`}</h5>
 					<div ><Rate disabled value={props.reviewScore} /><span>{props.bookReviews}</span><span style={{ marginLeft: '5px' }}>customer reviews</span></div>
 					<hr />
 					<div>{props.description}</div>
