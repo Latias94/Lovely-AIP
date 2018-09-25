@@ -56,18 +56,26 @@ export default class rowOfBookComponent extends Component {
 	}
 
 	handleResize() {
-		this.setState({ windowWidth: window.document.body.scrollWidth });
+		this.setState({ windowWidth: window.document.body.scrollWidth, divTransformation: 0 });
 		console.log(window.document.body.scrollWidth);
 	}
 
 	resizeWindowChange(windowWidth) {
+		let bookMarginRight;
 		windowWidth *= 0.80;
 		let numberOfCard = parseInt(windowWidth / 200);
-		let bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
-		if (bookMarginRight <= 20) {
-			numberOfCard -= 1;
+		if (numberOfCard > 1) {
 			bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
+			if (bookMarginRight <= 20) {
+				numberOfCard -= 1;
+				bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
+			}
+		} else if (windowWidth > 200 && windowWidth < 400) {
+			 bookMarginRight = windowWidth - 200;
+		} else {
+			 bookMarginRight = 5;
 		}
+
 		const transformation = numberOfCard * (200 + bookMarginRight);
 		return {
 			windowWidth, numberOfCard, bookMarginRight, transformation,
