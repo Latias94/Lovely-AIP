@@ -132,8 +132,7 @@ router.get('/book/:id', async (req, res) => {
     return res.status(404)
       .json([]);
   }
-  return res.status(404)
-    .json([]);
+  return false;
 });
 
 module.exports = router;
