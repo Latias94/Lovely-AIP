@@ -19,7 +19,8 @@ const storage = multer.diskStorage({
 function checkFileType(file, callback) {
   // Allowed ext
   const fileTypes = /jpeg|jpg|png|gif/;
-  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+  const extName = fileTypes.test(path.extname(file.originalname)
+    .toLowerCase());
   // check mimeType
   const mimeType = fileTypes.test(file.mimetype);
   if (mimeType && extName) {
@@ -35,7 +36,8 @@ const upload = multer({
   fileFilter: (req, file, callback) => {
     checkFileType(file, callback);
   },
-}).single('image');
+})
+  .single('image');
 
 /**
  * @swagger
@@ -60,30 +62,29 @@ const upload = multer({
 router.post('/avatar', passport.authenticate('jwt', {
   session: false,
 }), (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, async (err) => {
     if (err) {
-      return res.status(404).json({
-        msg: err,
-      });
+      return res.status(404)
+        .json({ msg: err });
     } else if (req.file === undefined) {
-      return res.status(404).json({
-        msg: 'Error: No File Selected!'
-      });
+      return res.status(404)
+        .json({ msg: 'Error: No File Selected!' });
     } else {
       // console.log(req.file);
-      User.findById(req.user.id)
-        .then((user) => {
-          if (user) {
-            user.avatar = `/uploads/${req.file.filename}`;
-            user.save().then(currentUser => res.json(currentUser));
-          } else {
-            return res.status(404).json({
-              usernotfound: 'No user found'
-            });
-          }
-          return false;
-        });
-      return false;
+      try {
+        const user = await User.findById(req.user.id);
+        if (user) {
+          user.avatar = `/uploads/${req.file.filename}`;
+          const currentUser = await user.save();
+          return res.json(currentUser);
+        } else {
+          return res.status(404)
+            .json({ usernotfound: 'No user found' });
+        }
+      } catch (error) {
+        return res.status(404)
+          .json({ usernotfound: 'No user found' });
+      }
     }
   });
 });

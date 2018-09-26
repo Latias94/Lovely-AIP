@@ -4,12 +4,10 @@ const { clearHash } = require('../../config/cache');
 
 // Load Validation
 const validateCategoryInput = require('../../validation/category');
-
+const isStaff = require('../../utils/isStaff');
 // Load Category Model
 const Category = require('../../models/Category');
-// Load User Model
-const User = require('../../models/User');
-// Load Book Model
+
 const Book = require('../../models/Book');
 
 const router = express.Router();
@@ -31,6 +29,7 @@ const router = express.Router();
  */
 router.get('/test', (req, res) => res.json({ msg: 'Category Works' }));
 
+// keep the parent category only
 function filterSubCategories(categories) {
   let result = categories.slice();
   categories.forEach((category) => {
@@ -64,16 +63,16 @@ function filterSubCategories(categories) {
  *       404:
  *         description: No categories found
  */
-router.get('/', (req, res) => {
-  Category.find()
-    .sort({ name: 1 })
-    .then((categories) => {
-      categories = filterSubCategories(categories);
-      return res.json(categories);
-    })
-    .catch(() => {
-      return res.status(404).json({ categorynotfound: 'No categories found' });
-    });
+router.get('/', async (req, res) => {
+  try {
+    let categories = await Category.find()
+      .sort({ name: 1 });
+    categories = filterSubCategories(categories);
+    return res.json(categories);
+  } catch (err) {
+    return res.status(404)
+      .json({ categorynotfound: 'No categories found' });
+  }
 });
 
 /**
@@ -92,37 +91,78 @@ router.get('/', (req, res) => {
  *       404:
  *         description: No categories found
  */
-router.get('/list', (req, res) => {
+router.get('/list', async (req, res) => {
   const allCategories = [];
   let counter = 0;
-  Category.find()
-    .sort({ name: 1 })
-    .cache()
-    .then((categories) => {
-      categories = filterSubCategories(categories);
-      categories.forEach((category) => {
-        Book.find({ category: category._id })
-          .cache({ key: category._id })
-          .then((books) => {
-            counter += 1;
-            const categoryResult = {};
-            categoryResult._id = category._id;
-            categoryResult.slug = category.slug;
-            categoryResult.name = category.name;
-            categoryResult.subCategories = category.subCategories;
-            categoryResult.books = books;
-            allCategories.push(categoryResult);
-            if (counter === categories.length) {
-              return res.json(allCategories);
-            }
-            return false;
-          });
-      });
-    })
-    .catch(() => {
-      return res.status(404).json({ categorynotfound: 'No categories found' });
+  try {
+    let categories = await Category.find()
+      .sort({ name: 1 })
+      .cache();
+    // keep the parent category only
+    categories = filterSubCategories(categories);
+
+    categories.forEach(async (category) => {
+      const books = await Book.find({ category: category._id })
+        .cache({ key: category._id });
+      counter += 1;
+      const categoryResult = {};
+      categoryResult._id = category._id;
+      categoryResult.slug = category.slug;
+      categoryResult.name = category.name;
+      categoryResult.subCategories = category.subCategories;
+      categoryResult.books = books;
+      allCategories.push(categoryResult);
+      if (counter === categories.length) {
+        return res.json(allCategories);
+      }
+      return true;
     });
+  } catch (err) {
+    return res.status(404)
+      .json({ categorynotfound: 'No categories found' });
+  }
+  return false;
 });
+
+// Get category by condition. id or slug
+async function getCategoryByCondition(condition, req, errors) {
+  const category = await Category.findOne(condition)
+    .cache({ key: condition });
+  if (!category) {
+    errors.categorynotfound = 'No categories found';
+    return null;
+  }
+
+  const categoryResult = {};
+  categoryResult.id = category._id;
+  categoryResult.slug = category.slug;
+  categoryResult.name = category.name;
+  categoryResult.subCategories = category.subCategories;
+
+  const page = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10);
+  // 1 for oldest to newest, -1 for newest to oldest
+  const sortByPublish = parseInt(req.query.publish, 10);
+  // 1 for cheapest to most expensive
+  const sortByPrice = parseInt(req.query.price, 10);
+  const sortParams = {};
+  if (sortByPublish) {
+    sortParams.publishDate = sortByPublish;
+  }
+  if (sortByPrice) {
+    sortParams.price = sortByPrice;
+  }
+  const interval = (page - 1) * pageSize;
+
+  // find books related to this category
+  const books = await Book.find({ category: category._id })
+    .skip(interval)
+    .limit(pageSize)
+    .sort(sortParams)
+    .cache({ key: category._id });
+  categoryResult.books = books;
+  return categoryResult;
+}
 
 /**
  * @swagger
@@ -166,49 +206,24 @@ router.get('/list', (req, res) => {
  *       404:
  *         description: No categories found
  */
-router.get('/slug/:slug', (req, res) => {
+router.get('/slug/:slug', async (req, res) => {
   const errors = {};
-
-  Category.findOne({ slug: req.params.slug })
-    .cache({ key: req.params.id })
-    .then((category) => {
-      if (!category) {
-        errors.categorynotfound = 'No categories found';
-        return res.status(404).json(errors);
-      }
-
-      const categoryResult = {};
-      categoryResult.id = category._id;
-      categoryResult.slug = category.slug;
-      categoryResult.name = category.name;
-      categoryResult.subCategories = category.subCategories;
-
-      const page = parseInt(req.query.page, 10);
-      const pageSize = parseInt(req.query.pageSize, 10);
-      // 1 for oldest to newest, -1 for newest to oldest
-      const sortByPublish = parseInt(req.query.publish, 10);
-      // 1 for cheapest to most expensive
-      const sortByPrice = parseInt(req.query.price, 10);
-      const sortParams = {};
-      if (sortByPublish) {
-        sortParams.publishDate = sortByPublish;
-      }
-      if (sortByPrice) {
-        sortParams.price = sortByPrice;
-      }
-      const interval = (page - 1) * pageSize;
-      Book.find({ category: category._id })
-        .skip(interval)
-        .limit(pageSize)
-        .sort(sortParams)
-        .cache({ key: category._id })
-        .then((books) => {
-          categoryResult.books = books;
-          return res.json(categoryResult);
-        });
-      return false;
-    })
-    .catch(err => res.status(404).json(err));
+  try {
+    const category = await getCategoryByCondition(
+      { slug: req.params.slug }, req, errors
+    );
+    if (category) {
+      return res.json(category);
+    } else {
+      errors.categorynotfound = 'No categories found';
+      return res.status(404)
+        .json(errors);
+    }
+  } catch (err) {
+    errors.categorynotfound = 'No categories found';
+    return res.status(404)
+      .json(errors);
+  }
 });
 
 /**
@@ -253,49 +268,24 @@ router.get('/slug/:slug', (req, res) => {
  *       404:
  *         description: No categories found
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const errors = {};
-
-  Category.findById(req.params.id)
-    .cache({ key: req.params.id })
-    .then((category) => {
-      if (!category) {
-        errors.categorynotfound = 'No categories found';
-        return res.status(404).json(errors);
-      }
-
-      const categoryResult = {};
-      categoryResult.id = category._id;
-      categoryResult.slug = category.slug;
-      categoryResult.name = category.name;
-      categoryResult.subCategories = category.subCategories;
-
-      const page = parseInt(req.query.page, 10);
-      const pageSize = parseInt(req.query.pageSize, 10);
-      // 1 for oldest to newest, -1 for newest to oldest
-      const sortByPublish = parseInt(req.query.publish, 10);
-      // 1 for cheapest to most expensive
-      const sortByPrice = parseInt(req.query.price, 10);
-      const sortParams = {};
-      if (sortByPublish) {
-        sortParams.publishDate = sortByPublish;
-      }
-      if (sortByPrice) {
-        sortParams.price = sortByPrice;
-      }
-      const interval = (page - 1) * pageSize;
-      Book.find({ category: category._id })
-        .skip(interval)
-        .limit(pageSize)
-        .sort(sortParams)
-        .cache({ key: category._id })
-        .then((books) => {
-          categoryResult.books = books;
-          return res.json(categoryResult);
-        });
-      return false;
-    })
-    .catch(err => res.status(404).json(err));
+  try {
+    const category = await getCategoryByCondition(
+      { _id: req.params.id }, req, errors
+    );
+    if (category) {
+      return res.json(category);
+    } else {
+      errors.categorynotfound = 'No categories found';
+      return res.status(404)
+        .json(errors);
+    }
+  } catch (err) {
+    errors.categorynotfound = 'No categories found';
+    return res.status(404)
+      .json(errors);
+  }
 });
 
 /**
@@ -338,26 +328,19 @@ router.post(
   passport.authenticate('jwt', {
     session: false,
   }),
-  (req, res) => {
-    // find out whether user is staff
-    User.findOne({ user: req.user.id })
-      .cache({ key: req.user.id })
-      .then((user) => {
-        if (user) {
-          if (!user.isStaff) {
-            return res.status(401).json({
-              unauthorized: 'Cannot create the category',
-            });
-          }
-        }
-        return true;
-      });
+  async (req, res) => {
+    try {
+      // find out whether user is staff
+      const userIsStaff = await isStaff(req);
+      if (!userIsStaff) {
+        return res.status(401)
+          .json({ unauthorized: 'Cannot modify the book' });
+      }
 
-    Category.findOne({ name: req.body.name }).then((hasFound) => {
+      const hasFound = await Category.findOne({ name: req.body.name });
       if (hasFound) {
-        return res.status(404).json({
-          categoryexist: 'Category name has existed',
-        });
+        return res.status(404)
+          .json({ categoryexist: 'Category name has existed' });
       }
       // category not exist
       const {
@@ -366,19 +349,19 @@ router.post(
       } = validateCategoryInput(req.body);
 
       if (!isValid) {
-        return res.status(400).json(errors);
+        return res.status(400)
+          .json(errors);
       }
       const newCategory = new Category({
         name: req.body.name,
       });
 
-      newCategory.save().then((categoryObject) => {
-        return res.json(categoryObject);
-      });
-      return false;
-    });
-
-    return false;
+      const categoryObject = await newCategory.save();
+      return res.json(categoryObject);
+    } catch (err) {
+      return res.status(404)
+        .json({ categorynotfound: 'No categories found' });
+    }
   }
 );
 
@@ -430,62 +413,47 @@ router.post(
 router.post(
   '/:id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    // find out whether user is staff
-    User.findById(req.user.id)
-      .cache({ key: req.user.id })
-      .then((user) => {
-        if (user) {
-          if (!user.isStaff) {
-            return res.status(401).json({
-              unauthorized: 'Cannot delete the category',
-            });
-          }
-        }
-        return true;
-      });
-
+  async (req, res) => {
     const errors = {};
-    Category.findById(req.params.id)
-      .then((category) => {
-        if (category) {
-          if (req.body.slug) {
-            Category.findOne({ slug: req.body.slug })
-              .then((subCategory) => {
-                category.updateDate = Date.now();
-                // Update
-                category.subCategories.unshift({
-                  subid: subCategory._id,
-                  subname: subCategory.name,
-                });
-                clearHash('');
-                category.save().then(categoryObject => res.json(categoryObject));
-              })
-              .catch(() => res.status(404).json({
-                subcategorynotfound: 'No subCategories found',
-              }));
-          } else if (req.body.id) {
-            Category.findById(req.body.id)
-              .then((subCategory) => {
-                category.updateDate = Date.now();
-                // Update
-                category.subCategories.unshift({
-                  subid: subCategory._id,
-                  subname: subCategory.name,
-                });
-                clearHash(req.body.id);
-                category.save().then(categoryObject => res.json(categoryObject));
-              })
-              .catch(() => res.status(404).json({
-                subcategorynotfound: 'No subCategories found',
-              }));
-          }
-        } else {
-          errors.categorynotfound = 'No categories found';
-          return res.status(404).json(errors);
+    try {
+      // find out whether user is staff
+      const userIsStaff = await isStaff(req);
+      if (!userIsStaff) {
+        return res.status(401)
+          .json({ unauthorized: 'Cannot modify the book' });
+      }
+
+      const category = await Category.findById(req.params.id);
+      if (category) {
+        if (req.body.slug) {
+          const subCategory = await Category.findOne({ slug: req.body.slug });
+          category.updateDate = Date.now();
+          // Update
+          category.subCategories.unshift({
+            subid: subCategory._id,
+            subname: subCategory.name,
+          });
+          clearHash('');
+          const categoryObject = await category.save();
+          return res.json(categoryObject);
+        } else if (req.body.id) {
+          const subCategory = await Category.findById(req.body.id);
+          category.updateDate = Date.now();
+          // Update
+          category.subCategories.unshift({
+            subid: subCategory._id,
+            subname: subCategory.name,
+          });
+          clearHash(req.body.id);
+          const categoryObject = await category.save();
+          return res.json(categoryObject);
         }
-        return false;
-      });
+      }
+    } catch (err) {
+      errors.categorynotfound = 'No categories found';
+      return res.status(404)
+        .json(errors);
+    }
     return false;
   }
 );
@@ -519,28 +487,26 @@ router.post(
 router.delete(
   '/:id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const errors = {};
-
-    // find out whether user is staff
-    User.findById(req.user.id)
-      .cache({ key: req.user.id })
-      .then((user) => {
-        if (user) {
-          if (!user.isStaff) {
-            errors.unauthorized = 'Cannot delete the category';
-            return res.status(401).json(errors);
-          }
-          // user is staff
-          Category.findByIdAndRemove(req.params.id, (err) => {
-            clearHash(req.params.id);
-            return err
-              ? res.status(404).json({ categorynotfound: 'No categories found' })
-              : res.json({ success: true });
-          });
-        }
-        return true;
+  async (req, res) => {
+    try {
+      // find out whether user is staff
+      const userIsStaff = await isStaff(req);
+      if (!userIsStaff) {
+        return res.status(401)
+          .json({ unauthorized: 'Cannot modify the book' });
+      }
+      Category.findOneAndDelete({ _id: req.params.id }, (err) => {
+        clearHash(req.params.id);
+        return err
+          ? res.status(404)
+            .json({ categorynotfound: 'No categories found' })
+          : res.json({ success: true });
       });
+    } catch (err) {
+      res.status(404)
+        .json({ categorynotfound: 'No categories found' });
+    }
+    return false;
   }
 );
 

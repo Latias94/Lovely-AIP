@@ -24,7 +24,7 @@ router.get('/test', (req, res) => res.json({
 
 /**
  * @swagger
- * /api/feed/test:
+ * /api/feed/booklists:
  *   get:
  *     tags:
  *       - RSS
@@ -36,7 +36,7 @@ router.get('/test', (req, res) => res.json({
  *       200:
  *         description: return newest booklist RSS
  */
-router.get('/booklists', (req, res) => {
+router.get('/booklists', async (req, res) => {
   const feed = new RSS({
     title: 'Knight Frank Booklist',
     description: 'The newest booklist from Knight Frank',
@@ -44,31 +44,32 @@ router.get('/booklists', (req, res) => {
     site_url: `http://${req.headers.host}`,
     author: 'Knight Frank'
   });
+  try {
+    const booklists = await BookList.find()
+      .limit(10)
+      .sort({ updateDate: -1 })
+      .cache();
 
-  BookList.find()
-    .limit(10)
-    .sort({
-      updateDate: -1
-    })
-    .cache()
-    .then((booklists) => {
-      if (booklists) {
-        // TODO change frontend route
-        booklists.forEach((booklist) => {
-          feed.item({
-            title: booklist.title,
-            description: booklist.description,
-            url: `http://${req.headers.host}/api/booklists/${booklist._id}`,
-            date: booklist.updateDate,
-          });
+    if (booklists) {
+      // TODO change frontend route
+      booklists.forEach((booklist) => {
+        feed.item({
+          title: booklist.title,
+          description: booklist.description,
+          url: `http://${req.headers.host}/booklist/${booklist.slug}`,
+          date: booklist.updateDate,
         });
-        res.type('rss');
-        return res.send(feed.xml());
-      } else {
-        return res.status(404).json({ booklistnotfound: 'No booklists found' });
-      }
-    })
-    .catch(err => res.status(404).json(err));
+      });
+      res.type('rss');
+      return res.send(feed.xml());
+    } else {
+      return res.status(404)
+        .json({ booklistnotfound: 'No booklists found' });
+    }
+  } catch (err) {
+    return res.status(404)
+      .json({ booklistnotfound: 'No booklists found' });
+  }
 });
 
 module.exports = router;

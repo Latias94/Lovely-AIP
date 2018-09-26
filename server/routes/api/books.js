@@ -7,6 +7,7 @@ const User = require('../../models/User');
 const Review = require('../../models/Review');
 const cleanCache = require('../../middlewares/cleanCache');
 const { clearHash } = require('../../config/cache');
+const isStaff = require('../../utils/isStaff');
 
 // Validation
 const validateBookInput = require('../../validation/book');
@@ -48,16 +49,15 @@ router.get('/test', (req, res) => res.json({
  *       404:
  *         description: No books found
  */
-router.get('/', (req, res) => {
-  Book.find()
-    .sort({
-      date: -1,
-    })
-    .then(books => res.json(books))
-    .catch(() => res.status(404)
-      .json({
-        booknotfound: 'No books found',
-      }));
+router.get('/', async (req, res) => {
+  try {
+    const books = await Book.find()
+      .sort({ date: -1 });
+    return res.json(books);
+  } catch (err) {
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
+  }
 });
 
 /**
@@ -97,7 +97,7 @@ router.get('/', (req, res) => {
  *       404:
  *         description: No books found
  */
-router.get('/list', (req, res) => {
+router.get('/list', async (req, res) => {
   const page = parseInt(req.query.page, 10);
   const pageSize = parseInt(req.query.pageSize, 10);
   // 1 for oldest to newest, -1 for newest to oldest
@@ -112,16 +112,19 @@ router.get('/list', (req, res) => {
     sortParams.price = sortByPrice;
   }
   const interval = (page - 1) * pageSize;
-  Book.find()
-    .skip(interval)
-    .limit(pageSize)
-    .sort(sortParams)
-    .cache()
-    .then(books => res.json(books))
-    .catch(() => res.status(404)
-      .json({
-        booknotfound: 'No books found',
-      }));
+
+  try {
+    // find book with multiple conditions
+    const books = await Book.find()
+      .skip(interval)
+      .limit(pageSize)
+      .sort(sortParams)
+      .cache();
+    return res.json(books);
+  } catch (err) {
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
+  }
 });
 
 function mapAvatarToReviews(reviews, users) {
@@ -132,6 +135,34 @@ function mapAvatarToReviews(reviews, users) {
       }
     }
   }
+}
+
+// get book by condition, id, slug, or isbn
+async function getBookByCondition(condition) {
+  const book = await Book.findOne(condition)
+    .lean();
+
+  // find parent category according to book's category
+  const category = await Category.findOne({
+    subCategories: { $elemMatch: { subid: book.category._id } }
+  });
+
+  if (category) {
+    book.parentCategory = category.name;
+    book.parentCategoryId = category._id;
+    if (book.reviews.length > 0) {
+      const userIds = [];
+      book.reviews.forEach(review => userIds.push(review.user));
+
+      // map book reviews to the book
+      const users = await User.find({ _id: { $in: userIds } })
+        .cache();
+      if (users) {
+        mapAvatarToReviews(book.reviews, users);
+      }
+    }
+  }
+  return book;
 }
 
 /**
@@ -156,43 +187,79 @@ function mapAvatarToReviews(reviews, users) {
  *       404:
  *         description: No books found with that ID
  */
-router.get('/:id', (req, res) => {
-  Book.findById(req.params.id)
-  // .cache({ key: req.params.id })
-    .lean()
-    .then((book) => {
-      Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
-        .then((category) => {
-          if (category) {
-            book.parentCategory = category.name;
-            book.parentCategoryId = category._id;
-            if (book.reviews.length > 0) {
-              const userIds = [];
-              book.reviews.forEach(review => userIds.push(review.user));
-              User.find({ _id: { $in: userIds } })
-                .cache()
-                .then((users) => {
-                  if (users) {
-                    mapAvatarToReviews(book.reviews, users);
-                  }
-                  return res.json(book);
-                });
-            } else {
-              return res.json(book);
-            }
-          }
-          return false;
-        })
-        .catch(() => res.status(404)
-          .json({
-            categorynotfound: 'No categories found',
-          }));
-    })
-    .catch(() => res.status(404)
-      .json({
-        booknotfound: 'No books found',
-      }));
-  return false;
+router.get('/:id', async (req, res) => {
+  try {
+    const book = await getBookByCondition({ _id: req.params.id });
+    return res.json(book);
+  } catch (err) {
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
+  }
+});
+
+
+/**
+ * @swagger
+ * /api/books/slug/{slug}:
+ *   get:
+ *     tags:
+ *       - Book
+ *     summary: Get book by slug
+ *     description: Get book by slug.
+ *     parameters:
+ *       - name: "slug"
+ *         in: "path"
+ *         description: "Slug of book that needs to get"
+ *         required: true
+ *         type: "string"
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get book successfully
+ *       404:
+ *         description: No books found
+ */
+router.get('/slug/:slug', async (req, res) => {
+  try {
+    const book = await getBookByCondition({ slug: req.params.slug });
+    return res.json(book);
+  } catch (err) {
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/books/isbn/{isbn}:
+ *   get:
+ *     tags:
+ *       - Book
+ *     summary: Get book by isbn
+ *     description: Get book by isbn.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "isbn"
+ *         in: "path"
+ *         description: "ISBN of book that needs to be fetched"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Get book successfully
+ *       404:
+ *         description: No books found
+ */
+router.get('/isbn/:isbn', async (req, res) => {
+  try {
+    const book = await getBookByCondition({ isbn: req.params.isbn });
+    return res.json(book);
+  } catch (err) {
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
+  }
 });
 
 /**
@@ -237,7 +304,7 @@ router.get('/:id', (req, res) => {
  *       404:
  *         description: No books found with that keyword
  */
-router.get('/search/:keyword', (req, res) => {
+router.get('/search/:keyword', async (req, res) => {
   const page = parseInt(req.query.page, 10);
   const pageSize = parseInt(req.query.pageSize, 10);
   // 1 for oldest to newest, -1 for newest to oldest
@@ -252,50 +319,20 @@ router.get('/search/:keyword', (req, res) => {
     sortParams.price = sortByPrice;
   }
   const interval = (page - 1) * pageSize;
-  Book.find({ $text: { $search: req.params.keyword } })
-    .cache()
-    .skip(interval)
-    .limit(pageSize)
-    .sort(sortParams)
-    .then((books) => {
-      return res.json(books);
-    })
-    .catch(() => res.status(404)
-      .json({
-        booknotfound: 'No books found',
-      }));
+  try {
+    // find book with multiple conditions
+    const books = await Book.find({ $text: { $search: req.params.keyword } })
+      .cache()
+      .skip(interval)
+      .limit(pageSize)
+      .sort(sortParams);
+    return res.json(books);
+  } catch (err) {
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
+  }
 });
 
-/**
- * @swagger
- * /api/books/isbn/{isbn}:
- *   get:
- *     tags:
- *       - Book
- *     summary: Get book by isbn
- *     description: Get book by isbn.
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: "isbn"
- *         in: "path"
- *         description: "ISBN of book that needs to be fetched"
- *         required: true
- *         type: "string"
- *     responses:
- *       200:
- *         description: Get book successfully
- *       404:
- *         description: No books found
- */
-router.get('/isbn/:isbn', (req, res) => {
-  Book.findOne({ isbn: req.params.isbn })
-    .then(book => res.json(book))
-    .catch(() => res.status(404)
-      .json({
-        booknotfound: 'No books found',
-      }));
-});
 
 /**
  * @swagger
@@ -358,168 +395,83 @@ router.get('/isbn/:isbn', (req, res) => {
 router.post('/',
   passport.authenticate('jwt', {
     session: false,
-  }), (req, res) => {
-    // find out whether user is staff
-    User.findOne({ user: req.user.id })
-      .cache({ key: req.user.id })
-      .then((user) => {
-        if (user) {
-          if (!user.isStaff) {
-            return res.status(401)
-              .json({
-                unauthorized: 'Cannot create the book',
-              });
-          }
-        }
-        return true;
-      });
+  }), async (req, res) => {
+    try {
+      // find out whether user is staff
+      const userIsStaff = await isStaff(req);
+      if (!userIsStaff) {
+        return res.status(401)
+          .json({ unauthorized: 'Cannot modify the book' });
+      }
 
-    const {
-      errors,
-      isValid,
-    } = validateBookInput(req.body);
+      const {
+        errors,
+        isValid,
+      } = validateBookInput(req.body);
 
-    if (!isValid) {
-      // If any errors, send 400 with errors object
-      return res.status(400)
-        .json(errors);
-    }
-    const authors = [];
-    // if not an array, there should be a list of authors
-    if (Array.isArray(req.body.authors)) {
-      req.body.authors.forEach((author) => {
-        authors.unshift({ name: author });
-      });
-    } else {
-      authors.push({ name: req.body.authors });
-    }
-
-    if (req.body.category) {
-      Category.findById(req.body.category)
-        .cache({ key: req.body.category })
-        .then((category) => {
-          if (!category) {
-            errors.categorynotfound = 'No categories found';
-            return res.status(404)
-              .json(errors);
-          } else {
-            // category exist
-            const newBook = new Book({
-              category: req.body.category,
-              categoryName: category.name,
-              title: req.body.title,
-              price: req.body.price,
-              stock: req.body.stock,
-              coverUrl: req.body.coverUrl,
-              description: req.body.description,
-              isbn: req.body.isbn,
-              publishDate: new Date(req.body.publishDate),
-              authors,
-            });
-            newBook.save()
-              .then((book) => {
-                return res.json(book);
-              });
-          }
-          return false;
-        })
-        .catch(() => {
-          return res.status(404)
-            .json({
-              categorynotfound: 'No categories found',
-            });
+      if (!isValid) {
+        // If any errors, send 400 with errors object
+        return res.status(400)
+          .json(errors);
+      }
+      const authors = [];
+      // if not an array, there should be a list of authors
+      if (Array.isArray(req.body.authors)) {
+        req.body.authors.forEach((author) => {
+          authors.unshift({ name: author });
         });
-    } else {
-      // create with no category
-      Category.findOne({ slug: 'empty' })
-        .cache()
-        .then((emptyCategory) => {
-          const newBook = new Book({
-            category: emptyCategory._id,
-            categoryName: emptyCategory.name,
+      } else {
+        authors.push({ name: req.body.authors });
+      }
+
+      let newBook;
+      if (req.body.category) {
+        const category = await Category.findById(req.body.category)
+          .cache({ key: req.body.category });
+
+        if (!category) {
+          errors.categorynotfound = 'No categories found';
+          return res.status(404)
+            .json(errors);
+        } else {
+          // category exist
+          newBook = new Book({
+            category: req.body.category,
+            categoryName: category.name,
             title: req.body.title,
             price: req.body.price,
             stock: req.body.stock,
             coverUrl: req.body.coverUrl,
-            isbn: req.body.isbn,
             description: req.body.description,
+            isbn: req.body.isbn,
             publishDate: new Date(req.body.publishDate),
             authors,
           });
-          newBook.save()
-            .then((book) => {
-              return res.json(book);
-            });
-        })
-        .catch(() => res.status(404)
-          .json({
-            categorynotfound: 'No categories found',
-          }));
+        }
+      } else {
+        // create with no category
+        const emptyCategory = await Category.findOne({ slug: 'empty' })
+          .cache();
+        newBook = new Book({
+          category: emptyCategory._id,
+          categoryName: emptyCategory.name,
+          title: req.body.title,
+          price: req.body.price,
+          stock: req.body.stock,
+          coverUrl: req.body.coverUrl,
+          isbn: req.body.isbn,
+          description: req.body.description,
+          publishDate: new Date(req.body.publishDate),
+          authors,
+        });
+      }
+      const book = await newBook.save();
+      return res.json(book);
+    } catch (err) {
+      return res.status(404)
+        .json(err);
     }
-
-    return false;
   });
-
-/**
- * @swagger
- * /api/books/slug/{slug}:
- *   get:
- *     tags:
- *       - Book
- *     summary: Get book by slug
- *     description: Get book by slug.
- *     parameters:
- *       - name: "slug"
- *         in: "path"
- *         description: "Slug of book that needs to get"
- *         required: true
- *         type: "string"
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: Get book successfully
- *       404:
- *         description: No books found
- */
-router.get('/slug/:slug', (req, res) => {
-  Book.findOne({ slug: req.params.slug })
-  // .cache({ key: req.params.id })
-    .lean()
-    .then((book) => {
-      Category.findOne({ subCategories: { $elemMatch: { subid: book.category._id } } })
-        .then((category) => {
-          if (category) {
-            book.parentCategory = category.name;
-            book.parentCategoryId = category._id;
-            if (book.reviews.length > 0) {
-              const userIds = [];
-              book.reviews.forEach(review => userIds.push(review.user));
-              User.find({ _id: { $in: userIds } })
-                .cache()
-                .then((users) => {
-                  if (users) {
-                    mapAvatarToReviews(book.reviews, users);
-                  }
-                  return res.json(book);
-                });
-            } else {
-              return res.json(book);
-            }
-          }
-          return false;
-        })
-        .catch(() => res.status(404)
-          .json({
-            categorynotfound: 'No categories found',
-          }));
-    })
-    .catch(() => res.status(404)
-      .json({
-        booknotfound: 'No books found',
-      }));
-  return false;
-});
 
 /**
  * @swagger
@@ -549,31 +501,39 @@ router.get('/slug/:slug', (req, res) => {
  */
 router.delete('/:id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    // find out whether user is staff
-    User.findOne({ user: req.user.id })
-      .cache({ key: req.user.id })
-      .then((user) => {
-        if (user) {
-          if (!user.isStaff) {
-            return res.status(401)
-              .json({
-                unauthorized: 'Cannot delete the book',
-              });
-          }
-        }
-        return true;
-      });
+  async (req, res) => {
+    try {
+      // find out whether user is staff
+      const userIsStaff = await isStaff(req);
+      if (!userIsStaff) {
+        return res.status(401)
+          .json({ unauthorized: 'Cannot modify the book' });
+      }
 
-    Book.findByIdAndRemove(req.params.id, (err) => {
-      clearHash(req.params.id);
-      return err
-        ? res.status(404)
-          .json({ booknotfound: 'No books found' })
-        : res.json({ success: true });
-    });
+      Book.findOneAndDelete({ _id: req.params.id }, (err) => {
+        clearHash(req.params.id);
+        return err
+          ? res.status(404)
+            .json({ booknotfound: 'No books found' })
+          : res.json({ success: true });
+      });
+    } catch (err) {
+      return res.json({ success: false });
+    }
+    return false;
   });
 
+function calculateBookScore(book) {
+  let totalScore = 0;
+  book.reviews.map((re) => {
+    totalScore += re.star;
+    return null;
+  });
+  const bookScore = totalScore / book.reviews.length;
+  book.toObject();
+  book.score = bookScore.toFixed(2);
+  return book;
+}
 
 /**
  * @swagger
@@ -622,7 +582,7 @@ router.post('/review/:id',
     session: false,
   }),
   cleanCache,
-  (req, res) => {
+  async (req, res) => {
     const {
       errors,
       isValid,
@@ -634,66 +594,51 @@ router.post('/review/:id',
       return res.status(400)
         .json(errors);
     }
-
-    Book.findById(req.params.id)
-      .then((book) => {
-        Review.findOne({
+    try {
+      const book = await Book.findById(req.params.id);
+      const review = await Review.findOne({
+        book: req.params.id,
+        user: req.user.id
+      });
+      // if user has not created review in this book yet. create one
+      if (!review) {
+        const newReview = new Review({
+          content: req.body.content,
+          star: req.body.star,
           book: req.params.id,
-          user: req.user.id
-        })
-          .then((review) => {
-            if (!review) {
-              const newReview = new Review({
-                content: req.body.content,
-                star: req.body.star,
-                book: req.params.id,
-                user: req.user.id,
-              });
-              newReview.save()
-                .then((reviewObject) => {
-                  const reviewOfBook = {
-                    reviewid: reviewObject._id,
-                    content: reviewObject.content,
-                    star: reviewObject.star,
-                    user: req.user.id,
-                    username: req.user.name,
-                  };
-                  // Add to reviews array
-                  book.reviews.unshift(reviewOfBook);
+          user: req.user.id,
+        });
+        // create new review in review table, and embed to book object
+        const reviewObject = await newReview.save();
+        const reviewOfBook = {
+          reviewid: reviewObject._id,
+          content: reviewObject.content,
+          star: reviewObject.star,
+          user: req.user.id,
+          username: req.user.name,
+        };
+        // Add to reviews array
+        book.reviews.unshift(reviewOfBook);
 
-                  // calculate book score
-                  let totalScore = 0;
-                  book.reviews.map((re) => {
-                    totalScore += re.star;
-                    return null;
-                  });
-                  const bookScore = totalScore / book.reviews.length;
-                  book.toObject();
-                  book.score = bookScore.toFixed(2);
+        // calculate book score
+        calculateBookScore(book);
 
-                  clearHash(req.params.id);
+        clearHash(req.params.id);
 
-                  // Save
-                  book.save()
-                    .then(bookObject => res.json(bookObject));
-                })
-                .catch(err => res.status(404)
-                  .json(err));
-              return false;
-            } else {
-              errors.reviewexist = 'Review has existed';
-              return res.status(404)
-                .json(errors);
-            }
-          })
-          .catch(err => res.status(404)
-            .json(err));
-      })
-      .catch(() => res.status(404)
+        // Save
+        const bookObject = await book.save();
+        return res.json(bookObject);
+      } else {
+        errors.reviewexist = 'Review has existed';
+        return res.status(404)
+          .json(errors);
+      }
+    } catch (err) {
+      return res.status(404)
         .json({
           booknotfound: 'No books found',
-        }));
-    return false;
+        });
+    }
   });
 
 /**
@@ -730,64 +675,54 @@ router.delete('/review/:id/:review_id',
     session: false,
   }),
   cleanCache,
-  (req, res) => {
-    Book.findById(req.params.id)
-      .then((book) => {
-        if (book) {
-          Review.findByIdAndRemove(req.params.review_id, (err) => {
-            if (err) {
-              return res.status(404)
+  async (req, res) => {
+    try {
+      const book = await Book.findById(req.params.id);
+      if (book) {
+        Review.findByIdAndRemove(req.params.review_id, async (err) => {
+          if (err) {
+            return res.status(404)
+              .json({ reviewnotfound: 'No Reviews found' });
+          } else {
+            // delete review success
+            // Check to see if review exists
+            if (book.reviews.filter(review => review.reviewid.toString()
+              === req.params.review_id).length === 0) {
+              return res
+                .status(404)
                 .json({ reviewnotfound: 'No Reviews found' });
-            } else {
-              // delete review success
-              // Check to see if review exists
-              if (book.reviews.filter(review => review.reviewid.toString()
-                === req.params.review_id).length === 0) {
-                return res
-                  .status(404)
-                  .json({
-                    reviewnotfound: 'No Reviews found',
-                  });
-              }
-              // Get remove index
-              const removeIndex = book.reviews
-                .map(item => item._id.toString())
-                .indexOf(req.params.review_id);
-
-              // Splice review out of array
-              book.reviews.splice(removeIndex, 1);
-
-              if (book.reviews.length === 0) {
-                book.score = 0;
-              } else {
-                // calculate book score
-                let totalScore = 0;
-                book.reviews.map((re) => {
-                  totalScore += re.star;
-                  return null;
-                });
-                const bookScore = totalScore / book.reviews.length;
-                book.toObject();
-                book.score = bookScore.toFixed(2);
-              }
-              clearHash(req.params.id);
-              book.save()
-                .then(() => res.json({ success: true }));
-              return false;
             }
-          });
-        } else {
-          return res.status(404)
-            .json({
-              booknotfound: 'No books found',
-            });
-        }
-        return false;
-      })
-      .catch(() => res.status(404)
-        .json({
-          booknotfound: 'No books found',
-        }));
+
+            // Get remove index
+            const removeIndex = book.reviews
+              .map(item => item._id.toString())
+              .indexOf(req.params.review_id);
+
+            // Splice review out of array
+            book.reviews.splice(removeIndex, 1);
+
+            if (book.reviews.length === 0) {
+              book.score = 0;
+            } else {
+              // calculate book score
+              calculateBookScore(book);
+            }
+
+            clearHash(req.params.id);
+
+            const bookObject = await book.save();
+            return res.json(bookObject);
+          }
+        });
+      } else {
+        return res.status(404)
+          .json({ booknotfound: 'No books found' });
+      }
+      return false;
+    } catch (err) {
+      return res.status(404)
+        .json({ booknotfound: 'No books found' });
+    }
   });
 
 /**
@@ -824,20 +759,13 @@ router.delete('/review/:id/:review_id',
  */
 router.post('/:id',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    User.findOne({ user: req.user.id })
-      .cache({ key: req.user.id })
-      .then((user) => {
-        if (user) {
-          if (!user.isStaff) {
-            return res.status(401)
-              .json({
-                unauthorized: 'Cannot edit the book',
-              });
-          }
-        }
-        return true;
-      });
+  async (req, res) => {
+    // find out whether user is staff
+    const userIsStaff = await isStaff(req);
+    if (!userIsStaff) {
+      return res.status(401)
+        .json({ unauthorized: 'Cannot modify the book' });
+    }
 
     const bookFields = {};
     // Get fields
@@ -875,31 +803,25 @@ router.post('/:id',
     }
     bookFields.updateDate = Date.now();
     if (req.body.category) {
-      Category.findById(req.body.category)
-        .cache({ key: req.body.category })
-        .then((category) => {
-          if (category) {
-            bookFields.category = req.body.category;
-            bookFields.categoryName = category.name;
-            Book.findByIdAndUpdate(
-              req.params.id,
-              bookFields,
-              { new: true },
-              (err, bookObject) => {
-                clearHash(req.params.id);
-                return err ? res.status(404)
-                    .json({ booknotfound: 'No books found' })
-                  : res.json(bookObject);
-              }
-            );
-            return false;
-          } else {
-            return res.status(404)
-              .json({ categorynotfound: 'No categories found' });
+      const category = await Category.findById(req.body.category)
+        .cache({ key: req.body.category });
+      if (category) {
+        bookFields.category = req.body.category;
+        bookFields.categoryName = category.name;
+        Book.findByIdAndUpdate(
+          req.params.id,
+          bookFields,
+          { new: true },
+          (err, bookObject) => {
+            clearHash(req.params.id);
+            return err ? res.status(404)
+              .json({ booknotfound: 'No books found' }) : res.json(bookObject);
           }
-        })
-        .catch(() => res.status(404)
-          .json({ categorynotfound: 'No categories found' }));
+        );
+      } else {
+        return res.status(404)
+          .json({ categorynotfound: 'No categories found' });
+      }
     } else {
       Book.findByIdAndUpdate(
         req.params.id,
@@ -908,11 +830,11 @@ router.post('/:id',
         (err, bookObject) => {
           clearHash(req.params.id);
           return err ? res.status(404)
-              .json({ booknotfound: 'No books found' })
-            : res.json(bookObject);
+            .json({ booknotfound: 'No books found' }) : res.json(bookObject);
         }
       );
     }
+    return false;
   });
 
 module.exports = router;

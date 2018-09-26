@@ -82,76 +82,58 @@ function getMostSimilarUserByNum(scores, numOfUser) {
  *       404:
  *         description: No recommend books found
  */
-router.get('/book/:id', (req, res) => {
-  Review.aggregate(
-    [{
-      $group: {
-        _id: {
-          user: '$user',
-        },
-        book: {
-          $push: '$book'
-        },
-        star: {
-          $push: '$star'
+router.get('/book/:id', async (req, res) => {
+  try {
+    const reviews = await Review.aggregate(
+      [{
+        $group: {
+          _id: {
+            user: '$user',
+          },
+          book: {
+            $push: '$book'
+          },
+          star: {
+            $push: '$star'
+          }
+        }
+      }]
+    );
+    if (!reviews) {
+      return res.status(404)
+        .json([]);
+    } else {
+      const groupByUser = group(reviews);
+      const scores = similarityList(groupByUser, req.params.id, euclidean);
+      console.log(scores);
+      // get the three most similar user
+      const similarUser = getMostSimilarUserByNum(scores, 3);
+      // find user reviews
+      const userReviews = await Review.find({ user: req.params.id })
+        .cache({ key: req.params.id });
+      if (userReviews) {
+        // find other user reviews
+        const otherReviews = await Review.find({ user: { $in: similarUser } })
+          .where('star')
+          .gte(4); // star more than or equal to 4
+        if (otherReviews) {
+          const result = removeSameBook(userReviews, otherReviews);
+          console.log(result);
+          // get the recommend books
+          const books = await Book.find({ _id: { $in: result } })
+            .cache();
+          if (books) {
+            return res.json(books);
+          }
         }
       }
-    }]
-  )
-    .then((reviews) => {
-      if (!reviews) {
-        return res.status(404)
-          .json([]);
-      } else {
-        const groupByUser = group(reviews);
-        const scores = similarityList(groupByUser, req.params.id, euclidean);
-        console.log(scores);
-
-        const similarUser = getMostSimilarUserByNum(scores, 3);
-        Review.find({ user: req.params.id })
-          .cache({ key: req.params.id })
-          .then((userReviews) => {
-            if (userReviews) {
-              Review.find({ user: { $in: similarUser } })
-                .where('star')
-                .gte(4) // star more than or equal to 4
-                .then((otherReviews) => {
-                  if (otherReviews) {
-                    const result = removeSameBook(userReviews, otherReviews);
-                    console.log(result);
-                    Book.find({ _id: { $in: result } })
-                      .cache()
-                      .then((books) => {
-                        if (books) {
-                          return res.json(books);
-                        } else {
-                          return res.status(404)
-                            .json([]);
-                        }
-                      })
-                      .catch(() => res.status(404)
-                        .json([]));
-                  } else {
-                    return res.status(404)
-                      .json([]);
-                  }
-                  return false;
-                })
-                .catch(() => res.status(404)
-                  .json([]));
-            } else {
-              return res.status(404)
-                .json([]);
-            }
-            return false;
-          })
-          .catch(() => res.status(404)
-            .json([]));
-      }
-      return false;
-    })
-    .catch(() => res.status(404)
-      .json([]));
+    }
+  } catch (err) {
+    return res.status(404)
+      .json([]);
+  }
+  return res.status(404)
+    .json([]);
 });
 
 module.exports = router;
