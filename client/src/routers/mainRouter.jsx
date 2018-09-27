@@ -14,6 +14,7 @@ import Payment from '../Payment';
 import Admin from '../Admin';
 import BookListDetail from '../BookList/BookList';
 import Recommendation from '../Recommendation';
+import BookListFeed from '../RSS/BookListFeed'
 
 const MainRoute = () => (
 
@@ -32,6 +33,7 @@ const MainRoute = () => (
 			<Route path={'/booklist/:slug'} component={BookListDetail}/> {/* modal? */}
 			<Route path={'/admin'} component={Admin} /> {/* TODO: move to another route */}
 			<Route path={'/recommendation'} component={Recommendation} /> {/* TODO: move to another route */}
+			<Route path={'/feed/book-lists.xml'} component={BookListFeed} />
 		</Switch>
 	</Route>
 );

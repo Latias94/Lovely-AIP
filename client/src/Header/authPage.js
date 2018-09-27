@@ -24,7 +24,7 @@ function MenuItems(props) {
 	return (
 		<span>
 			<MenuItem component={Link} to="/login" onClick={handleClose} >
-          Login in
+          Log in
 			</MenuItem>
 
 			<MenuItem component={Link} to={'/register'} onClick={handleClose}>

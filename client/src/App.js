@@ -7,19 +7,26 @@ import Footer from './Footer';
 
 
 class App extends Component {
-  componentDidMount() {
-    document.title = 'Knight Frank';
-  }
+	componentDidMount() {
+		document.title = 'Knight Frank';
+	}
+
+	hideHeaderFooter() {
+		const isAdmin = this.props.location.pathname === '/admin';
+		const isRss = this.props.location.pathname === '/feed/book-lists.xml';
+		return isAdmin || isRss;
+	}
 
 	render() {
-		const isUser = this.props.location.pathname !== "/admin"
-      return (
-        <div className='app'>
-					{isUser && <Header/>}
-          <div className="router"><MainRoute/></div>
-					{isUser && <Footer/>}
-        </div>
-      )
+		const showHeaderFooter = !this.hideHeaderFooter();
+
+		return (
+			<div className='app'>
+				{showHeaderFooter && <Header/>}
+				<div className="router"><MainRoute/></div>
+				{showHeaderFooter && <Footer/>}
+			</div>
+		);
 	}
 }
 
