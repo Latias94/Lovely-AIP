@@ -11,7 +11,7 @@ describe('Cart Route testing', () => {
   beforeAll((done) => {
     const callback = (err) => {
       expect(err).toBeNull();
-      getToken().then((token) => {
+      getToken(true).then((token) => {
         request
           .post('/api/books')
           .set('Authorization', token)
@@ -41,7 +41,7 @@ describe('Cart Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
+        getToken(true).then((token) => {
           request
             .delete(`/api/books/${res.body._id}`)
             .set('Authorization', token)

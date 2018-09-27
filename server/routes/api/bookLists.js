@@ -465,8 +465,8 @@ router.post(
         bookListFields.books.unshift(bookFields);
 
         // Update booklist
-        BookList.findByIdAndUpdate(
-          req.params.id,
+        BookList.findOneAndUpdate(
+          {_id: req.params.id},
           bookListFields,
           { new: true },
           (err, bookListObject) => {

@@ -1,5 +1,6 @@
 const { app } = require('../../../server');
-const request = require('supertest').agent(app.listen());
+const request = require('supertest')
+  .agent(app.listen());
 const {
   getToken,
   supertestWithJest,
@@ -11,27 +12,31 @@ describe('BookList Route testing', () => {
   beforeAll((done) => {
     // add test book
     const callback = (err) => {
-      expect(err).toBeNull();
-      getToken().then((token) => {
-        request
-          .post('/api/books')
-          .set('Authorization', token)
-          .send('title=TestBook1')
-          .send('description=Just for testing')
-          .send('publishDate=1 1 1970')
-          .send('stock=100')
-          .send('price=100')
-          .send('isbn=9780672317248')
-          .send('authors=Tester Frank')
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .end((_, res) => {
-            supertestWithJest(err, res, done, () => {
-              expect(res.body.title).toBe('TestBook1');
-              expect(res.body.description).toBe('Just for testing');
+      expect(err)
+        .toBeNull();
+      getToken(true)
+        .then((token) => {
+          request
+            .post('/api/books')
+            .set('Authorization', token)
+            .send('title=TestBook1')
+            .send('description=Just for testing')
+            .send('publishDate=1 1 1970')
+            .send('stock=100')
+            .send('price=100')
+            .send('isbn=9780672317248')
+            .send('authors=Tester Frank')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((_, res) => {
+              supertestWithJest(err, res, done, () => {
+                expect(res.body.title)
+                  .toBe('TestBook1');
+                expect(res.body.description)
+                  .toBe('Just for testing');
+              });
             });
-          });
-      });
+        });
     };
     connectTestDB(callback);
   });
@@ -42,19 +47,21 @@ describe('BookList Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
-          request
-            .delete(`/api/books/${res.body._id}`)
-            .set('Authorization', token)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((error, response) => {
-              supertestWithJest(error, response, done, () => {
-                expect(response.body.success).toBeTruthy();
-                disconnectTestDB();
+        getToken(true)
+          .then((token) => {
+            request
+              .delete(`/api/books/${res.body._id}`)
+              .set('Authorization', token)
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end((error, response) => {
+                supertestWithJest(error, response, done, () => {
+                  expect(response.body.success)
+                    .toBeTruthy();
+                  disconnectTestDB();
+                });
               });
-            });
-        });
+          });
       });
   });
 
@@ -77,22 +84,26 @@ describe('BookList Route testing', () => {
   });
 
   it('POST /api/booklists Create Test booklist', (done) => {
-    getToken().then((token) => {
-      request
-        .post('/api/booklists')
-        .set('Authorization', token)
-        .send('title=TestBookList')
-        .send('description=Just for testing')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .end((err, res) => {
-          supertestWithJest(err, res, done, () => {
-            expect(res.body.title).toBe('TestBookList');
-            expect(res.body.description).toBe('Just for testing');
-            expect(res.body.username).toBe('test');
+    getToken()
+      .then((token) => {
+        request
+          .post('/api/booklists')
+          .set('Authorization', token)
+          .send('title=TestBookList')
+          .send('description=Just for testing')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end((err, res) => {
+            supertestWithJest(err, res, done, () => {
+              expect(res.body.title)
+                .toBe('TestBookList');
+              expect(res.body.description)
+                .toBe('Just for testing');
+              expect(res.body.username)
+                .toBe('test');
+            });
           });
-        });
-    });
+      });
   });
 
   it('GET /api/booklists/slug/testgame Get Test booklist by slug', (done) => {
@@ -102,9 +113,12 @@ describe('BookList Route testing', () => {
       .expect(200)
       .end((err, res) => {
         supertestWithJest(err, res, done, () => {
-          expect(res.body.title).toBe('TestBookList');
-          expect(res.body.description).toBe('Just for testing');
-          expect(res.body.username).toBe('test');
+          expect(res.body.title)
+            .toBe('TestBookList');
+          expect(res.body.description)
+            .toBe('Just for testing');
+          expect(res.body.username)
+            .toBe('test');
         });
       });
   });
@@ -122,9 +136,12 @@ describe('BookList Route testing', () => {
           .expect(200)
           .end((error, response) => {
             supertestWithJest(error, response, done, () => {
-              expect(res.body.title).toBe('TestBookList');
-              expect(res.body.description).toBe('Just for testing');
-              expect(res.body.username).toBe('test');
+              expect(res.body.title)
+                .toBe('TestBookList');
+              expect(res.body.description)
+                .toBe('Just for testing');
+              expect(res.body.username)
+                .toBe('test');
             });
             return false;
           });
@@ -138,19 +155,21 @@ describe('BookList Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
-          // edit book
-          request
-            .post(`/api/booklists/like/${res.body._id}`)
-            .set('Authorization', token)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((error, response) => {
-              supertestWithJest(error, response, done, () => {
-                expect(response.body.likes).toHaveLength(1);
+        getToken()
+          .then((token) => {
+            // edit book
+            request
+              .post(`/api/booklists/like/${res.body._id}`)
+              .set('Authorization', token)
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end((error, response) => {
+                supertestWithJest(error, response, done, () => {
+                  expect(response.body.likes)
+                    .toHaveLength(1);
+                });
               });
-            });
-        });
+          });
       });
   });
 
@@ -161,19 +180,21 @@ describe('BookList Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
-          // edit book
-          request
-            .post(`/api/booklists/unlike/${res.body._id}`)
-            .set('Authorization', token)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((error, response) => {
-              supertestWithJest(error, response, done, () => {
-                expect(response.body.likes).toHaveLength(0);
+        getToken()
+          .then((token) => {
+            // edit book
+            request
+              .post(`/api/booklists/unlike/${res.body._id}`)
+              .set('Authorization', token)
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end((error, response) => {
+                supertestWithJest(error, response, done, () => {
+                  expect(response.body.likes)
+                    .toHaveLength(0);
+                });
               });
-            });
-        });
+          });
       });
   });
 
@@ -184,24 +205,28 @@ describe('BookList Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
-          // edit book
-          request
-            .post(`/api/booklists/${res.body._id}`)
-            .set('Authorization', token)
-            .send('title=TestBookList2')
-            .send('description=After modified')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((error, response) => {
-              supertestWithJest(error, response, done, () => {
-                expect(response.body.title).toBe('TestBookList2');
-                expect(response.body.description).toBe('After modified');
-                expect(res.body.username).toBe('test');
+        getToken()
+          .then((token) => {
+            // edit book
+            request
+              .post(`/api/booklists/${res.body._id}`)
+              .set('Authorization', token)
+              .send('title=TestBookList2')
+              .send('description=After modified')
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end((error, response) => {
+                supertestWithJest(error, response, done, () => {
+                  expect(response.body.title)
+                    .toBe('TestBookList2');
+                  expect(response.body.description)
+                    .toBe('After modified');
+                  expect(res.body.username)
+                    .toBe('test');
+                });
               });
-            });
-          return false;
-        });
+            return false;
+          });
       });
   });
 
@@ -219,23 +244,28 @@ describe('BookList Route testing', () => {
           .expect(200)
           .end((err, res) => {
             const bookId = res.body._id;
-            getToken().then((token) => {
-              // edit book
-              request
-                .post(`/api/booklists/book/${booklistId}/${bookId}`)
-                .set('Authorization', token)
-                .expect('Content-Type', /json/)
-                .expect(200)
-                .end((error, response) => {
-                  supertestWithJest(error, response, done, () => {
-                    expect(response.body.title).toBe('TestBookList2');
-                    expect(response.body.description).toBe('After modified');
-                    expect(response.body.username).toBe('test');
-                    expect(response.body.books).toHaveLength(1);
+            getToken()
+              .then((token) => {
+                // edit book
+                request
+                  .post(`/api/booklists/book/${booklistId}/${bookId}`)
+                  .set('Authorization', token)
+                  .expect('Content-Type', /json/)
+                  .expect(200)
+                  .end((error, response) => {
+                    supertestWithJest(error, response, done, () => {
+                      expect(response.body.title)
+                        .toBe('TestBookList2');
+                      expect(response.body.description)
+                        .toBe('After modified');
+                      expect(response.body.username)
+                        .toBe('test');
+                      expect(response.body.books)
+                        .toHaveLength(1);
+                    });
                   });
-                });
-              return false;
-            });
+                return false;
+              });
           });
       });
   });
@@ -247,19 +277,21 @@ describe('BookList Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
-          // edit book
-          request
-            .delete(`/api/booklists/${res.body._id}`)
-            .set('Authorization', token)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((error, response) => {
-              supertestWithJest(error, response, done, () => {
-                expect(response.body.success).toBeTruthy();
+        getToken()
+          .then((token) => {
+            // edit book
+            request
+              .delete(`/api/booklists/${res.body._id}`)
+              .set('Authorization', token)
+              .expect('Content-Type', /json/)
+              .expect(200)
+              .end((error, response) => {
+                supertestWithJest(error, response, done, () => {
+                  expect(response.body.success)
+                    .toBeTruthy();
+                });
               });
-            });
-        });
+          });
       });
   });
 });

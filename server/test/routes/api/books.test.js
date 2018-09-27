@@ -35,7 +35,7 @@ describe('Book Route testing', () => {
   });
 
   it('POST /api/books Create Test book', (done) => {
-    getToken().then((token) => {
+    getToken(true).then((token) => {
       request
         .post('/api/books')
         .set('Authorization', token)
@@ -136,7 +136,8 @@ describe('Book Route testing', () => {
             .expect(200)
             .end((error, response) => {
               supertestWithJest(error, response, done, () => {
-                expect(response.body.success).toBeTruthy();
+                expect(response.body.title).toBe('TestGame');
+                expect(response.body.description).toBe('Just for testing');
               });
             });
         });
@@ -150,7 +151,7 @@ describe('Book Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
+        getToken(true).then((token) => {
           // edit book
           request
             .post(`/api/books/${res.body._id}`)
@@ -183,7 +184,7 @@ describe('Book Route testing', () => {
       .expect('Content-Type', /json/)
       .expect(200)
       .end((err, res) => {
-        getToken().then((token) => {
+        getToken(true).then((token) => {
           // edit book
           request
             .delete(`/api/books/${res.body._id}`)

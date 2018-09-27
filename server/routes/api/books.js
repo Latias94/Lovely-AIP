@@ -679,41 +679,42 @@ router.delete('/review/:id/:review_id',
     try {
       const book = await Book.findById(req.params.id);
       if (book) {
-        Review.findByIdAndRemove(req.params.review_id, async (err) => {
-          if (err) {
-            return res.status(404)
-              .json({ reviewnotfound: 'No Reviews found' });
-          } else {
-            // delete review success
-            // Check to see if review exists
-            if (book.reviews.filter(review => review.reviewid.toString()
-              === req.params.review_id).length === 0) {
-              return res
-                .status(404)
+        Review.findOneAndDelete({ _id: req.params.review_id },
+          async (err) => {
+            if (err) {
+              return res.status(404)
                 .json({ reviewnotfound: 'No Reviews found' });
-            }
-
-            // Get remove index
-            const removeIndex = book.reviews
-              .map(item => item._id.toString())
-              .indexOf(req.params.review_id);
-
-            // Splice review out of array
-            book.reviews.splice(removeIndex, 1);
-
-            if (book.reviews.length === 0) {
-              book.score = 0;
             } else {
-              // calculate book score
-              calculateBookScore(book);
+              // delete review success
+              // Check to see if review exists
+              if (book.reviews.filter(review => review.reviewid.toString()
+                === req.params.review_id).length === 0) {
+                return res
+                  .status(404)
+                  .json({ reviewnotfound: 'No Reviews found' });
+              }
+
+              // Get remove index
+              const removeIndex = book.reviews
+                .map(item => item._id.toString())
+                .indexOf(req.params.review_id);
+
+              // Splice review out of array
+              book.reviews.splice(removeIndex, 1);
+
+              if (book.reviews.length === 0) {
+                book.score = 0;
+              } else {
+                // calculate book score
+                calculateBookScore(book);
+              }
+
+              clearHash(req.params.id);
+
+              const bookObject = await book.save();
+              return res.json(bookObject);
             }
-
-            clearHash(req.params.id);
-
-            const bookObject = await book.save();
-            return res.json(bookObject);
-          }
-        });
+          });
       } else {
         return res.status(404)
           .json({ booknotfound: 'No books found' });
@@ -808,8 +809,8 @@ router.post('/:id',
       if (category) {
         bookFields.category = req.body.category;
         bookFields.categoryName = category.name;
-        Book.findByIdAndUpdate(
-          req.params.id,
+        Book.findOneAndUpdate(
+          { _id: req.params.id },
           bookFields,
           { new: true },
           (err, bookObject) => {
@@ -823,8 +824,8 @@ router.post('/:id',
           .json({ categorynotfound: 'No categories found' });
       }
     } else {
-      Book.findByIdAndUpdate(
-        req.params.id,
+      Book.findOneAndUpdate(
+        { _id: req.params.id },
         bookFields,
         { new: true },
         (err, bookObject) => {

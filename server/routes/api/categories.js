@@ -102,14 +102,13 @@ router.get('/list', async (req, res) => {
     categories = filterSubCategories(categories);
 
     categories.forEach(async (category) => {
+      // TODO change API
       const books = await Book.find({ category: category._id })
         .cache({ key: category._id });
       counter += 1;
-      const categoryResult = {};
-      categoryResult._id = category._id;
-      categoryResult.slug = category.slug;
-      categoryResult.name = category.name;
-      categoryResult.subCategories = category.subCategories;
+
+      // create new category object for adding book property
+      const categoryResult = category.toObject();
       categoryResult.books = books;
       allCategories.push(categoryResult);
       if (counter === categories.length) {
@@ -133,12 +132,6 @@ async function getCategoryByCondition(condition, req, errors) {
     return null;
   }
 
-  const categoryResult = {};
-  categoryResult.id = category._id;
-  categoryResult.slug = category.slug;
-  categoryResult.name = category.name;
-  categoryResult.subCategories = category.subCategories;
-
   const page = parseInt(req.query.page, 10);
   const pageSize = parseInt(req.query.pageSize, 10);
   // 1 for oldest to newest, -1 for newest to oldest
@@ -160,6 +153,8 @@ async function getCategoryByCondition(condition, req, errors) {
     .limit(pageSize)
     .sort(sortParams)
     .cache({ key: category._id });
+
+  const categoryResult = category.toObject();
   categoryResult.books = books;
   return categoryResult;
 }
