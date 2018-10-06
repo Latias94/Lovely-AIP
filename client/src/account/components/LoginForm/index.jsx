@@ -135,10 +135,6 @@ class LoginForm extends Component {
 
           <br/>
           <Button variant="contained" color="primary" onClick={this.handleSubmit}>Sign in</Button>
-          <br/>
-          <Button variant="contained">Log in with your Google account</Button>
-          <br/>
-          <a href="/retrieve-password" style={forgotPasswordStyle}>Forgot password?</a>
         </div>
       )
   }

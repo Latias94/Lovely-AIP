@@ -45,10 +45,10 @@ class headerPageIndex extends Component {
 				<div style={containerDiv}>
 					<div style={logoPart}>
 						<img src={Logo} style={iconLogo} alt="logo" />
-						<div style={searchIcon}>
+						{/* <div style={searchIcon}>
 							<SearchInput/>
 							<Icon icon={ic_search} size={24} style={{ marginBottom: '8px' }} />
-						</div>
+						</div> */}
 						<div style={rightIcon}>
 							<AuthIcon
 								isAuthenticated={this.props.auth.isAuthenticated}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -37,7 +38,7 @@ function SimpleCard(props) {
 				</Typography>
 			</CardContent>
 			<CardActions>
-				<Button variant="contained" color="primary" fullWidth>CheckOut</Button>
+				<Button variant="contained" color="primary" component={Link} to={'/payment'} fullWidth>CheckOut</Button>
 			</CardActions>
 		</Card>
 	);
