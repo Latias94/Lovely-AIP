@@ -14,6 +14,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import Axios from 'axios';
 
 const actionsStyles = theme => ({
     root: {
@@ -128,30 +129,21 @@ const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: tru
     TablePaginationActions,
 );
 
-let counter = 0;
-function createData(email, name, activated) {
-    counter += 1;
-    return { id:counter, email, name, activated };
-}
-
 class CustomerManage extends React.Component {
     state = {
-        rows: [
-            createData('111@gmail.com', 'Alice', 'Yes'),
-            createData('112@gmail.com', 'Ben', 'No'),
-            createData('113@gmail.com', 'Cici', 'No'),
-            createData('114@gmail.com', 'Ben', 'No'),
-            createData('135@gmail.com', 'Alice', 'Yes'),
-            createData('116@gmail.com', 'Alice', 'Yes'),
-            createData('117@gmail.com', 'Ben', 'No'),
-            createData('118@gmail.com', 'Cici', 'No'),
-            createData('119@gmail.com', 'Ben', 'No'),
-            createData('112@gmail.com', 'Alice', 'Yes'),
-
-        ],
+        rows: [{_id:1, email:'', name:'', active:''}],
         page: 0,
-        rowsPerPage: 5,
+        rowsPerPage: 15,
     };
+
+    componentDidMount() {
+        Axios.get('/users')
+        .then(res => {
+            this.setState({
+                rows: res.data
+            })
+        })
+    }
 
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -173,19 +165,19 @@ class CustomerManage extends React.Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell>E-mail</TableCell>
-                                <TableCell numeric>User Name</TableCell>
-                                <TableCell numeric>Activated</TableCell>
+                                <TableCell>User Name</TableCell>
+                                <TableCell>Activated</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                                 return (
-                                    <TableRow key={row.id}>
+                                    <TableRow key={row._id}>
                                         <TableCell component="th" scope="row">
                                             {row.email}
                                         </TableCell>
-                                        <TableCell numeric>{row.name}</TableCell>
-                                        <TableCell numeric>{row.activated}</TableCell>
+                                        <TableCell>{row.name}</TableCell>
+                                        <TableCell>{row.active ? "Yes" : "No"}</TableCell>
                                     </TableRow>
                                 );
 

@@ -19,7 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-
+import Axios from 'axios';
 
 const actionsStyles = theme => ({
     root: {
@@ -158,33 +158,32 @@ const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: tru
     TablePaginationActions,
 );
 
-let counter = 0;
-function createData(bookname, author, isbn, action) {
-    counter += 1;
-    return { id:counter, bookname, author, isbn, action };
-}
-
 class BookManage extends React.Component {
     state = {
-        rows: [
-            createData('ABCDE', 'Alice', '019393847495'),
-            createData('ABCDEf', 'Alice', '019393847495'),
-            createData('ABCDEg', 'Alice', '019393847495'),
-            createData('ABCDEh', 'Alice', '019393847495'),
-            createData('ABCDEi', 'Alice', '019393847495'),
-            createData('ABCDEj', 'Alice', '019393847495'),
-            createData('ABCDEk', 'Alice', '019393847495'),
-
-        ],
+        rows: [{
+            _id:0,
+            title:"",
+            authors:[{name:""}],
+            isbn:0
+        }],
         page: 0,
 
-        rowsPerPage: 5,
+        rowsPerPage: 15,
 
         open: false,
         expanded: null,
 
     };
 
+    componentDidMount() {
+        Axios.get('/books')
+        .then(res => {
+            console.log(res.data)
+            this.setState({
+                rows: res.data
+            })
+        })
+    }
 
     handleOpen = () => {
         this.setState({ open: true });
@@ -211,6 +210,7 @@ class BookManage extends React.Component {
     render() {
         const { classes } = this.props;
         const { rows, rowsPerPage, page } = this.state;
+        console.log(this.state.rows[0]);
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
         return (
@@ -337,22 +337,22 @@ class BookManage extends React.Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell numeric>Book Name</TableCell>
-                                <TableCell numeric>Author</TableCell>
+                                <TableCell>Book Name</TableCell>
+                                <TableCell>Author</TableCell>
                                 <TableCell numeric>ISBN</TableCell>
-                                <TableCell numeric>Action</TableCell>
+                                <TableCell>Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                                 return (
-                                    <TableRow key={row.id}>
+                                    <TableRow key={row._id}>
                                         <TableCell component="th" scope="row">
-                                            {row.bookname}
+                                            {row.title}
                                         </TableCell>
-                                        <TableCell numeric>{row.author}</TableCell>
+                                        <TableCell >{row.authors.length > 0 ? row.authors[0].name : ""}</TableCell>
                                         <TableCell numeric>{row.isbn}</TableCell>
-                                        <TableCell numeric>
+                                        <TableCell>
                                             {/*<Button variant="contained" color="secondary" className={classes.button}>*/}
                                                 {/*Delete*/}
                                             {/*</Button>*/}
