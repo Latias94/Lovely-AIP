@@ -104,9 +104,14 @@ router.get('/books', async (req, res) => {
 
     if (books) {
       books.forEach((book) => {
+        const content = `
+            <div style="text-align: center;"><img src="${book.coverUrl}" style="max-height:200px" alt="${book.title}"></div>
+            <p><b>Description: </b>${book.description}</p>
+            <div style="text-align: center;"><a href="${frontendHost}/book/${book._id}">Click here to view the book</a></div>
+        `;
         feed.item({
           title: book.title,
-          description: book.description,
+          description: content,
           url: `${frontendHost}/book/${book._id}`,
           date: book.updateDate,
           image_url: book.coverUrl,

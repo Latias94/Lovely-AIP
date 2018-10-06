@@ -15,6 +15,7 @@
 - [Docker](#docker)
     - [Build](#build)
     - [Run](#run)
+- [RSS](#rss)
 
 ## Set Up Environment Variable
 Before start the server, you ought to set up environment variables as the following table.
@@ -124,3 +125,9 @@ docker build -t server .
 ```shell
 docker run -p 5000:5000 -d --restart=always server
 ```
+
+## RSS
+Provide feeds of the newest book lists and books.  
+[The Newest Book RSS](https://lovely-aip.herokuapp.com/api/feed/books)
+
+![](https://i.loli.net/2018/10/06/5bb8d65366cae.png)
