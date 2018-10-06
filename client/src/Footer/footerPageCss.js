@@ -22,10 +22,7 @@ export const containerDiv = {
 };
 
 export const footerWord = {
-	width: 'auto',
-	height: 'auto',
 	color: 'white',
-	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
 };

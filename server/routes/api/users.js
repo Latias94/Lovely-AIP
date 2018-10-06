@@ -333,6 +333,7 @@ router.post('/login', async (req, res) => {
             id: user.id,
             name: user.name,
             email: user.email,
+            isStaff: user.isStaff
             // avatar: user.avatar,
           }; // Create JWT payload
           // Sign Token
@@ -382,16 +383,19 @@ router.get('/current', passport.authenticate('jwt', {
 }), async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
+    const userIsStaff = await isStaff(req);
     if (!user) {
       return res.status(404)
         .json({
           usernotfound: 'No user found'
         });
     } else if (user.avatar !== null) {
+      const { id, name, email } = req.user;
       res.json({
-        id: req.user.id,
-        name: req.user.name,
-        email: req.user.email,
+        id,
+        name,
+        email,
+        isStaff: userIsStaff,
         avatar: user.avatar
       });
     } else {
@@ -399,6 +403,7 @@ router.get('/current', passport.authenticate('jwt', {
         id: req.user.id,
         name: req.user.name,
         email: req.user.email,
+        isStaff: userIsStaff
       });
     }
   } catch (err) {
