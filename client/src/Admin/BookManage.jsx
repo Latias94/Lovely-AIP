@@ -167,7 +167,17 @@ class BookManage extends React.Component {
             isbn:0
         }],
         page: 0,
-
+        newTitle:"",
+        newAuthors:"",
+        // newBook: {
+        //     title:"",
+        //     authors: [{name:""}],
+        //     description: "",
+        //     publishDate: "",
+        //     coverUrl: "",
+        //     stock: 0,
+        //     price: 0
+        // },
         rowsPerPage: 15,
 
         open: false,
@@ -175,10 +185,15 @@ class BookManage extends React.Component {
 
     };
 
+    newBook = {
+        title:"",
+        authors:[{name:""}],
+        isbn:0
+    }
+
     componentDidMount() {
         Axios.get('/books')
         .then(res => {
-            console.log(res.data)
             this.setState({
                 rows: res.data
             })
@@ -205,12 +220,22 @@ class BookManage extends React.Component {
         this.setState(state => ({
             open: !state.open,
         }));
+        Axios.post('/books', {
+            title: this.state.newTitle,
+            authors: [{name: this.state.newAuthors}],
+            description: "",
+            publishDate: "",
+            coverUrl: "",
+            stock: 0,
+            price: 0,
+            category: "5b65103ac55fe361685262bf"
+          })
+        .then()
     };
 
     render() {
         const { classes } = this.props;
         const { rows, rowsPerPage, page } = this.state;
-        console.log(this.state.rows[0]);
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
         return (
@@ -220,7 +245,8 @@ class BookManage extends React.Component {
                     color="primary"
                     className={classes.button}
                     style={{outline:'none'}}
-                    onClick={this.handleOpen}>
+                    onClick={this.handleOpen}
+>
                     <AddIcon />
                     ADD a New Book
                 </Button>
@@ -243,8 +269,11 @@ class BookManage extends React.Component {
                                         <TextField
                                             id="BookTitle"
                                             label="Book Title"
-                                            multiline
+                                            type="text"
                                             className={classes.textField}
+                                            value={this.state.newTitle}
+                                            onChange={e => this.setState({newTitle: e.target.value}) }
+                                            required
                                         />
                                     </td>
                                     <td>
@@ -253,7 +282,8 @@ class BookManage extends React.Component {
                                             label="Author"
                                             className={classes.textField}
                                             type="text"
-                                            placeholder='Author A , Author B'
+                                            value={this.state.newAuthors}
+                                            onChange={e => this.setState({newAuthors: e.target.value})}
                                         />
                                     </td>
                                 </tr>
@@ -356,7 +386,7 @@ class BookManage extends React.Component {
                                             {/*<Button variant="contained" color="secondary" className={classes.button}>*/}
                                                 {/*Delete*/}
                                             {/*</Button>*/}
-                                            <Button variant="contained" color="primary" className={classes.button}>
+                                            <Button variant="contained" color="primary" className={classes.button} disabled>
                                                 Edit
                                             </Button>
                                         </TableCell>

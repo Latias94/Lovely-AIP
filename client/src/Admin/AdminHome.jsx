@@ -5,7 +5,7 @@ class AdminHome extends React.Component{
         return(
             <div>
                 <h1 style={{color:'#00B0FF', fontSize:'100px'}}>
-                    UI is on the cloud ^~^
+                    Welcome Admin ^~^
                 </h1>
             </div>
 

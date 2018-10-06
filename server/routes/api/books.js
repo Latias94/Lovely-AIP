@@ -399,6 +399,7 @@ router.post('/',
     try {
       // find out whether user is staff
       const userIsStaff = await isStaff(req);
+      
       if (!userIsStaff) {
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
