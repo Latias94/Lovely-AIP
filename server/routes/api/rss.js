@@ -1,6 +1,8 @@
 const express = require('express');
 const RSS = require('rss');
 const BookList = require('../../models/BookList');
+const Book = require('../../models/Book');
+const { frontendHost } = require('../../config/keys');
 
 const router = express.Router();
 
@@ -40,8 +42,8 @@ router.get('/booklists', async (req, res) => {
   const feed = new RSS({
     title: 'Knight Frank Booklist',
     description: 'The newest booklist from Knight Frank',
-    feed_url: `http://${req.headers.host}${req.url}`,
-    site_url: `http://${req.headers.host}`,
+    feed_url: `${frontendHost}${req.url}`,
+    site_url: `${frontendHost}`,
     author: 'Knight Frank'
   });
   try {
@@ -56,7 +58,7 @@ router.get('/booklists', async (req, res) => {
         feed.item({
           title: booklist.title,
           description: booklist.description,
-          url: `http://${req.headers.host}/booklist/${booklist.slug}`,
+          url: `${frontendHost}/booklist/${booklist.slug}`,
           date: booklist.updateDate,
         });
       });
@@ -69,6 +71,56 @@ router.get('/booklists', async (req, res) => {
   } catch (err) {
     return res.status(404)
       .json({ booklistnotfound: 'No booklists found' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/feed/books:
+ *   get:
+ *     tags:
+ *       - RSS
+ *     summary: Get RSS of 10 of newest books
+ *     description: Get RSS of 10 of newest books
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: return newest books RSS
+ */
+router.get('/books', async (req, res) => {
+  const feed = new RSS({
+    title: 'Knight Frank Book',
+    description: 'The newest books from Knight Frank',
+    feed_url: `${frontendHost}`,
+    site_url: `${frontendHost}`,
+    author: 'Knight Frank'
+  });
+  try {
+    const books = await Book.find()
+      .limit(10)
+      .sort({ updateDate: -1 })
+      .cache();
+
+    if (books) {
+      books.forEach((book) => {
+        feed.item({
+          title: book.title,
+          description: book.description,
+          url: `${frontendHost}/book/${book._id}`,
+          date: book.updateDate,
+          image_url: book.coverUrl,
+        });
+      });
+      res.type('rss');
+      return res.send(feed.xml());
+    } else {
+      return res.status(404)
+        .json({ booknotfound: 'No books found' });
+    }
+  } catch (err) {
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
   }
 });
 

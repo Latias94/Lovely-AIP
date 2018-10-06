@@ -2,7 +2,7 @@ const Validator = require('validator');
 const ISBN = require('isbnjs');
 const isEmpty = require('./is-empty');
 
-module.exports = function validateProductInput(bodyData) {
+module.exports = function validateBookInput(bodyData) {
   const errors = {};
   const data = bodyData;
 
@@ -21,7 +21,10 @@ module.exports = function validateProductInput(bodyData) {
 
   function validateAuthors(authors) {
     authors = !isEmpty(authors) ? authors : '';
-    if (!Validator.isLength(authors, { min: 2, max: 30 })) {
+    if (!Validator.isLength(authors, {
+      min: 2,
+      max: 30
+    })) {
       errors.authors = 'Authors must be between 2 and 30 characters';
     }
     if (Validator.isEmpty(authors)) {
@@ -35,14 +38,20 @@ module.exports = function validateProductInput(bodyData) {
     data.authors.forEach(validateAuthors);
   }
 
-  if (!Validator.isLength(data.title, { min: 2, max: 80 })) {
+  if (!Validator.isLength(data.title, {
+    min: 2,
+    max: 80
+  })) {
     errors.title = 'Book title must be between 2 and 80 characters';
   }
   if (Validator.isEmpty(data.title)) {
     errors.title = 'Title field is required';
   }
 
-  if (!Validator.isLength(data.description, { min: 10, max: 1000 })) {
+  if (!Validator.isLength(data.description, {
+    min: 10,
+    max: 1000
+  })) {
     errors.description = 'Book description must be between 10 and 1000 characters';
   }
   if (Validator.isEmpty(data.description)) {
@@ -73,9 +82,12 @@ module.exports = function validateProductInput(bodyData) {
     errors.stock = 'Stock field is required';
   }
 
-  if (!Validator.isEmpty(data.isbn) && !ISBN.parse(data.isbn).isIsbn13()) {
-    errors.isbn = 'ISBN is invalid';
+  if (ISBN.parse(data.isbn) == null
+    || (ISBN.parse(data.isbn) != null && !ISBN.parse(data.isbn)
+      .isIsbn13())) {
+    errors.isbn = 'ISBN must meet the ISBN-13 standard';
   }
+
   if (Validator.isEmpty(data.isbn)) {
     errors.isbn = 'ISBN field is required';
   }
