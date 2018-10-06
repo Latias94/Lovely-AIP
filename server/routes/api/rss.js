@@ -92,7 +92,7 @@ router.get('/books', async (req, res) => {
   const feed = new RSS({
     title: 'Knight Frank Book',
     description: 'The newest books from Knight Frank',
-    feed_url: `${frontendHost}`,
+    feed_url: `${frontendHost}/categories`,
     site_url: `${frontendHost}`,
     author: 'Knight Frank'
   });
@@ -105,7 +105,7 @@ router.get('/books', async (req, res) => {
     if (books) {
       books.forEach((book) => {
         const content = `
-            <div style="text-align: center;"><img src="${book.coverUrl}" style="max-height:200px" alt="${book.title}"></div>
+            <center><img src="${book.coverUrl}" style="max-height:200px" alt="${book.title}"></center>
             <p><b>Description: </b>${book.description}</p>
             <div style="text-align: center;"><a href="${frontendHost}/book/${book._id}">Click here to view the book</a></div>
         `;

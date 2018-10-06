@@ -6,7 +6,7 @@ module.exports = {
   testPort: 5001,
   email: process.env.EMAIL,
   emailPwd: process.env.EMAIL_PWD,
-  frontendHost: 'https://knight-frank.herokuapp.com',
+  frontendHost: 'http://knight-frank-web.s3-website-ap-southeast-2.amazonaws.com',
   redisURI: process.env.REDIS_URI,
   redisPort: process.env.REDIS_PORT,
   redisPwd: process.env.REDIS_PWD,
