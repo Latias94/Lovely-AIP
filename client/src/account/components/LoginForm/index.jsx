@@ -129,6 +129,7 @@ class LoginForm extends Component {
           />
 
           <Button variant="contained" color="primary" onClick={this.handleSubmit} className="loginBtn" style={{outline:'none'}}>Sign in</Button>
+          <a href="/register"><div style={{color: 'gray', textDecoration: 'underline', marginTop: '10px'}}>New here?</div></a>
         </div>
       )
   }

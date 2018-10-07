@@ -43,11 +43,11 @@ const menu = (bookList, open, addBookIntoBooklist, bookid) => (
 					bookList.map(item => (
 						<ListItem style={styles.dropDownItem} button key={item._id} onClick={() => addBookIntoBooklist(item._id, bookid)}>
 							{item.title}
-						</ListItem >
+						</ListItem>
 					))
 				}
 				<Divider/>
-				<ListItem style={styles.dropDownItem} onClick={open} button key="3">Create a new book list</ListItem >
+				<ListItem style={styles.dropDownItem} onClick={open} button key="3">Create a new book list</ListItem>
 			</List>
 		</Paper>
 	</div>
@@ -93,7 +93,7 @@ const BooksPageComponent = props => (
 					<h5>{`by ${props.bookAuthor} (Author)`}</h5>
 					<div ><Rate disabled value={props.reviewScore} /><span>{props.bookReviews}</span><span style={{ marginLeft: '5px' }}>customer reviews</span></div>
 					<hr />
-					<div>{props.description}</div>
+					<pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'Arial,sans-serif', fontSize: '16px' }}>{props.description}</pre>
 				</div>
 			</div>
 			<div style={styles.rightPart}>
@@ -142,18 +142,16 @@ const BooksPageComponent = props => (
 						alt={item.username}/> :
 						<LetterAvatar classes={classes} username={item.username}/>
                         }
-							{/* <div style={styles.userHeadImage}></div> */}
 							<span style={{marginLeft:'10px'}}>{item.username}</span>
 						</div>
 						<div style={styles.viewPersonalInfromation}>
 							<Rate disabled value={item.star} />
-							{/*<span>{item.content}</span>*/}
 						</div>
 						<div style={styles.reviewContent}>
 							<span>{convertDate(item.createDate)}</span>
 							<p style={{ color: 'rebeccapurple' }}>
-                                Verified Purchase</p>
-							<div style={{ fontSize: '15px' }}>{item.content}</div>
+                                [Verified Purchase]</p>
+							<pre style={{ fontSize: '20px', whiteSpace: 'pre-wrap' }}>{item.content}</pre>
 						</div>
 					</div>
 				)))
@@ -174,7 +172,7 @@ const BooksPageComponent = props => (
 			}}>
 				{/* TODO: Check is it rated?*/}
 				<TextField
-					placeholder={'Please rate first.'}
+					placeholder=" Please rate first."
 					onChange={event => props.reviewContentChange(event.target.value)}
 					multiline
 					fullWidth
@@ -186,8 +184,9 @@ const BooksPageComponent = props => (
 			<Button
 				size="medium"
 				variant="contained"
-				color="primary"
+				color="default"
 				onClick={props.submitClick}
+				style={{ backgroundColor: 'gray', color: 'white' }}
 				>
 			Review
 			</Button>

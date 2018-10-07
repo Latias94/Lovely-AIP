@@ -49,7 +49,9 @@ class headerPageIndex extends Component {
 			<div style={background}>
 				<div style={containerDiv}>
 					<div style={logoPart}>
+					<a href="/">
 						<img src={Logo} style={iconLogo} alt="logo" />
+					</a>
 						{/* <div style={searchIcon}>
 							<SearchInput/>
 							<Icon icon={ic_search} size={24} style={{ marginBottom: '8px' }} />
