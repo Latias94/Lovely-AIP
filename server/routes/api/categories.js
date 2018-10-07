@@ -4,7 +4,6 @@ const { clearHash } = require('../../config/cache');
 
 // Load Validation
 const validateCategoryInput = require('../../validation/category');
-const isStaff = require('../../utils/isStaff');
 // Load Category Model
 const Category = require('../../models/Category');
 
@@ -325,9 +324,7 @@ router.post(
   }),
   async (req, res) => {
     try {
-      // find out whether user is staff
-      const userIsStaff = await isStaff(req);
-      if (!userIsStaff) {
+      if (!req.user.isStaff) {
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
       }
@@ -411,9 +408,7 @@ router.post(
   async (req, res) => {
     const errors = {};
     try {
-      // find out whether user is staff
-      const userIsStaff = await isStaff(req);
-      if (!userIsStaff) {
+      if (!req.user.isStaff) {
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
       }
@@ -484,9 +479,7 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      // find out whether user is staff
-      const userIsStaff = await isStaff(req);
-      if (!userIsStaff) {
+      if (!req.user.isStaff) {
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
       }

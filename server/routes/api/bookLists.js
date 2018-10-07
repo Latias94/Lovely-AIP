@@ -26,14 +26,109 @@ const validateAddBookToBookListInput = require('../../validation/addBookToBookLi
  */
 router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
 
+// add book title to the books in all booklists
+async function embedBookToBookLists(bookLists, req) {
+  if (bookLists.length < 0) return;
+  const bookIds = [];
+  bookLists.forEach((bookList) => {
+    bookList.books.forEach(book => bookIds.push(book.bookid));
+  });
+  const books = await Book.find({
+    _id: {
+      $in: bookIds,
+    }
+  })
+    .cache({ key: req.params.id });
+
+  const bookObjects = [];
+  books.forEach(book => bookObjects.push(book.toObject()));
+  bookLists.forEach((bookList) => {
+    bookList.books.forEach((book) => {
+      bookObjects.forEach((object) => {
+        if (book.bookid.toString() === object._id.toString()) {
+          book.title = object.title;
+        }
+      });
+    });
+  });
+}
+
 /**
  * @swagger
- * /api/booklists:
+ * /api/booklists/search/{keyword}:
  *   get:
  *     tags:
  *       - BookList
- *     summary: Get all booklists
- *     description: Get all booklists
+ *     summary: Get booklists by keyword with condition
+ *     description: Get booklists by keyword with condition. (search in booklist title and description with weight).
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "keyword"
+ *         in: "path"
+ *         description: "keyword of books that needs to be fetched"
+ *         required: true
+ *         type: "string"
+ *       - name: "page"
+ *         in: "query"
+ *         description: "the page you are query (powered by pageSize). Default is 1"
+ *         required: false
+ *         type: "integer"
+ *       - name: "pageSize"
+ *         in: "query"
+ *         description: "How many books you want to show in one page. Default is 10"
+ *         required: false
+ *         type: "integer"
+ *     responses:
+ *       200:
+ *         description: Get books successfully
+ *       404:
+ *         description: No books found with that keyword
+ */
+router.get('/search/:keyword', async (req, res) => {
+  let page = parseInt(req.query.page, 10);
+  let pageSize = parseInt(req.query.pageSize, 10);
+  if (Number.isNaN(page)) page = 1;
+  if (Number.isNaN(pageSize)) pageSize = 10;
+
+  const interval = (page - 1) * pageSize;
+  console.log(interval);
+  try {
+    const booklists = await BookList.find({ $text: { $search: req.params.keyword } })
+      .skip(interval)
+      .limit(pageSize)
+      .cache()
+      .lean();
+
+    const searchResult = await BookList.find({ $text: { $search: req.params.keyword } });
+    const totalPages = Math.ceil(searchResult.length / pageSize);
+    if (page > totalPages) {
+      return res.status(404)
+        .json({ booklistoutofpages: 'The page you request is larger than the maximum number of pages' });
+    }
+
+    await embedBookToBookLists(booklists, req);
+
+    const result = {};
+    result.currentPage = page;
+    result.totalPages = totalPages;
+    result.booklists = booklists;
+
+    return res.json(result);
+  } catch (err) {
+    return res.status(404)
+      .json({ booklistnotfound: 'No booklists found' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/booklists/list:
+ *   get:
+ *     tags:
+ *       - BookList
+ *     summary: Get booklists with condition
+ *     description: Get booklists with condition. e.g.http://localhost:5000/api/booklists/list?page=1&pageSize=10&createDate=1
  *     produces:
  *       - application/json
  *     parameters:
@@ -47,16 +142,67 @@ router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
  *         description: "How many booklists you want to show in one page"
  *         required: true
  *         type: "integer"
- *       - name: "update"
+ *       - name: "create"
  *         in: "query"
- *         description: "Sort result by update date, 1 for oldest to newest, -1 for newest to oldest"
+ *         description: "Sort result by create date, 1 for oldest to newest, -1 for newest to oldest"
  *         required: false
  *         type: "integer"
- *       - name: "title"
- *         in: "query"
- *         description: "Sort result by title, default = 1"
- *         required: false
- *         type: "integer"
+ *     responses:
+ *       200:
+ *         description: Get booklists successfully
+ *       404:
+ *         description: No booklists found
+ */
+router.get('/list', async (req, res) => {
+  const page = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10);
+  // 1 for oldest to newest, -1 for newest to oldest
+  const sortByCreateDate = parseInt(req.query.createDate, 10);
+  const sortParams = {};
+  if (sortByCreateDate) {
+    sortParams.createDate = sortByCreateDate;
+  }
+  const interval = (page - 1) * pageSize;
+
+  try {
+    // find booklists with multiple conditions
+    const booklists = await BookList.find()
+      .skip(interval)
+      .limit(pageSize)
+      .sort(sortParams)
+      .cache()
+      .lean();
+    // Count all the booklists
+    const counts = await BookList.countDocuments({});
+    const totalPages = Math.ceil(counts / pageSize);
+    if (page > totalPages) {
+      return res.status(404)
+        .json({ booklistoutofpages: 'The page you request is larger than the maximum number of pages' });
+    }
+
+    await embedBookToBookLists(booklists, req);
+
+    const result = {};
+    result.currentPage = page;
+    result.totalPages = totalPages;
+    result.booklists = booklists;
+    return res.json(result);
+  } catch (err) {
+    return res.status(404)
+      .json({ booklistnotfound: 'No booklists found' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/booklists:
+ *   get:
+ *     tags:
+ *       - BookList
+ *     summary: Get all booklists
+ *     description: Get all booklists
+ *     produces:
+ *       - application/json
  *     responses:
  *       200:
  *         description: Get all booklists successfully
@@ -64,37 +210,10 @@ router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
  *         description: No booklists found
  */
 router.get('/', async (req, res) => {
-  const errors = {};
-
-  const page = parseInt(req.query.page, 10);
-  const pageSize = parseInt(req.query.pageSize, 10);
-  // 1 for oldest to newest, -1 for newest to oldest
-  const sortByUpdate = parseInt(req.query.update, 10);
-  const sortByTitle = parseInt(req.query.title, 10);
-  const sortParams = {};
-  if (sortByUpdate) {
-    sortParams.updateDate = sortByUpdate;
-  }
-  if (sortByTitle) {
-    sortParams.title = sortByTitle;
-  } else {
-    sortParams.title = 1;
-  }
-  const interval = (page - 1) * pageSize;
-
   try {
-    const bookLists = await BookList.find()
-      .skip(interval)
-      .limit(pageSize)
-      .sort(sortParams)
-      .cache();
-    if (!bookLists) {
-      errors.booklistnotfound = 'No bookLists found';
-      return res.status(404)
-        .json(errors);
-    } else {
-      return res.json(bookLists);
-    }
+    const booklists = await BookList.find()
+      .sort({ updateDate: -1 });
+    return res.json(booklists);
   } catch (e) {
     return res.status(404)
       .json({ booklistnotfound: 'No bookLists found' });
@@ -103,42 +222,40 @@ router.get('/', async (req, res) => {
 
 async function embedBookToBookList(bookList, req) {
   // if booklist.book not empty, embed book details in booklist object
-  if (bookList.books.length > 0) {
-    // get bookid array
-    const bookIds = [];
-    bookList.books.forEach(book => bookIds.push(book.bookid));
-    const books = await Book.find({
-      _id: {
-        $in: bookIds,
-      }
-    })
-      .cache({ key: req.params.id });
-    const bookObjects = [];
-    // map book to proper field in booklist, cause result return from
-    // mongoose query is not in sequence
-    books.forEach(book => bookObjects.push(book.toObject()));
-
-    bookObjects.forEach((book) => {
-      book.reviews.forEach((review) => {
-        // find user reviews of each book and add to book object
-        if (review.user.toString() === bookList.user.toString()) {
-          book.reviewContent = review.content;
-          book.reviewStar = review.star;
-        }
-      });
-    });
-
-    for (let i = 0; i < bookObjects.length; i += 1) {
-      bookList.books.forEach((book) => {
-        if (book.recommendation !== undefined
-          && bookObjects[i]._id.toString() === book.bookid.toString()) {
-          bookObjects[i].recommendation = book.recommendation;
-        }
-      });
+  if (bookList.books.length < 0) return;
+  // get bookid array
+  const bookIds = [];
+  bookList.books.forEach(book => bookIds.push(book.bookid));
+  const books = await Book.find({
+    _id: {
+      $in: bookIds,
     }
-    bookList.books = bookObjects;
+  })
+    .cache({ key: req.params.id });
+  const bookObjects = [];
+  // map book to proper field in booklist, cause result return from
+  // mongoose query is not in sequence
+  books.forEach(book => bookObjects.push(book.toObject()));
+
+  bookObjects.forEach((book) => {
+    book.reviews.forEach((review) => {
+      // find user reviews of each book and add to book object
+      if (review.user.toString() === bookList.user.toString()) {
+        book.reviewContent = review.content;
+        book.reviewStar = review.star;
+      }
+    });
+  });
+
+  for (let i = 0; i < bookObjects.length; i += 1) {
+    bookList.books.forEach((book) => {
+      if (book.recommendation !== undefined
+        && bookObjects[i]._id.toString() === book.bookid.toString()) {
+        bookObjects[i].recommendation = book.recommendation;
+      }
+    });
   }
-  return bookList;
+  bookList.books = bookObjects;
 }
 
 /**
@@ -466,7 +583,7 @@ router.post(
 
         // Update booklist
         BookList.findOneAndUpdate(
-          {_id: req.params.id},
+          { _id: req.params.id },
           bookListFields,
           { new: true },
           (err, bookListObject) => {

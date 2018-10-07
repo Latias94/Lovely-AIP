@@ -7,7 +7,6 @@ const User = require('../../models/User');
 const Review = require('../../models/Review');
 const cleanCache = require('../../middlewares/cleanCache');
 const { clearHash, clearAll } = require('../../config/cache');
-const isStaff = require('../../utils/isStaff');
 
 // Validation
 const validateBookInput = require('../../validation/book');
@@ -67,7 +66,7 @@ router.get('/', async (req, res) => {
  *     tags:
  *       - Book
  *     summary: Get books with condition
- *     description: Get books with condition. e.g.http://localhost:5000/api/books/list?page=2&pageSize=10&price=-1&publish
+ *     description: Get books with condition. e.g.http://localhost:5000/api/books/list?page=2&pageSize=10&price=-1&publish=1
  *     produces:
  *       - application/json
  *     parameters:
@@ -119,8 +118,21 @@ router.get('/list', async (req, res) => {
       .skip(interval)
       .limit(pageSize)
       .sort(sortParams)
-      .cache();
-    return res.json(books);
+      .cache()
+      .lean();
+    // Count all the books
+    const counts = await Book.countDocuments({});
+    const totalPages = Math.ceil(counts / pageSize);
+    if (page > totalPages) {
+      return res.status(404)
+        .json({ bookoutofpages: 'The page you request is larger than the maximum number of pages' });
+    }
+
+    const result = {};
+    result.currentPage = page;
+    result.totalPages = totalPages;
+    result.books = books;
+    return res.json(result);
   } catch (err) {
     return res.status(404)
       .json({ booknotfound: 'No books found' });
@@ -280,22 +292,22 @@ router.get('/isbn/:isbn', async (req, res) => {
  *         type: "string"
  *       - name: "page"
  *         in: "query"
- *         description: "the page you are query (powered by pageSize)"
- *         required: true
+ *         description: "the page you are query (powered by pageSize). Default is 1"
+ *         required: false
  *         type: "integer"
  *       - name: "pageSize"
  *         in: "query"
- *         description: "How many books you want to show in one page"
- *         required: true
+ *         description: "How many books you want to show in one page. Default is 10"
+ *         required: false
  *         type: "integer"
  *       - name: "publish"
  *         in: "query"
- *         description: "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest"
+ *         description: "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest. Default is -1"
  *         required: false
  *         type: "integer"
  *       - name: "price"
  *         in: "query"
- *         description: "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest"
+ *         description: "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest. Default is 1"
  *         required: false
  *         type: "integer"
  *     responses:
@@ -305,12 +317,17 @@ router.get('/isbn/:isbn', async (req, res) => {
  *         description: No books found with that keyword
  */
 router.get('/search/:keyword', async (req, res) => {
-  const page = parseInt(req.query.page, 10);
-  const pageSize = parseInt(req.query.pageSize, 10);
+  let page = parseInt(req.query.page, 10);
+  let pageSize = parseInt(req.query.pageSize, 10);
+  if (Number.isNaN(page)) page = 1;
+  if (Number.isNaN(pageSize)) pageSize = 10;
   // 1 for oldest to newest, -1 for newest to oldest
-  const sortByPublish = parseInt(req.query.publish, 10);
+  let sortByPublish = parseInt(req.query.publish, 10);
   // 1 for cheapest to most expensive
-  const sortByPrice = parseInt(req.query.price, 10);
+  let sortByPrice = parseInt(req.query.price, 10);
+  if (Number.isNaN(sortByPublish)) sortByPublish = -1;
+  if (Number.isNaN(sortByPrice)) sortByPrice = 1;
+
   const sortParams = {};
   if (sortByPublish) {
     sortParams.publishDate = sortByPublish;
@@ -322,11 +339,25 @@ router.get('/search/:keyword', async (req, res) => {
   try {
     // find book with multiple conditions
     const books = await Book.find({ $text: { $search: req.params.keyword } })
-      .cache()
       .skip(interval)
       .limit(pageSize)
-      .sort(sortParams);
-    return res.json(books);
+      .sort(sortParams)
+      .cache()
+      .lean();
+
+    const searchResult = await Book.find({ $text: { $search: req.params.keyword } });
+    const totalPages = Math.ceil(searchResult.length / pageSize);
+    if (page > totalPages) {
+      return res.status(404)
+        .json({ bookoutofpages: 'The page you request is larger than the maximum number of pages' });
+    }
+
+    const result = {};
+    result.currentPage = page;
+    result.totalPages = totalPages;
+    result.books = books;
+
+    return res.json(result);
   } catch (err) {
     return res.status(404)
       .json({ booknotfound: 'No books found' });
@@ -397,10 +428,7 @@ router.post('/',
     session: false,
   }), async (req, res) => {
     try {
-      // find out whether user is staff
-      const userIsStaff = await isStaff(req);
-
-      if (!userIsStaff) {
+      if (!req.user.isStaff) {
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
       }
@@ -505,9 +533,7 @@ router.delete('/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      // find out whether user is staff
-      const userIsStaff = await isStaff(req);
-      if (!userIsStaff) {
+      if (!req.user.isStaff) {
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
       }
@@ -763,9 +789,7 @@ router.delete('/review/:id/:review_id',
 router.post('/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    // find out whether user is staff
-    const userIsStaff = await isStaff(req);
-    if (!userIsStaff) {
+    if (!req.user.isStaff) {
       return res.status(401)
         .json({ unauthorized: 'Cannot modify the book' });
     }

@@ -15,7 +15,6 @@ const validationLoginInput = require('../../validation/login');
 const User = require('../../models/User');
 const BookList = require('../../models/BookList');
 const Review = require('../../models/Review');
-const isStaff = require('../../utils/isStaff');
 
 const router = express.Router();
 
@@ -383,7 +382,6 @@ router.get('/current', passport.authenticate('jwt', {
 }), async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    const userIsStaff = await isStaff(req);
     if (!user) {
       return res.status(404)
         .json({
@@ -395,7 +393,7 @@ router.get('/current', passport.authenticate('jwt', {
         id,
         name,
         email,
-        isStaff: userIsStaff,
+        isStaff: req.user.isStaff,
         avatar: user.avatar
       });
     } else {
@@ -403,7 +401,7 @@ router.get('/current', passport.authenticate('jwt', {
         id: req.user.id,
         name: req.user.name,
         email: req.user.email,
-        isStaff: userIsStaff
+        isStaff: req.user.isStaff
       });
     }
   } catch (err) {
@@ -552,9 +550,7 @@ router.get('/avatar/:id', async (req, res) => {
 router.get('/', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      // find out whether user is staff
-      const userIsStaff = await isStaff(req);
-      if (!userIsStaff) {
+      if (!req.user.isStaff) {
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
       }

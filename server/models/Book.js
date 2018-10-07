@@ -3,6 +3,7 @@ const URLSlugs = require('mongoose-url-slugs');
 
 const { Schema } = mongoose;
 
+// create index in MongoDB
 mongoose.set('useCreateIndex', true);
 
 const BookSchema = new Schema({
@@ -92,7 +93,7 @@ const BookSchema = new Schema({
 BookSchema.plugin(URLSlugs('title', { field: 'slug' }));
 BookSchema.index({
   title: 'text',
-  description: 'description',
+  description: 'text',
 }, {
   weights: {
     name: 5,
