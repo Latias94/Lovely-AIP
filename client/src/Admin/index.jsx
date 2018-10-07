@@ -60,7 +60,7 @@ class Admin extends React.Component {
             <div className={classes.root} style={{width:'100%',backgroundColor:'#FAFAFA'}}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
-                        <Tab label=" " style={{outline:'none'}} icon={<Home />}/>
+                        <Tab label=" " style={{outline:'none', paddingTop:'16px'}} icon={<Home />}/>
                         <Tab label="Customer" style={{outline:'none'}} />
                         <Tab label="Books" style={{outline:'none'}} />
                     </Tabs>
