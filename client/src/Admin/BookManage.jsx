@@ -20,6 +20,11 @@ import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Axios from 'axios';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Styles
 const actionsStyles = theme => ({
@@ -84,7 +89,6 @@ const styles = theme => ({
         minWidth: 275,
     },
 });
-
 
 // Control of the table page
 class TablePaginationActions extends React.Component {
@@ -181,7 +185,10 @@ class BookManage extends React.Component {
         rowsPerPage: 15,
 
         open: false,
+        deleteDialogOpen: false,
         expanded: null,
+        selectedBookID: null,
+        selectedBookTitle: ""
     };
 
     componentDidMount() {
@@ -197,7 +204,18 @@ class BookManage extends React.Component {
             })
     }
 
-    handleOpen = () => {
+    handleDeleteDialogOpen = (bookID, title) => {
+        this.setState({ 
+            deleteDialogOpen: true,
+            selectedBookID: bookID,
+        selectedBookTitle: title });
+      };
+
+    handleDeleteDialogClose = () => {
+        this.setState({ deleteDialogOpen: false });
+      };
+
+    handleAddNewBookOpen = () => {
         if(process.env.NODE === 'production'){
             this.setState({
                 newTitle: "",
@@ -225,7 +243,7 @@ class BookManage extends React.Component {
         this.setState({ open: true });
     };
 
-    handleClose = () => {
+    handleAddNewBookClose = () => {
         this.setState({ open: false });
     };
 
@@ -264,10 +282,9 @@ class BookManage extends React.Component {
             price,
             category
           })
-        .then(response => this.getAllBooks())
+        .then(() => this.getAllBooks())
         .catch(err => {this.alertObj(err.response.data)})
     };
-
 
     alertObj(obj){
         var output = "";
@@ -276,6 +293,12 @@ class BookManage extends React.Component {
             output += property+"\n";
         }
         alert(output);
+    }
+
+    confirmDelete () {
+        Axios.delete('/books/'+ this.state.selectedBookID)
+        .then(() => this.getAllBooks())
+        this.handleDeleteDialogClose();
     }
 
     render() {
@@ -290,7 +313,7 @@ class BookManage extends React.Component {
                     color="primary"
                     className={classes.button}
                     style={{outline:'none'}}
-                    onClick={this.handleOpen}
+                    onClick={this.handleAddNewBookOpen}
 >
                     <AddIcon />
                     New book
@@ -299,7 +322,7 @@ class BookManage extends React.Component {
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
                     open={this.state.open}
-                    onClose={this.handleClose}
+                    onClose={this.handleAddNewBookClose}
                 >
                     <div className={classes.paper} style={{top:'17%', left:'23%', width:'60%', height:'60%'}}>
                         <Typography variant="title" id="modal-title" style={{'marginBottom':'10px'}}>
@@ -420,6 +443,27 @@ class BookManage extends React.Component {
                         </Typography>
                     </div>
                 </Modal>
+                <Dialog
+          open={this.state.deleteDialogOpen}
+          onClose={this.handleDeleteDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Delete this book?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {this.state.selectedBookTitle}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.confirmDelete.bind(this)} color="primary">
+              YES
+            </Button>
+            <Button onClick={this.handleAddNewBookClose} color="primary" autoFocus>
+              NO
+            </Button>
+          </DialogActions>
+        </Dialog>
             <Paper className={classes.root}>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table}>
@@ -448,7 +492,7 @@ class BookManage extends React.Component {
                                             variant="contained" 
                                             color="primary" 
                                             className={classes.button} 
-                                            onClick={() => {Axios.delete('/books/'+ row._id).then(response=>this.getAllBooks())}}>
+                                            onClick={() => this.handleDeleteDialogOpen(row._id, row.title)}>
                                                 Delete
                                             </Button>
                                         </TableCell>
