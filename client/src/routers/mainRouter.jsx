@@ -36,7 +36,6 @@ const MainRoute = () => (
 			<Route path={'/recommendation'} component={Recommendation} /> {/* TODO: move to another route */}
 			<Route path={'/feed/book-lists.xml'} component={BookListFeed} />
 			<Route component={PageNotFound} />
-
 		</Switch>
 	</Route>
 );

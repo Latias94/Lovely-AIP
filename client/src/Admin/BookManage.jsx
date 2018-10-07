@@ -217,7 +217,7 @@ class BookManage extends React.Component {
       };
 
     handleAddNewBookOpen = () => {
-        if(process.env.NODE === 'production'){
+        if(process.env.NODE_ENV === 'production'){
             this.setState({
                 newTitle: "",
                 newAuthors: [""],
