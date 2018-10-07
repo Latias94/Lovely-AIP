@@ -46,8 +46,8 @@ const validate = data => (dispatch) => {
 		});
 		return false;
 	}
-	if (password.length < 8) {
-		const errMsg = { password: 'Password must be at least 8 character.' };
+	if (password.length < 6) {
+		const errMsg = { password: 'Password must be at least 6 character.' };
 		dispatch({
 			type: GET_ERRORS,
 			payload: errMsg,

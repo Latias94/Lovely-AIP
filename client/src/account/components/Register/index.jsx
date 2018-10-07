@@ -103,6 +103,7 @@ class RegisterForm extends Component {
         value={password}
         type={"password"}
         onChange={this.handleChange}
+        placeholder="6 - 30 characters"
       />
 
       <KFAccountInput
@@ -118,11 +119,7 @@ class RegisterForm extends Component {
       <Button variant="contained" color="secondary" id={"submit"} onClick={this.handleSubmit}
               className="registerBtn"
              style={{marginTop:'20px', outline:'none'}}>
-          Create a new account</Button>
-      <br/>
-      <div>
-        <Button variant="contained" className="registerBtn" style={{letterSpacing:'normal', outline:'none'}}>Sign up with your Google account</Button>
-      </div>
+          Create your new account</Button>
       <br/>
       <div>
         <a href="/login" style={{underlineStyle}}>Already signed up?</a>

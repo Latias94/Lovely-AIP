@@ -25,7 +25,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import isEmpty from '../account/validation/isEmpty';
 // Styles
 const actionsStyles = theme => ({
     root: {
@@ -181,6 +181,7 @@ class BookManage extends React.Component {
         newStock: 0,
         newPrice: 0,
         newCategory: "5b65103ac55fe361685262bf",
+        newBookError:{},
 
         rowsPerPage: 15,
 
@@ -255,11 +256,13 @@ class BookManage extends React.Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
-    handleClickButton = () => {
+    handleCancelAddNewBook = () => {
         this.setState(state => ({
             open: !state.open,
         }));
+    }
 
+    handleClickButton = () => {
         const { 
             newISBN: isbn, 
             newTitle: title, 
@@ -282,18 +285,17 @@ class BookManage extends React.Component {
             price,
             category
           })
-        .then(() => this.getAllBooks())
-        .catch(err => {this.alertObj(err.response.data)})
+        .then(() => {
+            this.setState(state => ({
+                open: !state.open,
+            }));
+            this.getAllBooks();
+            this.setState({newBookError:{}})
+        })
+        .catch(err => {
+            this.setState({newBookError: err.response.data})
+        })
     };
-
-    alertObj(obj){
-        var output = "";
-        for(var i in obj){
-            var property = obj[i];
-            output += property+"\n";
-        }
-        alert(output);
-    }
 
     confirmDelete () {
         Axios.delete('/books/'+ this.state.selectedBookID)
@@ -303,7 +305,7 @@ class BookManage extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { rows, rowsPerPage, page } = this.state;
+        const { rows, rowsPerPage, page, newBookError } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
         return (
@@ -342,6 +344,8 @@ class BookManage extends React.Component {
                                             value={this.state.newTitle}
                                             onChange={e => this.setState({newTitle: e.target.value}) }
                                             required
+                                            error={newBookError.hasOwnProperty('title')}
+                                            helperText={newBookError.hasOwnProperty('title') ? newBookError.title : ""}
                                         />
                                     </td>
                                     <td>
@@ -353,6 +357,8 @@ class BookManage extends React.Component {
                                             value={this.state.newAuthors}
                                             onChange={e => this.setState({newAuthors: [e.target.value]})}
                                             required
+                                            error={newBookError.hasOwnProperty('authors')}
+                                            helperText={newBookError.hasOwnProperty('authors') ? newBookError.authors : ""}
                                         />
                                     </td>
                                 </tr>
@@ -379,6 +385,8 @@ class BookManage extends React.Component {
                                             required
                                             value={this.state.newStock}
                                             onChange={e => this.setState({newStock: e.target.value}) }
+                                            error={newBookError.hasOwnProperty('stock')}
+                                            helperText={newBookError.hasOwnProperty('stock') ? newBookError.stock : ""}
                                         />
                                     </td>
                                     <td>
@@ -391,6 +399,8 @@ class BookManage extends React.Component {
                                             required
                                             value={this.state.newISBN}
                                             onChange={e => this.setState({newISBN: e.target.value}) }
+                                            error={newBookError.hasOwnProperty('isbn')}
+                                            helperText={newBookError.hasOwnProperty('isbn') ? newBookError.isbn : ""}
                                         />
                                     </td>
                                 </tr>
@@ -404,6 +414,8 @@ class BookManage extends React.Component {
                                             required
                                             value={this.state.newPrice}
                                             onChange={e => this.setState({newPrice: e.target.value}) }
+                                            error={newBookError.hasOwnProperty('price')}
+                                            helperText={newBookError.hasOwnProperty('price') ? newBookError.price : ""}
                                         />
                                     </td>
                                     <td>
@@ -415,6 +427,8 @@ class BookManage extends React.Component {
                                             required
                                             value={this.state.newPublishDate}
                                             onChange={e => this.setState({newPublishDate: e.target.value}) }
+                                            error={newBookError.hasOwnProperty('publishDate')}
+                                            helperText={newBookError.hasOwnProperty('publishDate') ? newBookError.publishDate : ""}
                                         />
                                     </td>
                                 </tr>
@@ -429,6 +443,8 @@ class BookManage extends React.Component {
                                             required
                                             value={this.state.newDescription}
                                             onChange={e => this.setState({newDescription: e.target.value}) }
+                                            error={newBookError.hasOwnProperty('description')}
+                                            helperText={newBookError.hasOwnProperty('description') ? newBookError.description : ""}
                                         />
                                         </td>
                                 </tr>
@@ -436,7 +452,7 @@ class BookManage extends React.Component {
                             </table >
                             <Button
                                 variant="contained"
-                                onClick={this.handleClickButton}
+                                onClick={this.handleCancelAddNewBook}
                                 style={{margin:'2%'}}
                             >Cancel</Button>
                             <Button variant="contained" color="primary" onClick={this.handleClickButton}>Confirm</Button>
