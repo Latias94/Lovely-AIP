@@ -167,11 +167,11 @@ class BookList extends React.PureComponent {
                             <TableBody>
                                 {books.length ? books.map(book => (
                                     <TableRow key={book._id}>
-                                        <TableCell component="a" scope="row" href={`http://localhost:3000/book/${book._id}`}>
+                                        <TableCell component="a" scope="row" href={`/book/${book._id}`}>
                                             <img src={book.coverUrl} alt={book.title} style={{ width: '55px' }} title=""/>
                                         </TableCell>
                                         <TableCell>
-                                            <a href={`http://localhost:3000/book/${book._id}`}>{book.title}</a>
+                                            <a href={`/book/${book._id}`}>{book.title}</a>
                                             <div>{`by ${book.authors[0].name}`}</div> {/* TODO: join authors' names */}
                                             <Rate disabled value={book.reviewStar} />
                                         </TableCell>
