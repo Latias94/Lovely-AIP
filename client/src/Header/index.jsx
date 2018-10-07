@@ -63,9 +63,8 @@ class headerPageIndex extends Component {
 							{this.props.isAdmin && <div 
 							title='Dashboard' 
 							onClick={this.openDashboard} 
-							style={{'cursor':'pointer','marginLeft':'15px'}}>
-							<Icon icon={ic_dashboard} size={30}/>
-							</div>}
+							style={{cursor:'pointer',marginLeft:'25px'}}>
+								<Icon icon={ic_dashboard} size={25} style={{marginBottom:'10px'}}/>							</div>}
 						</div>
 					</div>
 				</div>
