@@ -40,9 +40,9 @@ module.exports = function validateBookInput(bodyData) {
 
   if (!Validator.isLength(data.title, {
     min: 2,
-    max: 80
+    max: 100
   })) {
-    errors.title = 'Book title must be between 2 and 80 characters';
+    errors.title = 'Book title must be between 2 and 100 characters';
   }
   if (Validator.isEmpty(data.title)) {
     errors.title = 'Title field is required';
@@ -50,9 +50,9 @@ module.exports = function validateBookInput(bodyData) {
 
   if (!Validator.isLength(data.description, {
     min: 10,
-    max: 1000
+    max: 2000
   })) {
-    errors.description = 'Book description must be between 10 and 1000 characters';
+    errors.description = 'Book description must be between 10 and 2000 characters';
   }
   if (Validator.isEmpty(data.description)) {
     errors.description = 'Description field is required';
