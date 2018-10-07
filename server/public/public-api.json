@@ -1,0 +1,1051 @@
+{
+    "info": {
+        "title": "Knight Frank Public API",
+        "version": "1.0.0",
+        "description": "Hmmm, You have found a list of public API, enjoy it!"
+    },
+    "host": "lovely-aip.herokuapp.com",
+    "basePath": "/",
+    "swagger": "2.0",
+    "paths": {
+        "/api/booklists/search/{keyword}": {
+            "get": {
+                "tags": ["BookList"],
+                "summary": "Get booklists by keyword with condition",
+                "description": "Get booklists by keyword with condition. (search in booklist title and description with weight).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "keyword",
+                    "in": "path",
+                    "description": "keyword of books that needs to be fetched",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "page",
+                    "in": "query",
+                    "description": "the page you are query (powered by pageSize). Default is 1",
+                    "required": false,
+                    "type": "integer"
+                }, {
+                    "name": "pageSize",
+                    "in": "query",
+                    "description": "How many books you want to show in one page. Default is 10",
+                    "required": false,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get books successfully"
+                    },
+                    "404": {
+                        "description": "No books found with that keyword"
+                    }
+                }
+            }
+        },
+        "/api/booklists/list": {
+            "get": {
+                "tags": ["BookList"],
+                "summary": "Get booklists with condition",
+                "description": "Get booklists with condition. e.g.http://localhost:5000/api/booklists/list?page=1&pageSize=10&createDate=1",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "page",
+                    "in": "query",
+                    "description": "the page you are query (powered by pageSize)",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "pageSize",
+                    "in": "query",
+                    "description": "How many booklists you want to show in one page",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "create",
+                    "in": "query",
+                    "description": "Sort result by create date, 1 for oldest to newest, -1 for newest to oldest",
+                    "required": false,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get booklists successfully"
+                    },
+                    "404": {
+                        "description": "No booklists found"
+                    }
+                }
+            }
+        },
+        "/api/booklists": {
+            "get": {
+                "tags": ["BookList"],
+                "summary": "Get all booklists",
+                "description": "Get all booklists",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Get all booklists successfully"
+                    },
+                    "404": {
+                        "description": "No booklists found"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["BookList"],
+                "summary": "Create a BookList",
+                "description": "Create a new BookList. Title and description field is required. Description must be between 10 and 500 characters. This can only be done by the logged in user (add JWT token to header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "body",
+                    "description": "Created BookList object",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/BookList"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created"
+                    },
+                    "400": {
+                        "description": "Form validation fail"
+                    },
+                    "401": {
+                        "description": "Cannot create the BookList"
+                    },
+                    "404": {
+                        "description": "BookList name has existed"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/booklists/slug/{slug}": {
+            "get": {
+                "tags": ["BookList"],
+                "summary": "Get BookList by slug",
+                "description": "Get BookList by slug. Example http://localhost:5000/api/booklists/slug/game Any details please refer to https://github.com/talha-asad/mongoose-url-slugs",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Get BookList successfully"
+                    },
+                    "404": {
+                        "description": "No booklists found"
+                    }
+                }
+            }
+        },
+        "/api/booklists/{id}": {
+            "get": {
+                "tags": ["BookList"],
+                "summary": "Get a BookList with the user reviews by id",
+                "description": "Get a BookList with the user reviews by id. This can only be done by the logged in user (JWT token required in the header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "The ID of the BookList",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get BookList successfully"
+                    },
+                    "404": {
+                        "description": "No booklists found"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["BookList"],
+                "summary": "Edit BookList",
+                "description": "Edit a exist BookList. Both title and description fields are required. This can only be done by the logged in user (add JWT token to header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "body",
+                    "description": "Edit BookList object",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/BookList"
+                    }
+                }, {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of BookList that needs to be edited",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully edited"
+                    },
+                    "401": {
+                        "description": "Cannot edit the BookList"
+                    },
+                    "404": {
+                        "description": "No booklists found or BookList name has existed"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            },
+            "delete": {
+                "tags": ["BookList"],
+                "summary": "Delete BookList",
+                "description": "Delete a exist BookList.This can only be done by the logged in user (add JWT token to header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "body",
+                    "description": "Delete BookList object",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/BookList"
+                    }
+                }, {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of BookList that needs to be deleted",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted bookList Object"
+                    },
+                    "401": {
+                        "description": "Cannot delete the booklist"
+                    },
+                    "404": {
+                        "description": "No booklists found"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/booklists/book/{id}/{book_id}": {
+            "post": {
+                "tags": ["BookList"],
+                "summary": "Add Book to BookList",
+                "description": "Add Book to a exist BookList. Both BookList id and Book id fields are required.",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of BookList that needs to be edited",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "book_id",
+                    "in": "path",
+                    "description": "ID of Book that needs to be added to BookList",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "body",
+                    "description": "Add recommendation for the book (optional)",
+                    "in": "body",
+                    "schema": {
+                        "$ref": "#/definitions/AddBookToBookList"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully Added"
+                    },
+                    "400": {
+                        "description": "Form validation fail"
+                    },
+                    "404": {
+                        "description": "No booklists found or other internal error"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            },
+            "delete": {
+                "tags": ["BookList"],
+                "summary": "Delete a Book from a BookList",
+                "description": "Delete a Book from a exist BookList. Both BookList id and Book id fields are required.",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of BookList that needs to be edited",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "book_id",
+                    "in": "path",
+                    "description": "ID of Book that needs to be added to BookList",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully Deleted"
+                    },
+                    "401": {
+                        "description": "Cannot delete the BookList"
+                    },
+                    "404": {
+                        "description": "No booklists found or other internal error"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/booklists/like/{id}": {
+            "post": {
+                "tags": ["BookList"],
+                "summary": "Like BookList",
+                "description": "Like a exist BookList. This can only be done by the logged in user (add JWT token to header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of BookList that needs to be liked",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully liked"
+                    },
+                    "400": {
+                        "description": "User already liked this BookList"
+                    },
+                    "404": {
+                        "description": "No BookLists found"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/booklists/unlike/{id}": {
+            "post": {
+                "tags": ["BookList"],
+                "summary": "Unlike bookList",
+                "description": "Unlike a exist bookList. This can only be done by the logged in user (add JWT token to header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of bookList that needs to be unliked",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully Unliked"
+                    },
+                    "400": {
+                        "description": "You have not yet liked this bookList"
+                    },
+                    "404": {
+                        "description": "No bookLists found"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/books": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Get all books",
+                "description": "Get all books",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Get all books successfully"
+                    },
+                    "404": {
+                        "description": "No books found"
+                    }
+                }
+            }
+        },
+        "/api/books/list": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Get books with condition",
+                "description": "Get books with condition. e.g.http://localhost:5000/api/books/list?page=2&pageSize=10&price=-1&publish=1",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "page",
+                    "in": "query",
+                    "description": "the page you are query (powered by pageSize)",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "pageSize",
+                    "in": "query",
+                    "description": "How many books you want to show in one page",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "publish",
+                    "in": "query",
+                    "description": "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest",
+                    "required": false,
+                    "type": "integer"
+                }, {
+                    "name": "price",
+                    "in": "query",
+                    "description": "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest",
+                    "required": false,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get books successfully"
+                    },
+                    "404": {
+                        "description": "No books found"
+                    }
+                }
+            }
+        },
+        "/api/books/{id}": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Get book by id",
+                "description": "Get book by id.",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of book that needs to be fetched",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get book successfully"
+                    },
+                    "404": {
+                        "description": "No books found with that ID"
+                    }
+                }
+            }
+        },
+        "/api/books/slug/{slug}": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Get book by slug",
+                "description": "Get book by slug.",
+                "parameters": [{
+                    "name": "slug",
+                    "in": "path",
+                    "description": "Slug of book that needs to get",
+                    "required": true,
+                    "type": "string"
+                }],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Get book successfully"
+                    },
+                    "404": {
+                        "description": "No books found"
+                    }
+                }
+            }
+        },
+        "/api/books/isbn/{isbn}": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Get book by isbn",
+                "description": "Get book by isbn.",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "isbn",
+                    "in": "path",
+                    "description": "ISBN of book that needs to be fetched",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get book successfully"
+                    },
+                    "404": {
+                        "description": "No books found"
+                    }
+                }
+            }
+        },
+        "/api/books/search/{keyword}": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Get books by keyword with condition",
+                "description": "Get book by keyword with condition. (search in book title and description with weight).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "keyword",
+                    "in": "path",
+                    "description": "keyword of books that needs to be fetched",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "page",
+                    "in": "query",
+                    "description": "the page you are query (powered by pageSize). Default is 1",
+                    "required": false,
+                    "type": "integer"
+                }, {
+                    "name": "pageSize",
+                    "in": "query",
+                    "description": "How many books you want to show in one page. Default is 10",
+                    "required": false,
+                    "type": "integer"
+                }, {
+                    "name": "publish",
+                    "in": "query",
+                    "description": "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest. Default is -1",
+                    "required": false,
+                    "type": "integer"
+                }, {
+                    "name": "price",
+                    "in": "query",
+                    "description": "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest. Default is 1",
+                    "required": false,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get books successfully"
+                    },
+                    "404": {
+                        "description": "No books found with that keyword"
+                    }
+                }
+            }
+        },
+        "/api/books/review/{id}": {
+            "post": {
+                "tags": ["Book"],
+                "summary": "Add review to book",
+                "description": "Add review to book. This can only be done by the logged in user (add JWT token to header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "body",
+                    "description": "Review object",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/Review"
+                    }
+                }, {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of book that needs to add review",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added review"
+                    },
+                    "400": {
+                        "description": "Form validation fail"
+                    },
+                    "404": {
+                        "description": "No books found or Review has existed"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/books/review/{id}/{review_id}": {
+            "delete": {
+                "tags": ["Book"],
+                "summary": "Remove review from book",
+                "description": "Remove review from book. This can only be done by the logged in user (add JWT token to header).",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of book that needs to be modified",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "review_id",
+                    "in": "path",
+                    "description": "ID of review that needs to be deleted",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully removed review"
+                    },
+                    "401": {
+                        "description": "Cannot delete the review"
+                    },
+                    "404": {
+                        "description": "No books found or review does not exist"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/cart": {
+            "get": {
+                "tags": ["Cart"],
+                "summary": "Get all books in the user cart",
+                "description": "Get all books in the user cart. This can only be done by the logged in user (add JWT token to header)",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Get all books in the user cart successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Something error"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/cart/{id}": {
+            "post": {
+                "tags": ["Cart"],
+                "summary": "Add one book into cart",
+                "description": "Add one book into cart. This can only be done by the logged in user (add JWT token to header)",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "id of book that want to add into cart",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Book Id not exist or Something wrong"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            },
+            "delete": {
+                "tags": ["Cart"],
+                "summary": "Delete one book from cart",
+                "description": "Delete one book from cart. This can only be done by the logged in user (add JWT token to header)",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of book that needs to be deleted",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the book"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "No books found"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/cart/{id}/{quantity}": {
+            "post": {
+                "tags": ["Cart"],
+                "summary": "Edit purchase quantity of book in cart",
+                "description": "Add one book into cart. This can only be done by the logged in user (add JWT token to header)",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "quantity",
+                    "in": "path",
+                    "description": "Purchase quantity of book",
+                    "required": true,
+                    "type": "Number"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully edited"
+                    },
+                    "400": {
+                        "description": "Quantity is invalid"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Book id not exist or Something wrong"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": ["Category"],
+                "summary": "Get all categories",
+                "description": "Get all categories",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Get all categories successfully"
+                    },
+                    "404": {
+                        "description": "No categories found"
+                    }
+                }
+            }
+        },
+        "/api/categories/list": {
+            "get": {
+                "tags": ["Category"],
+                "summary": "Get all categories with their books",
+                "description": "Get all categories with their books",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Get all categories successfully"
+                    },
+                    "404": {
+                        "description": "No categories found"
+                    }
+                }
+            }
+        },
+        "/api/categories/slug/{slug}": {
+            "get": {
+                "tags": ["Category"],
+                "summary": "Get category by slug",
+                "description": "Get category by slug. Example http://localhost:5000/api/categories/slug/game Any details please refer to https://github.com/talha-asad/mongoose-url-slugs",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "slug",
+                    "in": "path",
+                    "description": "Slug of category that needs to be fetched",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "page",
+                    "in": "query",
+                    "description": "the page you are query (powered by pageSize)",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "pageSize",
+                    "in": "query",
+                    "description": "How many books you want to show in one page",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "publish",
+                    "in": "query",
+                    "description": "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest",
+                    "required": false,
+                    "type": "integer"
+                }, {
+                    "name": "price",
+                    "in": "query",
+                    "description": "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest",
+                    "required": false,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get category successfully"
+                    },
+                    "404": {
+                        "description": "No categories found"
+                    }
+                }
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": ["Category"],
+                "summary": "Get category by id",
+                "description": "Get category by id",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of category that needs to be fetched",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "name": "page",
+                    "in": "query",
+                    "description": "the page you are query (powered by pageSize)",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "pageSize",
+                    "in": "query",
+                    "description": "How many books you want to show in one page",
+                    "required": true,
+                    "type": "integer"
+                }, {
+                    "name": "publish",
+                    "in": "query",
+                    "description": "Sort result by publish date, 1 for oldest to newest, -1 for newest to oldest",
+                    "required": false,
+                    "type": "integer"
+                }, {
+                    "name": "price",
+                    "in": "query",
+                    "description": "Sort result by price, 1 for cheapest to most expensive, -1 for most expensive to cheapest",
+                    "required": false,
+                    "type": "integer"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get category successfully"
+                    },
+                    "404": {
+                        "description": "No categories found"
+                    }
+                }
+            }
+        },
+        "/api/recommendation/book/{id}": {
+            "get": {
+                "tags": ["Recommendation"],
+                "summary": "Get recommend books by user id",
+                "description": "Get recommend books by user id. The recommendation is simply using KNN mechanism.",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID of user",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Get recommend book successfully"
+                    },
+                    "404": {
+                        "description": "No recommend books found"
+                    }
+                }
+            }
+        },
+        "/api/feed/booklists": {
+            "get": {
+                "tags": ["RSS"],
+                "summary": "Get RSS of 10 of newest BookLists",
+                "description": "Get RSS of 10 of newest BookLists",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "return newest booklist RSS"
+                    }
+                }
+            }
+        },
+        "/api/feed/books": {
+            "get": {
+                "tags": ["RSS"],
+                "summary": "Get RSS of 10 of newest books",
+                "description": "Get RSS of 10 of newest books",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "return newest books RSS"
+                    }
+                }
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Login user into the system",
+                "description": "User login (example> email:test@test.com passwprd:123456)",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "body",
+                    "description": "user email",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/UserForLogin"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully login and return JWT Token"
+                    },
+                    "400": {
+                        "description": "Invalid username/password supplied"
+                    },
+                    "404": {
+                        "description": "Account is not activated"
+                    }
+                }
+            }
+        },
+        "/api/users/current": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Return current user",
+                "description": "This can only be done by the logged in user (add JWT token to header)",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "return current user successfully"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/users/current/booklist": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Return the bookLists current user created",
+                "description": "This can only be done by the logged in user (add JWT token to header)",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "return bookLists successfully"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/users/current/review": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Return the reviews current user created",
+                "description": "This can only be done by the logged in user (add JWT token to header)",
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "return reviews successfully"
+                    }
+                },
+                "security": [{
+                    "JWT": []
+                }]
+            }
+        },
+        "/api/users/avatar/{id}": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Get user avatar according to user id",
+                "description": "Get user avatar according to user id",
+                "produces": ["application/json"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "id of the user",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get the avatar"
+                    },
+                    "404": {
+                        "description": "No avatars found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "BookList": {
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "AddBookToBookList": {
+            "properties": {
+                "recommendation": {
+                    "type": "string"
+                }
+            }
+        },
+        "Review": {
+            "properties": {
+                "star": {
+                    "type": "Number"
+                },
+                "content": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserForLogin": {
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "responses": {},
+    "parameters": {},
+    "securityDefinitions": {
+        "JWT": {
+            "description": "JWT token from user login",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "tags": []
+}
