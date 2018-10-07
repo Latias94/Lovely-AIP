@@ -126,7 +126,7 @@ class BookList extends React.PureComponent {
                     />
                     <h1 style={{fontSize:'20px'}}>{bookListTitle}</h1>
                     <p style={{ fontSize: '14px', fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>{description}</p>
-                    <div style={{ flexDirection: 'row' }}>
+                    {(this.props.userID === this.state.userID || this.props.isAdmin ) && <div style={{ flexDirection: 'row' }}>
                         <Button
                             style={{ outline: 'none', width: '170px', backgroundColor:'#3D5AFE', color:'#fff', marginRight:'10px' }}
                             variant="contained"
@@ -143,7 +143,7 @@ class BookList extends React.PureComponent {
                         >
                             Edit
                         </Button>
-                        {(this.props.userID === this.state.userID || this.props.isAdmin ) && <Button
+                        <Button
                             title={'Delete this book list'}
                             style={{ outline: 'none', width: '120px', marginRight:'10px' }}
                             variant="contained"
@@ -151,8 +151,8 @@ class BookList extends React.PureComponent {
                             onClick={() => { this.deleteBookList(bookListId) }}
                         >
                             Delete list
-                        </Button>}
-                    </div>
+                        </Button>
+                    </div>}
                     {/*
             TODO: add sort func in table: https://material-ui.com/demos/tables/
             */}
