@@ -693,6 +693,8 @@ router.post('/review/:id',
  *     responses:
  *       200:
  *         description: Successfully removed review
+ *       401:
+ *         description: Cannot delete the review
  *       404:
  *         description: No books found or review does not exist
  *     security:
@@ -724,8 +726,14 @@ router.delete('/review/:id/:review_id',
 
               // Get remove index
               const removeIndex = book.reviews
-                .map(item => item._id.toString())
+                .map(item => item.reviewid.toString())
                 .indexOf(req.params.review_id);
+              console.log(removeIndex);
+              console.log(book.reviews);
+              if (book.reviews[removeIndex].user.toString() !== req.user.id.toString()) {
+                return res.status(401)
+                  .json({ unauthorized: 'Cannot delete the review' });
+              }
 
               // Splice review out of array
               book.reviews.splice(removeIndex, 1);

@@ -30,11 +30,14 @@ const swaggerOptions = {
 // initialize swagger-jsdoc
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
-app.use('/swagger', express.static('api-docs'));
+// Api document for staff
+app.use('/swagger', express.static('api-docs/private'));
 app.get('/swagger.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });
+// Api document for public
+app.use('/developer', express.static('api-docs/public'));
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({
