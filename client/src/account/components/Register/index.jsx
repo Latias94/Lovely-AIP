@@ -7,6 +7,7 @@ import {withRouter} from "react-router-dom";
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KFAccountInput from '../KFAccountInput';
+import './registerPage.css';
 
 const styles = theme => ({
   container: {
@@ -72,7 +73,7 @@ class RegisterForm extends Component {
     const {classes} = this.props;
 
     return <div className={classes.container}>
-      <h1>Sign up</h1>
+      <h1 className="loginTitle"> Sign up</h1>
 
       <KFAccountInput
         name={"Email*"}
@@ -114,15 +115,17 @@ class RegisterForm extends Component {
         onChange={this.handleChange}
       />
 
-      <Button variant="contained" color="secondary" id={"submit"} onClick={this.handleSubmit}>Create a new
-        account</Button>
+      <Button variant="contained" color="secondary" id={"submit"} onClick={this.handleSubmit}
+              className="registerBtn"
+             style={{marginTop:'20px', outline:'none'}}>
+          Create a new account</Button>
       <br/>
       <div>
-        <Button variant="contained">Sign up with your Google account</Button>
+        <Button variant="contained" className="registerBtn" style={{letterSpacing:'normal', outline:'none'}}>Sign up with your Google account</Button>
       </div>
       <br/>
       <div>
-        <a href="/login" style={underlineStyle}>Already signed up?</a>
+        <a href="/login" style={{underlineStyle}}>Already signed up?</a>
       </div>
     </div>
   }

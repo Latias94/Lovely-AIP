@@ -6,6 +6,7 @@ import KFAccountInput from '../KFAccountInput';
 import { loginUser } from '../../actions/authActions';
 import { connect } from 'react-redux';
 import { compose } from "redux";
+import './loginForm.css';
 
 const styles = theme => ({
   container: {
@@ -107,8 +108,8 @@ class LoginForm extends Component {
     const { classes } = this.props;
 
       return (
-        <div className={classes.container}>
-          <h1>Log in</h1>
+        <div className={classes.container} style={{minHeight:'360px'}}>
+          <h1 className="loginTitle">Log in</h1>
 
           <KFAccountInput
             name={"Email"}
@@ -120,7 +121,6 @@ class LoginForm extends Component {
                    onChange={this.handleChange}
           />
 
-          <br/>
 
           <KFAccountInput
             name={"Password"}
@@ -133,8 +133,7 @@ class LoginForm extends Component {
             onKeyDown={this.handleEnter} // TODO: fail to set onkeydown
           />
 
-          <br/>
-          <Button variant="contained" color="primary" onClick={this.handleSubmit}>Sign in</Button>
+          <Button variant="contained" color="primary" onClick={this.handleSubmit} className="loginBtn" style={{outline:'none'}}>Sign in</Button>
         </div>
       )
   }
