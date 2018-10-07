@@ -86,7 +86,7 @@ const BooksPageComponent = props => (
 			</ul>
 		</div>
 		<div style={styles.mainView}>
-			<div style={styles.bookImage}><img src={props.coverUrl} style={{ width: '200px' }} alt="000" /></div>
+			{props.coverUrl && <div style={styles.bookImage}><img src={props.coverUrl} style={{ width: '200px' }} alt="000" /></div>}
 			<div style={styles.center}>
 				<h3>{props.bookName}</h3>
 				<div style={styles.bookInfo}>
