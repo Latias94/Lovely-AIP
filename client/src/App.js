@@ -21,7 +21,7 @@ class App extends Component {
 		const showHeaderFooter = !this.hideHeaderFooter();
 
 		return (
-			<div className='app'>
+			<div className='app' style={{backgroundColor:'#FAFAFA'}}>
 				{showHeaderFooter && <Header/>}
 				<div className="router"><MainRoute/></div>
 				{showHeaderFooter && <Footer/>}

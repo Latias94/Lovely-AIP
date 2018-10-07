@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 
 
 const styles = theme => ({
@@ -107,7 +108,7 @@ class MySetting extends React.Component {
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>General settings</Typography>
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails style={{height:300}}>
+                    <ExpansionPanelDetails>
                         <table style={{width:'100%'}}>
                             <thead></thead>
                             <tbody>
@@ -185,17 +186,44 @@ class MySetting extends React.Component {
                             </tbody>
                         </table>
                     </ExpansionPanelDetails>
+                    <Button variant="contained" color="primary" className={classes.button} style={{marginLeft:'30px', marginBottom:'20px'}}>
+                        SAVE
+                    </Button>
                 </ExpansionPanel>
                 <ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>Change Password</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
-                        <Typography>
-                            Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
-                            diam eros in elit. Pellentesque convallis laoreet laoreet.
-                        </Typography>
+                        <table style={{width:'100%'}}>
+                            <thead></thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <TextField
+                                        id="NewPassword"
+                                        label="New Password"
+                                        multiline
+                                        className={classes.textField}
+                                        margin="normal"
+                                    />
+                                </td>
+                                <td>
+                                    <TextField
+                                        id="ConfirmPassword"
+                                        label="Confirm New Password"
+                                        multiline
+                                        className={classes.textField}
+                                        margin="normal"
+                                    />
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </ExpansionPanelDetails>
+                    <Button variant="contained" color="primary" className={classes.button} style={{marginLeft:'30px', marginBottom:'20px'}}>
+                        SAVE
+                    </Button>
                 </ExpansionPanel>
             </div>
         );

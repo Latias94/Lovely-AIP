@@ -13,6 +13,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 
+
 const styles = theme => ({
     buttonWrapper: {
         position: 'relative',
@@ -105,11 +106,11 @@ class MyList extends React.Component {
         const { classes } = this.props;
 
         return (
-            <div>
+            <div  style={{backgroundColor:'#FAFAFA'}}>
                 <Grid container justify="center" spacing={0}>
                     <Grid item className={classes.buttonWrapper} style={{paddingTop:'20px'}}>
                         <Button
-                            style={{outline:'none'}}
+                            style={{outline:'none', backgroundColor:'#3D5AFE', color:'#fff', width:'170px', height:'40px'}}
                             variant="contained"
                             onClick={this.handleOpen}
                         >
@@ -152,6 +153,7 @@ class MyList extends React.Component {
                                                     error={this.state.isDescriptionWrong}
                                                     helperText={this.state.descriptionError}
                                                     required
+                                                    style={{width:'270px'}}
                                                 />
                                             </td>
                                         </tr>
@@ -177,9 +179,9 @@ class MyList extends React.Component {
                     {
                         this.props.bookLists.map(
                             (bookList)=>{
-                                return <Card key={bookList._id} className={classes.card}>
+                                return <Card key={bookList._id} className={classes.card} style={{marginTop:'10px', backgroundColor:'#FAFAFA'}}>
                                     <CardContent>
-                                        <Typography variant="subheading" style={{display:'inline'}}>
+                                        <Typography variant="subheading" style={{display:'inline', fontSize:'18px', paddingBottom:'0'}}>
                                             <a href={'/booklist/'+bookList.slug}>
                                                 {bookList.title}
                                             </a>
