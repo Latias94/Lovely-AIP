@@ -11,6 +11,9 @@ import Button from '@material-ui/core/Button';
 import { Rate } from 'antd';
 import KFStyles from '../KFStyles';
 import BookListEditorModal from './BookListEditorModal';
+import {compose} from "redux";
+import {connect} from "react-redux";
+
 
 const styles = theme => ({
     root: {
@@ -38,6 +41,7 @@ class BookList extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            userID: "",
             bookListTitle: 'Book List',
             description: '',
             books: [],
@@ -61,6 +65,7 @@ class BookList extends React.PureComponent {
                     title: bookListTitle,
                     books, description,
                     _id: bookListId,
+                    user: userID
                 } = res.data;
 
                 this.setState({
@@ -69,6 +74,7 @@ class BookList extends React.PureComponent {
                     totalBooks: books.length,
                     description,
                     bookListId,
+                    userID
                 });
             })
             .catch(err => (console.log(err)));
@@ -123,7 +129,7 @@ class BookList extends React.PureComponent {
                     />
                     <h1 style={{fontSize:'20px'}}>{bookListTitle}</h1>
                     <p style={{ fontSize: '14px', fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>{description}</p>
-                    <div style={{ flexDirection: 'row' }}>
+                    {(this.props.userID === this.state.userID || this.props.isAdmin ) && <div style={{ flexDirection: 'row' }}>
                         <Button
                             style={{ outline: 'none', width: '170px', backgroundColor:'#3D5AFE', color:'#fff', marginRight:'10px' }}
                             variant="contained"
@@ -145,11 +151,11 @@ class BookList extends React.PureComponent {
                             style={{ outline: 'none', width: '120px', marginRight:'10px' }}
                             variant="contained"
                             color="secondary"
-                            onClick={() => { this.deleteBookList(bookListId); }}
+                            onClick={() => { this.deleteBookList(bookListId) }}
                         >
                             Delete list
                         </Button>
-                    </div>
+                    </div>}
                     {/*
             TODO: add sort func in table: https://material-ui.com/demos/tables/
             */}
@@ -166,20 +172,20 @@ class BookList extends React.PureComponent {
                             {/* </TableHead> */}
                             <TableBody>
                                 {books.length ? books.map(book => (
-                                    <TableRow key={book._id}>
-                                        <TableCell component="a" scope="row" href={`/book/${book._id}`}>
-                                            <img src={book.coverUrl} alt={book.title} style={{ width: '55px' }} title=""/>
-                                        </TableCell>
-                                        <TableCell>
-                                            <a href={`/book/${book._id}`}>{book.title}</a>
+                                    <tr key={book._id} style={{height:'220px'}}>
+                                        <td component="a" scope="row" href={`/book/${book._id}`} style={{width:'18%',paddingLeft:'20px'}}>
+                                            <img src={book.coverUrl} alt={book.title} style={{ width: '120px' }} title=""/>
+                                        </td>
+                                        <td style={{width:'60'}}>
+                                            <a href={`/book/${book._id}`} style={{fontSize:'18px'}}>{book.title}</a>
                                             <div>{`by ${book.authors[0].name}`}</div> {/* TODO: join authors' names */}
                                             <Rate disabled value={book.reviewStar} />
-                                        </TableCell>
-                                        <TableCell>
+                                        </td>
+                                        <td style={{width:'20%'}}>
                                             {book.reviewContent ? book.reviewContent : ''}
-                                        </TableCell>
-                                    </TableRow>
-                                )) : <div>No books yet.</div>}
+                                        </td>
+                                    </tr>
+                                )) : <tr>No books yet.</tr>}
                             </TableBody>
                         </Table>
                     </Paper>
@@ -192,6 +198,10 @@ class BookList extends React.PureComponent {
 
 BookList.propTypes = {
     classes: PropTypes.object.isRequired,
+    userID: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(BookList);
+export default compose(
+    withStyles(styles),
+    connect(state => ({ userID: state.auth.user.id, isAdmin: state.auth.user.isStaff }))
+)(BookList);

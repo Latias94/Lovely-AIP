@@ -59,11 +59,11 @@ class AccountTab extends React.Component {
                         <Tab label="My BookList" style={{outline:'none'}} />
                         {/*<Tab label="My Order" style={{outline:'none'}} />*/}
                         {/*<Tab label="My Payment" style={{outline:'none'}} />*/}
-                        <Tab label="My Setting" style={{outline:'none'}}  />
+                        {/*<Tab label="My Setting" style={{outline:'none'}}  />*/}
                     </Tabs>
                 </AppBar>
                 {value === 0 && <MyList />}
-                {value === 1 && <MySetting />}
+                {/*{value === 1 && <MySetting />}*/}
             </div>
         );
     }

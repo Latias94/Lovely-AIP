@@ -9,7 +9,6 @@ import {
 import imageOne from '../Img/Banner1.png';
 import imageTwo from '../Img/Banner2.png';
 import imageThree from '../Img/Banner3.png';
-import config from '../config'
 
 
 const items = [
@@ -32,7 +31,7 @@ const items = [
 		src: imageThree,
 		altText: ' ',
 		caption: ' ',
-		url: "/booklist/best-book-of-2018"
+		url: "/booklist/the-best-book-i-have-ever-read-in-2018"
 	},
 ];
 
