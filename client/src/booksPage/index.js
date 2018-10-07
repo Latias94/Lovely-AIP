@@ -50,7 +50,7 @@ class BooksPage extends Component {
 
 	createANewBookList(title) {
 		Axios.post('/booklists', { title, description: 'tryyyyyyyyyyy' })
-			.then((response) => { this.getUserBookList(); this.handleClose(); })
+			.then(() => { this.getUserBookList(); this.handleClose(); })
 			.catch((error => console.log(error)));
 	}
 
@@ -118,7 +118,17 @@ class BooksPage extends Component {
 			})
 			.catch((error) => {
 				if (error.response.status === 404) { alert(error.response.data.reviewexist); }
+				else { this.alertObj(error.response.data)}
 			});
+	}
+
+	alertObj(obj) {
+		var output = "";
+		for(var i in obj){
+			var property = obj[i];
+			output += property;
+		}
+		alert(output);
 	}
 
 	render() {

@@ -68,7 +68,7 @@ const dropdown = (isLogin, booklist, open, addBookIntoBooklist, bookid) => (!isL
 
 const convertDate = (isoDate) => {
 	const date = new Date(isoDate);
-	return date.toUTCString();
+	return date.toLocaleString();
 };
 
 const BooksPageComponent = props => (
@@ -186,9 +186,9 @@ const BooksPageComponent = props => (
 			<Button
 				size="medium"
 				variant="contained"
-				color="default"
+				color="primary"
 				onClick={props.submitClick}
-				style={{ backgroundColor: 'gray', color: 'white' }}>
+				>
 			Review
 			</Button>
 		</div>

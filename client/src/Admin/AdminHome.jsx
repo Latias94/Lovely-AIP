@@ -32,4 +32,4 @@ class AdminHome extends React.Component {
     }
 }
 
-export default connect(state => {isAdmin: state.auth.user.isStaff})(AdminHome)
+export default connect(state => ({ isAdmin: state.auth.user.isStaff }))(AdminHome);
