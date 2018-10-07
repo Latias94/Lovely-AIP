@@ -57,7 +57,7 @@ class Admin extends React.Component {
         const { value } = this.state;
 
         return (
-            <div className={classes.root} style={{width:'100%'}}>
+            <div className={classes.root} style={{width:'100%',backgroundColor:'#FAFAFA'}}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
                         <Tab label=" " style={{outline:'none'}} icon={<Home />}/>
