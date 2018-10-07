@@ -38,7 +38,7 @@ function SimpleCard(props) {
 				</Typography>
 			</CardContent>
 			<CardActions>
-				<Button variant="contained" color="primary" component={Link} to={'/payment'} fullWidth>CheckOut</Button>
+				<Button variant="contained" color="primary" component={Link} to={'/payment'} fullWidth disabled>CheckOut</Button>
 			</CardActions>
 		</Card>
 	);

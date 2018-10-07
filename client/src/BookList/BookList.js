@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Axios from 'axios';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { Rate } from 'antd';
@@ -170,9 +167,10 @@ class BookList extends React.PureComponent {
                             {/* /!*<TableCell className={tableHeader} numeric>Star</TableCell>*!/ */}
                             {/* </TableRow> */}
                             {/* </TableHead> */}
-                            <TableBody>
+                            <thead></thead>
+                            <tbody >
                                 {books.length ? books.map(book => (
-                                    <tr key={book._id} style={{height:'220px'}}>
+                                    <tr key={book._id} style={{height:'220px',borderBottom:'8px #E0E0E0  solid'}}>
                                         <td component="a" scope="row" href={`/book/${book._id}`} style={{width:'18%',paddingLeft:'20px'}}>
                                             <img src={book.coverUrl} alt={book.title} style={{ width: '120px' }} title=""/>
                                         </td>
@@ -186,7 +184,7 @@ class BookList extends React.PureComponent {
                                         </td>
                                     </tr>
                                 )) : <tr>No books yet.</tr>}
-                            </TableBody>
+                            </tbody>
                         </Table>
                     </Paper>
                 </div>
@@ -198,7 +196,7 @@ class BookList extends React.PureComponent {
 
 BookList.propTypes = {
     classes: PropTypes.object.isRequired,
-    userID: PropTypes.string.isRequired
+    userID: PropTypes.string
 };
 
 export default compose(
