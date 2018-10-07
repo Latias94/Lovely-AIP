@@ -11,10 +11,10 @@ const footerPageIndex = () => (
 			<div style={style.footerWord}>Made by Lovely AIP</div>
             <div>
             <a  href="https://lovely-aip.herokuapp.com/api/feed/booklists">
-                <img src={Rss} style={{width:'40px',height:'40px', marginTop:'20px', marginRight:'20px'}}/>
+                <img src={Rss} style={{width:'40px',height:'40px', marginTop:'20px', marginRight:'20px'}} alt="RSS"/>
             </a>
             <a  href="https://github.com/Latias94/Lovely-AIP">
-                <img src={Github} style={{width:'40px',height:'40px', marginTop:'20px'}}/>
+                <img src={Github} style={{width:'40px',height:'40px', marginTop:'20px'}} alt="Git repo"/>
             </a>
             </div>
 		</div>

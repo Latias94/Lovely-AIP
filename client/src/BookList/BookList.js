@@ -11,6 +11,9 @@ import Button from '@material-ui/core/Button';
 import { Rate } from 'antd';
 import KFStyles from '../KFStyles';
 import BookListEditorModal from './BookListEditorModal';
+import {compose} from "redux";
+import {connect} from "react-redux";
+
 
 const styles = theme => ({
     root: {
@@ -38,6 +41,7 @@ class BookList extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            userID: "",
             bookListTitle: 'Book List',
             description: '',
             books: [],
@@ -61,6 +65,7 @@ class BookList extends React.PureComponent {
                     title: bookListTitle,
                     books, description,
                     _id: bookListId,
+                    user: userID
                 } = res.data;
 
                 this.setState({
@@ -69,6 +74,7 @@ class BookList extends React.PureComponent {
                     totalBooks: books.length,
                     description,
                     bookListId,
+                    userID
                 });
             })
             .catch(err => (console.log(err)));
@@ -140,15 +146,15 @@ class BookList extends React.PureComponent {
                         >
                             Edit
                         </Button>
-                        <Button
+                        {(this.props.userID === this.state.userID || this.props.isAdmin ) && <Button
                             title={'Delete this book list'}
                             style={{ outline: 'none', width: '120px', marginRight:'10px' }}
                             variant="contained"
                             color="secondary"
-                            onClick={() => { this.deleteBookList(bookListId); }}
+                            onClick={() => { this.deleteBookList(bookListId) }}
                         >
                             Delete list
-                        </Button>
+                        </Button>}
                     </div>
                     {/*
             TODO: add sort func in table: https://material-ui.com/demos/tables/
@@ -192,6 +198,10 @@ class BookList extends React.PureComponent {
 
 BookList.propTypes = {
     classes: PropTypes.object.isRequired,
+    userID: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(BookList);
+export default compose(
+    withStyles(styles),
+    connect(state => ({ userID: state.auth.user.id, isAdmin: state.auth.user.isStaff }))
+)(BookList);
