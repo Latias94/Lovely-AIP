@@ -53,19 +53,17 @@ class AccountTab extends React.Component {
         const { value } = this.state;
 
         return (
-            <div className={classes.root} style={{width:'100%'}}>
+            <div className={classes.root} style={{width:'900px'}}>
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
                         <Tab label="My BookList" style={{outline:'none'}} />
-                        <Tab label="My Order" style={{outline:'none'}} />
-                        <Tab label="My Payment" style={{outline:'none'}} />
+                        {/*<Tab label="My Order" style={{outline:'none'}} />*/}
+                        {/*<Tab label="My Payment" style={{outline:'none'}} />*/}
                         <Tab label="My Setting" style={{outline:'none'}}  />
                     </Tabs>
                 </AppBar>
                 {value === 0 && <MyList />}
-                {value === 1 && <TabContainer>Item Three</TabContainer>}
-                {value === 2 && <TabContainer>Item Three</TabContainer>}
-                {value === 3 && <MySetting />}
+                {value === 1 && <MySetting />}
             </div>
         );
     }

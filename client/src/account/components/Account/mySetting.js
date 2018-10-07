@@ -102,7 +102,7 @@ class MySetting extends React.Component {
         const { expanded } = this.state;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root} style={{backgroundColor:'#FAFAFA'}}>
                 <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>General settings</Typography>

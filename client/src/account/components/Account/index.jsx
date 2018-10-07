@@ -13,6 +13,12 @@ import config from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
 import { getCurrentUserBookLists } from './actions';
+import AddIcon from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
+
+
+
+
 
 const styles = {
     row: {
@@ -80,10 +86,16 @@ class Account extends React.Component {
                 (// TODO: WHY I HAVE TO SET THE STYLE AGAIN?
                     <span style={container}>
 				<div style={verticalCenter}>
+                    <div >
 					{avatarType === 'letter' ? <LetterAvatar classes={classes} username={username}/> :
                         <ImageAvatar classes={classes} avatarURL={avatarURL} alt={username}/>}
                     {/* TODO: MAKE IT AS A BANNER ABOVE THE AVATAR */}
-                    <button onClick={this.onOpenModal}>Change picture</button>
+                    </div>
+                    <div>
+                         <Button onClick={this.onOpenModal} variant="outlined" size="medium" color="primary" className={classes.button} style={{outline:'none'}} >
+                          change
+                        </Button>
+                    </div>
 				</div>
 				
         <Modal
