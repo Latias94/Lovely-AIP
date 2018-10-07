@@ -1,7 +1,7 @@
 export const background = {
 	backgroundColor: 'black',
 	width: '100%',
-	height: '170px',
+	height: '200px',
 	marginTop: '30px',
 };
 
@@ -25,4 +25,5 @@ export const footerWord = {
 	color: 'white',
 	alignItems: 'center',
 	justifyContent: 'center',
+	fontSize:'20px'
 };
