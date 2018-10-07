@@ -6,7 +6,7 @@ const Category = require('../../models/Category');
 const User = require('../../models/User');
 const Review = require('../../models/Review');
 const cleanCache = require('../../middlewares/cleanCache');
-const { clearHash } = require('../../config/cache');
+const { clearHash, clearAll } = require('../../config/cache');
 const isStaff = require('../../utils/isStaff');
 
 // Validation
@@ -467,6 +467,7 @@ router.post('/',
         });
       }
       const book = await newBook.save();
+      clearAll();
       return res.json(book);
     } catch (err) {
       return res.status(404)
@@ -512,7 +513,7 @@ router.delete('/:id',
       }
 
       Book.findOneAndDelete({ _id: req.params.id }, (err) => {
-        clearHash(req.params.id);
+        clearAll();
         return err
           ? res.status(404)
             .json({ booknotfound: 'No books found' })

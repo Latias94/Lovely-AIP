@@ -264,15 +264,10 @@ class BookManage extends React.Component {
             price,
             category
           })
-        .then(this.refreshAllBooks())
+        .then(response => this.getAllBooks())
         .catch(err => {this.alertObj(err.response.data)})
     };
 
-    refreshAllBooks () {
-        setTimeout(() => {
-            this.getAllBooks()
-        }, 1500)
-    }
 
     alertObj(obj){
         var output = "";
@@ -453,7 +448,7 @@ class BookManage extends React.Component {
                                             variant="contained" 
                                             color="primary" 
                                             className={classes.button} 
-                                            onClick={() => {Axios.delete('/books/'+ row._id).then(this.refreshAllBooks())}}>
+                                            onClick={() => {Axios.delete('/books/'+ row._id).then(response=>this.getAllBooks())}}>
                                                 Delete
                                             </Button>
                                         </TableCell>
