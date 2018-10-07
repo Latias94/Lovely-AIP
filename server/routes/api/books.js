@@ -345,6 +345,11 @@ router.get('/search/:keyword', async (req, res) => {
       .cache()
       .lean();
 
+    if (books.length === 0) {
+      return res.status(404)
+        .json({ noresult: 'No result is found' });
+    }
+
     const searchResult = await Book.find({ $text: { $search: req.params.keyword } });
     const totalPages = Math.ceil(searchResult.length / pageSize);
     if (page > totalPages) {
