@@ -453,9 +453,9 @@ class BookManage extends React.Component {
                             <Button
                                 variant="contained"
                                 onClick={this.handleCancelAddNewBook}
-                                style={{margin:'2%'}}
+                                style={{margin:'2%', outline:'none'}}
                             >Cancel</Button>
-                            <Button variant="contained" color="primary" onClick={this.handleClickButton}>Confirm</Button>
+                            <Button variant="contained" color="primary" onClick={this.handleClickButton} style={{outline:'none'}}>Confirm</Button>
                         </Typography>
                     </div>
                 </Modal>
@@ -472,10 +472,10 @@ class BookManage extends React.Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.confirmDelete.bind(this)} color="primary">
+            <Button onClick={this.confirmDelete.bind(this)} color="primary" style={{outline:'none', color:'#D32F2F'}}>
               YES
             </Button>
-            <Button onClick={this.handleAddNewBookClose} color="primary" autoFocus>
+            <Button onClick={this.handleDeleteDialogClose} style={{color:'#1976D2'}}>
               NO
             </Button>
           </DialogActions>
@@ -507,7 +507,8 @@ class BookManage extends React.Component {
                                             <Button 
                                             variant="contained" 
                                             color="primary" 
-                                            className={classes.button} 
+                                            className={classes.button}
+                                            style={{outline:'none'}}
                                             onClick={() => this.handleDeleteDialogOpen(row._id, row.title)}>
                                                 Delete
                                             </Button>
