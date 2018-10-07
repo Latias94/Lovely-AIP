@@ -23,10 +23,6 @@ const styles = theme => ({
     color: 'gray',
     textDecoration: 'underline'
   },
-  forgotPasswordStyle: {
-    color: 'gray',
-    textDecoration: 'underline'
-  },
   buttonStyle: {
     flex: 1,// extend as much as it can
     alignSelf: 'stretch',
@@ -103,7 +99,6 @@ class LoginForm extends Component {
   };
 
   render() {
-    const { forgotPasswordStyle } = styles;
     const { email, password, errors } = this.state;
     const { classes } = this.props;
 

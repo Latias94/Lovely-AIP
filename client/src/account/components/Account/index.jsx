@@ -13,11 +13,7 @@ import config from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
 import { getCurrentUserBookLists } from './actions';
-import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
-
-
-
 
 
 const styles = {

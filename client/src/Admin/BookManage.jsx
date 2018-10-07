@@ -21,6 +21,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Axios from 'axios';
 
+// Styles
 const actionsStyles = theme => ({
     root: {
         flexShrink: 0,
@@ -85,8 +86,7 @@ const styles = theme => ({
 });
 
 
-
-//page
+// Control of the table page
 class TablePaginationActions extends React.Component {
     handleFirstPageButtonClick = event => {
         this.props.onChangePage(event, 0);
@@ -167,40 +167,61 @@ class BookManage extends React.Component {
             isbn:0
         }],
         page: 0,
-        newTitle:"",
-        newAuthors:"",
-        // newBook: {
-        //     title:"",
-        //     authors: [{name:""}],
-        //     description: "",
-        //     publishDate: "",
-        //     coverUrl: "",
-        //     stock: 0,
-        //     price: 0
-        // },
+
+        newTitle: "",
+        newAuthors: [""],
+        newISBN: "",
+        newDescription: "",
+        newPublishDate: "",
+        newCoverURL: "",
+        newStock: 0,
+        newPrice: 0,
+        newCategory: "5b65103ac55fe361685262bf",
+
         rowsPerPage: 15,
 
         open: false,
         expanded: null,
-
     };
 
-    newBook = {
-        title:"",
-        authors:[{name:""}],
-        isbn:0
+    componentDidMount() {
+        this.getAllBooks();
     }
 
-    componentDidMount() {
-        Axios.get('/books')
-        .then(res => {
-            this.setState({
-                rows: res.data
+    getAllBooks () {
+            Axios.get('/books')
+            .then(res => {
+                this.setState({
+                    rows: res.data
+                })
             })
-        })
     }
 
     handleOpen = () => {
+        if(process.env.NODE === 'production'){
+            this.setState({
+                newTitle: "",
+                newAuthors: [""],
+                newISBN: "",
+                newDescription: "",
+                newPublishDate: "",
+                newCoverURL: "",
+                newStock: 0,
+                newPrice: 0,
+                newCategory: "5b65103ac55fe361685262bf",
+            })
+        } else {
+            // TEST
+            this.setState({
+                newISBN: "9780312426781",
+                newStock: 1,
+                newPrice: 1,
+                newTitle: "AAAAA",
+                newAuthors: ["name"],
+                newDescription: " New Description",
+                newPublishDate: "7 21 2018"
+            });
+        }
         this.setState({ open: true });
     };
 
@@ -220,18 +241,47 @@ class BookManage extends React.Component {
         this.setState(state => ({
             open: !state.open,
         }));
+
+        const { 
+            newISBN: isbn, 
+            newTitle: title, 
+            newAuthors: authors,
+            newDescription: description,
+            newCategory: category,
+            newStock: stock,
+            newPrice: price,
+            newCoverURL: coverUrl,
+            newPublishDate: publishDate } = this.state;
+
         Axios.post('/books', {
-            title: this.state.newTitle,
-            authors: [{name: this.state.newAuthors}],
-            description: "",
-            publishDate: "",
-            coverUrl: "",
-            stock: 0,
-            price: 0,
-            category: "5b65103ac55fe361685262bf"
+            title,
+            authors,
+            isbn,
+            description,
+            publishDate,
+            coverUrl,
+            stock,
+            price,
+            category
           })
-        .then()
+        .then(this.refreshAllBooks())
+        .catch(err => {this.alertObj(err.response.data)})
     };
+
+    refreshAllBooks () {
+        setTimeout(() => {
+            this.getAllBooks()
+        }, 1500)
+    }
+
+    alertObj(obj){
+        var output = "";
+        for(var i in obj){
+            var property = obj[i];
+            output += property+"\n";
+        }
+        alert(output);
+    }
 
     render() {
         const { classes } = this.props;
@@ -248,7 +298,7 @@ class BookManage extends React.Component {
                     onClick={this.handleOpen}
 >
                     <AddIcon />
-                    ADD a New Book
+                    New book
                 </Button>
                 <Modal
                     aria-labelledby="simple-modal-title"
@@ -257,8 +307,8 @@ class BookManage extends React.Component {
                     onClose={this.handleClose}
                 >
                     <div className={classes.paper} style={{top:'17%', left:'23%', width:'60%', height:'60%'}}>
-                        <Typography variant="title" id="modal-title">
-                            Add a new book
+                        <Typography variant="title" id="modal-title" style={{'marginBottom':'10px'}}>
+                            New book
                         </Typography>
                         <Typography variant="subheading" id="simple-modal-description">
                             <table style={{width:'100%'}}>
@@ -283,28 +333,24 @@ class BookManage extends React.Component {
                                             className={classes.textField}
                                             type="text"
                                             value={this.state.newAuthors}
-                                            onChange={e => this.setState({newAuthors: e.target.value})}
+                                            onChange={e => this.setState({newAuthors: [e.target.value]})}
+                                            required
                                         />
                                     </td>
                                 </tr>
-                                <tr>
+                                {/* <tr>
+                                    TODO: make a dropdown list for category
                                     <td>
                                         <TextField
-                                            id="Category1"
-                                            label="First Category"
+                                            id="Category"
+                                            label="Category"
                                             className={classes.textField}
                                             type="text"
+                                            value={this.state.newCategory}
+                                            onChange={e => this.setState({newCategory: e.target.value}) }
                                         />
                                     </td>
-                                    <td>
-                                        <TextField
-                                            id="Category2"
-                                            label="Second Category"
-                                            className={classes.textField}
-                                            type="text"
-                                        />
-                                    </td>
-                                </tr>
+                                </tr> */}
                                 <tr>
                                     <td>
                                         <TextField
@@ -312,6 +358,9 @@ class BookManage extends React.Component {
                                             label="In stock"
                                             className={classes.textField}
                                             type="text"
+                                            required
+                                            value={this.state.newStock}
+                                            onChange={e => this.setState({newStock: e.target.value}) }
                                         />
                                     </td>
                                     <td>
@@ -319,7 +368,11 @@ class BookManage extends React.Component {
                                             id="ISBN"
                                             label="ISBN"
                                             className={classes.textField}
+                                            placeholder="13 digits"
                                             type="ISBN"
+                                            required
+                                            value={this.state.newISBN}
+                                            onChange={e => this.setState({newISBN: e.target.value}) }
                                         />
                                     </td>
                                 </tr>
@@ -330,6 +383,9 @@ class BookManage extends React.Component {
                                             label="Price"
                                             className={classes.textField}
                                             type="text"
+                                            required
+                                            value={this.state.newPrice}
+                                            onChange={e => this.setState({newPrice: e.target.value}) }
                                         />
                                     </td>
                                     <td>
@@ -337,7 +393,10 @@ class BookManage extends React.Component {
                                             id="PublishDate"
                                             label="PublishDate"
                                             className={classes.textField}
-                                            type="ISBN"
+                                            placeholder="sample: 7 21 2018"
+                                            required
+                                            value={this.state.newPublishDate}
+                                            onChange={e => this.setState({newPublishDate: e.target.value}) }
                                         />
                                     </td>
                                 </tr>
@@ -348,6 +407,10 @@ class BookManage extends React.Component {
                                             label="Description"
                                             className={classes.textField}
                                             type="Description"
+                                            placeholder="10 to 1000 characters"
+                                            required
+                                            value={this.state.newDescription}
+                                            onChange={e => this.setState({newDescription: e.target.value}) }
                                         />
                                         </td>
                                 </tr>
@@ -384,10 +447,14 @@ class BookManage extends React.Component {
                                         <TableCell numeric>{row.isbn}</TableCell>
                                         <TableCell>
                                             {/*<Button variant="contained" color="secondary" className={classes.button}>*/}
-                                                {/*Delete*/}
+                                                {/*Edit*/}
                                             {/*</Button>*/}
-                                            <Button variant="contained" color="primary" className={classes.button} disabled>
-                                                Edit
+                                            <Button 
+                                            variant="contained" 
+                                            color="primary" 
+                                            className={classes.button} 
+                                            onClick={() => {Axios.delete('/books/'+ row._id).then(this.refreshAllBooks())}}>
+                                                Delete
                                             </Button>
                                         </TableCell>
                                     </TableRow>
