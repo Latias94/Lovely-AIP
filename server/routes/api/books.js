@@ -458,6 +458,13 @@ router.post('/',
         authors.push({ name: req.body.authors });
       }
 
+      const isExisted = await Book.findOne({ isbn: req.body.isbn });
+      if (isExisted) {
+        errors.bookexisted = 'Book has existed in the database';
+        return res.status(404)
+          .json(errors);
+      }
+
       let newBook;
       if (req.body.category) {
         const category = await Category.findById(req.body.category)

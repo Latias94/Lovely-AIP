@@ -2,7 +2,7 @@
     "info": {
         "title": "Knight Frank Public API",
         "version": "1.0.0",
-        "description": "Hmmm, You have found a list of public API, enjoy it!"
+        "description": "Hmmm, you have found a list of public API, enjoy it!"
     },
     "host": "lovely-aip.herokuapp.com",
     "basePath": "/",
