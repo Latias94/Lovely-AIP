@@ -127,11 +127,11 @@ class Payment extends React.Component {
         const { activeStep } = this.state;
 
         return (
-            <div className={classes.root}>
-                <Stepper nonLinear activeStep={activeStep}>
+            <div className={classes.root} >
+                <Stepper nonLinear activeStep={activeStep} style={{backgroundColor:'#FAFAFA'}}>
                     {steps.map((label, index) => {
                         return (
-                            <Step key={label}>
+                            <Step key={label} >
                                 <StepButton
                                     onClick={this.handleStep(index)}
                                     completed={this.state.completed[index]}
