@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const helmet = require('helmet');
 const swaggerJSDoc = require('swagger-jsdoc');
 const cors = require('cors');
 const users = require('./routes/api/users');
@@ -46,7 +45,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
-app.use(helmet());
 
 let db;
 // Connect to MongoDB

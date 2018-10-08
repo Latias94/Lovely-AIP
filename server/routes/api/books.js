@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const ISBN = require('isbnjs');
 
 const Book = require('../../models/Book');
 const Category = require('../../models/Category');
@@ -280,8 +281,8 @@ router.get('/isbn/:isbn', async (req, res) => {
  *   get:
  *     tags:
  *       - Book
- *     summary: Get books by keyword with condition
- *     description: Get book by keyword with condition. (search in book title and description with weight).
+ *     summary: Get books by keyword or isbn with condition
+ *     description: Get book by keyword or isbn with condition. (search in book title and description with weight).
  *     produces:
  *       - application/json
  *     parameters:
@@ -337,8 +338,27 @@ router.get('/search/:keyword', async (req, res) => {
   }
   const interval = (page - 1) * pageSize;
   try {
+    let { keyword } = req.params;
+    const result = {};
+
+    // if query with isbn10 or isbn13.
+    if (ISBN.parse(keyword) !== null && ISBN.parse(keyword).isIsbn13()) {
+      // 978-4-87311-336-4 to 9784873113364 or 4-87311-336-4 to 9784873113364
+      keyword = ISBN.asIsbn13(keyword);
+      const book = await Book.findOne({ isbn: keyword });
+      if (book) {
+        result.currentPage = 1;
+        result.totalPages = 1;
+        result.books = [book];
+        return res.json(result);
+      } else {
+        return res.status(404)
+          .json({ booknotfound: 'No books found with this ISBN' });
+      }
+    }
+
     // find book with multiple conditions
-    const books = await Book.find({ $text: { $search: req.params.keyword } })
+    const books = await Book.find({ $text: { $search: keyword } })
       .skip(interval)
       .limit(pageSize)
       .sort(sortParams)
@@ -350,18 +370,16 @@ router.get('/search/:keyword', async (req, res) => {
         .json({ noresult: 'No result is found' });
     }
 
-    const searchResult = await Book.find({ $text: { $search: req.params.keyword } });
+    const searchResult = await Book.find({ $text: { $search: keyword } });
     const totalPages = Math.ceil(searchResult.length / pageSize);
     if (page > totalPages) {
       return res.status(404)
         .json({ bookoutofpages: 'The page you request is larger than the maximum number of pages' });
     }
 
-    const result = {};
     result.currentPage = page;
     result.totalPages = totalPages;
     result.books = books;
-
     return res.json(result);
   } catch (err) {
     return res.status(404)
@@ -465,48 +483,38 @@ router.post('/',
           .json(errors);
       }
 
-      let newBook;
+      const bookObj = {
+        title: req.body.title,
+        price: req.body.price,
+        stock: req.body.stock,
+        coverUrl: req.body.coverUrl,
+        description: req.body.description,
+        isbn: req.body.isbn,
+        publishDate: new Date(req.body.publishDate),
+        authors,
+      };
+
+      // find category id
       if (req.body.category) {
         const category = await Category.findById(req.body.category)
           .cache({ key: req.body.category });
-
+        // category id is invalid
         if (!category) {
           errors.categorynotfound = 'No categories found';
           return res.status(404)
             .json(errors);
-        } else {
-          // category exist
-          newBook = new Book({
-            category: req.body.category,
-            categoryName: category.name,
-            title: req.body.title,
-            price: req.body.price,
-            stock: req.body.stock,
-            coverUrl: req.body.coverUrl,
-            description: req.body.description,
-            isbn: req.body.isbn,
-            publishDate: new Date(req.body.publishDate),
-            authors,
-          });
         }
+        // category exist
+        bookObj.category = req.body.category;
+        bookObj.categoryName = category.name;
       } else {
-        // create with no category
+        // if do not provide category id, create book with empty category
         const emptyCategory = await Category.findOne({ slug: 'empty' })
           .cache();
-        newBook = new Book({
-          category: emptyCategory._id,
-          categoryName: emptyCategory.name,
-          title: req.body.title,
-          price: req.body.price,
-          stock: req.body.stock,
-          coverUrl: req.body.coverUrl,
-          isbn: req.body.isbn,
-          description: req.body.description,
-          publishDate: new Date(req.body.publishDate),
-          authors,
-        });
+        bookObj.category = emptyCategory._id;
+        bookObj.categoryName = emptyCategory.name;
       }
-      const book = await newBook.save();
+      const book = await new Book(bookObj).save();
       clearAll();
       return res.json(book);
     } catch (err) {

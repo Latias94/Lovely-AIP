@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const redis = require('redis');
 const util = require('util');
 
+// Redis Client, for data caching
 const client = redis.createClient({
   host: require('../config/keys').redisURI,
   port: require('../config/keys').redisPort,
