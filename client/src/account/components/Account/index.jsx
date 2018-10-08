@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {compose} from "redux";
 import {getCurrentUserInfo} from '../../actions/authActions';
 import isEmpty from '../../validation/isEmpty'
-import config from '../../../config';
+import { UPLOAD_BASE_URL } from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
 import { getCurrentUserBookLists } from './actions';
@@ -116,8 +116,7 @@ class Account extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const baseURL = (process.env.NODE_ENV === 'production') ? config.UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
-    console.log(baseURL)
+    const baseURL = UPLOAD_BASE_URL;
     // install user info
     if (!isEmpty(state.auth.user)) {
         const {id: userId, name: username, email, avatar: avatarURL} = state.auth.user;
