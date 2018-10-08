@@ -458,6 +458,26 @@ router.post(
   }
 );
 
+// if there is parent category that contain this sub category,
+// we need to find out the parent category which we need to modify
+function removeSubCategory(subid, parentCategories) {
+  const modifiedCategories = [];
+  parentCategories.forEach((parentCategory) => {
+    // found whether subCategory is in the parentCategory
+    if (parentCategory.subCategories.filter(subCategory => subCategory.subid.toString()
+      === subid.toString()).length > 0) {
+      // get index of subcategory
+      const index = parentCategory.subCategories
+        .map(subCate => subCate.subid.toString())
+        .indexOf(subid.toString());
+      // remove subCategory
+      parentCategory.subCategories.splice(index, 1);
+      modifiedCategories.push(parentCategory);
+    }
+  });
+  return modifiedCategories;
+}
+
 /**
  * @swagger
  * /api/categories/{id}:
@@ -494,9 +514,36 @@ router.delete(
           .json({ unauthorized: 'Cannot modify the book' });
       }
       const category = await Category.findOneAndDelete({ _id: req.params.id });
-      if (category) {
-        clearHash(req.params.id);
-        return res.json({ success: true });
+
+      const parentCategories = await Category.find({ 'subCategories.subid': req.params.id });
+
+      // if there is parent category that contain this sub category,
+      // we need to modify the parent category as well
+      if (parentCategories) {
+        let success = true;
+
+        const modifiedCategories = removeSubCategory(req.params.id, parentCategories);
+        modifiedCategories.forEach(async (modifiedCategory) => {
+          // update each parent category which contain this subCategory
+          const result = await Category.findOneAndUpdate(
+            { _id: modifiedCategory._id },
+            modifiedCategory,
+            { new: true }
+          );
+          // if one update fail, throw error
+          if (success && !result) success = false;
+        });
+        if (category && success) {
+          clearHash(req.params.id);
+          return res.json({ success: true });
+        }
+      } else {
+        // if the category is parent category
+        // delete it directly
+        if (category) {
+          clearHash(req.params.id);
+          return res.json({ success: true });
+        }
       }
     } catch (err) {
       return res.status(404)
