@@ -145,12 +145,22 @@ class BookList extends React.PureComponent {
                         </Button>
                         <Button
                             title={'Delete this book list'}
-                            style={{ outline: 'none', width: '120px', marginRight:'10px' }}
+                            style={{ outline: 'none', width: '120px', marginRight:'10px', backgroundColor:'#D50000' }}
                             variant="contained"
-                            color="secondary"
                             onClick={() => { this.deleteBookList(bookListId) }}
+                            color="primary"
+
                         >
                             Delete list
+                        </Button>
+                        <Button
+                            title={'Thumbs Up'}
+                            style={{ outline: 'none', width: '120px', marginRight:'10px', backgroundColor:'#EC407A' }}
+                            variant="contained"
+                            color="primary"
+
+                        >
+                            Like
                         </Button>
                     </div>}
                     {/*
