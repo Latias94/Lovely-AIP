@@ -13,12 +13,12 @@ import styles from './booksPageCss';
 import Modal from './moudel';
 import PopularBooks from '../Welcome/popularBooks';
 import { LetterAvatar, ImageAvatar } from '../account/components/AvatarUploader/Avatars';
-import config from '../config';
+import { UPLOAD_BASE_URL } from '../config';
 
 
 const totalPrice = (unitPrice, number) => (unitPrice * number).toFixed(2);
 const isInstock = number => (number ? 'In Stock.' : 'Out of Stock');
-const uploadBaseURL = process.env.NODE_ENV === 'production' ? config.UPLOAD_BASE_URL : config.DEV_UPLOAD_BASE_URL;
+const uploadBaseURL = UPLOAD_BASE_URL;
 
 // style for avatar
 const classes = {
