@@ -1,4 +1,7 @@
+import { HOME_URL } from '../../../config';
 const puppeteer = require('puppeteer');
+
+const loginURL = HOME_URL + '/login';
 
 describe('Test account page', () => {
 	test('App name === Knight Frank', async () => {
@@ -9,7 +12,7 @@ describe('Test account page', () => {
 		const page = await browser.newPage();
 		await page.setViewport({ width: 1280, height: 800 });
 
-		await page.goto('localhost:3000/login', { waitUntil: 'networkidle2' });
+		await page.goto(loginURL, { waitUntil: 'networkidle2' });
 		// TODO: move to App.test.js
 		const title = await page.title();
 		expect(title).toBe('Knight Frank'); // code behind it won't execute
@@ -23,7 +26,7 @@ describe('Test account page', () => {
 		});
 		const page = await browser.newPage();
 		await page.setViewport({ width: 1280, height: 800 });
-		await page.goto('localhost:3000/login', { waitUntil: 'networkidle2' });
+		await page.goto(loginURL, { waitUntil: 'networkidle2' });
 		await page.focus('#email');
 		await page.keyboard.type('sf4@sf.com');
 		await page.focus('input[name="password"]');
@@ -36,13 +39,13 @@ describe('Test account page', () => {
 		await inputElement.click();
 		await page.waitFor(1000);
 		// _sleep(5);
-		//   await page.goto('localhost:3000/account'); // a new tab
+		//   await page.goto(url+'/account'); // a new tab
 		const accountButton = await page.$('a[href$=account]');
 		await accountButton.click();
 		await page.waitFor(3000);
 
 		const url = page.url();
-		expect(url).toBe('http://localhost:3000/login');
+		expect(url).toBe(url+'login');
 
 		await page.screenshot({
 			path: '/Users/anluoridge/Downloads/TEMP/KnightFrankAccount.png',

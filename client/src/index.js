@@ -11,10 +11,10 @@ import App from './App';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
-import config from './config';
+import { API_BASE_URL } from './config';
 
 // set base URL in request
-axios.defaults.baseURL = (process.env.NODE_ENV === 'production') ? config.API_BASE_URL : config.DEV_API_BASE_URL;
+axios.defaults.baseURL = API_BASE_URL;
 // Check for token
 if (localStorage.jwtToken) {
 	// Set token header in Axios
