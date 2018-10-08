@@ -47,7 +47,7 @@ class searchIndex extends Component {
 			searchURL = `/books/search/${parm}?page=1&pageSize=20`;
 			break;
 		case 'Book Lists':
-			searchURL = `/booklists/slug/${parm}`;	
+			searchURL = `/booklists/search/${parm}`;	
 			break;
 		default:
 			break;
@@ -58,7 +58,7 @@ class searchIndex extends Component {
 				.then((res) => {
 					this.setState({ data: res.data });
 				})
-				.catch(() => this.setState({ error: true, data: 'There is not result.' }));
+				.catch((err) => this.setState({ error: true, data: 'There is not result.' }));
 		}
 	}
 
