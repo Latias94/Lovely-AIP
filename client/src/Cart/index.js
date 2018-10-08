@@ -17,7 +17,6 @@ class CartTablePage extends Component {
 		axios.get('/cart')
 			.then((res) => {
 				this.setState({ booksInCart: res.data });
-				console.log(res);
 			})
 			.catch((err) => {
 				console.log(err);

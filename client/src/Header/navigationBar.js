@@ -66,21 +66,10 @@ class FullWidthTabs extends React.Component {
 					>
 						<Tab label="Home" component={Link} to="/" />
 						<Tab label="All Categories" component={Link} to="/categories" />
-						{/* <Tab label="Recommendation" component={Link} to="/recommendation" /> */}
+						<Tab label="Recommendation" component={Link} to="/recommendation" />
 						{/* <Tab label="Awards" style={{ outline: 'none' }} /> */}
 					</Tabs>
 				</AppBar>
-				{/* <SwipeableViews
-          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={this.state.value}
-                onChangeIndex={this.handleChangeIndex}
-                style={appStyle.navigationSub}
-        >
-          <TabContainer dir={theme.direction}>  </TabContainer>
-          <TabContainer dir={theme.direction}>Item Two</TabContainer>
-          <TabContainer dir={theme.direction}>Item Three</TabContainer>
-          <TabContainer dir={theme.direction}>Item Four</TabContainer>
-        </SwipeableViews> */}
 			</div>
 		);
 	}

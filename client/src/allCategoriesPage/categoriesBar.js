@@ -20,7 +20,7 @@ class NestedList extends React.Component {
 
 		return (
 			<div className={classes.root} style={{
-				borderRightStyle: 'solid', borderRightWidth: '2px', width: '20%', minWidth: '120px', height: '100%',
+				borderRightStyle: 'solid', borderRightWidth: '2px', width: '20%', minWidth: '120px', height: '100%', backgroundColor: '#fafafa',
 			}}>
 				<List
 					component="nav"

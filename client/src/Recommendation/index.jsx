@@ -1,35 +1,27 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import { connect } from 'react-redux';
+import { getBookListDataAction } from './action';
+import RowofBookList from '../Search/showList';
 
 class recommendation extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			recommendation: [],
-		};
-	}
-
 	componentDidMount() {
-		Axios.get('/booklists?page=1&pageSize=100')
-			.then((response) => { console.log(response.data); })
-			.catch((error) => { console.log(error); });
-	}
-
-	componentDidUpdate(prevProps) {
+		this.props.getBookListDataAction();
 	}
 
 	render() {
 		return (
-			<div >
-			hellow
+			<div style={{
+				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
+			}}>
+				<RowofBookList content={this.props.recommendation} />
 			</div>
 		);
 	}
 }
 
-// const mapStateToProps = state => ({
-// 	auth: state.auth,
-// 	cartCount: state.headerReducer.cartNumber,
-// });
+const mapStateToProps = state => ({
+	recommendation: state.recommendationReducer.recommendation,
+});
 
-export default recommendation;
+export default connect(mapStateToProps, { getBookListDataAction })(recommendation);

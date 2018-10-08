@@ -12,27 +12,27 @@ import Paper from '@material-ui/core/Paper';
 import styles from './booksPageCss';
 import Modal from './moudel';
 import PopularBooks from '../Welcome/popularBooks';
-import { LetterAvatar, ImageAvatar } from "../account/components/AvatarUploader/Avatars";
-import config from "../config";
+import { LetterAvatar, ImageAvatar } from '../account/components/AvatarUploader/Avatars';
+import { UPLOAD_BASE_URL } from '../config';
 
 
 const totalPrice = (unitPrice, number) => (unitPrice * number).toFixed(2);
 const isInstock = number => (number ? 'In Stock.' : 'Out of Stock');
-const uploadBaseURL = process.env.NODE_ENV === 'production' ? config.UPLOAD_BASE_URL: config.DEV_UPLOAD_BASE_URL;
+const uploadBaseURL = UPLOAD_BASE_URL;
 
 // style for avatar
 const classes = {
-    row: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    avatar: {
-        margin: 10,
-    },
-    bigAvatar: {
-        width: 160,
-        height: 160,
-    },
+	row: {
+		display: 'flex',
+		justifyContent: 'center',
+	},
+	avatar: {
+		margin: 10,
+	},
+	bigAvatar: {
+		width: 160,
+		height: 160,
+	},
 };
 
 const menu = (bookList, open, addBookIntoBooklist, bookid) => (
@@ -108,12 +108,12 @@ const BooksPageComponent = props => (
 					<span>Deliver to Australia</span>
 					<hr />
 					<Button
-                        variant="contained"
-                        color="default"
-                        style={{ backgroundColor: 'gray', color: 'white', outline: 'none' }}
-                        onClick={() => props.addToCartClick(props.id)}>
+						variant="contained"
+						color="default"
+						style={{ backgroundColor: 'gray', color: 'white', outline: 'none' }}
+						onClick={() => props.addToCartClick(props.id)}>
                         Add to Cart
-                    </Button>
+					</Button>
 					<Dropdown overlay={dropdown(props.authOrNot, props.usersBookList, props.handleOpen, props.addBookIntoBooklist, props.id)} trigger={['click']} >
 						<Button variant="contained" color="default" style={{
 							backgroundColor: 'gray', color: 'white', marginTop: '15px', outline: 'none',
@@ -126,6 +126,7 @@ const BooksPageComponent = props => (
 		</div>
 		<hr />
 		{!props.realtedBookList ? null : (<PopularBooks
+			currentBookId={props.currentBookId}
 			bookList={[props.realtedBookList]}
 		/>)}
 		<hr />
@@ -135,14 +136,14 @@ const BooksPageComponent = props => (
 				props.views.map(item => (
 					<div style={styles.containerOfPersonalReview} key={item._id}>
 						<div style={styles.viewPersonalInfromation}>
-						{item.avatar ? 
-						<ImageAvatar 
-						classes={classes} 
-						avatarURL={uploadBaseURL+item.avatar} 
-						alt={item.username}/> :
-						<LetterAvatar classes={classes} username={item.username}/>
-                        }
-							<span style={{marginLeft:'10px'}}>{item.username}</span>
+							{item.avatar
+								? <ImageAvatar
+									classes={classes}
+									avatarURL={uploadBaseURL + item.avatar}
+									alt={item.username}/>
+								: <LetterAvatar classes={classes} username={item.username}/>
+							}
+							<span style={{ marginLeft: '10px' }}>{item.username}</span>
 						</div>
 						<div style={styles.viewPersonalInfromation}>
 							<Rate disabled value={item.star} />
@@ -170,7 +171,7 @@ const BooksPageComponent = props => (
 			<div style={{
 				width: '90%', marginLeft: '5%',
 			}}>
-				{/* TODO: Check is it rated?*/}
+				{/* TODO: Check is it rated? */}
 				<TextField
 					placeholder=" Please rate first."
 					onChange={event => props.reviewContentChange(event.target.value)}
@@ -187,7 +188,7 @@ const BooksPageComponent = props => (
 				color="default"
 				onClick={props.submitClick}
 				style={{ backgroundColor: 'gray', color: 'white' }}
-				>
+			>
 			Review
 			</Button>
 		</div>

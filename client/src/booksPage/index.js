@@ -28,6 +28,7 @@ class BooksPage extends Component {
 			submittedReviewContent: '',
 			open: false,
 			realtedBookList: '',
+			currentBookId: '',
 		};
 		this.addToCartClick = this.addToCartClick.bind(this);
 		this.reviewStarChange = this.reviewStarChange.bind(this);
@@ -72,12 +73,18 @@ class BooksPage extends Component {
 		this.getUserBookList();
 		Axios.get(requestURL)
 			.then((response) => {
-				this.setState({ bookDetailInformation: response.data });
+				this.setState({ bookDetailInformation: response.data, currentBookId: response.data._id });
 				this.getRelateBookList(this.state.bookDetailInformation.category);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.match.params.id !== prevProps.match.params.id) {
+			window.location.reload();
+		}
 	}
 
 	reviewStarChange(star) {
@@ -97,7 +104,7 @@ class BooksPage extends Component {
 	}
 
 	getUserBookList() {
-		this.isAuthenticated && Axios.get('/users/current/booklist')
+		this.props.auth && Axios.get('/users/current/booklist')
 			.then((response) => {
 				this.setState({ usersBookList: response.data });
 			})
@@ -117,15 +124,14 @@ class BooksPage extends Component {
 				window.location.reload();
 			})
 			.catch((error) => {
-				if (error.response.status === 404) { alert(error.response.data.reviewexist); }
-				else { this.alertObj(error.response.data)}
+				if (error.response.status === 404) { alert(error.response.data.reviewexist); } else { this.alertObj(error.response.data); }
 			});
 	}
 
 	alertObj(obj) {
-		var output = "";
-		for(var i in obj){
-			var property = obj[i];
+		let output = '';
+		for (const i in obj) {
+			const property = obj[i];
 			output += property;
 		}
 		alert(output);
@@ -184,6 +190,7 @@ class BooksPage extends Component {
 					createANewBookList={this.createANewBookList}
 					addBookIntoBooklist={this.addBookIntoBooklist}
 					realtedBookList={this.state.realtedBookList}
+					currentBookId={this.state.currentBookId}
 				/>
 			);
 		}
