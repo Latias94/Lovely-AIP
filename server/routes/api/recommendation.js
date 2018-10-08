@@ -67,7 +67,7 @@ function getMostSimilarUserByNum(scores, numOfUser) {
  *     tags:
  *       - Recommendation
  *     summary: Get recommend books by user id
- *     description: Get recommend books by user id. The recommendation is simply using KNN mechanism.
+ *     description: Get recommend books by user id. The recommendation is simply using KNN mechanism. e.g. http://localhost:5000/api/recommendation/book/5b5c0edc1e744f9760543a07
  *     produces:
  *       - application/json
  *     parameters:
@@ -99,13 +99,10 @@ router.get('/book/:id', async (req, res) => {
         }
       }]
     );
-    if (!reviews) {
-      return res.status(404)
-        .json([]);
-    } else {
+    if (reviews) {
       const groupByUser = group(reviews);
       const scores = similarityList(groupByUser, req.params.id, euclidean);
-      console.log(scores);
+      // console.log(scores);
       // get the three most similar user
       const similarUser = getMostSimilarUserByNum(scores, 3);
       // find user reviews
@@ -132,7 +129,8 @@ router.get('/book/:id', async (req, res) => {
     return res.status(404)
       .json([]);
   }
-  return false;
+  return res.status(404)
+    .json([]);
 });
 
 module.exports = router;

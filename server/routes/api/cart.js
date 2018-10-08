@@ -51,12 +51,15 @@ router.get('/', passport.authenticate('jwt', {
   try {
     const user = await User.findById(req.user.id)
       .cache({ key: req.user.id });
-    return res.json(user.cart);
+    if (user) {
+      return res.json(user.cart);
+    }
   } catch (err) {
-    res.status(404)
-      .json(err);
+    return res.status(404)
+      .json({ usernotfound: 'User not found' });
   }
-  return false;
+  return res.status(404)
+    .json({ usernotfound: 'User not found' });
 });
 
 /**
@@ -104,13 +107,15 @@ router.post(
       newBook.quantity = 1;
       user.cart.unshift(newBook);
       const currentUser = await user.save();
-      return res.json(currentUser.cart);
+      if (currentUser) {
+        return res.json(currentUser.cart);
+      }
     } catch (err) {
       return res.status(404)
-        .json({
-          booknotfound: 'No books found',
-        });
+        .json({ booknotfound: 'No books found' });
     }
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
   }
 );
 
@@ -157,34 +162,30 @@ router.post(
       return res.status(400)
         .json(errors);
     }
-    // check quantity
-    if (req.params.quantity <= 0) {
-      errors.quantity = 'Quantity is invalid';
-      return res.status(400)
-        .json(errors);
-    }
 
     try {
       const user = await User.findById(req.user.id);
 
       if (user.cart.filter(book => book.bookid.toString()
         === req.params.id).length === 0) {
-        return res
-          .status(404)
+        return res.status(404)
           .json({ booknotfound: 'No books found' });
       }
-      // find book index and update quantity
+      // Find book index and update quantity
       const editIndex = user.cart.map(book => book.bookid.toString())
         .indexOf(req.params.id);
       user.cart[editIndex].quantity = req.params.quantity;
+      // Save changes
       const currentUser = await user.save();
-      return res.json(currentUser.cart);
+      if (currentUser) {
+        return res.json(currentUser.cart);
+      }
     } catch (err) {
       return res.status(404)
-        .json({
-          booknotfound: 'No books found',
-        });
+        .json({ booknotfound: 'No books found' });
     }
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
   }
 );
 
@@ -221,21 +222,27 @@ router.delete(
   async (req, res) => {
     try {
       const user = await User.findById(req.user.id);
+      // If cannot find book in user cart
       if (user.cart.filter(book => book.bookid.toString()
         === req.params.id).length === 0) {
-        return res
-          .status(404)
+        return res.status(404)
           .json({ booknotfound: 'No books found' });
       }
-      const editIndex = user.cart.map(book => book.bookid.toString())
+      // Find book, and get the delete index of the book
+      const deleteIndex = user.cart.map(book => book.bookid.toString())
         .indexOf(req.params.id);
-      user.cart.splice(editIndex, 1);
+      user.cart.splice(deleteIndex, 1);
+      // Save changes
       const currentUser = await user.save();
-      return res.json(currentUser.cart);
+      if (currentUser) {
+        return res.json(currentUser.cart);
+      }
     } catch (err) {
       return res.status(404)
         .json({ booknotfound: 'No books found' });
     }
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
   }
 );
 

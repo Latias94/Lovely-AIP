@@ -26,7 +26,8 @@ const validateAddBookToBookListInput = require('../../validation/addBookToBookLi
  */
 router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
 
-// add book title to the books in all booklists
+// Add book title to the books in all booklists
+// Because result from mongoose find() is not in sequence
 async function embedBookToBookLists(bookLists, req) {
   if (bookLists.length < 0) return;
   const bookIds = [];
@@ -92,8 +93,8 @@ router.get('/search/:keyword', async (req, res) => {
   if (Number.isNaN(pageSize)) pageSize = 10;
 
   const interval = (page - 1) * pageSize;
-  console.log(interval);
-  try {
+
+  try { // Search Book list by keywords
     const booklists = await BookList.find({ $text: { $search: req.params.keyword } })
       .skip(interval)
       .limit(pageSize)
@@ -112,6 +113,7 @@ router.get('/search/:keyword', async (req, res) => {
         .json({ booklistoutofpages: 'The page you request is larger than the maximum number of pages' });
     }
 
+    // add book title to the books in all booklists
     await embedBookToBookLists(booklists, req);
 
     const result = {};
@@ -185,6 +187,7 @@ router.get('/list', async (req, res) => {
         .json({ booklistoutofpages: 'The page you request is larger than the maximum number of pages' });
     }
 
+    // add book title to the books in all booklists
     await embedBookToBookLists(booklists, req);
 
     const result = {};
@@ -218,13 +221,19 @@ router.get('/', async (req, res) => {
   try {
     const booklists = await BookList.find()
       .sort({ updateDate: -1 });
-    return res.json(booklists);
+    if (booklists) {
+      return res.json(booklists);
+    }
   } catch (e) {
     return res.status(404)
       .json({ booklistnotfound: 'No bookLists found' });
   }
+  return res.status(404)
+    .json({ booklistnotfound: 'No bookLists found' });
 });
 
+// Embed book object to booklist according to book id
+// Because result from mongoose find() is not in sequence
 async function embedBookToBookList(bookList, req) {
   // if booklist.book not empty, embed book details in booklist object
   if (bookList.books.length < 0) return;
@@ -408,11 +417,15 @@ router.post(
     try {
       // save new booklist
       const bookList = await newBookList.save();
-      return res.json(bookList);
+      if (bookList) {
+        return res.json(bookList);
+      }
     } catch (err) {
       return res.status(404)
         .json({ success: false });
     }
+    return res.status(404)
+      .json({ success: false });
   }
 );
 
@@ -462,8 +475,8 @@ router.post(
         .json(errors);
     }
     const bookListFields = {};
-    if (req.body.title) bookListFields.title = req.body.title;
-    if (req.body.description) bookListFields.description = req.body.description;
+    bookListFields.title = req.body.title;
+    bookListFields.description = req.body.description;
 
     try {
       const bookList = await BookList.findById(req.params.id);
@@ -476,28 +489,26 @@ router.post(
         }
 
         bookListFields.updateDate = Date.now();
+        // Should clean redis cache whenever you modify the data
         clearHash(req.params.id);
         // Update book
-        BookList.findOneAndUpdate(
+        const bookListObject = await BookList.findOneAndUpdate(
           { _id: req.params.id },
           bookListFields,
-          { new: true },
-          (err, bookListObject) => {
-            return err ? res.status(404)
-              .json(err) : res.json(bookListObject);
-          }
+          { new: true }
         );
-      } else {
-        errors.booklistnotfound = 'No booklists found';
-        return res.status(404)
-          .json(errors);
+        if (bookList) {
+          return res.json(bookListObject);
+        }
       }
     } catch (err) {
       errors.booklistnotfound = 'No booklists found';
       return res.status(404)
         .json(errors);
     }
-    return false;
+    errors.booklistnotfound = 'No booklists found';
+    return res.status(404)
+      .json(errors);
   }
 );
 
@@ -587,28 +598,24 @@ router.post(
         bookListFields.books.unshift(bookFields);
 
         // Update booklist
-        BookList.findOneAndUpdate(
+        const bookListObject = await BookList.findOneAndUpdate(
           { _id: req.params.id },
           bookListFields,
-          { new: true },
-          (err, bookListObject) => {
-            // clean redis cache
-            clearHash({ key: req.params.id });
-            return err ? res.status(404)
-              .json(err) : res.json(bookListObject);
-          }
+          { new: true }
         );
-      } else {
-        errors.booklistnotfound = 'No booklists found';
-        return res.status(404)
-          .json(errors);
+        clearHash({ key: req.params.id });
+        if (bookListObject) {
+          return res.json(bookListObject);
+        }
       }
     } catch (err) {
       errors.booklistnotfound = 'No booklists found';
       return res.status(404)
         .json(errors);
     }
-    return false;
+    errors.booklistnotfound = 'No booklists found';
+    return res.status(404)
+      .json(errors);
   }
 );
 
@@ -676,17 +683,18 @@ router.delete(
 
         // Save booklist
         const bookListObject = await bookList.save();
-        return res.json(bookListObject);
-      } else {
-        errors.booklistnotfound = 'No booklists found';
-        return res.status(404)
-          .json(errors);
+        if (bookListObject) {
+          return res.json(bookListObject);
+        }
       }
     } catch (err) {
       errors.booklistnotfound = 'No booklists found';
       return res.status(404)
         .json(errors);
     }
+    errors.booklistnotfound = 'No booklists found';
+    return res.status(404)
+      .json(errors);
   }
 );
 
@@ -739,12 +747,15 @@ router.post(
 
       // Save booklist
       const bookListObject = await bookList.save();
-      return res.json(bookListObject);
+      if (bookListObject) {
+        return res.json(bookListObject);
+      }
     } catch (err) {
-      res.status(404)
+      return res.status(404)
         .json({ booklistnotfound: 'No booklists found' });
     }
-    return false;
+    return res.status(404)
+      .json({ booklistnotfound: 'No booklists found' });
   }
 );
 
@@ -801,11 +812,15 @@ router.post(
 
       // Save book list
       const bookListObject = await bookList.save();
-      return res.json(bookListObject);
+      if (bookListObject) {
+        return res.json(bookListObject);
+      }
     } catch (err) {
       return res.status(404)
         .json({ booklistnotfound: 'No booklists found' });
     }
+    return res.status(404)
+      .json({ booklistnotfound: 'No booklists found' });
   }
 );
 
@@ -857,18 +872,17 @@ router.delete(
           .json(errors);
       }
 
-      BookList.findOneAndDelete({ _id: req.params.id }, (err) => {
+      const bookListObject = await BookList.findOneAndDelete({ _id: req.params.id });
+      if (bookListObject) {
         clearHash(req.params.id);
-        return err
-          ? res.status(404)
-            .json({ booklistnotfound: 'No booklists found' })
-          : res.json({ success: true });
-      });
+        return res.json({ success: true });
+      }
     } catch (err) {
       return res.status(404)
         .json({ booklistnotfound: 'No booklists found' });
     }
-    return false;
+    return res.status(404)
+      .json({ booklistnotfound: 'No booklists found' });
   }
 );
 

@@ -55,7 +55,7 @@ BookListSchema.index({
   description: 'text',
 }, {
   weights: {
-    name: 5,
+    name: 5, // name has more weights than description
     description: 1,
   }
 });

@@ -53,11 +53,15 @@ router.get('/', async (req, res) => {
   try {
     const books = await Book.find()
       .sort({ date: -1 });
-    return res.json(books);
+    if (books) {
+      return res.json(books);
+    }
   } catch (err) {
     return res.status(404)
       .json({ booknotfound: 'No books found' });
   }
+  return res.status(404)
+    .json({ booknotfound: 'No books found' });
 });
 
 /**
@@ -342,7 +346,8 @@ router.get('/search/:keyword', async (req, res) => {
     const result = {};
 
     // if query with isbn10 or isbn13.
-    if (ISBN.parse(keyword) !== null && ISBN.parse(keyword).isIsbn13()) {
+    if (ISBN.parse(keyword) !== null && ISBN.parse(keyword)
+      .isIsbn13()) {
       // 978-4-87311-336-4 to 9784873113364 or 4-87311-336-4 to 9784873113364
       keyword = ISBN.asIsbn13(keyword);
       const book = await Book.findOne({ isbn: keyword });
@@ -515,12 +520,16 @@ router.post('/',
         bookObj.categoryName = emptyCategory.name;
       }
       const book = await new Book(bookObj).save();
-      clearAll();
-      return res.json(book);
+      if (book) {
+        clearAll();
+        return res.json(book);
+      }
     } catch (err) {
       return res.status(404)
-        .json(err);
+        .json({ success: false });
     }
+    return res.status(404)
+      .json({ success: false });
   });
 
 /**
@@ -558,19 +567,20 @@ router.delete('/:id',
           .json({ unauthorized: 'Cannot modify the book' });
       }
 
-      Book.findOneAndDelete({ _id: req.params.id }, (err) => {
+      const book = await Book.findOneAndDelete({ _id: req.params.id });
+      if (book) {
         clearAll();
-        return err
-          ? res.status(404)
-            .json({ booknotfound: 'No books found' })
-          : res.json({ success: true });
-      });
+        res.json({ success: true });
+      }
     } catch (err) {
-      return res.json({ success: false });
+      return res.status(404)
+        .json({ success: false });
     }
-    return false;
+    return res.status(404)
+      .json({ success: false });
   });
 
+// Calculate Book score according to each star from book reviews
 function calculateBookScore(book) {
   let totalScore = 0;
   book.reviews.map((re) => {
@@ -671,11 +681,12 @@ router.post('/review/:id',
         // calculate book score
         calculateBookScore(book);
 
-        clearHash(req.params.id);
-
         // Save
         const bookObject = await book.save();
-        return res.json(bookObject);
+        if (bookObject) {
+          clearHash(req.params.id);
+          return res.json(bookObject);
+        }
       } else {
         errors.reviewexist = 'Review has existed';
         return res.status(404)
@@ -683,10 +694,10 @@ router.post('/review/:id',
       }
     } catch (err) {
       return res.status(404)
-        .json({
-          booknotfound: 'No books found',
-        });
+        .json({ booknotfound: 'No books found' });
     }
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
   });
 
 /**
@@ -728,59 +739,95 @@ router.delete('/review/:id/:review_id',
   async (req, res) => {
     try {
       const book = await Book.findById(req.params.id);
-      if (book) {
-        Review.findOneAndDelete({ _id: req.params.review_id },
-          async (err) => {
-            if (err) {
-              return res.status(404)
-                .json({ reviewnotfound: 'No Reviews found' });
-            } else {
-              // delete review success
-              // Check to see if review exists
-              if (book.reviews.filter(review => review.reviewid.toString()
-                === req.params.review_id).length === 0) {
-                return res
-                  .status(404)
-                  .json({ reviewnotfound: 'No Reviews found' });
-              }
-
-              // Get remove index
-              const removeIndex = book.reviews
-                .map(item => item.reviewid.toString())
-                .indexOf(req.params.review_id);
-              console.log(removeIndex);
-              console.log(book.reviews);
-              if (book.reviews[removeIndex].user.toString() !== req.user.id.toString()) {
-                return res.status(401)
-                  .json({ unauthorized: 'Cannot delete the review' });
-              }
-
-              // Splice review out of array
-              book.reviews.splice(removeIndex, 1);
-
-              if (book.reviews.length === 0) {
-                book.score = 0;
-              } else {
-                // calculate book score
-                calculateBookScore(book);
-              }
-
-              clearHash(req.params.id);
-
-              const bookObject = await book.save();
-              return res.json(bookObject);
-            }
-          });
-      } else {
+      if (!book) {
         return res.status(404)
-          .json({ booknotfound: 'No books found' });
+          .json({ booknotfound: 'No Books found' });
       }
-      return false;
+      const reviewObj = await Review.findOneAndDelete({ _id: req.params.review_id });
+      if (!reviewObj) {
+        return res.status(404)
+          .json({ reviewnotfound: 'No Reviews found' });
+      }
+      // Delete review successfully
+      // Check to see if review still exists in the book object
+      if (book.reviews.filter(review => review.reviewid.toString()
+        === req.params.review_id).length === 0) {
+        return res.status(404)
+          .json({ success: false });
+      }
+
+      // Get remove index
+      const removeIndex = book.reviews
+        .map(item => item.reviewid.toString())
+        .indexOf(req.params.review_id);
+
+      // The review is not created by current user
+      if (book.reviews[removeIndex].user.toString() !== req.user.id.toString()) {
+        return res.status(401)
+          .json({ unauthorized: 'Cannot delete the review' });
+      }
+
+      // Splice review out of array
+      book.reviews.splice(removeIndex, 1);
+
+      if (book.reviews.length === 0) {
+        book.score = 0;
+      } else {
+        // calculate book score
+        calculateBookScore(book);
+      }
+
+      const bookObject = await book.save();
+      if (bookObject) {
+        clearHash(req.params.id);
+        return res.json(bookObject);
+      }
     } catch (err) {
       return res.status(404)
-        .json({ booknotfound: 'No books found' });
+        .json({ success: false });
     }
+    return res.status(404)
+      .json({ success: false });
   });
+
+function createUpdateField(req) {
+  const bookFields = {};
+  // Get fields
+  if (req.body.description) {
+    bookFields.description = req.body.description;
+  }
+  if (req.body.title) {
+    bookFields.title = req.body.title;
+  }
+  if (req.body.price) {
+    bookFields.price = Number(req.body.price);
+  }
+  if (req.body.stock) {
+    bookFields.stock = Number(req.body.stock);
+  }
+  // category id
+  if (req.body.category) {
+    bookFields.category = req.body.category;
+  }
+  if (req.body.publishDate) {
+    bookFields.publishDate = new Date(req.body.publishDate);
+  }
+  if (req.body.isbn) {
+    bookFields.isbn = req.body.isbn;
+  }
+  if (req.body.authors) {
+    bookFields.authors = [];
+    if (Array.isArray(req.body.authors)) {
+      req.body.authors.forEach((author) => {
+        bookFields.authors.unshift({ name: author });
+      });
+    } else {
+      bookFields.authors.unshift({ name: req.body.authors });
+    }
+  }
+  bookFields.updateDate = Date.now();
+  return bookFields;
+}
 
 /**
  * @swagger
@@ -822,74 +869,40 @@ router.post('/:id',
         .json({ unauthorized: 'Cannot modify the book' });
     }
 
-    const bookFields = {};
-    // Get fields
-    if (req.body.description) {
-      bookFields.description = req.body.description;
-    }
-    if (req.body.title) {
-      bookFields.title = req.body.title;
-    }
-    if (req.body.price) {
-      bookFields.price = Number(req.body.price);
-    }
-    if (req.body.stock) {
-      bookFields.stock = Number(req.body.stock);
-    }
-    // category id
-    if (req.body.category) {
-      bookFields.category = req.body.category;
-    }
-    if (req.body.publishDate) {
-      bookFields.publishDate = new Date(req.body.publishDate);
-    }
-    if (req.body.isbn) {
-      bookFields.isbn = req.body.isbn;
-    }
-    if (req.body.authors) {
-      bookFields.authors = [];
-      if (Array.isArray(req.body.authors)) {
-        req.body.authors.forEach((author) => {
-          bookFields.authors.unshift({ name: author });
-        });
-      } else {
-        bookFields.authors.unshift({ name: req.body.authors });
+    const bookFields = createUpdateField(req);
+
+    try {
+      // if need to modify the category of book.
+      if (req.body.category) {
+        const category = await Category.findById(req.body.category)
+          .cache({ key: req.body.category });
+        // Category exist
+        if (category) {
+          // Update book with new category
+          bookFields.category = req.body.category;
+          bookFields.categoryName = category.name;
+        } else {
+          // category id not found
+          return res.status(404)
+            .json({ categorynotfound: 'No categories found' });
+        }
       }
-    }
-    bookFields.updateDate = Date.now();
-    if (req.body.category) {
-      const category = await Category.findById(req.body.category)
-        .cache({ key: req.body.category });
-      if (category) {
-        bookFields.category = req.body.category;
-        bookFields.categoryName = category.name;
-        Book.findOneAndUpdate(
-          { _id: req.params.id },
-          bookFields,
-          { new: true },
-          (err, bookObject) => {
-            clearHash(req.params.id);
-            return err ? res.status(404)
-              .json({ booknotfound: 'No books found' }) : res.json(bookObject);
-          }
-        );
-      } else {
-        return res.status(404)
-          .json({ categorynotfound: 'No categories found' });
-      }
-    } else {
-      Book.findOneAndUpdate(
+      // Update book object with field
+      const bookObject = await Book.findOneAndUpdate(
         { _id: req.params.id },
         bookFields,
-        { new: true },
-        (err, bookObject) => {
-          clearHash(req.params.id);
-          return err ? res.status(404)
-            .json({ booknotfound: 'No books found' }) : res.json(bookObject);
-        }
+        { new: true }
       );
+      if (bookObject) {
+        clearHash(req.params.id);
+        return res.json(bookObject);
+      }
+    } catch (e) {
+      return res.status(404)
+        .json({ booknotfound: 'No books found' });
     }
-    return false;
+    return res.status(404)
+      .json({ booknotfound: 'No books found' });
   });
 
 module.exports = router;
