@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Book from '../allCategoriesPage/aBook';
 import ShowBook from './showBook';
 import ShowList from './showList';
-
 
 const ShowContent = (state, type, content) => {
 	if (state) {
@@ -11,9 +9,9 @@ const ShowContent = (state, type, content) => {
 			<div style={{ fontSize: '40px', textAlign: 'center' }}>Sorry. There is nothing found.</div>
 		);
 	}
-	if (type === '0') {
+	if (type === 'Book Lists') {
 		return (<ShowList content={content.booklists} />);
-	} if (type === '1') {
+	} if (type === 'Books') {
 		return (<ShowBook content={content.books} />);
 	}
 	return (<ShowBook content={[content]} />);
@@ -26,7 +24,7 @@ class searchIndex extends Component {
 			type: this.props.match.params.type,
 			content: this.props.match.params.parm,
 			data: {},
-			state: false,
+			error: false,
 		};
 	}
 
@@ -38,40 +36,30 @@ class searchIndex extends Component {
 
 	componentDidMount() {
 		const { type, parm } = this.props.match.params;
-		let axiosContent = {};
-		switch (type) {
-		case '0':
-			axiosContent = {
-				method: 'get',
-				url: `/booklists/search/${parm}`,
-			};
+		if (parm.length === 0) {
+			return;
+		}
+	
+		let searchURL = '';
+	
+		switch (type.replace('%20', ' ')) {
+		case 'Books':
+			searchURL = `/books/search/${parm}?page=1&pageSize=20`;
 			break;
-		case '1':
-			axiosContent = {
-				method: 'get',
-				url: `/books/search/${parm}?page=1&pageSize=20`,
-			};
-			break;
-		case '2':
-			axiosContent = {
-				method: 'get',
-				url: `/books/isbn/${parm}`,
-			};
+		case 'Book Lists':
+			searchURL = `/booklists/slug/${parm}`;	
 			break;
 		default:
 			break;
 		}
-		if (axiosContent) {
-			axios(axiosContent)
-				.then((res) => {
-					this.setResData(res.data);
-				})
-				.catch(err => this.setState({ state: true, data: 'There is not resule' }));
-		}
-	}
 
-	setResData(data) {
-		this.setState({ data });
+		if (searchURL.length > 0) {
+			axios.get(searchURL)
+				.then((res) => {
+					this.setState({ data: res.data });
+				})
+				.catch(() => this.setState({ error: true, data: 'There is not result.' }));
+		}
 	}
 
 	render() {
@@ -80,7 +68,7 @@ class searchIndex extends Component {
 				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
 			}}>
 				{
-					ShowContent(this.state.state, this.props.match.params.type, this.state.data)
+					ShowContent(this.state.error, this.props.match.params.type, this.state.data)
 				}
 			</div>
 		);

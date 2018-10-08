@@ -16,20 +16,11 @@ class allCategoriesPage extends Component {
 		};
 	}
 
-
 	componentDidMount() {
 		const requestURL = '/categories';
 		this.props.onCategoryNumberChange({ mainCategories: 'Computers & Technology', subCategories: 'Databases & Big Data' });
 
-		Axios({
-			method: 'get',
-			url: requestURL,
-			header: {
-				'Access-Control-Allow-Origin': '*',
-				'content-type': 'application/x-www-form-urlencoded',
-			},
-		}).then((response) => {
-			// TODO: error hint
+		Axios(requestURL).then((response) => {
 			this.setState({ allCategories: response.data });
 		}).catch((error) => {
 			console.log(error);

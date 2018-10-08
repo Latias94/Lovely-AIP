@@ -95,7 +95,9 @@ class LoginForm extends Component {
   };
 
   handleEnter = e => {
-    if(e.keyCode===13) {this.handleSubmit(e)}
+    if(e.keyCode === 13) {
+      this.handleSubmit(e)
+    }
   };
 
   render() {
@@ -125,7 +127,7 @@ class LoginForm extends Component {
             value={password}
             type={"password"}
             onChange={this.handleChange}
-            onKeyDown={this.handleEnter} // TODO: fail to set onkeydown
+            onKeyDown={this.handleEnter}
           />
 
           <Button variant="contained" color="primary" onClick={this.handleSubmit} className="loginBtn" style={{outline:'none'}}>Sign in</Button>

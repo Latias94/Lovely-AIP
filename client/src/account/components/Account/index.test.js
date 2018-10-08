@@ -1,7 +1,6 @@
-import { HOME_URL } from '../../../config';
 const puppeteer = require('puppeteer');
 
-const loginURL = HOME_URL + '/login';
+const loginURL = 'http://localhost:3000/login';
 
 describe('Test account page', () => {
 	test('App name === Knight Frank', async () => {

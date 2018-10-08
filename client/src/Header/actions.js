@@ -33,35 +33,3 @@ export const addBookToCartData = bookid => (dispatch) => {
 			console.log(error);
 		});
 };
-
-export const search = (type, pram) => (dispatch) => {
-	let content = {};
-	switch (type) {
-	case 0:
-		content = {
-			method: 'get',
-			url: `/booklists/slug/${pram.slug}`,
-		};
-		break;
-	case 1:
-		content = {
-			method: 'get',
-			url: `/books/search/${pram.slug}?page=1&pageSize=20`,
-		};
-		break;
-	case 2:
-		content = {
-			method: 'get',
-			url: `/books/isbn/${pram.slug}`,
-		};
-		break;
-	default:
-		break;
-	}
-	if (content) {
-		axios(content)
-			.then((res) => {
-				dispatch(setResData({ data: res.data }));
-			});
-	}
-};

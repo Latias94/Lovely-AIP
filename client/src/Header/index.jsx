@@ -3,7 +3,6 @@ import { Icon } from 'react-icons-kit';
 import { ic_search } from 'react-icons-kit/md/ic_search';
 import { ic_dashboard } from 'react-icons-kit/md/ic_dashboard';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Input from '@material-ui/core/Input';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Logo from '../Img/logo.png';
@@ -11,16 +10,14 @@ import * as style from './headerPageCss';
 import Cart from './badgeIcon';
 import NavigationBar from './navigationBar';
 import { loginUser, logoutUser } from '../account/actions/authActions';
-import {
-	getUsersCart, search,
-} from './actions';
+import { getUsersCart } from './actions';
 import AuthIcon from './authPage';
 
 
 const searchType = [
-	'Book List',
-	'Book',
-	'ISBN'];
+	'Books',
+	'Book Lists'];
+
 class headerPageIndex extends Component {
 	constructor(props) {
 		super(props);
@@ -32,6 +29,8 @@ class headerPageIndex extends Component {
 		};
 		this.onSearchContentChange = this.onSearchContentChange.bind(this);
 		this.onSearchTypeChange = this.onSearchTypeChange.bind(this);
+		this.onSearchClick = this.onSearchClick.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
 	componentDidMount() {
@@ -52,8 +51,18 @@ class headerPageIndex extends Component {
 		this.setState({ type: e.target.value });
 	}
 
-	openDashboard() {
-		window.location = '/admin';
+	onSearchClick() {
+		if (this.state.content.length > 0) {
+			const type = searchType[this.state.type];
+			window.location = `/search/${type}/${this.state.content}`;
+		}
+	}
+
+	onKeyDown(e) {
+		// if ENTER pushed
+		if(e.keyCode === 13) {
+			this.onSearchClick();
+		}
 	}
 
 	render() {
@@ -91,14 +100,19 @@ class headerPageIndex extends Component {
 							</NativeSelect>
 							<Input
 								value={this.state.content}
-								onChange={e => this.onSearchContentChange(e)}
+								onChange={this.onSearchContentChange}
 								style={{ color: 'white' }}
 								id="custom-css-input"
+								onKeyDown={this.onKeyDown}
 							/>
-							<Link to={`/search/${this.state.type}/${this.state.content}`} style={{
+							{/* submit search */}
+							<div style={{
 								width: '24px', height: '24px', marginBottom: '8px', color: 'white',
-							}}>
-								<Icon icon={ic_search} size={24}/></Link>
+								cursor: 'pointer'
+							}}
+							onClick={this.onSearchClick}
+							>
+								<Icon icon={ic_search} size={24}/></div>
 						</div>
 						<div style={rightIcon}>
 							<AuthIcon
@@ -108,7 +122,7 @@ class headerPageIndex extends Component {
 							<Cart number={this.props.cartCount} auth={this.props.auth.isAuthenticated} />
 							{this.props.isAdmin && <div
 								title='Dashboard'
-								onClick={this.openDashboard}
+								onClick={() => {window.location = '/admin'}}
 								style={{ cursor: 'pointer', marginLeft: '15px' }}>
 								<Icon icon={ic_dashboard} size={30}/>
 							</div>}
@@ -133,5 +147,4 @@ export default connect(mapStateToProps, {
 	loginUser,
 	logoutUser,
 	getUsersCart,
-	search,
 })(headerPageIndex);

@@ -1,7 +1,6 @@
-import { HOME_URL } from '../../../config';
 const puppeteer = require('puppeteer');
 
-const registerURL = HOME_URL + '/register';
+const registerURL = 'http://localhost:3000/register';
 let browser;
 let page;
 
