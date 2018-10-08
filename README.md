@@ -1,9 +1,11 @@
 # Lovely-AIP
-This project is an internet programming assignment.
+This project is an assignment of a full stack subject.
 
 It is a website for readers to purchase, review and manage the books in it. 
 
 Our inspiration comes from the Amazon and Douban (the equivalent of Goodreads in China).
+
+The demo is running on: http://knight-frank-web.s3-website-ap-southeast-2.amazonaws.com/
 
 For more details:
 
@@ -26,6 +28,20 @@ npm run dev
 The server runs on port 3000.  
 The client runs on port 5000.
 
+However, there are some variables need to be set before running this app.
+
+They are in `/server/config/key.js`.
+```js
+ module.exports = {
+  mongoURI: process.env.MONGO_URI,
+  port: process.env.PORT || 5000,
+  email: process.env.EMAIL,
+  emailPwd: process.env.EMAIL_PWD,
+  redisURI: process.env.REDIS_URI,
+  redisPort: process.env.REDIS_PORT,
+  redisPwd: process.env.REDIS_PWD,
+};
+```
 ## Lovely-AIP's Code Style Guide
 
 For both React.js and Express.js We decided to follow [Airbnb's JavaScript Code Style](https://github.com/airbnb/javascript).
