@@ -19,6 +19,7 @@ class allCategoriesPage extends Component {
 
 	componentDidMount() {
 		const requestURL = '/categories';
+		this.props.onCategoryNumberChange({ mainCategories: 'Computers & Technology', subCategories: 'Databases & Big Data' });
 
 		Axios({
 			method: 'get',

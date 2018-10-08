@@ -34,7 +34,7 @@ export const bookRow = {
 	boxSizing: 'border-box',
 	borderLeftStyle: 'solid',
 	borderLeftWidth: '20px',
-	borderColor: 'white',
+	borderColor: '#fafafa',
 	display: 'grid',
 	gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
 	justifyItems: 'center',

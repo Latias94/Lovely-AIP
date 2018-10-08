@@ -35,12 +35,12 @@ export function LetterAvatar(props) {
 }
 
 LetterAvatar.propTypes = {
-    classes: PropTypes.object.isRequired,
-    username: PropTypes.string.isRequired
+	classes: PropTypes.object.isRequired,
+	username: PropTypes.string.isRequired,
 };
 
 ImageAvatar.propTypes = {
-    classes: PropTypes.object.isRequired,
-    avatarURL: PropTypes.string.isRequired,
-    alt: PropTypes.string.isRequired
+	classes: PropTypes.object.isRequired,
+	avatarURL: PropTypes.string.isRequired,
+	alt: PropTypes.string.isRequired,
 };

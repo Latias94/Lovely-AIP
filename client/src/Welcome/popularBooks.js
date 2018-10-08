@@ -11,7 +11,7 @@ export default class PopularBooks extends Component {
 					<div key={obj._id || obj.id} style={{ marginTop: '5px' }}>
 						<h3>{obj.title || obj.name}</h3>
 						<hr />
-						<Row books={obj.books}/>
+						<Row currentBookId={this.props.currentBookId} books={obj.books}/>
 					</div>
 				))}
 			</div>

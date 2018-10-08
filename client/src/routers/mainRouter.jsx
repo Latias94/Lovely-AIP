@@ -15,6 +15,7 @@ import Admin from '../Admin';
 import BookListDetail from '../BookList/BookList';
 import Recommendation from '../Recommendation';
 import BookListFeed from '../RSS/BookListFeed';
+import Search from '../Search';
 import PageNotFound from '../PageNotFound';
 
 const MainRoute = () => (
@@ -25,7 +26,7 @@ const MainRoute = () => (
 			<Route path={'/register'} component={RegisterForm} />
 			<Route path={'/login'} component={LoginForm} />
 			<Route path={'/book/:id'} component={BooksPage} />
-			<Route path={'/categories/:categoryID?'} component={Categories} />
+			<Route exact path={'/categories/:categoryID?'} component={Categories} />
 			<Route path={'/cart'} component={Cart} />
 			<Route path={'/account'} component={Account} />
 			<Route path={'/verify-email'} component={EmailVerification} />
@@ -35,6 +36,7 @@ const MainRoute = () => (
 			<Route path={'/admin'} component={Admin} /> {/* TODO: move to another route */}
 			<Route path={'/recommendation'} component={Recommendation} /> {/* TODO: move to another route */}
 			<Route path={'/feed/book-lists.xml'} component={BookListFeed} />
+			<Route path={'/search/:type/:parm?'} component={Search} />
 			<Route component={PageNotFound} />
 		</Switch>
 	</Route>

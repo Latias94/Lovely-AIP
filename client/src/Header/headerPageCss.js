@@ -48,7 +48,7 @@ export const logoPart = {
 };
 
 export const searchIcon = {
-	width: '200px',
+	// width: '200px',
 	color: 'white',
 	height: '60px',
 	display: 'flex',
@@ -73,7 +73,7 @@ export const avatarStyle = {
 	display: 'flex',
 	alignItems: 'left',
 	justifyContent: 'center',
-	cursor: 'pointer'
+	cursor: 'pointer',
 };
 
 export const navSpan = {

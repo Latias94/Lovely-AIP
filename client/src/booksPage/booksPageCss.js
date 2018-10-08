@@ -19,6 +19,9 @@ const styles = {
 		margin: '10px 0px 10px 0px',
 	},
 	dropDownList: {
+		height: '300px',
+		overflow: 'scroll',
+		width: '230px',
 		backgroundColor: 'white',
 	},
 	dropDownItem: {

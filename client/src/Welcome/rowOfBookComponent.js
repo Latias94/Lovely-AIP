@@ -114,17 +114,24 @@ export default class rowOfBookComponent extends Component {
 					transform: `translateX(${-this.state.divTransformation * this.resizeWindowChange(this.state.windowWidth).transformation}px)`,
 					transition: 'transform 1s',
 				}}>
-					{this.props.books.map(book => <Book
-						bookMarginRight={this.resizeWindowChange(this.state.windowWidth).bookMarginRight}
-						key={book._id}
-						bookid={book._id}
-						bookTitle={book.title}
-						bookAuthor={book.authors[0].name}
-						imagePath={book.coverUrl}
-						bookPrice={book.price}
-						reviewScore={book.score}
-						bookReviews={book.reviews ? book.reviews.length : 0}
-					/>)}
+					{this.props.books.map((book) => {
+						if (this.props.currentBookId !== book._id) {
+							return (
+								< Book
+									bookMarginRight = { this.resizeWindowChange(this.state.windowWidth).bookMarginRight }
+									key = { book._id }
+									bookid = { book._id }
+									bookTitle = { book.title }
+									bookAuthor = { book.authors[0].name }
+									imagePath = { book.coverUrl }
+									bookPrice = { book.price }
+									reviewScore = { book.score }
+									bookReviews = { book.reviews ? book.reviews.length : 0 }
+								/>
+							);
+						}
+						return null;
+					})}
 				</div>
 				<Button
 					onMouseOver={() => this.increaseButtonOver()}
