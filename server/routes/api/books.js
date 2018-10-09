@@ -570,7 +570,7 @@ router.delete('/:id',
       const book = await Book.findOneAndDelete({ _id: req.params.id });
       if (book) {
         clearAll();
-        res.json({ success: true });
+        return res.json({ success: true });
       }
     } catch (err) {
       return res.status(404)
