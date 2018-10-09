@@ -6,7 +6,6 @@ import KFAccountInput from '../KFAccountInput';
 import { loginUser } from '../../actions/authActions';
 import { connect } from 'react-redux';
 import { compose } from "redux";
-import './loginForm.css';
 
 const styles = theme => ({
   container: {
@@ -33,6 +32,25 @@ const styles = theme => ({
     marginLeft: 5,
     marginRight: 5
   },
+  loginTitle: {
+    fontSize: '42px',
+    fontWeight: 'normal',
+    color: '#424242',
+    marginTop: '40px'
+},
+  loginBtn: {
+      width: '200px',
+      height: '44px',
+      fontSize: '15px',
+      fontWeight: 'normal',
+      marginTop: '20px',
+      letterSpacing: '1px'
+  },
+  newHere: {
+    color: 'gray', 
+    textDecoration: 'underline', 
+    marginTop: '10px'
+  }
 });
 
 /**
@@ -47,14 +65,18 @@ class LoginForm extends Component {
       password: '',
       errors: {}
     }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
   }
   /**
    if the user has already logged in, redirect to home page.
    */
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      window.location.pathname='/';
+      this.props.history.push('/');
     }
+    // TODO: HUD hint
   }
 
   /**
@@ -81,11 +103,11 @@ class LoginForm extends Component {
     }
   }
 
-  handleChange = e => {
+  handleChange(e) {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  handleSubmit = e => {
+  handleSubmit(e) {
     e.preventDefault();
     const userData = {
 			email: this.state.email,
@@ -94,7 +116,7 @@ class LoginForm extends Component {
     this.props.loginUser(userData);
   };
 
-  handleEnter = e => {
+  handleEnter(e) {
     if(e.keyCode === 13) {
       this.handleSubmit(e)
     }
@@ -106,7 +128,7 @@ class LoginForm extends Component {
 
       return (
         <div className={classes.container} style={{minHeight:'360px'}}>
-          <h1 className="loginTitle">Log in</h1>
+          <h1 className={classes.loginTitle}>Log in</h1>
 
           <KFAccountInput
             name={"Email"}
@@ -117,7 +139,6 @@ class LoginForm extends Component {
                    type={"email"}
                    onChange={this.handleChange}
           />
-
 
           <KFAccountInput
             name={"Password"}
@@ -130,8 +151,14 @@ class LoginForm extends Component {
             onKeyDown={this.handleEnter}
           />
 
-          <Button variant="contained" color="primary" onClick={this.handleSubmit} className="loginBtn" style={{outline:'none'}}>Sign in</Button>
-          <a href="/register"><div style={{color: 'gray', textDecoration: 'underline', marginTop: '10px'}}>New here?</div></a>
+          <Button 
+          className={classes.loginBtn}
+          variant="contained" 
+          color="primary" 
+          onClick={this.handleSubmit}>
+          Sign in
+          </Button>
+          <a href="/register"><div className={classes.newHere}>New here?</div></a>
         </div>
       )
   }
@@ -141,12 +168,12 @@ LoginForm.propTypes = {
   classes: PropTypes.object.isRequired,
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
 
 export default compose(

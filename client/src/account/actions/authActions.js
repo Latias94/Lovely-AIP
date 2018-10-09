@@ -8,7 +8,6 @@ import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
  * @param data - User data
  * @returns boolean is validated
  */
-// validation (temp)
 
 const validate = data => (dispatch) => {
 	const {
@@ -101,11 +100,8 @@ export const setCurrentUser = decoded => ({
 // TODO: split it to the right page folder
 // Login and get the token
 export const loginUser = userData => (dispatch) => {
-	axios({
-		method: 'post',
-		url: '/users/login',
-		data: userData,
-	}).then((res) => {
+	axios.post('/users/login', userData)
+	.then((res) => {
 		const { token } = res.data;
 		// Save to localStorage
 		localStorage.setItem('jwtToken', token);
@@ -128,7 +124,7 @@ export const logoutUser = () => (dispatch) => {
 	// Set current user to {} which will set isAuthenticated to false as well
 	dispatch(setCurrentUser({}));
 	// return to home page
-	window.open('/', '_self');
+	window.location = '/';
 };
 
 // TODO: move this to account folder

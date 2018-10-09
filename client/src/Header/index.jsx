@@ -122,7 +122,7 @@ class headerPageIndex extends Component {
 							<Cart number={this.props.cartCount} auth={this.props.auth.isAuthenticated} />
 							{this.props.isAdmin && <div
 								title='Dashboard'
-								onClick={() => {window.location = '/admin'}}
+								onClick={() => {this.props.history.push('/admin')}}
 								style={{ cursor: 'pointer', marginLeft: '15px' }}>
 								<Icon icon={ic_dashboard} size={30}/>
 							</div>}

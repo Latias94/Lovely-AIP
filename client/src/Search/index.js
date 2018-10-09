@@ -3,8 +3,8 @@ import axios from 'axios';
 import ShowBook from './showBook';
 import ShowList from './showList';
 
-const ShowContent = (state, type, content) => {
-	if (state) {
+const ShowContent = (bookNotFound, type, content) => {
+	if (bookNotFound) {
 		return (
 			<div style={{ fontSize: '40px', textAlign: 'center' }}>Sorry. There is nothing found.</div>
 		);
