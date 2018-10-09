@@ -10,9 +10,9 @@ const { email, emailPwd } = require('../config/keys');
 // });
 
 const config = {
+  // or Gmail, for more Well-known services
+  // please visit https://nodemailer.com/smtp/well-known/
   service: 'QQ',
-  // port: 465,
-  // secureConnection: true,
   auth: {
     user: email,
     pass: emailPwd,

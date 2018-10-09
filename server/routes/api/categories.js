@@ -118,7 +118,6 @@ router.get('/list', async (req, res) => {
       }
     });
   } catch (err) {
-    console.log(err);
     return res.status(404)
       .json({ categorynotfound: 'No categories found' });
   }

@@ -42,6 +42,10 @@ They are in `/server/config/key.js`.
   redisPwd: process.env.REDIS_PWD,
 };
 ```
+
+If you are using mail service rather than QQ, like Gmail or Hotmail, you should change the service name in server/utils/mailer.js Line 15.
+For more supported well-known services can be found in [Nodemailer](https://nodemailer.com/smtp/well-known/).  
+
 ## Lovely-AIP's Code Style Guide
 
 For both React.js and Express.js We decided to follow [Airbnb's JavaScript Code Style](https://github.com/airbnb/javascript).
