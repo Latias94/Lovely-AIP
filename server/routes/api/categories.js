@@ -118,11 +118,11 @@ router.get('/list', async (req, res) => {
       }
     });
   } catch (err) {
+    console.log(err);
     return res.status(404)
       .json({ categorynotfound: 'No categories found' });
   }
-  return res.status(404)
-    .json({ categorynotfound: 'No categories found' });
+  return false;
 });
 
 // Get category by condition. id or slug
