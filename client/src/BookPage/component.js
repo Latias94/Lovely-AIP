@@ -66,11 +66,6 @@ const dropdown = (isLogin, booklist, open, addBookIntoBooklist, bookid) => (!isL
 ) : menu(booklist, open, addBookIntoBooklist, bookid)
 );
 
-const convertDate = (isoDate) => {
-	const date = new Date(isoDate);
-	return date.toLocaleString();
-};
-
 const BooksPageComponent = props => (
 	<div style={styles.container}>
 		<Modal
@@ -125,9 +120,9 @@ const BooksPageComponent = props => (
 			</div>
 		</div>
 		<hr />
-		{!props.realtedBookList ? null : (<PopularBooks
+		{!props.relatedBookList ? null : (<PopularBooks
 			currentBookId={props.currentBookId}
-			bookList={[props.realtedBookList]}
+			bookList={[props.relatedBookList]}
 		/>)}
 		<hr />
 		<h3>Reviews</h3>
@@ -135,7 +130,7 @@ const BooksPageComponent = props => (
 			props.views.length && (
 				props.views.map(item => (
 					<div style={styles.containerOfPersonalReview} key={item._id}>
-						<div style={styles.viewPersonalInfromation}>
+						<div style={styles.viewPersonalInformation}>
 							{item.avatar
 								? <ImageAvatar
 									classes={classes}
@@ -145,11 +140,11 @@ const BooksPageComponent = props => (
 							}
 							<span style={{ marginLeft: '10px' }}>{item.username}</span>
 						</div>
-						<div style={styles.viewPersonalInfromation}>
+						<div style={styles.viewPersonalInformation}>
 							<Rate disabled value={item.star} />
 						</div>
 						<div style={styles.reviewContent}>
-							<span>{convertDate(item.createDate)}</span>
+							<span>{new Date(item.createDate).toLocaleString()}</span>
 							<p style={{ color: 'rebeccapurple' }}>
                                 [Verified Purchase]</p>
 							<pre style={{ fontSize: '20px', whiteSpace: 'pre-wrap' }}>{item.content}</pre>

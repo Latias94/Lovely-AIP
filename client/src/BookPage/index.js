@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Axios from 'axios';
+import axios from 'axios';
 import ContentComponent from './component';
 // import { selectBookNumberAction } from './actions';
 import { addBookToCartData } from '../Header/actions';
@@ -27,13 +27,12 @@ class BooksPage extends Component {
 			submittedReviewStar: 0,
 			submittedReviewContent: '',
 			open: false,
-			realtedBookList: '',
+			relatedBookList: '',
 			currentBookId: '',
 		};
 		this.addToCartClick = this.addToCartClick.bind(this);
 		this.reviewStarChange = this.reviewStarChange.bind(this);
 		this.reviewContentChange = this.reviewContentChange.bind(this);
-		this.addToCartClickw = this.addToCartClick.bind(this);
 		this.submitReview = this.submitReview.bind(this);
 		this.getUserBookList = this.getUserBookList.bind(this);
 		this.handleOpen = this.handleOpen.bind(this);
@@ -50,28 +49,28 @@ class BooksPage extends Component {
 	}
 
 	createANewBookList(title) {
-		Axios.post('/booklists', { title, description: 'tryyyyyyyyyyy' })
+		axios.post('/booklists', { title, description: '' })
 			.then(() => { this.getUserBookList(); this.handleClose(); })
 			.catch((error => console.log(error)));
 	}
 
 	addBookIntoBooklist(booklistId, bookId) {
 		const url = `/booklists/book/${booklistId}/${bookId}`;
-		Axios.post(url)
-			.then((response) => { alert('add book successful'); })
+		axios.post(url)
+			.then(() => { alert('add book successful'); })
 			.catch((error => console.log(error)));
 	}
 
 	getRelateBookList(category) {
-		Axios.get(`/categories/${category}`)
-			.then((response) => { this.setState({ realtedBookList: response.data }); })
+		axios.get(`/categories/${category}`)
+			.then((response) => { this.setState({ relatedBookList: response.data }); })
 			.catch(error => console.log(error));
 	}
 
 	componentDidMount() {
 		const requestURL = `/books/${this.props.match.params.id}`;
 		this.getUserBookList();
-		Axios.get(requestURL)
+		axios.get(requestURL)
 			.then((response) => {
 				this.setState({ bookDetailInformation: response.data, currentBookId: response.data._id });
 				this.getRelateBookList(this.state.bookDetailInformation.category);
@@ -104,7 +103,7 @@ class BooksPage extends Component {
 	}
 
 	getUserBookList() {
-		this.props.auth && Axios.get('/users/current/booklist')
+		this.props.auth && axios.get('/users/current/booklist')
 			.then((response) => {
 				this.setState({ usersBookList: response.data });
 			})
@@ -116,7 +115,7 @@ class BooksPage extends Component {
 	submitReview() {
 		const requestURL = `/books/review/${this.props.match.params.id}`;
 		const { submittedReviewStar, submittedReviewContent } = this.state;
-		Axios.post(requestURL, {
+		axios.post(requestURL, {
 			star: submittedReviewStar,
 			content: submittedReviewContent,
 		})
@@ -189,7 +188,7 @@ class BooksPage extends Component {
 					openMoudal={this.state.open}
 					createANewBookList={this.createANewBookList}
 					addBookIntoBooklist={this.addBookIntoBooklist}
-					realtedBookList={this.state.realtedBookList}
+                    relatedBookList={this.state.relatedBookList}
 					currentBookId={this.state.currentBookId}
 				/>
 			);
@@ -198,10 +197,8 @@ class BooksPage extends Component {
 	}
 }
 
-
 function mapStateToProps(state) {
 	return {
-		// booknumber: state.booksPageReducer.bookNumber,
 		auth: state.auth.isAuthenticated,
 	};
 }

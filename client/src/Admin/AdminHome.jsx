@@ -27,8 +27,6 @@ class AdminHome extends React.Component {
                 window.location = '/';
             }
         }
-
-
     }
 }
 

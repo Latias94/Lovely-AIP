@@ -155,16 +155,14 @@ class BookList extends React.PureComponent {
                             Delete list
 						</Button>
 					</div>}
-					{/*
-            TODO: add sort func in table: https://material-ui.com/demos/tables/
-            */}
+
 					<Paper className={root}>
 						<Table className={table} padding={'dense'}>
 							<thead></thead>
 							<tbody >
 								{books.length ? books.map(book => (
 									<tr key={book._id} style={{ height: '220px', borderBottom: '8px #E0E0E0  solid' }}>
-										<td component="a" scope="row" href={`/book/${book._id}`} style={{ width: '18%', paddingLeft: '20px' }}>
+										<td component="a" href={`/book/${book._id}`} style={{ width: '18%', paddingLeft: '20px' }}>
 											<img src={book.coverUrl} alt={book.title} style={{ width: '120px' }} title=""/>
 										</td>
 										<td style={{ width: '60' }}>

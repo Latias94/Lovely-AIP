@@ -51,7 +51,7 @@ const styles = {
 		// flexDirection: 'column',
 		// alignItems: 'center',
 	},
-	viewPersonalInfromation: {
+	viewPersonalInformation: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'flex-start',
