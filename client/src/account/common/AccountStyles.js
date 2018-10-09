@@ -28,20 +28,3 @@ export const styles = {
 		alignItems: 'center',
 	}
 };
-
-// export const styles = theme => ({
-// 	container: {
-// 		display: 'flex',
-// 		flexDirection: 'column',
-// 		flexWrap: 'wrap',
-// 		justifyContent: 'space-between',
-// 		alignItems: 'center',
-// 	},
-// 	formControl: {
-// 		margin: theme.spacing.unit,
-// 	},
-// 	underlineStyle: {
-// 		color: 'gray',
-// 		textDecoration: 'underline',
-// 	},
-// });

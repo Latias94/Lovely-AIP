@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import styles from './booksPageCss';
 import Modal from './moudel';
 import PopularBooks from '../Welcome/popularBooks';
-import { LetterAvatar, ImageAvatar } from '../account/components/AvatarUploader/Avatars';
+import { LetterAvatar, ImageAvatar } from '../account/containers/AvatarUploader/Avatars';
 import { UPLOAD_BASE_URL } from '../config';
 
 

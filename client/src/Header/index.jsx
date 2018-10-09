@@ -9,7 +9,7 @@ import Logo from '../Img/logo.png';
 import * as style from './headerPageCss';
 import Cart from './badgeIcon';
 import NavigationBar from './navigationBar';
-import { loginUser, logoutUser } from '../account/actions/authActions';
+import { loginUser, logoutUser } from '../account/common/actions/authActions';
 import { getUsersCart } from './actions';
 import AuthIcon from './authPage';
 

@@ -1,11 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import {styles} from '../AccountStyles'
+import {styles} from '../../common/AccountStyles'
 
-/**
- * @test token = '2@test.com0c4628a8ae46efe765bcae01d370461457a5c73d';
- */
-class VerifyEmail extends React.Component {
+class EmailVerification extends React.Component {
   state = {
     status: ''
   };
@@ -15,15 +12,15 @@ class VerifyEmail extends React.Component {
       .then(() => {
         this.setState({status: "You have been successfully activated!"});
         // back to login page
-        window.setTimeout(
-          () => {window.open('/login', '_self')},
+        setTimeout(
+          () => {window.location = '/login'},
           1000);
       })
       .catch(() => {
         this.setState({status: 'Oops! Your activation link is invalid.'});
         // back to home page
-        window.setTimeout(() => {
-          window.open('/', '_self')},
+        setTimeout(() => {
+          window.location = '/login'},
           3000);
       });
   };
@@ -46,4 +43,4 @@ class VerifyEmail extends React.Component {
   }
 }
 
-export default VerifyEmail;
+export default EmailVerification;

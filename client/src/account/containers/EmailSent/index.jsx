@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import { styles } from '../../AccountStyles';
+import { styles } from '../../common/AccountStyles';
 import axios from 'axios';
 
 /**
@@ -16,7 +16,7 @@ import axios from 'axios';
  * @author AnLuoRidge
  */
 
-class EmailVerification extends Component {
+class EmailSent extends Component {
 	state = {
 		timer: ''
 	};
@@ -56,4 +56,4 @@ function jumpToUsersMailbox() {
   window.open('http://mail.google.com', '_blank');
 }
 
-export default EmailVerification;
+export default EmailSent;

@@ -2,13 +2,13 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Welcome from '../Welcome';
-import RegisterForm from '../account/components/Register';
-import LoginForm from '../account/components/LoginForm';
-import BooksPage from '../booksPage';
-import Categories from '../allCategoriesPage';
-import Account from '../account/components/Account';
-import EmailVerification from '../account/components/EmailVerification';
-import VerifyEmail from '../account/utils/verifyEmail';
+import RegisterForm from '../account/containers/Register';
+import LoginForm from '../account/containers/LoginForm';
+import BooksPage from '../BookPage';
+import Categories from '../AllCategoriesPage';
+import Account from '../account/containers/Account';
+import EmailSent from '../account/containers/EmailSent';
+import EmailVerification from '../account/containers/EmailVerification/index';
 import Cart from '../Cart';
 import Payment from '../Payment';
 import Admin from '../Admin';
@@ -29,8 +29,8 @@ const MainRoute = () => (
 			<Route exact path={'/categories/:categoryID?'} component={Categories} />
 			<Route path={'/cart'} component={Cart} />
 			<Route path={'/account'} component={Account} />
-			<Route path={'/verify-email'} component={EmailVerification} />
-			<Route path={'/activate/:token'} component={VerifyEmail}/>
+			<Route path={'/email-sent'} component={EmailSent} />
+			<Route path={'/activate/:token'} component={EmailVerification}/>
 			<Route path={'/payment'} component={Payment}/>
 			<Route path={'/booklist/:slug'} component={BookListDetail}/> {/* modal? */}
 			<Route path={'/admin'} component={Admin} /> {/* TODO: move to another route */}

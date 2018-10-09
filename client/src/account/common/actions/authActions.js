@@ -83,7 +83,7 @@ export const registerUser = (userData, history) => (dispatch) => {
 			url: '/users/register',
 			data: userData,
 		})
-			.then(() => history.push('/verify-email'))
+			.then(() => history.push('/email-sent'))
 			.catch(err => dispatch({
 				type: GET_ERRORS,
 				payload: err.response.data,

@@ -3,16 +3,16 @@ import {withStyles} from '@material-ui/core/styles';
 import Modal from 'react-responsive-modal';
 import AccountTab from './AccountTab'
 import {Link} from 'react-router-dom';
-import {styles as accountStyles} from '../../AccountStyles';
+import {styles as accountStyles} from '../../common/AccountStyles';
 import AvatarUploader from "../AvatarUploader";
 import {connect} from 'react-redux';
 import {compose} from "redux";
-import {getCurrentUserInfo} from '../../actions/authActions';
-import isEmpty from '../../validation/isEmpty'
-import { UPLOAD_BASE_URL } from '../../../config';
+import {getCurrentUserInfo} from '../../common/actions/authActions';
+import isEmpty from '../../common/utils/isEmpty'
+import {UPLOAD_BASE_URL} from '../../../config';
 import {ImageAvatar, LetterAvatar} from "../AvatarUploader/Avatars";
 import './avatar-uploader.css';
-import { getCurrentUserBookLists } from './actions';
+import {getCurrentUserBookLists} from './actions';
 import Button from '@material-ui/core/Button';
 
 
@@ -28,6 +28,9 @@ const styles = {
         width: 160,
         height: 160,
     },
+    avatarModal: {
+    marginTop: '150px'
+    }
 };
 
 function AccountInfo(props) {
@@ -35,7 +38,6 @@ function AccountInfo(props) {
     return (
         <div style={{'marginBottom':'15px'}}>
             <p style={{'fontSize':'24px','fontWeight':'bold'}}>{username}</p>
-            {/*<p>Email: {email}</p>*/}
         </div>);
 }
 
@@ -76,7 +78,7 @@ class Account extends React.Component {
         const { container, verticalCenter } = accountStyles;
 
         return <div style={container}>
-            {/* THIS IS UGLY */}
+            {/* REFACTOR: THIS IS UGLY */}
             {isLoggedIn
                 ?
                 (// TODO: WHY I HAVE TO SET THE STYLE AGAIN?
@@ -97,7 +99,7 @@ class Account extends React.Component {
         <Modal
             open={avatarPageOpened}
             onClose={this.onCloseModal}
-            classNames={{ modal: 'avatar-modal' }}
+            className={classes.avatarModal}
         >
           <AvatarUploader handleCompletion={this.onCloseModal}/>
         </Modal>
@@ -116,7 +118,6 @@ class Account extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const baseURL = UPLOAD_BASE_URL;
     // install user info
     if (!isEmpty(state.auth.user)) {
         const {id: userId, name: username, email, avatar: avatarURL} = state.auth.user;
@@ -128,7 +129,7 @@ const mapStateToProps = state => {
         };
         if (avatarURL) {
             props.avatarType = 'image';
-            props.avatarURL = baseURL + avatarURL;
+            props.avatarURL = UPLOAD_BASE_URL + avatarURL;
         } else {
             props.avatarType = 'letter';
         }

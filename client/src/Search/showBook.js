@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Book from '../allCategoriesPage/aBook';
+import Book from '../AllCategoriesPage/aBook';
 
 class showBook extends Component {
 	render() {
