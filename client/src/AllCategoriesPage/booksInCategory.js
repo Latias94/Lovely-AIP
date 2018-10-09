@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 import * as style from './categoriesPageCss';
 import Book from './aBook';
 
@@ -11,17 +11,16 @@ export default class booksPage extends Component {
 			categoryName: '',
 			subCategoryName: '',
 			books: { books: [] },
-			categoryID: '5b69933780422c14325872a7',
+			categoryID: '',
 		};
 	}
 
 	componentDidMount() {
-		let requestURL = '/categories/';
-		requestURL += '5b69933780422c14325872a7';
-		Axios.get(requestURL)
+		const requestURL = `/categories/${this.props.categoriesID}`;
+		axios.get(requestURL)
 			.then((response) => {
 				this.setState({ books: response.data });
-			}).catch((error) => {
+            }).catch((error) => {
 				console.log(error);
 			});
 	}
@@ -32,7 +31,7 @@ export default class booksPage extends Component {
 			this.setState({ books: { books: [] }, categoryID: this.props.categoriesID });
 			let requestURL = '/categories/';
 			requestURL += this.props.categoriesID;
-			Axios.get(requestURL)
+			axios.get(requestURL)
 				.then((response) => {
 					this.setState({ books: response.data });
 				})

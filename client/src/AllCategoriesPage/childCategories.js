@@ -27,7 +27,7 @@ class childList extends React.Component {
 
 	handleClick(name) {
 		this.setState(state => ({ open: !state.open }));
-		this.props.updataCategory({ mainCategories: name, subCategories: '' });
+		this.props.updateCategory({ mainCategories: name, subCategories: '' });
 	}
 
 	render() {
@@ -52,7 +52,7 @@ class childList extends React.Component {
 										key={subitems._id}
 										button
 										onClick={() => {
-											this.props.updataCategory({ mainCategories: this.props.categoriesName, subCategories: subitems.subname });
+											this.props.updateCategory({ mainCategories: this.props.categoriesName, subCategories: subitems.subname });
 										}}
 										component={Link}
 										to={`/categories/${subitems.subid}`}
