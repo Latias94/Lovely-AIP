@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+
 import { Icon } from 'react-icons-kit';
 import { ic_search } from 'react-icons-kit/md/ic_search';
 import { ic_dashboard } from 'react-icons-kit/md/ic_dashboard';
@@ -143,8 +145,8 @@ const mapStateToProps = state => ({
 	searchInputContent: state.headerReducer.searchInputContent,
 });
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
 	loginUser,
 	logoutUser,
 	getUsersCart,
-})(headerPageIndex);
+})(headerPageIndex));

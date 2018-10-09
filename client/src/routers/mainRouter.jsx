@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import PrivateRoute from './PrivateRoute';
 
 import Welcome from '../Welcome';
 import RegisterForm from '../account/containers/Register';
@@ -10,16 +11,17 @@ import Account from '../account/containers/Account';
 import EmailSent from '../account/containers/EmailSent';
 import EmailVerification from '../account/containers/EmailVerification/index';
 import Cart from '../Cart';
-import Payment from '../Payment';
 import Admin from '../Admin';
-import BookListDetail from '../BookList/BookList';
+import BookListDetail from '../BookList/index';
 import Recommendation from '../Recommendation';
 import BookListFeed from '../RSS/BookListFeed';
 import Search from '../Search';
 import PageNotFound from '../PageNotFound';
 
-const MainRoute = () => (
+const MainRoute = (props) => {
+	const { authed, isAdmin } = props;
 
+	return (
 	<Route>
 		<Switch>
 			<Route exact path={'/'} component={Welcome} />
@@ -27,19 +29,18 @@ const MainRoute = () => (
 			<Route path={'/login'} component={LoginForm} />
 			<Route path={'/book/:id'} component={BooksPage} />
 			<Route exact path={'/categories/:categoryID?'} component={Categories} />
-			<Route path={'/cart'} component={Cart} />
-			<Route path={'/account'} component={Account} />
+			<PrivateRoute authed={authed} path={'/cart'} component={Cart} />
+			<PrivateRoute authed={authed} path={'/account'} component={Account} />
 			<Route path={'/email-sent'} component={EmailSent} />
 			<Route path={'/activate/:token'} component={EmailVerification}/>
-			<Route path={'/payment'} component={Payment}/>
-			<Route path={'/booklist/:slug'} component={BookListDetail}/> {/* modal? */}
-			<Route path={'/admin'} component={Admin} /> {/* TODO: move to another route */}
-			<Route path={'/recommendation'} component={Recommendation} /> {/* TODO: move to another route */}
+			<Route path={'/booklist/:slug'} component={BookListDetail}/>
+			<PrivateRoute authed={isAdmin} path={'/admin'} component={Admin} />
+			<Route path={'/recommendation'} component={Recommendation} />
 			<Route path={'/feed/book-lists.xml'} component={BookListFeed} />
 			<Route path={'/search/:type/:parm?'} component={Search} />
 			<Route component={PageNotFound} />
 		</Switch>
 	</Route>
-);
+)};
 
 export default MainRoute;

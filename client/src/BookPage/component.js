@@ -134,7 +134,7 @@ const BooksPageComponent = props => (
 							{item.avatar
 								? <ImageAvatar
 									classes={classes}
-									avatarURL={uploadBaseURL + item.avatar}
+									avatarURL={uploadBaseURL + '/' + item.avatar}
 									alt={item.username}/>
 								: <LetterAvatar classes={classes} username={item.username}/>
 							}

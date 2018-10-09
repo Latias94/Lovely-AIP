@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withRouter} from 'react-router-dom';
+
 import './App.css';
-import { withRouter } from 'react-router';
 import MainRoute from './routers/mainRouter';
 import Header from './Header';
 import Footer from './Footer';
@@ -11,24 +14,34 @@ class App extends Component {
 		document.title = 'Knight Frank';
 	}
 
-	hideHeaderFooter() {
-		const isAdmin = this.props.location.pathname === '/admin';
-		const isRss = this.props.location.pathname === '/feed/book-lists.xml';
+	static hideHeaderFooter() {
+		const isAdmin = window.location.pathname === '/admin';
+		const isRss = window.location.pathname === '/feed/book-lists.xml';
 		return isAdmin || isRss;
 	}
 
 	render() {
-		const showHeaderFooter = !this.hideHeaderFooter();
+		const show = !App.hideHeaderFooter();
+		const { authed, isAdmin } = this.props;
 
 		return (
-			<div className='app' style={{backgroundColor:'#FAFAFA'}}>
-				{showHeaderFooter && <Header/>}
-				<div className="router"><MainRoute/></div>
-				{showHeaderFooter && <Footer/>}
+			<div className='app'>
+				{show && <Header/>}
+				<div className='router'>
+					<MainRoute authed={authed} isAdmin={isAdmin}/>
+				</div>
+				{show && <Footer/>}
 			</div>
 		);
 	}
 }
 
-// use withRouter HOC in order to inject match, history and location in the component props.
-export default withRouter(App);
+const mapStateToProps = state => ({
+    authed: state.auth.isAuthenticated,
+    isAdmin: state.auth.user.isStaff,
+});
+
+export default compose(
+	withRouter,
+	connect(mapStateToProps)
+)(App);
