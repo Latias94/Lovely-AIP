@@ -7,6 +7,7 @@ import headerReducer from './Header/headerPageReducer';
 import cartPageTableRowReducer from './Cart/cartTableRow/cartTableRowReducer';
 import userReducer from './account/components/Account/reducers';
 import recommendationReducer from './Recommendation/RecommendationReducer';
+import welcomePageReducer from './Welcome/welcomePageReducer';
 
 // root reducer
 export default combineReducers({
@@ -18,4 +19,5 @@ export default combineReducers({
 	user: userReducer,
 	cartPageTableRowReducer,
 	recommendationReducer,
+	welcomePageReducer,
 });
