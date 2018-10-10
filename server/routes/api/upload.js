@@ -76,15 +76,16 @@ router.post('/avatar', passport.authenticate('jwt', {
         if (user) {
           user.avatar = `/uploads/${req.file.filename}`;
           const currentUser = await user.save();
-          return res.json(currentUser);
-        } else {
-          return res.status(404)
-            .json({ usernotfound: 'No user found' });
+          if (currentUser) {
+            return res.json(currentUser);
+          }
         }
       } catch (error) {
         return res.status(404)
           .json({ usernotfound: 'No user found' });
       }
+      return res.status(404)
+        .json({ usernotfound: 'No user found' });
     }
   });
 });

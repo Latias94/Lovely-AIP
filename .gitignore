@@ -9,6 +9,7 @@ package-lock.json
 # IDE
 .idea/
 .code/
+.vscode/
 
 # jest coverage report
 coverage/

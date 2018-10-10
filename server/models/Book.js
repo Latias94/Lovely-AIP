@@ -95,7 +95,7 @@ BookSchema.index({
   title: 'text',
   description: 'text',
 }, {
-  weights: {
+  weights: { // name has more weights than description
     name: 5,
     description: 1,
   }

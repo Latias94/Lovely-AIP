@@ -29,6 +29,9 @@ Before start the server, you ought to set up environment variables as the follow
 | EMAIL      | { Email account that support SMTP protocol, for the usage of send validation email }   |
 | EMAIL_PWD  | { Email password } |
 
+If you are using mail service rather than QQ, like Gmail or Hotmail, you should change the service name in server/utils/mailer.js Line 15.
+For more supported well-known services can be found in [Nodemailer](https://nodemailer.com/smtp/well-known/).
+
 ## API
 Recommend REST API Testing Tools: [Postman](https://www.getpostman.com/) or [Restlet](https://chrome.google.com/webstore/detail/restlet-client-rest-api-t/aejoelaoggembcahagimdiliamlcdmfm).
 

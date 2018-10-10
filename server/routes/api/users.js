@@ -112,6 +112,7 @@ router.post('/register', authLimiter, async (req, res) => {
       .json(errors);
   }
   try {
+    // Validate whether email is existed
     const user = await User.findOne({ email: req.body.email });
     if (user) {
       errors.email = 'Email already exists';
@@ -146,17 +147,24 @@ router.post('/register', authLimiter, async (req, res) => {
 
     bcrypt.genSalt(12, (err, salt) => {
       bcrypt.hash(newUser.password, salt, async (error, hash) => {
-        if (error) throw error;
+        if (error) {
+          return res.status(404)
+            .json({ success: false });
+        }
         newUser.password = hash;
         const userObject = await newUser.save();
-        return res.json(userObject);
+        if (userObject) {
+          return res.json(userObject);
+        } else {
+          return res.status(404)
+            .json({ success: false });
+        }
       });
     });
   } catch (err) {
     return res.status(404)
       .json({ success: false });
   }
-  return false;
 });
 
 /**
@@ -189,20 +197,19 @@ router.get('/active/:activeToken', async (req, res) => {
     });
     if (!user) {
       return res.status(404)
-        .json({
-          activationfail: 'The token is invalid. Please Re-activate your email.',
-        });
+        .json({ activationfail: 'The token is invalid. Please Re-activate your email.' });
     }
     user.active = true;
     const success = user.save();
     if (success) {
-      res.json({ success: true });
+      return res.json({ success: true });
     }
   } catch (err) {
-    res.status(404)
+    return res.status(404)
       .json({ success: false });
   }
-  return false;
+  return res.status(404)
+    .json({ success: false });
 });
 
 /**
@@ -269,7 +276,8 @@ router.post('/active/', authLimiter, async (req, res) => {
     return res.status(404)
       .json({ success: false });
   }
-  return false;
+  return res.status(404)
+    .json({ success: false });
 });
 
 /**
@@ -342,7 +350,7 @@ router.post('/login', async (req, res) => {
               expiresIn: 10800,
             },
             (err, token) => {
-              res.json({
+              return res.json({
                 success: true,
                 token: `Bearer ${token}`,
               });

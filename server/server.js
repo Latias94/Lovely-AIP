@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const helmet = require('helmet');
 const swaggerJSDoc = require('swagger-jsdoc');
+const cors = require('cors');
 const users = require('./routes/api/users');
 const books = require('./routes/api/books');
 const bookLists = require('./routes/api/bookLists');
@@ -45,7 +45,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
-app.use(helmet());
 
 let db;
 // Connect to MongoDB
@@ -68,14 +67,12 @@ app.use(passport.initialize());
 
 // Public Folder
 app.use(express.static('public'));
-// cross origin
-app.use((req, res, next) => {
-  // BEFORE CHANGING, MAKE SURE THE ACCOUNT PAGE WORKS!!!
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Access-Control-Allow-Methods', 'POST, GET, DELETE');
-  next();
-});
+
+const corsOptions = {
+  origin: require('./config/keys').frontendHost,
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 // Passport Config
 require('./config/passport')(passport);

@@ -5,7 +5,7 @@ const swaggerDefinition = {
     version: '1.0.0',
     description: 'Demonstrating RESTful API',
   },
-  host: 'lovely-aip.herokuapp.com',
+  host: require('./keys').backendHost,
   basePath: '/',
 };
 
