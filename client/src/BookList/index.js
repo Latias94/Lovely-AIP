@@ -107,6 +107,10 @@ class BookList extends React.PureComponent {
 		const {
 			bookListTitle, books, totalBooks, description, bookListId,
 		} = this.state;
+<<<<<<< HEAD
+=======
+		// Change page title according to number of books.
+>>>>>>> 7ac5c05ce6d8b04c14c7597e7b1eab52b8ba2b3b
 		if (totalBooks > 1 || totalBooks === 0) {
 			document.title = `${bookListTitle} (${totalBooks} books)`;
 		} else if (totalBooks === 1) {

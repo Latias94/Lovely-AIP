@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import ContentComponent from './component';
 import { addBookToCartData } from '../Header/actions';
-import { showErrorMsgFromErrorObject, showErrorMsg, showSuccess } from '../common/utils/sweetAlert';
+import { showErrorMsgFromErrorObject, showErrorMsg, showSuccess } from "../common/utils/sweetAlert";
 
 
 class BooksPage extends Component {
@@ -58,7 +58,11 @@ class BooksPage extends Component {
 	addBookIntoBooklist(booklistId, bookId) {
 		const url = `/booklists/book/${booklistId}/${bookId}`;
 		axios.post(url)
+<<<<<<< HEAD
 			.then(() => { showSuccess(); })
+=======
+			.then(() => { showSuccess() })
+>>>>>>> 7ac5c05ce6d8b04c14c7597e7b1eab52b8ba2b3b
 			.catch((error => showErrorMsgFromErrorObject(error)));
 	}
 
@@ -109,7 +113,11 @@ class BooksPage extends Component {
 				this.setState({ usersBookList: response.data });
 			})
 			.catch((error) => {
+<<<<<<< HEAD
 				showErrorMsgFromErrorObject(error);
+=======
+                showErrorMsgFromErrorObject(error)
+>>>>>>> 7ac5c05ce6d8b04c14c7597e7b1eab52b8ba2b3b
 			});
 	}
 
@@ -125,9 +133,15 @@ class BooksPage extends Component {
 			})
 			.catch((error) => {
 				if (error.response.status === 404) {
+<<<<<<< HEAD
 					showErrorMsg(error.response.data.reviewexist);
 				} else {
 					showErrorMsgFromErrorObject(error);
+=======
+					showErrorMsg(error.response.data.reviewexist)
+				} else {
+                    showErrorMsgFromErrorObject(error)
+>>>>>>> 7ac5c05ce6d8b04c14c7597e7b1eab52b8ba2b3b
 				}
 			});
 	}
