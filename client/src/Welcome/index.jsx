@@ -1,46 +1,31 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
+import { connect } from 'react-redux';
+import { getWelcomePageBooksDataAction } from './actions';
 import CarouselDIV from './carouselDIV';
 import PopularBooks from './popularBooks';
 
 
-export default class welcomePageIndex extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			bookListArray: [],
-			categoriesListArray: [],
-			booklistID: ['5b87b6da566163069154f729', '5b87b55f566163069154f705', '5b83eda73cf33874746df9b1'],
-		};
-	}
-
+class welcomePageIndex extends Component {
 	componentDidMount() {
-		const thisArray = [];
-		for (let item = 0; item < this.state.booklistID.length; item++) {
-			Axios({
-				method: 'get',
-				url: `/booklists/${this.state.booklistID[item]}`,
-			}).then((response) => {
-				// TODO: error hint
-				thisArray.push(response.data);
-				this.setState({ bookListArray: thisArray });
-			}).catch((error) => {
-				console.log(error);
-			});
-		}
+		this.props.getWelcomePageBooksDataAction();
 	}
-
 
 	render() {
 		return (
 			<div style={{
 				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
 			}}>
-				<CarouselDIV/>
-				<PopularBooks
-					bookList= {this.state.bookListArray}
-				/>
+				<CarouselDIV />
+				{this.props.booksInHomePage ? <PopularBooks
+					bookList= {this.props.booksInHomePage}
+				/> : null}
 			</div>
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+	booksInHomePage: state.welcomePageReducer.booksInHomePage,
+});
+
+export default connect(mapStateToProps, { getWelcomePageBooksDataAction })(welcomePageIndex);

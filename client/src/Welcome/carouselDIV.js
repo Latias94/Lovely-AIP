@@ -17,21 +17,21 @@ const items = [
 		src: imageOne,
 		altText: ' ',
 		caption: ' ',
-		url: "/booklist/best-book-of-2018"
+		url: '/booklist/best-book-of-2018',
 	},
 	{
 		id: 2,
 		src: imageTwo,
 		altText: ' ',
 		caption: ' ',
-		url: "/booklist/life-books"
+		url: '/booklist/life-books',
 	},
 	{
 		id: 3,
 		src: imageThree,
 		altText: ' ',
 		caption: ' ',
-		url: "/booklist/the-best-book-i-have-ever-read-in-2018"
+		url: '/booklist/the-best-book-i-have-ever-read-in-2018',
 	},
 ];
 
@@ -74,7 +74,7 @@ class CarouselDIV extends Component {
 	render() {
 		const { activeIndex } = this.state;
 		const slides = items.map(item => (
-			
+
 			<CarouselItem
 				className="custom-tag"
 				tag="div"
@@ -85,7 +85,7 @@ class CarouselDIV extends Component {
 				<a href={item.url}><img style={{ height: '100%', width: '100%' }} src={item.src} alt={item.altText}/></a>
 				<CarouselCaption className="text-danger" captionText={item.caption} captionHeader={item.caption} />
 			</CarouselItem>
-			
+
 		));
 
 		return (

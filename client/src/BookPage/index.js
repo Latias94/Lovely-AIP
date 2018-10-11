@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import ContentComponent from './component';
 import { addBookToCartData } from '../Header/actions';
-import { showErrorMsgFromErrorObject, showErrorMsg, showSuccess } from "../common/utils/sweetAlert";
+import { showErrorMsgFromErrorObject, showErrorMsg, showSuccess } from '../common/utils/sweetAlert';
 
 
 class BooksPage extends Component {
@@ -58,7 +58,7 @@ class BooksPage extends Component {
 	addBookIntoBooklist(booklistId, bookId) {
 		const url = `/booklists/book/${booklistId}/${bookId}`;
 		axios.post(url)
-			.then(() => { showSuccess() })
+			.then(() => { showSuccess(); })
 			.catch((error => showErrorMsgFromErrorObject(error)));
 	}
 
@@ -77,7 +77,7 @@ class BooksPage extends Component {
 				this.getRelateBookList(this.state.bookDetailInformation.category);
 			})
 			.catch((error) => {
-                showErrorMsgFromErrorObject(error)
+				showErrorMsgFromErrorObject(error);
 			});
 	}
 
@@ -109,7 +109,7 @@ class BooksPage extends Component {
 				this.setState({ usersBookList: response.data });
 			})
 			.catch((error) => {
-                showErrorMsgFromErrorObject(error)
+				showErrorMsgFromErrorObject(error);
 			});
 	}
 
@@ -125,9 +125,9 @@ class BooksPage extends Component {
 			})
 			.catch((error) => {
 				if (error.response.status === 404) {
-					showErrorMsg(error.response.data.reviewexist)
+					showErrorMsg(error.response.data.reviewexist);
 				} else {
-                    showErrorMsgFromErrorObject(error)
+					showErrorMsgFromErrorObject(error);
 				}
 			});
 	}
@@ -161,7 +161,6 @@ class BooksPage extends Component {
 					bookName={title}
 					bookImagePath={'#'}
 					bookAuthor={authors[0].name}
-					// bookRate={reviews[0].star}
 					reviewScore={score}
 					bookReviews={reviews.length}
 					description={description}
@@ -184,7 +183,7 @@ class BooksPage extends Component {
 					openMoudal={this.state.open}
 					createANewBookList={this.createANewBookList}
 					addBookIntoBooklist={this.addBookIntoBooklist}
-                    relatedBookList={this.state.relatedBookList}
+					relatedBookList={this.state.relatedBookList}
 					currentBookId={this.state.currentBookId}
 				/>
 			);

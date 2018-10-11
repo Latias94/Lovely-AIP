@@ -4,24 +4,29 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 
+const style = {
+	typo: { margin: '5px 10px 5px 10px' },
+	card: { marginTop: '15px', display: 'flex', justifyContent: 'space-between' },
+};
+
 class showList extends Component {
 	render() {
 		return (
 			<div>
 				{this.props.content ? (
 					this.props.content.map(v => (
-						<Card key={v._id} style={{ marginTop: '15px', display: 'flex', justifyContent: 'space-between' }} component={Link} to={`/booklist/${v.slug}`}>
+						<Card key={v._id} style={style.card} component={Link} to={`/booklist/${v.slug}`}>
 							<CardContent style={{ width: '30%' }}>
-								<Typography style={{ margin: '5px 10px 5px 10px' }}>Title: {v.title}</Typography>
-								<Typography style={{ margin: '5px 10px 5px 10px' }}>Author: {v.username}</Typography>
+								<Typography style={style.typo}>Title: {v.title}</Typography>
+								<Typography style={style.typo}>Author: {v.username}</Typography>
 							</CardContent>
 							<CardContent style={{ width: '30%' }}>
-								<Typography style={{ margin: '5px 10px 5px 10px' }}>Books: {v.books.length}</Typography>
-								<Typography style={{ margin: '5px 10px 5px 10px' }}>Likes: {v.likes.length}</Typography>
+								<Typography style={style.typo}>Books: {v.books.length}</Typography>
+								<Typography style={style.typo}>Likes: {v.likes.length}</Typography>
 							</CardContent>
 							<CardContent style={{ width: '30%' }}>
-								<Typography style={{ margin: '5px 10px 5px 10px' }}>Create Date: {new Date(v.createDate).toLocaleDateString()}</Typography>
-								<Typography style={{ margin: '5px 10px 5px 10px' }}>Updata Date: {new Date(v.updateDate).toLocaleDateString()}</Typography>
+								<Typography style={style.typo}>Create Date: {new Date(v.createDate).toLocaleDateString()}</Typography>
+								<Typography style={style.typo}>Updata Date: {new Date(v.updateDate).toLocaleDateString()}</Typography>
 							</CardContent>
 						</Card>
 					))

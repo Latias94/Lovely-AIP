@@ -21,8 +21,6 @@ class searchIndex extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			type: this.props.match.params.type,
-			content: this.props.match.params.parm,
 			data: {},
 			error: false,
 		};
@@ -39,15 +37,15 @@ class searchIndex extends Component {
 		if (parm.length === 0) {
 			return;
 		}
-	
+
 		let searchURL = '';
-	
+
 		switch (type.replace('%20', ' ')) {
 		case 'Books':
 			searchURL = `/books/search/${parm}?page=1&pageSize=20`;
 			break;
 		case 'Book Lists':
-			searchURL = `/booklists/search/${parm}`;	
+			searchURL = `/booklists/search/${parm}`;
 			break;
 		default:
 			break;
@@ -58,7 +56,7 @@ class searchIndex extends Component {
 				.then((res) => {
 					this.setState({ data: res.data });
 				})
-				.catch((err) => this.setState({ error: true, data: 'There is not result.' }));
+				.catch(err => this.setState({ error: true, data: 'There is not result.' }));
 		}
 	}
 

@@ -2,7 +2,28 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
-import Book from '../AllCategoriesPage/aBook';
+import Book from '../allCategoriesPage/aBook';
+
+export const resizeWindowChange = (windowWidthInput) => {
+	let bookMarginRight;
+	const windowWidth = windowWidthInput * 0.80;
+	let numberOfCard = parseInt(windowWidth / 200, 10);
+	if (numberOfCard > 1) {
+		bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
+		if (bookMarginRight <= 20) {
+			numberOfCard -= 1;
+			bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
+		}
+	} else if (windowWidth > 200 && windowWidth < 400) {
+		bookMarginRight = windowWidth - 200;
+	} else {
+		bookMarginRight = 5;
+	}
+	const transformation = numberOfCard * (200 + bookMarginRight);
+	return {
+		windowWidth, numberOfCard, bookMarginRight, transformation,
+	};
+};
 
 export default class rowOfBookComponent extends Component {
 	constructor(props) {
@@ -13,7 +34,6 @@ export default class rowOfBookComponent extends Component {
 			decreaseButtonTransform: -65,
 			increaseButtonTransform: 65,
 		};
-		this.resizeWindowChange = this.resizeWindowChange.bind(this);
 		this.handleResize = this.handleResize.bind(this);
 		this.increaseTransform = this.increaseTransform.bind(this);
 		this.decreaseTransform = this.decreaseTransform.bind(this);
@@ -22,7 +42,7 @@ export default class rowOfBookComponent extends Component {
 	}
 
 	increaseTransform() {
-		(this.state.divTransformation + 1) < (this.props.books.length / this.resizeWindowChange(this.state.windowWidth).numberOfCard) && this.setState({ divTransformation: this.state.divTransformation + 1 });
+		(this.state.divTransformation + 1) < (this.props.books.length / resizeWindowChange(this.state.windowWidth).numberOfCard) && this.setState({ divTransformation: this.state.divTransformation + 1 });
 	}
 
 	decreaseTransform() {
@@ -58,26 +78,6 @@ export default class rowOfBookComponent extends Component {
 		this.setState({ windowWidth: window.innerWidth - 17, divTransformation: 0 });
 	}
 
-	resizeWindowChange(windowWidth) {
-		let bookMarginRight;
-		windowWidth *= 0.80;
-		let numberOfCard = parseInt(windowWidth / 200, 10);
-		if (numberOfCard > 1) {
-			bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
-			if (bookMarginRight <= 20) {
-				numberOfCard -= 1;
-				bookMarginRight = (windowWidth - numberOfCard * 200) / (numberOfCard - 1);
-			}
-		} else if (windowWidth > 200 && windowWidth < 400) {
-			bookMarginRight = windowWidth - 200;
-		} else {
-			bookMarginRight = 5;
-		}
-		const transformation = numberOfCard * (200 + bookMarginRight);
-		return {
-			windowWidth, numberOfCard, bookMarginRight, transformation,
-		};
-	}
 
 	render() {
 		return (
@@ -111,14 +111,14 @@ export default class rowOfBookComponent extends Component {
 					borderLeftStyle: 'solid',
 					borderLeftWidth: '2px',
 					borderColor: 'white',
-					transform: `translateX(${-this.state.divTransformation * this.resizeWindowChange(this.state.windowWidth).transformation}px)`,
+					transform: `translateX(${-this.state.divTransformation * resizeWindowChange(this.state.windowWidth).transformation}px)`,
 					transition: 'transform 1s',
 				}}>
 					{this.props.books.map((book) => {
 						if (this.props.currentBookId !== book._id) {
 							return (
 								< Book
-									bookMarginRight = { this.resizeWindowChange(this.state.windowWidth).bookMarginRight }
+									bookMarginRight = { resizeWindowChange(this.state.windowWidth).bookMarginRight }
 									key = { book._id }
 									bookid = { book._id }
 									bookTitle = { book.title }
