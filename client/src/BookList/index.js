@@ -1,15 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Axios from 'axios';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import { Rate } from 'antd';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import swal from 'sweetalert2';
+import {Rate} from 'antd';
+import {compose} from 'redux';
+import {connect} from 'react-redux';
 import KFStyles from '../KFStyles';
 import BookListEditorModal from './BookListEditorModal';
+import {deleteBookList} from './actions';
+import {showErrorMsgFromErrorObject} from "../common/utils/sweetAlert";
 
 
 const styles = theme => ({
@@ -46,8 +49,7 @@ class BookList extends React.PureComponent {
 			bookListId: 0,
 			openBookListEditorModal: false,
 		};
-		this.deleteBookList = this.deleteBookList.bind(this);
-		this.updateBookList = this.updateBookList.bind(this);
+		this.confirmDelete = this.confirmDelete.bind(this);
 		this.handleBookListEditorModalClose = this.handleBookListEditorModalClose.bind(this);
 	}
 
@@ -74,31 +76,28 @@ class BookList extends React.PureComponent {
 					userID,
 				});
 			})
-			.catch(err => (console.log(err)));
+			.catch(err => showErrorMsgFromErrorObject(err));
 	}
 
-	deleteBookList(id) {
-		if (window.confirm('Do you really want to delete it?') && id) {
-			Axios.delete(`/booklists/${id}`)
-				.then((res) => {
-					// window.open("/account", "Success!");
-					window.location.href = '/account'; // TODO: redirect without history
-					// this.props.history.location('/account')
-				})
-				.catch(err => console.log(err));
-		}
-	}
-
-	updateBookList(title, description) {
-		Axios.post(`/booklists/${this.state.bookListId}`, { title, description })
-			.then((res) => {
-				window.location.href = `/booklist/${res.data.slug}`;
+	confirmDelete(id) {
+		swal({
+			title: 'Are you sure?',
+			text: 'You won\'t be able to revert this!',
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#f50057',
+			cancelButtonColor: '#3f51b5',
+			confirmButtonText: 'Yes, delete it!',
+		})
+			.then((result) => {
+				if (result.value) {
+					deleteBookList(id)
+				}
 			})
-			.catch(err => console.log(err));
 	}
 
 	handleBookListEditorModalClose() {
-		this.setState({ openBookListEditorModal: false });
+		this.setState({openBookListEditorModal: false});
 	}
 
 	render() {
@@ -108,73 +107,91 @@ class BookList extends React.PureComponent {
 		const {
 			bookListTitle, books, totalBooks, description, bookListId,
 		} = this.state;
-		// TODO: testing -> check title of the page under 0/1/2
+		// Change page title according to number of books.
 		if (totalBooks > 1 || totalBooks === 0) {
 			document.title = `${bookListTitle} (${totalBooks} books)`;
 		} else if (totalBooks === 1) {
 			document.title = `${bookListTitle} (${totalBooks} book)`;
 		}
+
 		if (this.state.bookListId) {
 			return (
 				<div className={container}>
 					<BookListEditorModal
 						title={bookListTitle}
 						description={description}
+						bookListId={this.state.bookListId}
 						handleClose={this.handleBookListEditorModalClose}
 						openModal={this.state.openBookListEditorModal}
-						updateBookList={this.updateBookList}
 					/>
-					<h1 style={{ fontSize: '20px' }}>{bookListTitle}</h1>
-					<p style={{ fontSize: '14px', fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif' }}>{description}</p>
-					{(this.props.userID === this.state.userID || this.props.isAdmin) && <div style={{ flexDirection: 'row' }}>
+
+					<h1 style={{fontSize: '20px'}}>{bookListTitle}</h1>
+					<p style={{
+						fontSize: '14px',
+						fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif'
+					}}>{description}</p>
+					{(this.props.userID === this.state.userID || this.props.isAdmin) &&
+					<div style={{flexDirection: 'row'}}>
+						{/* Add new, edit, and delete buttons */}
 						<Button
 							style={{
-								outline: 'none', width: '170px', backgroundColor: '#3D5AFE', color: '#fff', marginRight: '10px',
+								outline: 'none',
+								width: '170px',
+								backgroundColor: '#3D5AFE',
+								color: '#fff',
+								marginRight: '10px',
 							}}
 							variant="contained"
 							href={'/'}
 						>
-                            + A new book
+							+ A new book
 						</Button>
 						<Button
-							style={{ outline: 'none', width: '80px', marginRight: '10px' }}
+							style={{outline: 'none', width: '80px', marginRight: '10px'}}
 							variant="contained"
 							color="primary"
-							onClick={() => { this.setState({ openBookListEditorModal: true }); }}
+							onClick={() => {
+								this.setState({openBookListEditorModal: true});
+							}}
 							title={'Edit the list title and description'}
 						>
-                            Edit
+							Edit
 						</Button>
 						<Button
 							title={'Delete this book list'}
-							style={{ outline: 'none', width: '120px', marginRight: '10px' }}
+							style={{outline: 'none', width: '120px', marginRight: '10px'}}
 							variant="contained"
 							color="secondary"
-							onClick={() => { this.deleteBookList(bookListId); }}
+							onClick={() => {
+								this.confirmDelete(bookListId);
+							}}
 						>
-                            Delete list
+							Delete list
 						</Button>
 					</div>}
-
+					{/* Show books in list */}
 					<Paper className={root}>
 						<Table className={table} padding={'dense'}>
-							<thead></thead>
-							<tbody >
+							<tbody>
 								{books.length ? books.map(book => (
-									<tr key={book._id} style={{ height: '220px', borderBottom: '8px #E0E0E0  solid' }}>
-										<td component="a" href={`/book/${book._id}`} style={{ width: '18%', paddingLeft: '20px' }}>
-											<img src={book.coverUrl} alt={book.title} style={{ width: '120px' }} title=""/>
+									<tr key={book._id} style={{height: '220px', borderBottom: '8px #E0E0E0  solid'}}>
+										<td component="a" href={`/book/${book._id}`}
+											style={{width: '18%', paddingLeft: '20px'}}>
+											<img src={book.coverUrl} alt={book.title} style={{width: '120px'}} title=""/>
 										</td>
-										<td style={{ width: '60' }}>
-											<a href={`/book/${book._id}`} style={{ fontSize: '18px' }}>{book.title}</a>
-											<div>{`by ${book.authors[0].name}`}</div> {/* TODO: join authors' names */}
-											<Rate disabled value={book.reviewStar} />
+										<td style={{width: '60'}}>
+											<a href={`/book/${book._id}`} style={{fontSize: '18px'}}>{book.title}</a>
+											<div>{`by ${book.authors[0].name}`}</div>
+											{/* TODO: join authors' names */}
+											<Rate disabled value={book.reviewStar}/>
 										</td>
-										<td style={{ width: '20%' }}>
+										<td style={{width: '20%'}}>
 											{book.reviewContent ? book.reviewContent : ''}
 										</td>
 									</tr>
-								)) : <tr><td>No books yet.</td></tr>}
+								)) : <tr>
+									<td>No books yet.</td>
+								</tr>}
 							</tbody>
 						</Table>
 					</Paper>

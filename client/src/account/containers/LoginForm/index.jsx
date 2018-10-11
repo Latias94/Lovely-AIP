@@ -64,7 +64,7 @@ class LoginForm extends Component {
       email: '',
       password: '',
       errors: {}
-    }
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleEnter = this.handleEnter.bind(this);

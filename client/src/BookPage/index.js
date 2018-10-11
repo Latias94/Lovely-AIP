@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import ContentComponent from './component';
-// import { selectBookNumberAction } from './actions';
 import { addBookToCartData } from '../Header/actions';
+import { showErrorMsgFromErrorObject, showErrorMsg, showSuccess } from "../common/utils/sweetAlert";
+
 
 class BooksPage extends Component {
 	constructor(props) {
@@ -51,20 +52,20 @@ class BooksPage extends Component {
 	createANewBookList(title) {
 		axios.post('/booklists', { title, description: '' })
 			.then(() => { this.getUserBookList(); this.handleClose(); })
-			.catch((error => console.log(error)));
+			.catch((error => showErrorMsgFromErrorObject(error)));
 	}
 
 	addBookIntoBooklist(booklistId, bookId) {
 		const url = `/booklists/book/${booklistId}/${bookId}`;
 		axios.post(url)
-			.then(() => { alert('add book successful'); })
-			.catch((error => console.log(error)));
+			.then(() => { showSuccess() })
+			.catch((error => showErrorMsgFromErrorObject(error)));
 	}
 
 	getRelateBookList(category) {
 		axios.get(`/categories/${category}`)
 			.then((response) => { this.setState({ relatedBookList: response.data }); })
-			.catch(error => console.log(error));
+			.catch(error => showErrorMsgFromErrorObject(error));
 	}
 
 	componentDidMount() {
@@ -76,7 +77,7 @@ class BooksPage extends Component {
 				this.getRelateBookList(this.state.bookDetailInformation.category);
 			})
 			.catch((error) => {
-				console.log(error);
+                showErrorMsgFromErrorObject(error)
 			});
 	}
 
@@ -108,7 +109,7 @@ class BooksPage extends Component {
 				this.setState({ usersBookList: response.data });
 			})
 			.catch((error) => {
-				console.log(error);
+                showErrorMsgFromErrorObject(error)
 			});
 	}
 
@@ -123,17 +124,12 @@ class BooksPage extends Component {
 				window.location.reload();
 			})
 			.catch((error) => {
-				if (error.response.status === 404) { alert(error.response.data.reviewexist); } else { this.alertObj(error.response.data); }
+				if (error.response.status === 404) {
+					showErrorMsg(error.response.data.reviewexist)
+				} else {
+                    showErrorMsgFromErrorObject(error)
+				}
 			});
-	}
-
-	alertObj(obj) {
-		let output = '';
-		for (const i in obj) {
-			const property = obj[i];
-			output += property;
-		}
-		alert(output);
 	}
 
 	render() {
