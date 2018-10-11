@@ -51,10 +51,11 @@ router.get('/', passport.authenticate('jwt', {
   try {
     const user = await User.findById(req.user.id)
       .cache({ key: req.user.id });
+
     if (user) {
       return res.json(user.cart);
     }
-  } catch (err) {
+  } catch (e) {
     return res.status(404)
       .json({ usernotfound: 'User not found' });
   }
@@ -64,20 +65,31 @@ router.get('/', passport.authenticate('jwt', {
 
 /**
  * @swagger
- * /api/cart/{id}:
+ * definitions:
+ *   AddBookToCart:
+ *     properties:
+ *       id:
+ *         type: string
+ *       quantity:
+ *         type: number
+ */
+/**
+ * @swagger
+ * /api/cart:
  *   post:
  *     tags:
  *       - Cart
- *     summary: Add one book into cart
- *     description: Add one book into cart. This can only be done by the logged in user (add JWT token to header)
+ *     summary: Add books into cart
+ *     description: Add books into cart. This can only be done by the logged in user (add JWT token to header)
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: "id"
- *         in: "path"
- *         description: "id of book that want to add into cart"
+ *       - name: body
+ *         description: Add books to user cart
+ *         in: body
  *         required: true
- *         type: "string"
+ *         schema:
+ *           $ref: '#/definitions/AddBookToCart'
  *     responses:
  *       200:
  *         description: Successfully created
@@ -89,52 +101,64 @@ router.get('/', passport.authenticate('jwt', {
  *       - JWT: []
  */
 router.post(
-  '/:id',
+  '/',
   passport.authenticate('jwt', {
     session: false,
   }),
   cleanCache,
   async (req, res) => {
+    const {
+      errors,
+      isValid,
+    } = validateCartInput(req.body);
+    if (!isValid) {
+      return res.status(400)
+        .json(errors);
+    }
+
     try {
       const user = await User.findById(req.user.id);
-      const book = await Book.findById(req.params.id);
-      const newBook = {};
-      newBook.bookid = req.params.id;
-      newBook.title = book.title;
-      newBook.price = book.price;
-      newBook.coverUrl = book.coverUrl;
-      newBook.authors = book.authors;
-      newBook.quantity = 1;
-      user.cart.unshift(newBook);
-      const currentUser = await user.save();
-      if (currentUser) {
-        return res.json(currentUser.cart);
+      const book = await Book.findById(req.body.id);
+      if (book) {
+        const newBook = {};
+        newBook.bookid = req.body.id;
+        newBook.title = book.title;
+        newBook.price = book.price;
+        newBook.coverUrl = book.coverUrl;
+        newBook.authors = book.authors;
+        newBook.quantity = req.body.quantity;
+        user.cart.unshift(newBook);
+        const currentUser = await user.save();
+        if (currentUser) {
+          return res.json(currentUser.cart);
+        }
       }
-    } catch (err) {
+      return res.status(404)
+        .json({ booknotfound: 'No books found' });
+    } catch (e) {
       return res.status(404)
         .json({ booknotfound: 'No books found' });
     }
-    return res.status(404)
-      .json({ booknotfound: 'No books found' });
   }
 );
 
 /**
  * @swagger
- * /api/cart/{id}/{quantity}:
+ * /api/cart/{id}:
  *   post:
  *     tags:
  *       - Cart
  *     summary: Edit purchase quantity of book in cart
- *     description: Add one book into cart. This can only be done by the logged in user (add JWT token to header)
+ *     description: Edit one book into cart. This can only be done by the logged in user (add JWT token to header)
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: "quantity"
- *         in: "path"
- *         description: "Purchase quantity of book"
+ *       - name: body
+ *         description: Add books to user cart
+ *         in: body
  *         required: true
- *         type: "Number"
+ *         schema:
+ *           $ref: '#/definitions/AddBookToCart'
  *     responses:
  *       200:
  *         description: Successfully edited
@@ -148,7 +172,7 @@ router.post(
  *       - JWT: []
  */
 router.post(
-  '/:id/:quantity',
+  '/:id/',
   passport.authenticate('jwt', {
     session: false,
   }),
@@ -157,35 +181,35 @@ router.post(
     const {
       errors,
       isValid,
-    } = validateCartInput(req.params);
+    } = validateCartInput(req.body);
     if (!isValid) {
       return res.status(400)
         .json(errors);
     }
-
     try {
       const user = await User.findById(req.user.id);
 
       if (user.cart.filter(book => book.bookid.toString()
         === req.params.id).length === 0) {
-        return res.status(404)
+        return res
+          .status(404)
           .json({ booknotfound: 'No books found' });
       }
-      // Find book index and update quantity
       const editIndex = user.cart.map(book => book.bookid.toString())
         .indexOf(req.params.id);
-      user.cart[editIndex].quantity = req.params.quantity;
-      // Save changes
+      user.cart[editIndex].quantity = req.body.quantity;
       const currentUser = await user.save();
       if (currentUser) {
         return res.json(currentUser.cart);
       }
-    } catch (err) {
-      return res.status(404)
+      return res
+        .status(404)
+        .json({ booknotfound: 'No books found' });
+    } catch (e) {
+      return res
+        .status(404)
         .json({ booknotfound: 'No books found' });
     }
-    return res.status(404)
-      .json({ booknotfound: 'No books found' });
   }
 );
 
@@ -222,27 +246,27 @@ router.delete(
   async (req, res) => {
     try {
       const user = await User.findById(req.user.id);
-      // If cannot find book in user cart
       if (user.cart.filter(book => book.bookid.toString()
         === req.params.id).length === 0) {
-        return res.status(404)
+        return res
+          .status(404)
           .json({ booknotfound: 'No books found' });
       }
-      // Find book, and get the delete index of the book
-      const deleteIndex = user.cart.map(book => book.bookid.toString())
+      const editIndex = user.cart.map(book => book.bookid.toString())
         .indexOf(req.params.id);
-      user.cart.splice(deleteIndex, 1);
-      // Save changes
+      user.cart.splice(editIndex, 1);
       const currentUser = await user.save();
       if (currentUser) {
         return res.json(currentUser.cart);
       }
-    } catch (err) {
-      return res.status(404)
+      return res
+        .status(404)
+        .json({ booknotfound: 'No books found' });
+    } catch (e) {
+      return res
+        .status(404)
         .json({ booknotfound: 'No books found' });
     }
-    return res.status(404)
-      .json({ booknotfound: 'No books found' });
   }
 );
 
