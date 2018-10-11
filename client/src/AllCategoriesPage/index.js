@@ -17,14 +17,34 @@ class allCategoriesPage extends Component {
 	}
 
 	componentDidMount() {
+		const categoryID = this.props.match.params.categoryID;
 		const requestURL = '/categories';
-		this.props.onCategoryNumberChange({ mainCategories: 'Computers & Technology', subCategories: 'Databases & Big Data' });
 
 		Axios(requestURL).then((response) => {
-			this.setState({ allCategories: response.data });
-		}).catch((error) => {
+			this.setState({
+				allCategories: response.data,
+                booksPageCategoryID: categoryID
+			});
+            this.setInitialCategoryNamesBySearch(response.data, categoryID);
+        }).catch((error) => {
 			console.log(error);
 		});
+	}
+
+	setInitialCategoryNamesBySearch(categories, categoryID) {
+        let categoryName = '';
+        let subCategoryName = '';
+        categories.forEach(category => {
+            category.subCategories.forEach(
+                subCategory => {
+                    if (subCategory.subid === categoryID) {
+                        categoryName = category.name;
+                        subCategoryName = subCategory.subname;
+                    }
+                }
+            );
+        });
+        this.props.onCategoryNumberChange({mainCategories: categoryName, subCategories: subCategoryName});
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {

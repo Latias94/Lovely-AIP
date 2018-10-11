@@ -13,25 +13,23 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
 import { API_BASE_URL } from './config';
 
-// set base URL in request
+// Set base URL in request
 axios.defaults.baseURL = API_BASE_URL;
-// Check for token
+// Check the token
 if (localStorage.jwtToken) {
 	// Set token header in Axios
 	setAuthTokenInHeader(localStorage.jwtToken);
-	// set baseURL in header
-	const decoded = jwt_decode(localStorage.jwtToken);
-	// install user
-	store.dispatch(setCurrentUser(decoded));
+	// Set baseURL in header
+	const user = jwt_decode(localStorage.jwtToken);
+	// Install user into store
+	store.dispatch(setCurrentUser(user));
 	// Check for expired token
 	const currentTime = Date.now() / 1000;
-	if (decoded.exp < currentTime) {
+	if (user.exp < currentTime) {
 	// Logout user
 		store.dispatch(logoutUser());
-		// TODO: Clear current Profile
-
 	// Redirect to login
-	//   window.location.href = '/login';
+	  window.location = '/login';
 	}
 }
 

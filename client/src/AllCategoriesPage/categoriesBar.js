@@ -35,7 +35,7 @@ class NestedList extends React.Component {
 									categoryID={item._id}
 									categoriesName={item.name}
 									subcategoriesName={item.subCategories}
-									updataCategory={this.props.onCategoryNumberChange}
+									updateCategory={this.props.onCategoryNumberChange}
 								/>
 							),
 						)

@@ -260,7 +260,7 @@ class BookManage extends React.Component {
         this.setState(state => ({
             open: !state.open,
         }));
-    }
+    };
 
     handleClickButton = () => {
         const { 
@@ -299,7 +299,7 @@ class BookManage extends React.Component {
 
     confirmDelete () {
         Axios.delete('/books/'+ this.state.selectedBookID)
-        .then(() => this.getAllBooks())
+        .then(() => this.getAllBooks());
         this.handleDeleteDialogClose();
     }
 

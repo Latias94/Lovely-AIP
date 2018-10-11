@@ -23,7 +23,7 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				user: newUser
-			}
+			};
 	default:
 		return state;
 	}

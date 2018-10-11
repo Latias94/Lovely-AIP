@@ -1,6 +1,7 @@
 import Axios from 'axios';
-import { createAction } from 'redux-actions';
-
+import {createAction} from 'redux-actions';
+import swal from 'sweetalert2';
+import {showErrorMsgFromErrorObject} from '../../../common/utils/sweetAlert';
 
 export const setCurrentUserBookLists = createAction('SET_CURRENT_USER_BOOKLISTS');
 
@@ -9,15 +10,20 @@ export const getCurrentUserBookLists = () => (dispatch) => {
 		.then((res) => {
 			dispatch(setCurrentUserBookLists(res.data));
 		})
-		.catch(err => console.log(err.data));
+		.catch(err => showErrorMsgFromErrorObject(err));
 };
 
 export const createBookList = (title, description) => (dispatch) => {
-	Axios.post('/booklists', { title, description })
-		.then((res) => {
+	Axios.post('/booklists', {title, description})
+		.then(() => {
 			// refresh
 			getCurrentUserBookLists()(dispatch);
+			swal({
+				position: 'top',
+				title: 'Created!',
+				showConfirmButton: false,
+				timer: 1500
+			});
 		})
-	// TODO: transfer error msg to UI
-		.catch(() => {});
+		.catch(err => showErrorMsgFromErrorObject(err));
 };

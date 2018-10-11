@@ -13,7 +13,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 
-
 const styles = theme => ({
     buttonWrapper: {
         position: 'relative',
@@ -57,7 +56,7 @@ const styles = theme => ({
 });
 
 
-class MyList extends React.Component {
+class MyBookLists extends React.Component {
     descriptionMinLength = 10;
 
     state = {
@@ -102,6 +101,12 @@ class MyList extends React.Component {
         }
     };
 
+    onKeyDown = e => {
+        if (e.keyCode === 13 ) {
+            this.handleConfirmButton()
+        }
+    };
+
     render() {
         const { classes } = this.props;
 
@@ -128,7 +133,6 @@ class MyList extends React.Component {
                                 </Typography>
                                 <Typography variant="subheading" id="simple-modal-description">
                                     <table style={{width:'100%'}}>
-                                        <thead></thead>
                                         <tbody>
                                         <tr>
                                             <td>
@@ -137,7 +141,6 @@ class MyList extends React.Component {
                                                     label="Title"
                                                     multiline
                                                     className={classes.textField}
-                                                    // TODO: how about using setState here?
                                                     inputRef={title => this.title = title}
                                                     required
                                                 />
@@ -154,6 +157,7 @@ class MyList extends React.Component {
                                                     helperText={this.state.descriptionError}
                                                     required
                                                     style={{width:'270px'}}
+                                                    onKeyDown={this.onKeyDown}
                                                 />
                                             </td>
                                         </tr>
@@ -200,7 +204,7 @@ class MyList extends React.Component {
     }
 }
 
-MyList.propTypes = {
+MyBookLists.propTypes = {
     bookLists: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired,
 };
@@ -208,4 +212,4 @@ MyList.propTypes = {
 export default compose(
     withStyles(styles),
     connect( state => ({bookLists: state.user.bookLists}), { createBookList })
-)(MyList);
+)(MyBookLists);

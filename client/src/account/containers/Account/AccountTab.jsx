@@ -5,8 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import MyList from './MyList'
-// import MySetting from './mySetting'
+import MyBookLists from './MyBookLists'
 
 
 const styles = theme => ({
@@ -62,7 +61,7 @@ class AccountTab extends React.Component {
                         {/*<Tab label="My Setting" style={{outline:'none'}}  />*/}
                     </Tabs>
                 </AppBar>
-                {value === 0 && <MyList />}
+                {value === 0 && <MyBookLists />}
                 {/*{value === 1 && <MySetting />}*/}
             </div>
         );

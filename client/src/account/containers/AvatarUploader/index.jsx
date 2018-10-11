@@ -22,7 +22,6 @@ class AvatarUploader extends PureComponent {
 
     uploadHandler = () => {
     const previewInFile = dataURLtoFile(this.state.preview, "avatar.png");
-    // const { preview: avatar } = this.state;
     const formData = new FormData();
     formData.append('image', previewInFile, previewInFile.name);
     Axios({

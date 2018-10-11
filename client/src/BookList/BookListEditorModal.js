@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import swal from "sweetalert2";
+import {updateBookList} from "./actions";
 
 
 const styles = theme => ({
@@ -38,11 +40,25 @@ class BookListEditorModal extends React.Component {
             this.setState({
                 isError: false
             });
-            this.props.updateBookList(title, description);
+            this.confirmUpdate(title, description, this.props.bookListId);
             this.props.handleClose();
-            // window.location.reload();
 		}
 	}
+
+    confirmUpdate(title, description, id) {
+        swal({
+            title: 'Update?',
+            showCancelButton: true,
+            confirmButtonColor: '#f50057',
+            cancelButtonColor: '#3f51b5',
+            confirmButtonText: 'Yes',
+        })
+            .then((result) => {
+                if (result.value) {
+                    updateBookList(title, description, id);
+                }
+            })
+    }
 
 	render() {
 		const { classes } = this.props;
@@ -95,7 +111,6 @@ BookListEditorModal.propTypes = {
 	classes: PropTypes.object.isRequired,
 	openModal: PropTypes.bool.isRequired,
 	handleClose: PropTypes.func.isRequired,
-	updateBookList: PropTypes.func.isRequired,
 	title: PropTypes.string.isRequired,
 	description: PropTypes.string
 };

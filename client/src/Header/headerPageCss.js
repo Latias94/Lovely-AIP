@@ -2,6 +2,7 @@ export const background = {
 	backgroundColor: '#585858',
 	width: '100%',
 	height: '120px',
+	zIndex: '100'
 };
 
 export const iconLogo = {
