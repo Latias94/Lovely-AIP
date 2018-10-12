@@ -41,10 +41,10 @@ const BooksPageComponent = props => (
 			id={props.id}
 		/>
 		<hr />
-		{!props.relatedBookList ? null : (<PopularBooks
+		{(props.relatedBookList && props.relatedBookList.books.length > 1) ? (<PopularBooks
 			currentBookId={props.currentBookId}
 			bookList={[props.relatedBookList]}
-		/>)}
+		/>) : null}
 		<hr />
 		{/* review */}
 		<h3>Reviews</h3>
