@@ -9,5 +9,4 @@ const swaggerDefinition = {
   basePath: '/',
 };
 
-
 module.exports = swaggerDefinition;

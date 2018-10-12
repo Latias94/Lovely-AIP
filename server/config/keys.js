@@ -9,7 +9,7 @@ module.exports = {
   frontendHost: process.env.NODE_ENV === 'production'
     ? 'http://knight-frank-web.s3-website-ap-southeast-2.amazonaws.com' : 'http://localhost:3000',
   backendHost: process.env.NODE_ENV === 'production'
-    ? 'https://lovely-aip.herokuapp.com' : `http://localhost:${process.env.PORT || 5000}`,
+    ? 'lovely-aip.herokuapp.com' : `localhost:${process.env.PORT || 5000}`,
   redisURI: process.env.REDIS_URI,
   redisPort: process.env.REDIS_PORT,
   redisPwd: process.env.REDIS_PWD,
