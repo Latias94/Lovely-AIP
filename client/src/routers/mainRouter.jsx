@@ -6,7 +6,7 @@ import Welcome from '../Welcome';
 import RegisterForm from '../account/containers/Register';
 import LoginForm from '../account/containers/LoginForm';
 import BooksPage from '../BookPage';
-import Categories from '../allCategoriesPage';
+import Categories from '../AllCategoriesPage';
 import Account from '../account/containers/Account';
 import EmailSent from '../account/containers/EmailSent';
 import EmailVerification from '../account/containers/EmailVerification/index';

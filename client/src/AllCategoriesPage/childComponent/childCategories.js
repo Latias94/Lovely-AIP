@@ -53,6 +53,7 @@ class childList extends React.Component {
 										button
 										onClick={() => {
 											this.props.updateCategory({ mainCategories: this.props.categoriesName, subCategories: subitems.subname });
+											this.props.getBooksInCategories(subitems.subid, this.props.categoriesName);
 										}}
 										component={Link}
 										to={`/categories/${subitems.subid}`}

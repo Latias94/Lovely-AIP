@@ -1,13 +1,25 @@
-const initialNames = {
-	mainCategories: '',
-	subCategories: '',
+const initialData = {
+	name: {
+		mainCategories: 'All',
+		subCategories: '',
+	},
+	allCategories: [],
+	booksInCategories: [],
 };
 
-export default (state = { name: initialNames }, action) => {
+export default (state = initialData, action) => {
 	switch (action.type) {
 	case 'SELECT_CATEGORY':
 		return {
-			name: action.name,
+			...state, name: action.name,
+		};
+	case 'INITIAL_ALL_CATEGORIES':
+		return {
+			...state, allCategories: [...action.allCategories],
+		};
+	case 'SET_BOOKS_IN_CATEGORIES':
+		return {
+			...state, booksInCategories: [...action.booksInCategories.books],
 		};
 	default:
 		return state;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
-import Book from '../allCategoriesPage/aBook';
+import Book from '../AllCategoriesPage/childComponent/aBook';
 
 export const resizeWindowChange = (windowWidthInput) => {
 	let bookMarginRight;
