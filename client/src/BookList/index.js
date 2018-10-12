@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Axios from 'axios';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import swal from 'sweetalert2';
-import {Rate} from 'antd';
-import {compose} from 'redux';
-import {connect} from 'react-redux';
+import { Rate } from 'antd';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import KFStyles from '../KFStyles';
 import BookListEditorModal from './BookListEditorModal';
-import {deleteBookList} from './actions';
-import {showErrorMsgFromErrorObject} from "../common/utils/sweetAlert";
+import { deleteBookList } from './actions';
+import { showErrorMsgFromErrorObject } from '../common/utils/sweetAlert';
 
 
 const styles = theme => ({
@@ -91,13 +91,13 @@ class BookList extends React.PureComponent {
 		})
 			.then((result) => {
 				if (result.value) {
-					deleteBookList(id)
+					deleteBookList(id);
 				}
-			})
+			});
 	}
 
 	handleBookListEditorModalClose() {
-		this.setState({openBookListEditorModal: false});
+		this.setState({ openBookListEditorModal: false });
 	}
 
 	render() {
@@ -107,10 +107,7 @@ class BookList extends React.PureComponent {
 		const {
 			bookListTitle, books, totalBooks, description, bookListId,
 		} = this.state;
-<<<<<<< HEAD
-=======
 		// Change page title according to number of books.
->>>>>>> 7ac5c05ce6d8b04c14c7597e7b1eab52b8ba2b3b
 		if (totalBooks > 1 || totalBooks === 0) {
 			document.title = `${bookListTitle} (${totalBooks} books)`;
 		} else if (totalBooks === 1) {
@@ -128,13 +125,13 @@ class BookList extends React.PureComponent {
 						openModal={this.state.openBookListEditorModal}
 					/>
 
-					<h1 style={{fontSize: '20px'}}>{bookListTitle}</h1>
+					<h1 style={{ fontSize: '20px' }}>{bookListTitle}</h1>
 					<p style={{
 						fontSize: '14px',
-						fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif'
+						fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif',
 					}}>{description}</p>
-					{(this.props.userID === this.state.userID || this.props.isAdmin) &&
-					<div style={{flexDirection: 'row'}}>
+					{(this.props.userID === this.state.userID || this.props.isAdmin)
+					&& <div style={{ flexDirection: 'row' }}>
 						{/* Add new, edit, and delete buttons */}
 						<Button
 							style={{
@@ -150,11 +147,11 @@ class BookList extends React.PureComponent {
 							+ A new book
 						</Button>
 						<Button
-							style={{outline: 'none', width: '80px', marginRight: '10px'}}
+							style={{ outline: 'none', width: '80px', marginRight: '10px' }}
 							variant="contained"
 							color="primary"
 							onClick={() => {
-								this.setState({openBookListEditorModal: true});
+								this.setState({ openBookListEditorModal: true });
 							}}
 							title={'Edit the list title and description'}
 						>
@@ -162,7 +159,7 @@ class BookList extends React.PureComponent {
 						</Button>
 						<Button
 							title={'Delete this book list'}
-							style={{outline: 'none', width: '120px', marginRight: '10px'}}
+							style={{ outline: 'none', width: '120px', marginRight: '10px' }}
 							variant="contained"
 							color="secondary"
 							onClick={() => {
@@ -177,18 +174,18 @@ class BookList extends React.PureComponent {
 						<Table className={table} padding={'dense'}>
 							<tbody>
 								{books.length ? books.map(book => (
-									<tr key={book._id} style={{height: '220px', borderBottom: '8px #E0E0E0  solid'}}>
+									<tr key={book._id} style={{ height: '220px', borderBottom: '8px #E0E0E0  solid' }}>
 										<td component="a" href={`/book/${book._id}`}
-											style={{width: '18%', paddingLeft: '20px'}}>
-											<img src={book.coverUrl} alt={book.title} style={{width: '120px'}} title=""/>
+											style={{ width: '18%', paddingLeft: '20px' }}>
+											<img src={book.coverUrl} alt={book.title} style={{ width: '120px' }} title=""/>
 										</td>
-										<td style={{width: '60'}}>
-											<a href={`/book/${book._id}`} style={{fontSize: '18px'}}>{book.title}</a>
+										<td style={{ width: '60' }}>
+											<a href={`/book/${book._id}`} style={{ fontSize: '18px' }}>{book.title}</a>
 											<div>{`by ${book.authors[0].name}`}</div>
 											{/* TODO: join authors' names */}
 											<Rate disabled value={book.reviewStar}/>
 										</td>
-										<td style={{width: '20%'}}>
+										<td style={{ width: '20%' }}>
 											{book.reviewContent ? book.reviewContent : ''}
 										</td>
 									</tr>
