@@ -231,7 +231,7 @@ router.post(
  *         type: "string"
  *     responses:
  *       200:
- *         description: Successfully deleted the book
+ *         description: Successfully deleted the book from cart
  *       401:
  *         description: Unauthorized
  *       404:
@@ -266,6 +266,55 @@ router.delete(
       return res
         .status(404)
         .json({ booknotfound: 'No books found' });
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /api/cart/{id}:
+ *   delete:
+ *     tags:
+ *       - Cart
+ *     summary: Delete all book from cart
+ *     description: Delete all book from cart. This can only be done by the logged in user (add JWT token to header)
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: "id"
+ *         in: "path"
+ *         description: "ID of book that needs to be deleted"
+ *         required: true
+ *         type: "string"
+ *     responses:
+ *       200:
+ *         description: Delete all books from cart successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Fail to delete all books from cart
+ *     security:
+ *       - JWT: []
+ */
+router.delete(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  cleanCache,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id);
+      user.cart = [];
+      const currentUser = await user.save();
+      if (currentUser && currentUser.cart.length === 0) {
+        return res.json({ success: true });
+      }
+      return res
+        .status(404)
+        .json({ success: false });
+    } catch (e) {
+      return res
+        .status(404)
+        .json({ success: false });
     }
   }
 );
