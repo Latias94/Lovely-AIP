@@ -272,7 +272,7 @@ router.delete(
 
 /**
  * @swagger
- * /api/cart/{id}:
+ * /api/cart:
  *   delete:
  *     tags:
  *       - Cart
