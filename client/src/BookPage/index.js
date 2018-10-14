@@ -95,9 +95,9 @@ class BooksPage extends Component {
 		this.setState({ submittedReviewContent: content });
 	}
 
-	addToCartClick(id) {
+	addToCartClick(id, count) {
 		if (this.props.auth) {
-			this.props.addBookToCartData(id);
+			this.props.addBookToCartData(id, count);
 		} else {
 			window.location.pathname = './login';
 		}
@@ -176,7 +176,7 @@ class BooksPage extends Component {
 					submitClick={this.submitReview}
 					coverUrl={coverUrl}
 					authOrNot={auth}
-					addToCartClick={id => this.addToCartClick(id)}
+					addToCartClick={this.addToCartClick}
 					usersBookList={this.state.usersBookList}
 					handleOpen={this.handleOpen}
 					handleClose={this.handleClose}

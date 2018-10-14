@@ -17,10 +17,14 @@ export const getUsersCart = () => (dispatch) => {
 		});
 };
 
-export const addBookToCartData = bookid => (dispatch) => {
+export const addBookToCartData = (bookid, count) => (dispatch) => {
 	axios({
 		method: 'post',
-		url: `/cart/${bookid}`,
+		url: '/cart',
+		data: {
+			id: bookid,
+			quantity: count,
+		},
 	})
 		.then(() => {
 			dispatch(addBookToCart);

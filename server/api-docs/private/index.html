@@ -36,7 +36,7 @@
   window.onload = function () {
     // Build a system
     const ui = SwaggerUIBundle({
-      url: 'https://lovely-aip.herokuapp.com/swagger.json', // local change to http://localhost:5000
+      url: `${window.document.location.origin}/swagger.json`,
       dom_id: '#swagger-ui',
       deepLinking: true,
       presets: [

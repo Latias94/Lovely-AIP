@@ -41,7 +41,7 @@ const bookInformation = props => (
 					variant="contained"
 					color="default"
 					style={{ backgroundColor: 'gray', color: 'white', outline: 'none' }}
-					onClick={() => props.addToCartClick(props.id)}>
+					onClick={() => { props.addToCartClick(props.id, props.quantity); } }>
                 Add to Cart
 				</Button>
 				<Dropdown overlay={<DropDownInCart isLogin={props.authOrNot} booklist={props.usersBookList} open={props.handleOpen} addBookIntoBooklist={props.addBookIntoBooklist} bookid={props.id} />} trigger={['click']} >
