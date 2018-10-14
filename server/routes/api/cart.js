@@ -280,12 +280,6 @@ router.delete(
  *     description: Delete all book from cart. This can only be done by the logged in user (add JWT token to header)
  *     produces:
  *       - application/json
- *     parameters:
- *       - name: "id"
- *         in: "path"
- *         description: "ID of book that needs to be deleted"
- *         required: true
- *         type: "string"
  *     responses:
  *       200:
  *         description: Delete all books from cart successfully
