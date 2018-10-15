@@ -123,8 +123,6 @@ export const logoutUser = () => (dispatch) => {
 	setAuthTokenInHeader(false);
 	// Set current user to {} which will set isAuthenticated to false as well
 	dispatch(setCurrentUser({}));
-	// return to home page
-	window.location = '/';
 };
 
 // TODO: move this to account folder
