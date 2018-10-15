@@ -481,9 +481,10 @@ router.post(
     try {
       const bookList = await BookList.findById(req.params.id);
       if (bookList) {
-        if (bookList.user.toString() !== req.user.id) {
-          // can only edit the book list user created
-          errors.unauthorized = 'Cannot edit the booklist';
+	      // Only the book list owner or admin can edit the book list
+          const editable = bookList.user.toString() !== req.user.id && !req.user.isStaff;
+	      if (editable) {
+          errors.unauthorized = 'Cannot edit the book list';
           return res.status(401)
             .json(errors);
         }

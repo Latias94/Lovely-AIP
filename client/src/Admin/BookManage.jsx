@@ -263,7 +263,7 @@ class BookManage extends React.Component {
         }));
     };
 
-    handleClickButton = () => {
+    addABook = () => {
         const { 
             newISBN: isbn, 
             newTitle: title, 
@@ -456,7 +456,7 @@ class BookManage extends React.Component {
                                 onClick={this.handleCancelAddNewBook}
                                 style={{margin:'2%', outline:'none'}}
                             >Cancel</Button>
-                            <Button variant="contained" color="primary" onClick={this.handleClickButton} style={{outline:'none'}}>Confirm</Button>
+                            <Button variant="contained" color="primary" onClick={this.addABook} style={{outline:'none'}}>Confirm</Button>
                         </Typography>
                     </div>
                 </Modal>

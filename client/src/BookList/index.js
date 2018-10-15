@@ -51,6 +51,7 @@ class BookList extends React.PureComponent {
 		};
 		this.confirmDelete = this.confirmDelete.bind(this);
 		this.handleBookListEditorModalClose = this.handleBookListEditorModalClose.bind(this);
+		this.operationButtons = this.operationButtons.bind(this);
 	}
 
 	componentDidMount() {
@@ -100,29 +101,82 @@ class BookList extends React.PureComponent {
 		this.setState({ openBookListEditorModal: false });
 	}
 
+	// Add new, edit, and delete 3 buttons.
+	operationButtons(bookListOwnerId, userId, isAdmin, bookListId) {
+		const showOperationButtons = userId === bookListOwnerId || isAdmin;
+
+		if (showOperationButtons) {
+			return (
+				<div style={{ flexDirection: 'row' }}>
+					<Button
+						style={{
+							outline: 'none',
+							width: '170px',
+							backgroundColor: '#3D5AFE',
+							color: '#fff',
+							marginRight: '10px',
+						}}
+						variant="contained"
+						href={'/'}
+					>
+						+ A new book
+					</Button>
+					<Button
+						style={{ outline: 'none', width: '80px', marginRight: '10px' }}
+						variant="contained"
+						color="primary"
+						onClick={() => {
+							this.setState({ openBookListEditorModal: true });
+						}}
+						title={'Edit the list title and description'}
+					>
+						Edit
+					</Button>
+					<Button
+						title={'Delete this book list'}
+						style={{ outline: 'none', width: '120px', marginRight: '10px' }}
+						variant="contained"
+						color="secondary"
+						onClick={() => {
+							this.confirmDelete(bookListId);
+						}}
+					>
+						Delete list
+					</Button>
+				</div>
+			);
+		}
+		return null;
+	}
+
 	render() {
 		const {
 			root, table, container,
 		} = this.props.classes;
 		const {
-			bookListTitle, books, totalBooks, description, bookListId,
+			bookListTitle,
+			books, totalBooks,
+			description,
+			bookListId,
+			openBookListEditorModal,
 		} = this.state;
-		// Change page title according to number of books.
+		// Change the page title according to the number of books.
 		if (totalBooks > 1 || totalBooks === 0) {
 			document.title = `${bookListTitle} (${totalBooks} books)`;
 		} else if (totalBooks === 1) {
 			document.title = `${bookListTitle} (${totalBooks} book)`;
 		}
 
-		if (this.state.bookListId) {
+
+		if (bookListId) {
 			return (
 				<div className={container}>
 					<BookListEditorModal
 						title={bookListTitle}
 						description={description}
-						bookListId={this.state.bookListId}
+						bookListId={bookListId}
 						handleClose={this.handleBookListEditorModalClose}
-						openModal={this.state.openBookListEditorModal}
+						openModal={openBookListEditorModal}
 					/>
 
 					<h1 style={{ fontSize: '20px' }}>{bookListTitle}</h1>
@@ -130,54 +184,19 @@ class BookList extends React.PureComponent {
 						fontSize: '14px',
 						fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif',
 					}}>{description}</p>
-					{(this.props.userID === this.state.userID || this.props.isAdmin)
-					&& <div style={{ flexDirection: 'row' }}>
-						{/* Add new, edit, and delete buttons */}
-						<Button
-							style={{
-								outline: 'none',
-								width: '170px',
-								backgroundColor: '#3D5AFE',
-								color: '#fff',
-								marginRight: '10px',
-							}}
-							variant="contained"
-							href={'/'}
-						>
-							+ A new book
-						</Button>
-						<Button
-							style={{ outline: 'none', width: '80px', marginRight: '10px' }}
-							variant="contained"
-							color="primary"
-							onClick={() => {
-								this.setState({ openBookListEditorModal: true });
-							}}
-							title={'Edit the list title and description'}
-						>
-							Edit
-						</Button>
-						<Button
-							title={'Delete this book list'}
-							style={{ outline: 'none', width: '120px', marginRight: '10px' }}
-							variant="contained"
-							color="secondary"
-							onClick={() => {
-								this.confirmDelete(bookListId);
-							}}
-						>
-							Delete list
-						</Button>
-					</div>}
+					{this.operationButtons(this.props.userID, this.state.userID, this.props.isAdmin, bookListId)}
 					{/* Show books in list */}
 					<Paper className={root}>
 						<Table className={table} padding={'dense'}>
 							<tbody>
 								{books.length ? books.map(book => (
 									<tr key={book._id} style={{ height: '220px', borderBottom: '8px #E0E0E0  solid' }}>
-										<td component="a" href={`/book/${book._id}`}
-											style={{ width: '18%', paddingLeft: '20px' }}>
-											<img src={book.coverUrl} alt={book.title} style={{ width: '120px' }} title=""/>
+										<td className={{ width: '18%', paddingLeft: '20px' }}>
+											<a href={`/book/${book._id}`}>
+												<img className={{ width: '120px' }} src={book.coverUrl}
+												     title={book.title} alt={book.title}
+												/>
+											</a>
 										</td>
 										<td style={{ width: '60' }}>
 											<a href={`/book/${book._id}`} style={{ fontSize: '18px' }}>{book.title}</a>
@@ -205,6 +224,7 @@ class BookList extends React.PureComponent {
 BookList.propTypes = {
 	classes: PropTypes.object.isRequired,
 	userID: PropTypes.string,
+	isAdmin: PropTypes.bool,
 };
 
 export default compose(
