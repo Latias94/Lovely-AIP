@@ -103,50 +103,48 @@ class BookList extends React.PureComponent {
 
 	// Add new, edit, and delete 3 buttons.
 	operationButtons(bookListOwnerId, userId, isAdmin, bookListId) {
-		const showOperationButtons = userId === bookListOwnerId || isAdmin;
+		const deletable = userId === bookListOwnerId || isAdmin;
+		const editable = userId === bookListOwnerId;
 
-		if (showOperationButtons) {
-			return (
-				<div style={{ flexDirection: 'row' }}>
-					<Button
-						style={{
-							outline: 'none',
-							width: '170px',
-							backgroundColor: '#3D5AFE',
-							color: '#fff',
-							marginRight: '10px',
-						}}
-						variant="contained"
-						href={'/'}
-					>
-						+ A new book
-					</Button>
-					<Button
-						style={{ outline: 'none', width: '80px', marginRight: '10px' }}
-						variant="contained"
-						color="primary"
-						onClick={() => {
-							this.setState({ openBookListEditorModal: true });
-						}}
-						title={'Edit the list title and description'}
-					>
-						Edit
-					</Button>
-					<Button
-						title={'Delete this book list'}
-						style={{ outline: 'none', width: '120px', marginRight: '10px' }}
-						variant="contained"
-						color="secondary"
-						onClick={() => {
-							this.confirmDelete(bookListId);
-						}}
-					>
-						Delete list
-					</Button>
-				</div>
-			);
-		}
-		return null;
+		return (
+			<div style={{ flexDirection: 'row' }}>
+				{editable && <Button
+					style={{
+						outline: 'none',
+						width: '170px',
+						backgroundColor: '#3D5AFE',
+						color: '#fff',
+						marginRight: '10px',
+					}}
+					variant="contained"
+					href={'/'}
+				>
+					+ A new book
+				</Button>}
+				{editable && <Button
+					style={{ outline: 'none', width: '80px', marginRight: '10px' }}
+					variant="contained"
+					color="primary"
+					onClick={() => {
+						this.setState({ openBookListEditorModal: true });
+					}}
+					title={'Edit the list title and description'}
+				>
+					Edit
+				</Button>}
+				{deletable && <Button
+					title={'Delete this book list'}
+					style={{ outline: 'none', width: '120px', marginRight: '10px' }}
+					variant="contained"
+					color="secondary"
+					onClick={() => {
+						this.confirmDelete(bookListId);
+					}}
+				>
+					Delete list
+				</Button>}
+			</div>
+		);
 	}
 
 	render() {
@@ -167,8 +165,7 @@ class BookList extends React.PureComponent {
 			document.title = `${bookListTitle} (${totalBooks} book)`;
 		}
 
-
-		if (bookListId) {
+		if (bookListId){
 			return (
 				<div className={container}>
 					<BookListEditorModal
@@ -189,28 +186,27 @@ class BookList extends React.PureComponent {
 					<Paper className={root}>
 						<Table className={table} padding={'dense'}>
 							<tbody>
-								{books.length ? books.map(book => (
-									<tr key={book._id} style={{ height: '220px', borderBottom: '8px #E0E0E0  solid' }}>
-										<td className={{ width: '18%', paddingLeft: '20px' }}>
-											<a href={`/book/${book._id}`}>
-												<img className={{ width: '120px' }} src={book.coverUrl}
-												     title={book.title} alt={book.title}
-												/>
-											</a>
-										</td>
-										<td style={{ width: '60' }}>
-											<a href={`/book/${book._id}`} style={{ fontSize: '18px' }}>{book.title}</a>
-											<div>{`by ${book.authors[0].name}`}</div>
-											{/* TODO: join authors' names */}
-											<Rate disabled value={book.reviewStar}/>
-										</td>
-										<td style={{ width: '20%' }}>
-											{book.reviewContent ? book.reviewContent : ''}
-										</td>
-									</tr>
-								)) : <tr>
-									<td>No books yet.</td>
-								</tr>}
+							{books.length ? books.map(book => (
+								<tr key={book._id} style={{ height: '220px', borderBottom: '8px #E0E0E0  solid' }}>
+									<td style={{ width: '18%', paddingLeft: '20px' }}>
+										<a href={`/book/${book._id}`}>
+											<img style={{ width: '120px' }} src={book.coverUrl}
+											     title={book.title} alt={book.title}
+											/>
+										</a>
+									</td>
+									<td style={{ width: '60' }}>
+										<a href={`/book/${book._id}`} style={{ fontSize: '18px' }}>{book.title}</a>
+										<div>{`by ${book.authors.map(author => author.name).join(', ')}`}</div>
+										<Rate disabled value={book.reviewStar}/>
+									</td>
+									<td style={{ width: '20%' }}>
+										{book.reviewContent ? book.reviewContent : ''}
+									</td>
+								</tr>
+							)) : <tr>
+								<td>No books yet.</td>
+							</tr>}
 							</tbody>
 						</Table>
 					</Paper>
