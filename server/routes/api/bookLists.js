@@ -124,7 +124,7 @@ router.get('/search/:keyword', async (req, res) => {
     return res.json(result);
   } catch (err) {
     return res.status(404)
-      .json({ booklistnotfound: 'No booklists found' });
+      .json({ booklistnotfound: 'No book lists found' });
   }
 });
 
@@ -158,7 +158,7 @@ router.get('/search/:keyword', async (req, res) => {
  *       200:
  *         description: Get booklists successfully
  *       404:
- *         description: No booklists found
+ *         description: No book lists found
  */
 router.get('/list', async (req, res) => {
   const page = parseInt(req.query.page, 10);
@@ -197,7 +197,7 @@ router.get('/list', async (req, res) => {
     return res.json(result);
   } catch (err) {
     return res.status(404)
-      .json({ booklistnotfound: 'No booklists found' });
+      .json({ booklistnotfound: 'No book lists found' });
   }
 });
 
@@ -215,7 +215,7 @@ router.get('/list', async (req, res) => {
  *       200:
  *         description: Get all booklists successfully
  *       404:
- *         description: No booklists found
+ *         description: No book lists found
  */
 router.get('/', async (req, res) => {
   try {
@@ -226,10 +226,10 @@ router.get('/', async (req, res) => {
     }
   } catch (e) {
     return res.status(404)
-      .json({ booklistnotfound: 'No bookLists found' });
+      .json({ booklistnotfound: 'No book lists found' });
   }
   return res.status(404)
-    .json({ booklistnotfound: 'No bookLists found' });
+    .json({ booklistnotfound: 'No book lists found' });
 });
 
 // Embed book object to booklist according to book id
@@ -286,7 +286,7 @@ async function embedBookToBookList(bookList, req) {
  *       200:
  *         description: Get BookList successfully
  *       404:
- *         description: No booklists found
+ *         description: No book lists found
  */
 router.get('/slug/:slug', async (req, res) => {
   const errors = {};
@@ -294,7 +294,7 @@ router.get('/slug/:slug', async (req, res) => {
     const bookList = await BookList.findOne({ slug: req.params.slug })
       .lean();
     if (!bookList) {
-      errors.booklistnotfound = 'No booklists found';
+      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
         .json(errors);
     }
@@ -303,7 +303,7 @@ router.get('/slug/:slug', async (req, res) => {
 
     return res.json(bookList);
   } catch (err) {
-    errors.booklistnotfound = 'No booklists found';
+    errors.booklistnotfound = 'No book lists found';
     return res.status(404)
       .json(errors);
   }
@@ -329,7 +329,7 @@ router.get('/slug/:slug', async (req, res) => {
  *       200:
  *         description: Get BookList successfully
  *       404:
- *         description: No booklists found
+ *         description: No book lists found
  */
 router.get('/:id',
   async (req, res) => {
@@ -338,7 +338,7 @@ router.get('/:id',
       const bookList = await BookList.findById(req.params.id)
         .lean();
       if (!bookList) {
-        errors.booklistnotfound = 'No booklists found';
+        errors.booklistnotfound = 'No book lists found';
         return res.status(404)
           .json(errors);
       }
@@ -347,7 +347,7 @@ router.get('/:id',
 
       return res.json(bookList);
     } catch (err) {
-      errors.booklistnotfound = 'No booklists found';
+      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
         .json(errors);
     }
@@ -457,7 +457,7 @@ router.post(
  *       401:
  *         description: Cannot edit the BookList
  *       404:
- *         description: No booklists found or BookList name has existed
+ *         description: No book lists found or BookList name has existed
  *     security:
  *       - JWT: []
  */
@@ -481,9 +481,8 @@ router.post(
     try {
       const bookList = await BookList.findById(req.params.id);
       if (bookList) {
-	      // Only the book list owner or admin can edit the book list
-          const editable = bookList.user.toString() !== req.user.id && !req.user.isStaff;
-	      if (editable) {
+	      // Only the owner of the book list can edit
+	      if (bookList.user.toString() !== req.user.id) {
           errors.unauthorized = 'Cannot edit the book list';
           return res.status(401)
             .json(errors);
@@ -503,11 +502,11 @@ router.post(
         }
       }
     } catch (err) {
-      errors.booklistnotfound = 'No booklists found';
+      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
         .json(errors);
     }
-    errors.booklistnotfound = 'No booklists found';
+    errors.booklistnotfound = 'No book lists found';
     return res.status(404)
       .json(errors);
   }
@@ -553,7 +552,7 @@ router.post(
  *       400:
  *         description: Form validation fail
  *       404:
- *         description: No booklists found or other internal error
+ *         description: No book lists found or other internal error
  *     security:
  *       - JWT: []
  */
@@ -610,11 +609,11 @@ router.post(
         }
       }
     } catch (err) {
-      errors.booklistnotfound = 'No booklists found';
+      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
         .json(errors);
     }
-    errors.booklistnotfound = 'No booklists found';
+    errors.booklistnotfound = 'No book lists found';
     return res.status(404)
       .json(errors);
   }
@@ -647,7 +646,7 @@ router.post(
  *       401:
  *         description: Cannot delete the BookList
  *       404:
- *         description: No booklists found or other internal error
+ *         description: No book lists found or other internal error
  *     security:
  *       - JWT: []
  */
@@ -660,10 +659,11 @@ router.delete(
 
     try {
       const bookList = await BookList.findById(req.params.id);
-      if (bookList) {
-        if (bookList.user.toString() !== req.user.id) {
+	    // Only the book list owner or admin can delete the book list
+	    const editable = bookList.user.toString() === req.user.id || req.user.isStaff;
+        if (!editable) {
           // can only edit the book list user created
-          errors.unauthorized = 'Cannot delete the booklist';
+          errors.unauthorized = 'Cannot delete the book list';
           return res.status(401)
             .json(errors);
         }
@@ -689,11 +689,11 @@ router.delete(
         }
       }
     } catch (err) {
-      errors.booklistnotfound = 'No booklists found';
+      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
         .json(errors);
     }
-    errors.booklistnotfound = 'No booklists found';
+    errors.booklistnotfound = 'No book lists found';
     return res.status(404)
       .json(errors);
   }
@@ -721,7 +721,7 @@ router.delete(
  *       400:
  *         description: User already liked this BookList
  *       404:
- *         description: No BookLists found
+ *         description: No Book lists found
  *     security:
  *       - JWT: []
  */
@@ -739,7 +739,7 @@ router.post(
         === req.user.id).length > 0) {
         return res
           .status(404)
-          .json({ alreadyliked: 'User already liked this booklist' });
+          .json({ alreadyliked: 'User already liked this book list' });
       }
       // Add user id to likes array
       bookList.likes.unshift({
@@ -753,10 +753,10 @@ router.post(
       }
     } catch (err) {
       return res.status(404)
-        .json({ booklistnotfound: 'No booklists found' });
+        .json({ booklistnotfound: 'No book lists found' });
     }
     return res.status(404)
-      .json({ booklistnotfound: 'No booklists found' });
+      .json({ booklistnotfound: 'No book lists found' });
   }
 );
 
@@ -782,7 +782,7 @@ router.post(
  *       400:
  *         description: You have not yet liked this bookList
  *       404:
- *         description: No bookLists found
+ *         description: No book lists found
  *     security:
  *       - JWT: []
  */
@@ -818,10 +818,10 @@ router.post(
       }
     } catch (err) {
       return res.status(404)
-        .json({ booklistnotfound: 'No booklists found' });
+        .json({ booklistnotfound: 'No book lists found' });
     }
     return res.status(404)
-      .json({ booklistnotfound: 'No booklists found' });
+      .json({ booklistnotfound: 'No book lists found' });
   }
 );
 
@@ -854,7 +854,7 @@ router.post(
  *       401:
  *         description: Cannot delete the booklist
  *       404:
- *         description: No booklists found
+ *         description: No book lists found
  *     security:
  *       - JWT: []
  */
@@ -880,10 +880,10 @@ router.delete(
       }
     } catch (err) {
       return res.status(404)
-        .json({ booklistnotfound: 'No booklists found' });
+        .json({ booklistnotfound: 'No book lists found' });
     }
     return res.status(404)
-      .json({ booklistnotfound: 'No booklists found' });
+      .json({ booklistnotfound: 'No book lists found' });
   }
 );
 
