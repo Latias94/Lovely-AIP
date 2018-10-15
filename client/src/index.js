@@ -28,8 +28,6 @@ if (localStorage.jwtToken) {
 	if (user.exp < currentTime) {
 	// Logout user
 		store.dispatch(logoutUser());
-	// Redirect to login
-	  window.location = '/login';
 	}
 }
 
