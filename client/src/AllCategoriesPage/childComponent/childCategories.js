@@ -33,7 +33,6 @@ class childList extends React.Component {
 	render() {
 		return (
 			<div>
-				{console.log(this.props)}
 				{this.props.subcategoriesName.length === 0 ? (
 					<ListItem button onClick={() => {
 						this.props.getBooksInCategories(this.props.categoryID, this.props.categoriesName);
