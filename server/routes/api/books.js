@@ -809,6 +809,9 @@ function createUpdateField(req) {
   if (req.body.title) {
     bookFields.title = req.body.title;
   }
+  if (req.body.coverUrl) {
+    bookFields.coverUrl = req.body.coverUrl;
+  }
   if (req.body.price) {
     bookFields.price = Number(req.body.price);
   }
