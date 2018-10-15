@@ -43,6 +43,7 @@ export function alertDeleted() {
 export function showSuccess() {
     swal({
         position: 'top',
+        type: 'success',
         title: 'Success!',
         showConfirmButton: false,
         timer: 1500

@@ -52,6 +52,11 @@ router.get('/test', (req, res) => res.json({
 router.get('/', async (req, res) => {
   try {
     const books = await Book.find()
+        .select({
+            title: 1,
+            authors: 1,
+            isbn: 1
+        })
       .sort({ date: -1 });
     if (books) {
       return res.json(books);

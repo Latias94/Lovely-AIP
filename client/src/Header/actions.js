@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { showSuccess } from "../common/utils/sweetAlert";
 
 export const setCartNumberAction = number => ({ type: 'SET_CART_NUMBER', cartNumber: number });
 export const addBookToCart = { type: 'ADD_CART_NUMBER' };
@@ -28,7 +29,7 @@ export const addBookToCartData = (bookid, count) => (dispatch) => {
 	})
 		.then(() => {
 			dispatch(addBookToCart);
-			alert('Add product successful');
+			showSuccess();
 		})
 		.catch((error) => {
 			console.log(error);

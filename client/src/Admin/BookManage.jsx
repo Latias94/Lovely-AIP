@@ -227,7 +227,8 @@ class BookManage extends React.Component {
                 newCoverURL: "",
                 newStock: 0,
                 newPrice: 0,
-                newCategory: "5b65103ac55fe361685262bf",
+                // TODO: Add a drop down for category
+                // newCategory: "5b65103ac55fe361685262bf",
             })
         } else {
             // TEST
@@ -235,7 +236,7 @@ class BookManage extends React.Component {
                 newISBN: "9780312426781",
                 newStock: 1,
                 newPrice: 1,
-                newTitle: "AAAAA",
+                newTitle: "FOR TESTING",
                 newAuthors: ["name"],
                 newDescription: " New Description",
                 newPublishDate: "7 21 2018"
