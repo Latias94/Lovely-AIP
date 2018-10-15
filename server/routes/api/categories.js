@@ -1,7 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 const { clearHash } = require('../../config/cache');
-
+const {
+  categoryexist,
+  categorynotfound,
+  notsuccess,
+  success,
+  unauthorized
+} = require('../../config/errMessage');
 // Load Validation
 const validateCategoryInput = require('../../validation/category');
 // Load Category Model
@@ -69,13 +75,14 @@ router.get('/', async (req, res) => {
     categories = filterSubCategories(categories);
     if (categories) {
       return res.json(categories);
+    } else {
+      return res.status(404)
+        .json(categorynotfound);
     }
   } catch (err) {
     return res.status(404)
-      .json({ categorynotfound: 'No categories found' });
+      .json(categorynotfound);
   }
-  return res.status(404)
-    .json({ categorynotfound: 'No categories found' });
 });
 
 /**
@@ -119,7 +126,7 @@ router.get('/list', async (req, res) => {
     });
   } catch (err) {
     return res.status(404)
-      .json({ categorynotfound: 'No categories found' });
+      .json(categorynotfound);
   }
   return false;
 });
@@ -212,9 +219,8 @@ router.get('/slug/:slug', async (req, res) => {
       return res.json(category);
     }
   } catch (err) {
-    errors.categorynotfound = 'No categories found';
     return res.status(404)
-      .json(errors);
+      .json(categorynotfound);
   }
   return res.status(404)
     .json(errors);
@@ -270,15 +276,14 @@ router.get('/:id', async (req, res) => {
     );
     if (category) {
       return res.json(category);
+    } else {
+      return res.status(404)
+        .json(categorynotfound);
     }
   } catch (err) {
-    errors.categorynotfound = 'No categories found';
     return res.status(404)
-      .json(errors);
+      .json(categorynotfound);
   }
-  errors.categorynotfound = 'No categories found';
-  return res.status(404)
-    .json(errors);
 });
 
 /**
@@ -324,13 +329,13 @@ router.post(
   async (req, res) => {
     if (!req.user.isStaff) {
       return res.status(401)
-        .json({ unauthorized: 'Cannot modify the book' });
+        .json(unauthorized);
     }
     try {
       const hasFound = await Category.findOne({ name: req.body.name });
       if (hasFound) {
         return res.status(404)
-          .json({ categoryexist: 'Category name has existed' });
+          .json(categoryexist);
       }
       // category not exist
       const {
@@ -348,14 +353,15 @@ router.post(
 
       const categoryObject = await newCategory.save();
       if (categoryObject) {
-        return res.json(categoryObject);
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
     } catch (err) {
       return res.status(404)
-        .json({ categorynotfound: 'No categories found' });
+        .json(categorynotfound);
     }
-    return res.status(404)
-      .json({ categorynotfound: 'No categories found' });
   }
 );
 
@@ -408,11 +414,10 @@ router.post(
   '/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const errors = {};
     try {
       if (!req.user.isStaff) {
         return res.status(401)
-          .json({ unauthorized: 'Cannot modify the book' });
+          .json(unauthorized);
       }
 
       const category = await Category.findById(req.params.id);
@@ -442,18 +447,19 @@ router.post(
           const categoryObject = await category.save();
           if (categoryObject) {
             clearHash(req.body.id);
-            return res.json(categoryObject);
+            return res.json(success);
+          } else {
+            return res.status(404)
+              .json(notsuccess);
           }
         }
       }
     } catch (err) {
-      errors.categorynotfound = 'No categories found';
       return res.status(404)
-        .json(errors);
+        .json(categorynotfound);
     }
-    errors.categorynotfound = 'No categories found';
     return res.status(404)
-      .json(errors);
+      .json(categorynotfound);
   }
 );
 
@@ -510,7 +516,7 @@ router.delete(
     try {
       if (!req.user.isStaff) {
         return res.status(401)
-          .json({ unauthorized: 'Cannot modify the book' });
+          .json(unauthorized);
       }
       const category = await Category.findOneAndDelete({ _id: req.params.id });
 
@@ -519,7 +525,7 @@ router.delete(
       // if there is parent category that contain this sub category,
       // we need to modify the parent category as well
       if (parentCategories) {
-        let success = true;
+        let isSuccess = true;
 
         const modifiedCategories = removeSubCategory(req.params.id, parentCategories);
         modifiedCategories.forEach(async (modifiedCategory) => {
@@ -530,26 +536,30 @@ router.delete(
             { new: true }
           );
           // if one update fail, throw error
-          if (success && !result) success = false;
+          if (isSuccess && !result) isSuccess = false;
         });
-        if (category && success) {
+        if (category && isSuccess) {
           clearHash(req.params.id);
-          return res.json({ success: true });
+          return res.json(success);
+        } else {
+          return res.status(404)
+            .json(notsuccess);
         }
       } else {
         // if the category is parent category
         // delete it directly
         if (category) {
           clearHash(req.params.id);
-          return res.json({ success: true });
+          return res.json(success);
+        } else {
+          return res.status(404)
+            .json(notsuccess);
         }
       }
     } catch (err) {
       return res.status(404)
-        .json({ categorynotfound: 'No categories found' });
+        .json(categorynotfound);
     }
-    return res.status(404)
-      .json({ categorynotfound: 'No categories found' });
   }
 );
 

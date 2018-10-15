@@ -4,6 +4,12 @@ const passport = require('passport');
 const User = require('../../models/User');
 const Book = require('../../models/Book');
 const cleanCache = require('../../middlewares/cleanCache');
+const {
+  notsuccess,
+  success,
+  usernotfound,
+  booknotfound,
+} = require('../../config/errMessage');
 const validateCartInput = require('../../validation/cart');
 
 const router = express.Router();
@@ -54,13 +60,14 @@ router.get('/', passport.authenticate('jwt', {
 
     if (user) {
       return res.json(user.cart);
+    } else {
+      return res.status(404)
+        .json({ usernotfound: 'User not found' });
     }
   } catch (e) {
     return res.status(404)
-      .json({ usernotfound: 'User not found' });
+      .json(usernotfound);
   }
-  return res.status(404)
-    .json({ usernotfound: 'User not found' });
 });
 
 /**
@@ -141,18 +148,26 @@ router.post(
 
         const currentUser = await user.save();
         if (currentUser) {
-          return res.json(currentUser.cart);
+          return res.json(success);
         }
       }
       return res.status(404)
-        .json({ booknotfound: 'No books found' });
+        .json(booknotfound);
     } catch (e) {
       return res.status(404)
-        .json({ booknotfound: 'No books found' });
+        .json(booknotfound);
     }
   }
 );
 
+/**
+ * @swagger
+ * definitions:
+ *   EditBookInCart:
+ *     properties:
+ *       quantity:
+ *         type: number
+ */
 /**
  * @swagger
  * /api/cart/{id}:
@@ -169,7 +184,7 @@ router.post(
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/AddBookToCart'
+ *           $ref: '#/definitions/EditBookInCart'
  *     responses:
  *       200:
  *         description: Successfully edited
@@ -202,24 +217,22 @@ router.post(
 
       if (user.cart.filter(book => book.bookid.toString()
         === req.params.id).length === 0) {
-        return res
-          .status(404)
-          .json({ booknotfound: 'No books found' });
+        return res.status(404)
+          .json(booknotfound);
       }
       const editIndex = user.cart.map(book => book.bookid.toString())
         .indexOf(req.params.id);
       user.cart[editIndex].quantity = req.body.quantity;
       const currentUser = await user.save();
       if (currentUser) {
-        return res.json(currentUser.cart);
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(booknotfound);
       }
-      return res
-        .status(404)
-        .json({ booknotfound: 'No books found' });
     } catch (e) {
-      return res
-        .status(404)
-        .json({ booknotfound: 'No books found' });
+      return res.status(404)
+        .json(booknotfound);
     }
   }
 );
@@ -259,24 +272,22 @@ router.delete(
       const user = await User.findById(req.user.id);
       if (user.cart.filter(book => book.bookid.toString()
         === req.params.id).length === 0) {
-        return res
-          .status(404)
-          .json({ booknotfound: 'No books found' });
+        return res.status(404)
+          .json(booknotfound);
       }
       const editIndex = user.cart.map(book => book.bookid.toString())
         .indexOf(req.params.id);
       user.cart.splice(editIndex, 1);
       const currentUser = await user.save();
       if (currentUser) {
-        return res.json(currentUser.cart);
+        return res.json(success);
+      } else {
+        return res.json(notsuccess);
       }
-      return res
-        .status(404)
-        .json({ booknotfound: 'No books found' });
     } catch (e) {
       return res
         .status(404)
-        .json({ booknotfound: 'No books found' });
+        .json(booknotfound);
     }
   }
 );
@@ -311,15 +322,14 @@ router.delete(
       user.cart = [];
       const currentUser = await user.save();
       if (currentUser && currentUser.cart.length === 0) {
-        return res.json({ success: true });
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
-      return res
-        .status(404)
-        .json({ success: false });
     } catch (e) {
-      return res
-        .status(404)
-        .json({ success: false });
+      return res.status(404)
+        .json(notsuccess);
     }
   }
 );

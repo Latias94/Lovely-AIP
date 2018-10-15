@@ -7,7 +7,19 @@ const crypto = require('crypto');
 const mailer = require('./../../utils/mailer');
 const keys = require('../../config/keys');
 const { authLimiter } = require('../../middlewares/rateLimit');
-
+const {
+  activationfail,
+  emailexist,
+  usernotfound,
+  notsuccess,
+  success,
+  isactive,
+  notactive,
+  pwdincorrect,
+  booklistnotfound,
+  reviewnotfound,
+  avatarnotfound,
+} = require('../../config/errMessage');
 // Load Input Validation
 const validationRegisterInput = require('../../validation/register');
 const validationLoginInput = require('../../validation/login');
@@ -115,9 +127,8 @@ router.post('/register', authLimiter, async (req, res) => {
     // Validate whether email is existed
     const user = await User.findOne({ email: req.body.email });
     if (user) {
-      errors.email = 'Email already exists';
       return res.status(400)
-        .json(errors);
+        .json(emailexist);
     }
 
     const newUser = new User({
@@ -130,7 +141,6 @@ router.post('/register', authLimiter, async (req, res) => {
     });
 
     crypto.randomBytes(20, (err, buf) => {
-      if (err) console.log(errors);
       // unique token
       newUser.activeToken = req.body.email + buf.toString('hex');
       // expire time is one day
@@ -149,22 +159,24 @@ router.post('/register', authLimiter, async (req, res) => {
       bcrypt.hash(newUser.password, salt, async (error, hash) => {
         if (error) {
           return res.status(404)
-            .json({ success: false });
+            .json(notsuccess);
         }
         newUser.password = hash;
         const userObject = await newUser.save();
         if (userObject) {
-          return res.json(userObject);
+          return res.json(success);
         } else {
           return res.status(404)
-            .json({ success: false });
+            .json(notsuccess);
         }
       });
     });
   } catch (err) {
     return res.status(404)
-      .json({ success: false });
+      .json(notsuccess);
   }
+  return res.status(404)
+    .json(notsuccess);
 });
 
 /**
@@ -197,19 +209,20 @@ router.get('/active/:activeToken', async (req, res) => {
     });
     if (!user) {
       return res.status(404)
-        .json({ activationfail: 'The token is invalid. Please Re-activate your email.' });
+        .json(activationfail);
     }
     user.active = true;
-    const success = user.save();
-    if (success) {
-      return res.json({ success: true });
+    const userObj = user.save();
+    if (userObj) {
+      return res.json(success);
+    } else {
+      return res.status(404)
+        .json(notsuccess);
     }
   } catch (err) {
     return res.status(404)
-      .json({ success: false });
+      .json(notsuccess);
   }
-  return res.status(404)
-    .json({ success: false });
 });
 
 /**
@@ -242,16 +255,12 @@ router.post('/active/', authLimiter, async (req, res) => {
     });
     if (!user) {
       return res.status(404)
-        .json({
-          usernotfound: 'No user found',
-        });
+        .json(usernotfound);
     }
 
     if (user.active) {
       return res.status(404)
-        .json({
-          isactive: 'Account has activated',
-        });
+        .json(isactive);
     }
     crypto.randomBytes(20, async (err, buf) => {
       // unique token
@@ -266,18 +275,20 @@ router.post('/active/', authLimiter, async (req, res) => {
         html: `<p>Please click <a href="${link}"> Here </a> to activate your account.</p>`,
       });
 
-      const success = await user.save();
-      if (success) {
-        return res.json({ success: true });
+      const userObj = await user.save();
+      if (userObj) {
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
-      return false;
     });
   } catch (err) {
     return res.status(404)
-      .json({ success: false });
+      .json(notsuccess);
   }
   return res.status(404)
-    .json({ success: false });
+    .json(notsuccess);
 });
 
 /**
@@ -322,18 +333,16 @@ router.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      errors.email = 'User not found';
       return res.status(404)
-        .json(errors);
+        .json(usernotfound);
     }
     // Check Password
     bcrypt.compare(password, user.password)
       .then((isMatch) => {
         if (isMatch) {
           if (!user.active) {
-            errors.email = 'Account is not activated';
             return res.status(404)
-              .json(errors);
+              .json(notactive);
           }
           // User Matched
           const payload = {
@@ -355,17 +364,15 @@ router.post('/login', async (req, res) => {
                 token: `Bearer ${token}`,
               });
             });
-          return true;
+        } else {
+          return res.status(404)
+            .json(pwdincorrect);
         }
-        errors.password = 'Password incorrect';
-        return res.status(404)
-          .json(errors);
       });
   } catch (err) {
     return res.status(404)
-      .json(err);
+      .json(usernotfound);
   }
-  return false;
 });
 
 
@@ -392,20 +399,20 @@ router.get('/current', passport.authenticate('jwt', {
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404)
-        .json({
-          usernotfound: 'No user found'
-        });
+        .json(usernotfound);
     } else if (user.avatar !== null) {
-      const { id, name, email } = req.user;
-      res.json({
+      const {
+        id, name, email, isStaff
+      } = req.user;
+      return res.json({
         id,
         name,
         email,
-        isStaff: req.user.isStaff,
+        isStaff,
         avatar: user.avatar
       });
     } else {
-      res.json({
+      return res.json({
         id: req.user.id,
         name: req.user.name,
         email: req.user.email,
@@ -414,9 +421,8 @@ router.get('/current', passport.authenticate('jwt', {
     }
   } catch (err) {
     return res.status(404)
-      .json({ success: false });
+      .json(notsuccess);
   }
-  return false;
 });
 
 /**
@@ -445,15 +451,11 @@ router.get('/current/booklist', passport.authenticate('jwt', {
       return res.json(bookLists);
     } else {
       return res.status(404)
-        .json({
-          booklistnotfound: 'No booklists found',
-        });
+        .json(booklistnotfound);
     }
   } catch (err) {
     return res.status(404)
-      .json({
-        booklistnotfound: 'No booklists found',
-      });
+      .json(booklistnotfound);
   }
 });
 
@@ -483,15 +485,11 @@ router.get('/current/review', passport.authenticate('jwt', {
       return res.json(reviews);
     } else {
       return res.status(404)
-        .json({
-          reviewnotfound: 'No reviews found',
-        });
+        .json(reviewnotfound);
     }
   } catch (err) {
     return res.status(404)
-      .json({
-        reviewnotfound: 'No reviews found',
-      });
+      .json(reviewnotfound);
   }
 });
 
@@ -527,13 +525,11 @@ router.get('/avatar/:id', async (req, res) => {
       });
     } else {
       return res.status(404)
-        .json({
-          avatarnotfound: 'No avatars found',
-        });
+        .json(avatarnotfound);
     }
   } catch (err) {
     return res.status(404)
-      .json(err);
+      .json(usernotfound);
   }
 });
 
@@ -571,7 +567,7 @@ router.get('/', passport.authenticate('jwt', { session: false }),
       return res.json(users);
     } catch (err) {
       return res.status(404)
-        .json(err);
+        .json(usernotfound);
     }
   });
 

@@ -3,6 +3,12 @@ const path = require('path');
 const express = require('express');
 const passport = require('passport');
 const User = require('../../models/User');
+const {
+  usernotfound,
+  nofileselected,
+  notsuccess,
+  success,
+} = require('../../config/errMessage');
 
 const router = express.Router();
 
@@ -68,7 +74,7 @@ router.post('/avatar', passport.authenticate('jwt', {
         .json({ msg: err });
     } else if (req.file === undefined) {
       return res.status(404)
-        .json({ msg: 'Error: No File Selected!' });
+        .json(nofileselected);
     } else {
       // console.log(req.file);
       try {
@@ -77,15 +83,19 @@ router.post('/avatar', passport.authenticate('jwt', {
           user.avatar = `/uploads/${req.file.filename}`;
           const currentUser = await user.save();
           if (currentUser) {
-            return res.json(currentUser);
+            return res.json(success);
+          } else {
+            return res.status(404)
+              .json(notsuccess);
           }
+        } else {
+          return res.status(404)
+            .json(usernotfound);
         }
       } catch (error) {
         return res.status(404)
-          .json({ usernotfound: 'No user found' });
+          .json(usernotfound);
       }
-      return res.status(404)
-        .json({ usernotfound: 'No user found' });
     }
   });
 });

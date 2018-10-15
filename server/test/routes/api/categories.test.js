@@ -52,7 +52,7 @@ describe('Category Route testing', () => {
         .expect(200)
         .end((err, res) => {
           supertestWithJest(err, res, done, () => {
-            expect(res.body.name).toBe('Test');
+            expect(res.body.success).toBeTruthy();
           });
         });
     });

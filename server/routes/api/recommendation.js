@@ -115,7 +115,7 @@ router.get('/book/:id', async (req, res) => {
           .gte(4); // star more than or equal to 4
         if (otherReviews) {
           const result = removeSameBook(userReviews, otherReviews);
-          console.log(result);
+          // console.log(result);
           // get the recommend books
           const books = await Book.find({ _id: { $in: result } })
             .cache();
