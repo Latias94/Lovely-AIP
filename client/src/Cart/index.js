@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import CartTable from './cartTable';
-import CheckoutBox from './checkOutBox';
+import CheckoutBox from './CheckOutButton';
 import * as style from './cartPageCss';
+import { showErrorMsgFromObject } from '../common/utils/sweetAlert';
 
 class CartTablePage extends Component {
 	constructor(props) {
@@ -19,7 +20,7 @@ class CartTablePage extends Component {
 				this.setState({ booksInCart: res.data });
 			})
 			.catch((err) => {
-				console.log(err);
+				showErrorMsgFromObject(err);
 			});
 	}
 

@@ -562,7 +562,12 @@ router.get('/', passport.authenticate('jwt', { session: false }),
         return res.status(401)
           .json({ unauthorized: 'Cannot modify the book' });
       }
-      const users = await User.find();
+      const users = await User.find()
+        .select({
+          name: 1,
+          email: 1,
+          active: 1,
+        });
       return res.json(users);
     } catch (err) {
       return res.status(404)

@@ -90,6 +90,7 @@ const BookSchema = new Schema({
     max: 5,
   },
 });
+
 BookSchema.plugin(URLSlugs('title', { field: 'slug' }));
 BookSchema.index({
   title: 'text',

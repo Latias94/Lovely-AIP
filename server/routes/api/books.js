@@ -52,6 +52,11 @@ router.get('/test', (req, res) => res.json({
 router.get('/', async (req, res) => {
   try {
     const books = await Book.find()
+        .select({
+            title: 1,
+            authors: 1,
+            isbn: 1
+        })
       .sort({ date: -1 });
     if (books) {
       return res.json(books);
@@ -514,8 +519,13 @@ router.post('/',
         bookObj.categoryName = category.name;
       } else {
         // if do not provide category id, create book with empty category
-        const emptyCategory = await Category.findOne({ slug: 'empty' })
+        let emptyCategory = await Category.findOne({ slug: 'empty' })
           .cache();
+        if (!emptyCategory) {
+          // if Empty category is not exist in database, create one
+          const empty = new Category({ name: 'Empty' });
+          emptyCategory = await empty.save();
+        }
         bookObj.category = emptyCategory._id;
         bookObj.categoryName = emptyCategory.name;
       }

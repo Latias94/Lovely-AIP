@@ -119,15 +119,26 @@ router.post(
     try {
       const user = await User.findById(req.user.id);
       const book = await Book.findById(req.body.id);
+
       if (book) {
-        const newBook = {};
-        newBook.bookid = req.body.id;
-        newBook.title = book.title;
-        newBook.price = book.price;
-        newBook.coverUrl = book.coverUrl;
-        newBook.authors = book.authors;
-        newBook.quantity = req.body.quantity;
-        user.cart.unshift(newBook);
+        if (user.cart.filter(bookInCart => bookInCart.bookid.toString()
+          === req.body.id).length !== 0) {
+          // If book have existed in user cart, edit that book directly
+          const editIndex = user.cart.map(bookInCart => bookInCart.bookid.toString())
+            .indexOf(req.body.id);
+          user.cart[editIndex].quantity += req.body.quantity;
+        } else {
+          // Can not found the book in user cart, then add books into user cart
+          const newBook = {};
+          newBook.bookid = req.body.id;
+          newBook.title = book.title;
+          newBook.price = book.price;
+          newBook.coverUrl = book.coverUrl;
+          newBook.authors = book.authors;
+          newBook.quantity = req.body.quantity;
+          user.cart.unshift(newBook);
+        }
+
         const currentUser = await user.save();
         if (currentUser) {
           return res.json(currentUser.cart);
@@ -272,7 +283,7 @@ router.delete(
 
 /**
  * @swagger
- * /api/cart/{id}:
+ * /api/cart:
  *   delete:
  *     tags:
  *       - Cart
@@ -280,12 +291,6 @@ router.delete(
  *     description: Delete all book from cart. This can only be done by the logged in user (add JWT token to header)
  *     produces:
  *       - application/json
- *     parameters:
- *       - name: "id"
- *         in: "path"
- *         description: "ID of book that needs to be deleted"
- *         required: true
- *         type: "string"
  *     responses:
  *       200:
  *         description: Delete all books from cart successfully
