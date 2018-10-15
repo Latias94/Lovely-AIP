@@ -239,7 +239,8 @@ class BookManage extends React.Component {
                 newTitle: "YOU ARE IN DEBUG MODE",
                 newAuthors: ["name"],
                 newDescription: "New Description",
-                newPublishDate: "7 21 2018"
+                newPublishDate: "7 21 2018",
+	            newCoverURL: 'https://images-na.ssl-images-amazon.com/images/I/41iYksBR8BL._SX358_BO1,204,203,200_.jpg'
             });
         }
         this.setState({ open: true });
@@ -425,9 +426,8 @@ class BookManage extends React.Component {
                                     </td>
                                     <td>
                                         <TextField
-                                            id="PublishDate"
+	                                        className={classes.textField}
                                             label="PublishDate"
-                                            className={classes.textField}
                                             placeholder="sample: 7 21 2018"
                                             required
                                             value={this.state.newPublishDate}
@@ -438,20 +438,35 @@ class BookManage extends React.Component {
                                     </td>
                                 </tr>
                                 <tr>
-                                        <td>
-                                        <TextField
-                                            id="Description"
-                                            label="Description"
-                                            className={classes.textField}
-                                            type="Description"
-                                            placeholder="10 to 1000 characters"
-                                            required
-                                            value={this.state.newDescription}
-                                            onChange={e => this.setState({newDescription: e.target.value}) }
-                                            error={newBookError.hasOwnProperty('description')}
-                                            helperText={newBookError.hasOwnProperty('description') ? newBookError.description : ""}
-                                        />
-                                        </td>
+	                                <td>
+		                                <TextField
+			                                className={classes.textField}
+			                                label="Description"
+			                                type="text"
+			                                placeholder="10 to 1000 characters"
+			                                multiline
+			                                required
+			                                value={this.state.newDescription}
+			                                onChange={e => this.setState({newDescription: e.target.value}) }
+			                                error={newBookError.hasOwnProperty('description')}
+			                                helperText={newBookError.hasOwnProperty('description') ? newBookError.description : ""}
+		                                />
+	                                </td>
+                                </tr>
+                                <tr>
+	                                <td>
+		                                <TextField
+			                                className={classes.textField}
+			                                label="Cover URL"
+			                                type="text"
+			                                placeholder="10 to 1000 characters"
+			                                required
+			                                value={this.state.newCoverURL}
+			                                onChange={e => this.setState({newCoverURL: e.target.value}) }
+			                                error={newBookError.hasOwnProperty('description')}
+			                                helperText={newBookError.hasOwnProperty('coverUrl') ? newBookError.description : ""}
+		                                />
+	                                </td>
                                 </tr>
                                 </tbody>
                             </table >
