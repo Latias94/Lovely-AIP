@@ -4,6 +4,7 @@ import { getWelcomePageBooksDataAction } from './actions';
 import CarouselDIV from './carouselDIV';
 import PopularBooks from './popularBooks';
 
+// Component of Welcome Page
 
 class welcomePageIndex extends Component {
 	componentDidMount() {
@@ -15,7 +16,9 @@ class welcomePageIndex extends Component {
 			<div style={{
 				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
 			}}>
+				{/* Carousel */}
 				<CarouselDIV />
+				{/* Render books from database */}
 				{this.props.booksInHomePage ? <PopularBooks
 					bookList= {this.props.booksInHomePage}
 				/> : null}

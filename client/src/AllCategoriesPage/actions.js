@@ -26,7 +26,7 @@ export const getBooksInCategories = (id, name) => (dispatch) => {
 	}
 	axios.get(requestURL)
 		.then((response) => {
-			if (id) {
+			if (id && name !== response.data.name) {
 				dispatch(showBooksinCategoryAction({
 					mainCategories: name,
 					subCategories: response.data.name,

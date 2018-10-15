@@ -33,8 +33,12 @@ class childList extends React.Component {
 	render() {
 		return (
 			<div>
+				{console.log(this.props)}
 				{this.props.subcategoriesName.length === 0 ? (
-					<ListItem button onClick={() => this.handleClick(this.props.categoriesName)} component={Link} to={`/categories/${this.props.categoryID}`}>
+					<ListItem button onClick={() => {
+						this.props.getBooksInCategories(this.props.categoryID, this.props.categoriesName);
+						this.handleClick(this.props.categoriesName);
+					}} component={Link} to={`/categories/${this.props.categoryID}`}>
 						<ListItemText style={{ paddingLeft: '0px' }} inset primary={this.props.categoriesName} />
 					</ListItem>
 				) : (

@@ -4,6 +4,11 @@ import ArrowRight from '@material-ui/icons/ArrowRight';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import Book from '../AllCategoriesPage/childComponent/aBook';
 
+
+// According to window's width, caculate the variables:
+// numberOfCard: the length of books in row
+// bookMarginRight: the margin right of each book component
+// transformation: How many pixels will row component move when buttons clicked
 export const resizeWindowChange = (windowWidthInput) => {
 	let bookMarginRight;
 	const windowWidth = windowWidthInput * 0.80;
@@ -41,12 +46,19 @@ export default class rowOfBookComponent extends Component {
 		this.decreaseButtonLeave = this.decreaseButtonLeave.bind(this);
 	}
 
+	// The transform will be increased if the current position is smaller than the group length
 	increaseTransform() {
-		(this.state.divTransformation + 1) < (this.props.books.length / resizeWindowChange(this.state.windowWidth).numberOfCard) && this.setState({ divTransformation: this.state.divTransformation + 1 });
+		const { divTransformation, windowWidth } = this.state;
+		const innerWindowWidth = resizeWindowChange(windowWidth);
+		if ((divTransformation + 1) < (this.props.books.length / innerWindowWidth.numberOfCard)) {
+			this.setState({ divTransformation: divTransformation + 1 });
+		}
 	}
 
 	decreaseTransform() {
-		(this.state.divTransformation >= 1) && this.setState({ divTransformation: this.state.divTransformation - 1 });
+		if (this.state.divTransformation >= 1) {
+			this.setState({ divTransformation: this.state.divTransformation - 1 });
+		}
 	}
 
 	decreaseButtonOver() {
