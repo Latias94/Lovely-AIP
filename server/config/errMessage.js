@@ -21,6 +21,6 @@ module.exports = {
   activationfail: { activationfail: 'The token is invalid. Please Re-activate your email.' },
   isactive: { isactive: 'Account has activated' },
   notactive: { notactive: 'Account is not activated' },
-  pwdincorrect: { pwdincorrect: 'Password incorrect' },
+  pwdincorrect: { password: 'Password incorrect' },
 
 };

@@ -175,8 +175,7 @@ router.post('/register', authLimiter, async (req, res) => {
     return res.status(404)
       .json(notsuccess);
   }
-  return res.status(404)
-    .json(notsuccess);
+  return false;
 });
 
 /**
