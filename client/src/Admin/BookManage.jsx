@@ -236,9 +236,9 @@ class BookManage extends React.Component {
                 newISBN: "9780312426781",
                 newStock: 1,
                 newPrice: 1,
-                newTitle: "FOR TESTING",
+                newTitle: "YOU ARE IN DEBUG MODE",
                 newAuthors: ["name"],
-                newDescription: " New Description",
+                newDescription: "New Description",
                 newPublishDate: "7 21 2018"
             });
         }
@@ -269,7 +269,7 @@ class BookManage extends React.Component {
             newTitle: title, 
             newAuthors: authors,
             newDescription: description,
-            newCategory: category,
+            // newCategory: category,
             newStock: stock,
             newPrice: price,
             newCoverURL: coverUrl,
@@ -284,17 +284,22 @@ class BookManage extends React.Component {
             coverUrl,
             stock,
             price,
-            category
+            // category
           })
         .then(() => {
             this.setState(state => ({
                 open: !state.open,
             }));
+            // refresh
             this.getAllBooks();
             this.setState({newBookError:{}})
         })
         .catch(err => {
-            this.setState({newBookError: err.response.data})
+	        let errorBody = err.response.data;
+	        if (errorBody.hasOwnProperty('bookexisted')) {
+		        errorBody.isbn = 'This book is duplicate.';
+	        }
+            this.setState({newBookError: errorBody});
         })
     };
 
@@ -333,7 +338,6 @@ class BookManage extends React.Component {
                         </Typography>
                         <Typography variant="subheading" id="simple-modal-description">
                             <table style={{width:'100%'}}>
-                                <thead></thead>
                                 <tbody>
                                 <tr>
                                     <td>

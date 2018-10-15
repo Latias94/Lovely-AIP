@@ -36,7 +36,6 @@ describe('User Route testing', () => {
       .expect(200)
       .end((err, res) => {
         supertestWithJest(err, res, done, () => {
-          expect(err).toBeNull();
           expect(res.body.success).toBeTruthy();
         });
       });

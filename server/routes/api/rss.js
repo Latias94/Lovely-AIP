@@ -3,6 +3,10 @@ const RSS = require('rss');
 const BookList = require('../../models/BookList');
 const Book = require('../../models/Book');
 const { frontendHost } = require('../../config/keys');
+const {
+  booklistnotfound,
+  booknotfound,
+} = require('../../config/errMessage');
 
 const router = express.Router();
 
@@ -53,7 +57,6 @@ router.get('/booklists', async (req, res) => {
       .cache();
 
     if (booklists) {
-      // TODO change frontend route
       booklists.forEach((booklist) => {
         feed.item({
           title: booklist.title,
@@ -66,11 +69,11 @@ router.get('/booklists', async (req, res) => {
       return res.send(feed.xml());
     } else {
       return res.status(404)
-        .json({ booklistnotfound: 'No booklists found' });
+        .json(booklistnotfound);
     }
   } catch (err) {
     return res.status(404)
-      .json({ booklistnotfound: 'No booklists found' });
+      .json(booklistnotfound);
   }
 });
 
@@ -121,11 +124,11 @@ router.get('/books', async (req, res) => {
       return res.send(feed.xml());
     } else {
       return res.status(404)
-        .json({ booknotfound: 'No books found' });
+        .json(booknotfound);
     }
   } catch (err) {
     return res.status(404)
-      .json({ booknotfound: 'No books found' });
+      .json(booknotfound);
   }
 });
 

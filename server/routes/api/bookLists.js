@@ -5,6 +5,19 @@ const BookList = require('../../models/BookList');
 const cleanCache = require('../../middlewares/cleanCache');
 const { clearHash } = require('../../config/cache');
 
+const {
+  noresult,
+  booklistoutofpages,
+  booklistnotfound,
+  notsuccess,
+  success,
+  booknotfound,
+  alreadyadded,
+  unauthorized,
+  alreadyliked,
+  notliked
+} = require('../../config/errMessage');
+
 const router = express.Router();
 
 const validateBookListInput = require('../../validation/bookList');
@@ -16,8 +29,8 @@ const validateAddBookToBookListInput = require('../../validation/addBookToBookLi
  *   get:
  *     tags:
  *       - BookList
- *     summary: Tests booklists route
- *     description: Tests booklists route
+ *     summary: Tests book lists route
+ *     description: Tests book lists route
  *     produces:
  *       - application/json
  *     responses:
@@ -26,7 +39,7 @@ const validateAddBookToBookListInput = require('../../validation/addBookToBookLi
  */
 router.get('/test', (req, res) => res.json({ msg: 'BookList Works' }));
 
-// Add book title to the books in all booklists
+// Add book title to the books in all book lists
 // Because result from mongoose find() is not in sequence
 async function embedBookToBookLists(bookLists, req) {
   if (bookLists.length < 0) return;
@@ -60,8 +73,8 @@ async function embedBookToBookLists(bookLists, req) {
  *   get:
  *     tags:
  *       - BookList
- *     summary: Get booklists by keyword with condition
- *     description: Get booklists by keyword with condition. (search in booklist title and description with weight).
+ *     summary: Get book lists by keyword with condition
+ *     description: Get book lists by keyword with condition. (search in book list title and description with weight).
  *     produces:
  *       - application/json
  *     parameters:
@@ -103,17 +116,17 @@ router.get('/search/:keyword', async (req, res) => {
 
     if (booklists.length === 0) {
       return res.status(404)
-        .json({ noresult: 'No result is found' });
+        .json(noresult);
     }
 
     const searchResult = await BookList.find({ $text: { $search: req.params.keyword } });
     const totalPages = Math.ceil(searchResult.length / pageSize);
     if (page > totalPages) {
       return res.status(404)
-        .json({ booklistoutofpages: 'The page you request is larger than the maximum number of pages' });
+        .json(booklistoutofpages);
     }
 
-    // add book title to the books in all booklists
+    // add book title to the books in all book lists
     await embedBookToBookLists(booklists, req);
 
     const result = {};
@@ -124,7 +137,7 @@ router.get('/search/:keyword', async (req, res) => {
     return res.json(result);
   } catch (err) {
     return res.status(404)
-      .json({ booklistnotfound: 'No book lists found' });
+      .json(booklistnotfound);
   }
 });
 
@@ -134,8 +147,8 @@ router.get('/search/:keyword', async (req, res) => {
  *   get:
  *     tags:
  *       - BookList
- *     summary: Get booklists with condition
- *     description: Get booklists with condition. e.g.http://localhost:5000/api/booklists/list?page=1&pageSize=10&createDate=1
+ *     summary: Get book lists with condition
+ *     description: Get book lists with condition. e.g.http://localhost:5000/api/booklists/list?page=1&pageSize=10&createDate=1
  *     produces:
  *       - application/json
  *     parameters:
@@ -146,7 +159,7 @@ router.get('/search/:keyword', async (req, res) => {
  *         type: "integer"
  *       - name: "pageSize"
  *         in: "query"
- *         description: "How many booklists you want to show in one page"
+ *         description: "How many book lists you want to show in one page"
  *         required: true
  *         type: "integer"
  *       - name: "create"
@@ -156,7 +169,7 @@ router.get('/search/:keyword', async (req, res) => {
  *         type: "integer"
  *     responses:
  *       200:
- *         description: Get booklists successfully
+ *         description: Get book lists successfully
  *       404:
  *         description: No book lists found
  */
@@ -184,10 +197,10 @@ router.get('/list', async (req, res) => {
     const totalPages = Math.ceil(counts / pageSize);
     if (page > totalPages) {
       return res.status(404)
-        .json({ booklistoutofpages: 'The page you request is larger than the maximum number of pages' });
+        .json(booklistoutofpages);
     }
 
-    // add book title to the books in all booklists
+    // add book title to the books in all book lists
     await embedBookToBookLists(booklists, req);
 
     const result = {};
@@ -197,7 +210,7 @@ router.get('/list', async (req, res) => {
     return res.json(result);
   } catch (err) {
     return res.status(404)
-      .json({ booklistnotfound: 'No book lists found' });
+      .json(booklistnotfound);
   }
 });
 
@@ -207,13 +220,13 @@ router.get('/list', async (req, res) => {
  *   get:
  *     tags:
  *       - BookList
- *     summary: Get all booklists
- *     description: Get all booklists
+ *     summary: Get all book lists
+ *     description: Get all book lists
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: Get all booklists successfully
+ *         description: Get all book lists successfully
  *       404:
  *         description: No book lists found
  */
@@ -223,21 +236,22 @@ router.get('/', async (req, res) => {
       .sort({ updateDate: -1 });
     if (booklists) {
       return res.json(booklists);
+    } else {
+      return res.status(404)
+        .json(booklistnotfound);
     }
   } catch (e) {
     return res.status(404)
-      .json({ booklistnotfound: 'No book lists found' });
+      .json(booklistnotfound);
   }
-  return res.status(404)
-    .json({ booklistnotfound: 'No book lists found' });
 });
 
-// Embed book object to booklist according to book id
+// Embed book object to book list according to book id
 // Because result from mongoose find() is not in sequence
 async function embedBookToBookList(bookList, req) {
-  // if booklist.book not empty, embed book details in booklist object
+  // if book list.book not empty, embed book details in book list object
   if (bookList.books.length < 0) return;
-  // get bookid array
+  // get book id array
   const bookIds = [];
   bookList.books.forEach(book => bookIds.push(book.bookid));
   const books = await Book.find({
@@ -247,7 +261,7 @@ async function embedBookToBookList(bookList, req) {
   })
     .cache({ key: req.params.id });
   const bookObjects = [];
-  // map book to proper field in booklist, cause result return from
+  // map book to proper field in book list, cause result return from
   // mongoose query is not in sequence
   books.forEach(book => bookObjects.push(book.toObject()));
 
@@ -289,23 +303,20 @@ async function embedBookToBookList(bookList, req) {
  *         description: No book lists found
  */
 router.get('/slug/:slug', async (req, res) => {
-  const errors = {};
   try {
     const bookList = await BookList.findOne({ slug: req.params.slug })
       .lean();
     if (!bookList) {
-      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
-        .json(errors);
+        .json(booklistnotfound);
     }
 
     await embedBookToBookList(bookList, req);
 
     return res.json(bookList);
   } catch (err) {
-    errors.booklistnotfound = 'No book lists found';
     return res.status(404)
-      .json(errors);
+      .json(booklistnotfound);
   }
 });
 
@@ -333,23 +344,20 @@ router.get('/slug/:slug', async (req, res) => {
  */
 router.get('/:id',
   async (req, res) => {
-    const errors = {};
     try {
       const bookList = await BookList.findById(req.params.id)
         .lean();
       if (!bookList) {
-        errors.booklistnotfound = 'No book lists found';
         return res.status(404)
-          .json(errors);
+          .json(booklistnotfound);
       }
 
       await embedBookToBookList(bookList, req);
 
       return res.json(bookList);
     } catch (err) {
-      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
-        .json(errors);
+        .json(booklistnotfound);
     }
   });
 
@@ -415,17 +423,18 @@ router.post(
       description: req.body.description,
     });
     try {
-      // save new booklist
+      // save new book list
       const bookList = await newBookList.save();
       if (bookList) {
-        return res.json(bookList);
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
     } catch (err) {
       return res.status(404)
-        .json({ success: false });
+        .json(notsuccess);
     }
-    return res.status(404)
-      .json({ success: false });
   }
 );
 
@@ -481,8 +490,8 @@ router.post(
     try {
       const bookList = await BookList.findById(req.params.id);
       if (bookList) {
-	      // Only the owner of the book list can edit
-	      if (bookList.user.toString() !== req.user.id) {
+        // Only the owner of the book list can edit
+        if (bookList.user.toString() !== req.user.id) {
           errors.unauthorized = 'Cannot edit the book list';
           return res.status(401)
             .json(errors);
@@ -497,18 +506,19 @@ router.post(
           bookListFields,
           { new: true }
         );
-        if (bookList) {
-          return res.json(bookListObject);
+        if (bookListObject) {
+          return res.json(success);
+        } else {
+          return res.status(404)
+            .json(notsuccess);
         }
       }
-    } catch (err) {
-      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
-        .json(errors);
+        .json(booklistnotfound);
+    } catch (err) {
+      return res.status(404)
+        .json(booklistnotfound);
     }
-    errors.booklistnotfound = 'No book lists found';
-    return res.status(404)
-      .json(errors);
   }
 );
 
@@ -575,18 +585,15 @@ router.post(
       if (bookList) {
         if (bookList.books.filter(book => book.bookid.toString()
           === req.params.book_id).length > 0) {
-          return res
-            .status(404)
-            .json({
-              alreadyadded: 'User already added this book',
-            });
+          return res.status(404)
+            .json(alreadyadded);
         }
         // find book by id
         const book = await Book.findById(req.params.book_id)
           .cache({ key: req.params.book_id });
         if (!book) {
           return res.status(404)
-            .json({ booknotfound: 'No books found' });
+            .json(booknotfound);
         }
         const bookFields = {};
         bookFields.bookid = req.params.book_id;
@@ -597,7 +604,7 @@ router.post(
         bookListFields.updateDate = Date.now();
         bookListFields.books.unshift(bookFields);
 
-        // Update booklist
+        // Update book list
         const bookListObject = await BookList.findOneAndUpdate(
           { _id: req.params.id },
           bookListFields,
@@ -605,17 +612,18 @@ router.post(
         );
         clearHash({ key: req.params.id });
         if (bookListObject) {
-          return res.json(bookListObject);
+          return res.json(success);
+        } else {
+          return res.status(404)
+            .json(notsuccess);
         }
       }
-    } catch (err) {
-      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
-        .json(errors);
+        .json(booklistnotfound);
+    } catch (err) {
+      return res.status(404)
+        .json(booklistnotfound);
     }
-    errors.booklistnotfound = 'No book lists found';
-    return res.status(404)
-      .json(errors);
   }
 );
 
@@ -655,47 +663,42 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   cleanCache,
   async (req, res) => {
-    const errors = {};
-
     try {
       const bookList = await BookList.findById(req.params.id);
-	    // Only the book list owner or admin can delete the book list
-	    const editable = bookList.user.toString() === req.user.id || req.user.isStaff;
-        if (!editable) {
-          // can only edit the book list user created
-          errors.unauthorized = 'Cannot delete the book list';
-          return res.status(401)
-            .json(errors);
-        }
-        // find the book which will be deleted
-        if (bookList.books.filter(book => book.bookid.toString()
-          === req.params.book_id).length === 0) {
-          return res.status(404)
-            .json({ booknotfound: 'No books found' });
-        }
-        // Get remove index
-        const removeIndex = bookList.books
-          .map(book => book._id.toString())
-          .indexOf(req.params.book_id);
-        bookList.books.splice(removeIndex, 1);
+      // Only the book list owner or admin can delete the book list
+      const editable = bookList.user.toString() === req.user.id || req.user.isStaff;
+      if (!editable) {
+        // can only edit the book list user created
+        return res.status(401)
+          .json(unauthorized);
+      }
+      // find the book which will be deleted
+      if (bookList.books.filter(book => book.bookid.toString()
+        === req.params.book_id).length === 0) {
+        return res.status(404)
+          .json(booknotfound);
+      }
+      // Get remove index
+      const removeIndex = bookList.books
+        .map(book => book._id.toString())
+        .indexOf(req.params.book_id);
+      bookList.books.splice(removeIndex, 1);
 
-        // Clean redis cache
-        clearHash(req.params.id);
+      // Clean redis cache
+      clearHash(req.params.id);
 
-        // Save booklist
-        const bookListObject = await bookList.save();
-        if (bookListObject) {
-          return res.json(bookListObject);
-        }
+      // Save booklist
+      const bookListObject = await bookList.save();
+      if (bookListObject) {
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
     } catch (err) {
-      errors.booklistnotfound = 'No book lists found';
       return res.status(404)
-        .json(errors);
+        .json(booklistnotfound);
     }
-    errors.booklistnotfound = 'No book lists found';
-    return res.status(404)
-      .json(errors);
   }
 );
 
@@ -734,29 +737,27 @@ router.post(
   async (req, res) => {
     try {
       const bookList = await BookList.findById(req.params.id);
-      // find out whether user has like this booklist
+      // find out whether user has like this book list
       if (bookList.likes.filter(like => like.user.toString()
         === req.user.id).length > 0) {
-        return res
-          .status(404)
-          .json({ alreadyliked: 'User already liked this book list' });
+        return res.status(404)
+          .json(alreadyliked);
       }
       // Add user id to likes array
-      bookList.likes.unshift({
-        user: req.user.id,
-      });
+      bookList.likes.unshift({ user: req.user.id });
 
-      // Save booklist
+      // Save book list
       const bookListObject = await bookList.save();
       if (bookListObject) {
-        return res.json(bookListObject);
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
     } catch (err) {
       return res.status(404)
-        .json({ booklistnotfound: 'No book lists found' });
+        .json(booklistnotfound);
     }
-    return res.status(404)
-      .json({ booklistnotfound: 'No book lists found' });
   }
 );
 
@@ -798,9 +799,8 @@ router.post(
       // find out whether user has like this booklist
       if (bookList.likes.filter(like => like.user.toString()
         === req.user.id).length === 0) {
-        return res
-          .status(400)
-          .json({ notliked: 'User have not yet liked this booklist' });
+        return res.status(400)
+          .json(notliked);
       }
 
       // Get remove index
@@ -814,14 +814,15 @@ router.post(
       // Save book list
       const bookListObject = await bookList.save();
       if (bookListObject) {
-        return res.json(bookListObject);
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
     } catch (err) {
       return res.status(404)
-        .json({ booklistnotfound: 'No book lists found' });
+        .json(booklistnotfound);
     }
-    return res.status(404)
-      .json({ booklistnotfound: 'No book lists found' });
   }
 );
 
@@ -863,27 +864,26 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   cleanCache,
   async (req, res) => {
-    const errors = {};
     try {
       const bookList = await BookList.findById(req.params.id);
       if (bookList.user.toString() !== req.user.id) {
         // can only edit the book list user created
-        errors.unauthorized = 'Cannot delete the booklist';
         return res.status(401)
-          .json(errors);
+          .json(unauthorized);
       }
 
       const bookListObject = await BookList.findOneAndDelete({ _id: req.params.id });
       if (bookListObject) {
         clearHash(req.params.id);
-        return res.json({ success: true });
+        return res.json(success);
+      } else {
+        return res.status(404)
+          .json(notsuccess);
       }
     } catch (err) {
       return res.status(404)
-        .json({ booklistnotfound: 'No book lists found' });
+        .json(booklistnotfound);
     }
-    return res.status(404)
-      .json({ booklistnotfound: 'No book lists found' });
   }
 );
 

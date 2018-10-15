@@ -30,10 +30,8 @@ describe('BookList Route testing', () => {
             .expect(200)
             .end((_, res) => {
               supertestWithJest(err, res, done, () => {
-                expect(res.body.title)
-                  .toBe('TestBook1');
-                expect(res.body.description)
-                  .toBe('Just for testing');
+                expect(res.body.success)
+                  .toBeTruthy();
               });
             });
         });
@@ -95,12 +93,8 @@ describe('BookList Route testing', () => {
           .expect(200)
           .end((err, res) => {
             supertestWithJest(err, res, done, () => {
-              expect(res.body.title)
-                .toBe('TestBookList');
-              expect(res.body.description)
-                .toBe('Just for testing');
-              expect(res.body.username)
-                .toBe('test');
+              expect(res.body.success)
+                .toBeTruthy();
             });
           });
       });
@@ -165,8 +159,8 @@ describe('BookList Route testing', () => {
               .expect(200)
               .end((error, response) => {
                 supertestWithJest(error, response, done, () => {
-                  expect(response.body.likes)
-                    .toHaveLength(1);
+                  expect(response.body.success)
+                    .toBeTruthy();
                 });
               });
           });
@@ -190,8 +184,8 @@ describe('BookList Route testing', () => {
               .expect(200)
               .end((error, response) => {
                 supertestWithJest(error, response, done, () => {
-                  expect(response.body.likes)
-                    .toHaveLength(0);
+                  expect(response.body.success)
+                    .toBeTruthy();
                 });
               });
           });
@@ -217,12 +211,8 @@ describe('BookList Route testing', () => {
               .expect(200)
               .end((error, response) => {
                 supertestWithJest(error, response, done, () => {
-                  expect(response.body.title)
-                    .toBe('TestBookList2');
-                  expect(response.body.description)
-                    .toBe('After modified');
-                  expect(res.body.username)
-                    .toBe('test');
+                  expect(response.body.success)
+                    .toBeTruthy();
                 });
               });
             return false;
@@ -254,14 +244,8 @@ describe('BookList Route testing', () => {
                   .expect(200)
                   .end((error, response) => {
                     supertestWithJest(error, response, done, () => {
-                      expect(response.body.title)
-                        .toBe('TestBookList2');
-                      expect(response.body.description)
-                        .toBe('After modified');
-                      expect(response.body.username)
-                        .toBe('test');
-                      expect(response.body.books)
-                        .toHaveLength(1);
+                      expect(response.body.success)
+                        .toBeTruthy();
                     });
                   });
                 return false;

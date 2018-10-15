@@ -26,8 +26,7 @@ describe('Cart Route testing', () => {
           .expect(200)
           .end((_, res) => {
             supertestWithJest(err, res, done, () => {
-              expect(res.body.title).toBe('TestCart');
-              expect(res.body.description).toBe('Just for testing');
+              expect(res.body.success).toBeTruthy();
             });
           });
       });
@@ -90,16 +89,15 @@ describe('Cart Route testing', () => {
       .end((err, res) => {
         getToken().then((token) => {
           request
-            .post(`/api/cart/${res.body._id}`)
+            .post('/api/cart')
+            .send(`id=${res.body._id}`)
+            .send('quantity=1')
             .set('Authorization', token)
             .expect('Content-Type', /json/)
             .expect(200)
             .end((error, response) => {
               supertestWithJest(error, response, done, () => {
-                expect(response.body[0].title).toBe('TestCart');
-                expect(response.body[0].price).toBe(100);
-                expect(response.body[0].quantity).toBe(1);
-                expect(response.body).toHaveLength(1);
+                expect(response.body.success).toBeTruthy();
               });
               return false;
             });
@@ -115,16 +113,14 @@ describe('Cart Route testing', () => {
       .end((err, res) => {
         getToken().then((token) => {
           request
-            .post(`/api/cart/${res.body._id}/10`)
+            .post(`/api/cart/${res.body._id}`)
+            .send('quantity=10')
             .set('Authorization', token)
             .expect('Content-Type', /json/)
             .expect(200)
             .end((error, response) => {
               supertestWithJest(error, response, done, () => {
-                expect(response.body[0].title).toBe('TestCart');
-                expect(response.body[0].price).toBe(100);
-                expect(response.body[0].quantity).toBe(10);
-                expect(response.body).toHaveLength(1);
+                expect(response.body.success).toBeTruthy();
               });
               return false;
             });
@@ -146,7 +142,7 @@ describe('Cart Route testing', () => {
             .expect(200)
             .end((error, response) => {
               supertestWithJest(error, response, done, () => {
-                expect(response.body).toHaveLength(0);
+                expect(response.body.success).toBeTruthy();
               });
               return false;
             });
