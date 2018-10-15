@@ -180,7 +180,7 @@ class BookManage extends React.Component {
         newCoverURL: "",
         newStock: 0,
         newPrice: 0,
-        newCategory: "5b65103ac55fe361685262bf",
+        newCategory: "",
         newBookError:{},
 
         rowsPerPage: 15,
