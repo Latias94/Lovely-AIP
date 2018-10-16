@@ -19,6 +19,7 @@ const {
   booklistnotfound,
   reviewnotfound,
   avatarnotfound,
+  emailnotfound
 } = require('../../config/errMessage');
 // Load Input Validation
 const validationRegisterInput = require('../../validation/register');
@@ -333,7 +334,7 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404)
-        .json(usernotfound);
+        .json(emailnotfound);
     }
     // Check Password
     bcrypt.compare(password, user.password)
