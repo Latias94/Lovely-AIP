@@ -22,5 +22,4 @@ module.exports = {
   isactive: { isactive: 'Account has activated' },
   notactive: { notactive: 'Account is not activated' },
   pwdincorrect: { password: 'Password incorrect' },
-
 };
