@@ -15,12 +15,12 @@ module.exports = {
   alreadyliked: { alreadyliked: 'User already liked this book list' },
   notliked: { notliked: 'User have not yet liked this booklist' },
   usernotfound: { usernotfound: 'User not found' },
+  emailnotfound: { usernotfound: 'The email address does not existed' },
   categoryexist: { categoryexist: 'Category name has existed' },
   nofileselected: { nofileselected: 'No File Selected' },
   emailexist: { emailexist: 'Email already exists' },
   activationfail: { activationfail: 'The token is invalid. Please Re-activate your email.' },
   isactive: { isactive: 'Account has activated' },
   notactive: { notactive: 'Account is not activated' },
-  pwdincorrect: { pwdincorrect: 'Password incorrect' },
-
+  pwdincorrect: { password: 'Password incorrect' },
 };

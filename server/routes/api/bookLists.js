@@ -866,7 +866,8 @@ router.delete(
   async (req, res) => {
     try {
       const bookList = await BookList.findById(req.params.id);
-      if (bookList.user.toString() !== req.user.id) {
+      const editable = bookList.user.toString() === req.user.id || req.user.isStaff;
+      if (!editable) {
         // can only edit the book list user created
         return res.status(401)
           .json(unauthorized);
