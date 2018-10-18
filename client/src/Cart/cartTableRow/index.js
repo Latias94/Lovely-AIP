@@ -11,7 +11,7 @@ class cartTableRow extends Component {
 			number: this.props.number,
 		};
 		this.handleChange = this.handleChange.bind(this);
-		this.deleateRow = this.deleateRow.bind(this);
+		this.deleteRow = this.deleteRow.bind(this);
 		this.props.setEachProductsPriceAction(this.props.totalPrice + this.props.number * this.props.price);
 	}
 
@@ -24,12 +24,12 @@ class cartTableRow extends Component {
 		}
 	}
 
-	deleateRow(id) {
+	deleteRow(id) {
 		axios({
 			method: 'delete',
 			url: `/cart/${id}`,
 		})
-			.then((res) => {
+			.then(_ => {
 				window.location.reload(true);
 			})
 			.catch((err) => {
@@ -47,7 +47,7 @@ class cartTableRow extends Component {
 				price={this.props.price}
 				number={this.state.number}
 				handleChange={this.handleChange}
-				deleateRow={this.deleateRow}
+				deleteRow={this.deleteRow}
 			/>
 		);
 	}

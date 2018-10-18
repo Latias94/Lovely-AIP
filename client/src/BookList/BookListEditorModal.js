@@ -80,7 +80,6 @@ class BookListEditorModal extends React.Component {
 							margin="dense"
 							value={this.state.title}
 							onChange={event => this.setState({title: event.target.value})}
-							// inputRef={title => this.setState({title: title.value})}
 						/>
                         <TextField
                             id="standard-dense"
@@ -90,7 +89,6 @@ class BookListEditorModal extends React.Component {
 							multiline
 							value={this.state.description}
 							onChange={e => this.setState({description: e.target.value})}
-                            // inputRef={description => this.description = description}
 							helperText={this.state.errorMsg}
 							error={this.state.isError}
                         />

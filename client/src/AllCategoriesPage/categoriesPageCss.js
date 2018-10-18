@@ -26,11 +26,7 @@ export const booksContainer = {
 };
 
 export const bookRow = {
-	// display: 'flex',
-	// flexDirection: 'row',
-	// justifyContent: 'space-around',
 	marginTop: '35px',
-	// marginBottom: '35px',
 	boxSizing: 'border-box',
 	borderLeftStyle: 'solid',
 	borderLeftWidth: '20px',

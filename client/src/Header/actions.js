@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { showSuccess } from "../common/utils/sweetAlert";
+import { showSuccess,showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
+
 
 export const setCartNumberAction = number => ({ type: 'SET_CART_NUMBER', cartNumber: number });
 export const addBookToCart = { type: 'ADD_CART_NUMBER' };
-// export const initialCartContent = data => ({ type: 'SET_ini_CART', cartContent: data });
 
 export const getUsersCart = () => (dispatch) => {
 	axios({
@@ -14,7 +14,7 @@ export const getUsersCart = () => (dispatch) => {
 			dispatch(setCartNumberAction(res.data.length));
 		})
 		.catch((err) => {
-			console.log(err);
+            showErrorMsgFromErrorObject(err);
 		});
 };
 
@@ -32,6 +32,6 @@ export const addBookToCartData = (bookid, count) => (dispatch) => {
 			showSuccess();
 		})
 		.catch((error) => {
-			console.log(error);
+            showErrorMsgFromErrorObject(error);
 		});
 };
