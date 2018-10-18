@@ -3,6 +3,7 @@ const passport = require('passport');
 const ISBN = require('isbnjs');
 
 const Book = require('../../models/Book');
+const BookList = require('../../models/BookList');
 const Category = require('../../models/Category');
 const User = require('../../models/User');
 const Review = require('../../models/Review');
@@ -587,6 +588,21 @@ router.delete('/:id',
         return res.status(401)
           .json(unauthorized);
       }
+      // Find book in book list
+      const bookLists = await BookList.find({ 'books.bookid': req.params.id });
+      bookLists.forEach(async (bookList) => {
+        const removeIndex = bookList.books
+          .map(book => book.bookid.toString())
+          .indexOf(req.params.id);
+        bookList.books.splice(removeIndex, 1);
+        const result = await bookList.save();
+        if (!result) {
+          return res.status(404)
+            .json(notsuccess);
+        } else {
+          return true;
+        }
+      });
 
       const book = await Book.findOneAndDelete({ _id: req.params.id });
       if (book) {
