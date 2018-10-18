@@ -49,13 +49,14 @@ class BookList extends React.PureComponent {
 			bookListId: 0,
 			openBookListEditorModal: false,
 		};
+		this.slug = this.props.match.params.slug;
 		this.confirmDelete = this.confirmDelete.bind(this);
 		this.handleBookListEditorModalClose = this.handleBookListEditorModalClose.bind(this);
 		this.operationButtons = this.operationButtons.bind(this);
 	}
 
 	componentDidMount() {
-		this.getBooksInBookList(this.props.match.params.slug);
+		this.getBooksInBookList(this.slug);
 	}
 
 	getBooksInBookList(slug) {
@@ -174,6 +175,7 @@ class BookList extends React.PureComponent {
 						bookListId={bookListId}
 						handleClose={this.handleBookListEditorModalClose}
 						openModal={openBookListEditorModal}
+						slug={this.slug}
 					/>
 
 					<h1 style={{ fontSize: '20px' }}>{bookListTitle}</h1>
