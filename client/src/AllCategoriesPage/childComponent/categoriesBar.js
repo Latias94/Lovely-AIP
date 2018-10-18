@@ -20,13 +20,19 @@ class NestedList extends React.Component {
 
 		return (
 			<div className={classes.root} style={{
-				borderRightStyle: 'solid', borderRightWidth: '2px', width: '20%', minWidth: '120px', height: '100%', backgroundColor: '#fafafa',
+				borderRightStyle: 'solid',
+				borderRightWidth: '2px',
+				width: '20%',
+				minWidth: '120px',
+				height: '100%',
+				backgroundColor: '#fafafa',
 			}}>
 				<List
 					component="nav"
-					subheader={<ListSubheader style={{ top: 'auto', fontSize: 'large' }} component="div">All Categories</ListSubheader>}
+					subheader={<ListSubheader style={{ top: 'auto', fontSize: 'large' }} component="div">All
+						Categories</ListSubheader>}
 				>
-					<hr style={{ margin: '0' }} />
+					<hr style={{ margin: '0' }}/>
 					{
 						this.props.categoriesList.map(
 							item => (

@@ -38,12 +38,12 @@ class childList extends React.Component {
 						this.props.getBooksInCategories(this.props.categoryID, this.props.categoriesName);
 						this.handleClick(this.props.categoriesName);
 					}} component={Link} to={`/categories/${this.props.categoryID}`}>
-						<ListItemText style={{ paddingLeft: '0px' }} inset primary={this.props.categoriesName} />
+						<ListItemText style={{ paddingLeft: '0px' }} inset primary={this.props.categoriesName}/>
 					</ListItem>
 				) : (
 					<ListItem button onClick={() => this.handleClick(this.props.categoriesName)}>
-						<ListItemText style={{ paddingLeft: '0px' }} inset primary={this.props.categoriesName} />
-						{this.state.open ? <ExpandLess /> : <ExpandMore />}
+						<ListItemText style={{ paddingLeft: '0px' }} inset primary={this.props.categoriesName}/>
+						{this.state.open ? <ExpandLess/> : <ExpandMore/>}
 					</ListItem>
 				)}
 				<Collapse in={this.state.open} timeout="auto" unmountOnExit>
@@ -55,13 +55,16 @@ class childList extends React.Component {
 										key={subitems._id}
 										button
 										onClick={() => {
-											this.props.updateCategory({ mainCategories: this.props.categoriesName, subCategories: subitems.subname });
+											this.props.updateCategory({
+												mainCategories: this.props.categoriesName,
+												subCategories: subitems.subname
+											});
 											this.props.getBooksInCategories(subitems.subid, this.props.categoriesName);
 										}}
 										component={Link}
 										to={`/categories/${subitems.subid}`}
 									>
-										<ListItemText inset primary={subitems.subname} />
+										<ListItemText inset primary={subitems.subname}/>
 									</ListItem>),
 							)
 						}

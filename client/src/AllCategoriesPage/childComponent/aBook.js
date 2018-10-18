@@ -34,7 +34,8 @@ const styles = {
 function SimpleMediaCard(props) {
 	const { classes } = props;
 	return (
-		<Link to={`/book/${props.bookid}`} key={props.bookid} style={{ marginLeft: '0px', marginRight: `${props.bookMarginRight - 1}px` }} replace>
+		<Link to={`/book/${props.bookid}`} key={props.bookid}
+		      style={{ marginLeft: '0px', marginRight: `${props.bookMarginRight - 1}px` }} replace>
 			<Card className={classes.card}>
 				<CardMedia
 					className={classes.media}
@@ -48,7 +49,8 @@ function SimpleMediaCard(props) {
 					<Typography component="span" noWrap={true} style={{ fontSize: '0.8rem', color: '#757575' }}>
 						{props.bookAuthor}
 					</Typography>
-					<Rate disabled value={props.reviewScore} style={{ fontSize: '0.8rem' }} /><p style={{ display: 'inline' }}>{props.bookReviews}</p>
+					<Rate disabled value={props.reviewScore} style={{ fontSize: '0.8rem' }}/><p
+					style={{ display: 'inline' }}>{props.bookReviews}</p>
 					<Typography component="span" noWrap={true}>
 						{props.bookPrice ? `$${props.bookPrice}` : null}
 					</Typography>

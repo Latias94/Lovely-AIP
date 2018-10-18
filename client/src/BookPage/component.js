@@ -40,19 +40,19 @@ const BooksPageComponent = props => (
 			addBookIntoBooklist={props.addBookIntoBooklist}
 			id={props.id}
 		/>
-		<hr />
+		<hr/>
 		{(props.relatedBookList && props.relatedBookList.books.length > 1) ? (<PopularBooks
 			currentBookId={props.currentBookId}
 			bookList={[props.relatedBookList]}
 		/>) : null}
-		<hr />
+		<hr/>
 		{/* review */}
 		<h3>Reviews</h3>
 		<ReviewsOfBook
 			views={props.views}
 
 		/>
-		<hr style={{ margin: '0' }} />
+		<hr style={{ margin: '0' }}/>
 		{/* Review Editor */}
 		<ReviewEditor
 			reviewStarChange={props.reviewStarChange}

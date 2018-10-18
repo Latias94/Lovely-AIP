@@ -25,17 +25,17 @@ describe('Test sign up', () => {
 		browser.close();
 	});
 
-  it('Success: update the page after the account created', async () => {
-    const fakeEmail = `${Math.floor((Math.random() * 1000) + 1).toString()}@mail.com`;
-    await page.type('#email', fakeEmail);
-    await page.type('#name', 'username');
-    await page.type('#password', 'rightPassword');
-    await page.type('#password2', 'rightPassword');
-    await page.click('Button[id="submit"]');
-    await page.waitFor(1000);
-    const submitButton = await page.$('Button[id="submit"]');
-    expect(submitButton).toBe(null);
-  });
+	it('Success: update the page after the account created', async () => {
+		const fakeEmail = `${Math.floor((Math.random() * 1000) + 1).toString()}@mail.com`;
+		await page.type('#email', fakeEmail);
+		await page.type('#name', 'username');
+		await page.type('#password', 'rightPassword');
+		await page.type('#password2', 'rightPassword');
+		await page.click('Button[id="submit"]');
+		await page.waitFor(1000);
+		const submitButton = await page.$('Button[id="submit"]');
+		expect(submitButton).toBe(null);
+	});
 
 	it('Validation: Length of password > 5 error hint', async () => {
 		await page.type('#email', 'test@mail.com');

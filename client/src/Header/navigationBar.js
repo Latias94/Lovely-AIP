@@ -58,16 +58,12 @@ class FullWidthTabs extends React.Component {
 						value={this.state.value}
 						onChange={this.handleChange}
 						indicatorColor="primary"
-						// textColor="inherit"
 						style={{ color: 'white' }}
 						fullWidth
-						// scrollable
-						// scrollButtons="auto"
 					>
-						<Tab label="Home" component={Link} to="/" />
-						<Tab label="All Categories" component={Link} to="/categories" />
-						<Tab label="Recommended Book Lists" component={Link} to="/recommendation" />
-						{/* <Tab label="Awards" style={{ outline: 'none' }} /> */}
+						<Tab label="Home" component={Link} to="/"/>
+						<Tab label="All Categories" component={Link} to="/categories"/>
+						<Tab label="Recommended Book Lists" component={Link} to="/recommendation"/>
 					</Tabs>
 				</AppBar>
 			</div>

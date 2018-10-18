@@ -37,14 +37,12 @@ describe('Test account page', () => {
 		const inputElement = await page.$('input[type=submit]');
 		await inputElement.click();
 		await page.waitFor(1000);
-		// _sleep(5);
-		//   await page.goto(url+'/account'); // a new tab
 		const accountButton = await page.$('a[href$=account]');
 		await accountButton.click();
 		await page.waitFor(3000);
 
 		const url = page.url();
-		expect(url).toBe(url+'login');
+		expect(url).toBe(url + 'login');
 
 		await page.screenshot({
 			path: '/Users/anluoridge/Downloads/TEMP/KnightFrankAccount.png',

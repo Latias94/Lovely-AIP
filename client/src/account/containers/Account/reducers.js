@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import { setCurrentUserBookLists } from './actions';
 
 const initialState = {
-    bookLists: []
+	bookLists: []
 };
 
 const accountReducer = handleActions({
@@ -12,9 +12,6 @@ const accountReducer = handleActions({
 			bookLists: payload,
 		};
 	},
-	// [decrementCounter](state) {
-	// 	return state - 1;
-	// },
 }, initialState);
 
 export default accountReducer;

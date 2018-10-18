@@ -37,12 +37,12 @@ const reviewOfBook = props => (
 							<span style={{ marginLeft: '10px' }}>{item.username}</span>
 						</div>
 						<div style={styles.viewPersonalInformation}>
-							<Rate disabled value={item.star} />
+							<Rate disabled value={item.star}/>
 						</div>
 						<div style={styles.reviewContent}>
 							<span>{new Date(item.createDate).toLocaleString()}</span>
 							<p style={{ color: 'rebeccapurple' }}>
-                                [Verified Purchase]</p>
+								[Verified Purchase]</p>
 							<pre style={{ fontSize: '20px', whiteSpace: 'pre-wrap' }}>{item.content}</pre>
 						</div>
 					</div>

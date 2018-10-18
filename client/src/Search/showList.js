@@ -25,7 +25,7 @@ class showList extends Component {
 							</CardContent>
 							<CardContent style={{ width: '30%' }}>
 								<Typography style={style.typo}>Created Date: {new Date(v.createDate).toLocaleDateString()}</Typography>
-								<Typography style={style.typo}>Updatde Date: {new Date(v.updateDate).toLocaleDateString()}</Typography>
+								<Typography style={style.typo}>Updated Date: {new Date(v.updateDate).toLocaleDateString()}</Typography>
 							</CardContent>
 						</Card>
 					))

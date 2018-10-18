@@ -29,8 +29,9 @@ class CartTablePage extends Component {
 			<div style={{ width: '90%', marginLeft: '5%', marginTop: '20px' }}>
 				<h2>Cart</h2>
 				<div style={style.container}>
-					<div style={{ width: '80%' }}><CartTable cartBooks={this.state.booksInCart} /></div>
-					<div style={{ width: '19%' }}><CheckoutBox number={this.state.booksInCart.length} totalPrice={this.props.totalPrice} /></div>
+					<div style={{ width: '80%' }}><CartTable cartBooks={this.state.booksInCart}/></div>
+					<div style={{ width: '19%' }}><CheckoutBox number={this.state.booksInCart.length}
+					                                           totalPrice={this.props.totalPrice}/></div>
 				</div>
 			</div>
 		);

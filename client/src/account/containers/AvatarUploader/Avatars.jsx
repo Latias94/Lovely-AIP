@@ -5,12 +5,6 @@ import PropTypes from 'prop-types';
 
 // Image avatar and letter avatar component.
 
-/**
- *
- * @param props
- * @returns {*}
- * @constructor
- */
 export function ImageAvatar(props) {
 	const { classes, avatarURL, alt } = props;
 	return (

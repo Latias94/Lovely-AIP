@@ -22,7 +22,6 @@ const reviewOfBook = props => (
 		<div style={{
 			width: '90%', marginLeft: '5%',
 		}}>
-			{/* TODO: Check is it rated? */}
 			<TextField
 				placeholder=" Please rate first."
 				onChange={event => props.reviewContentChange(event.target.value)}
@@ -42,7 +41,7 @@ const reviewOfBook = props => (
 				to='/login'
 				style={{ backgroundColor: 'gray', color: 'white' }}
 			>
-        Review
+				Review
 			</Button>
 		) : (
 			<Button
@@ -52,7 +51,7 @@ const reviewOfBook = props => (
 				onClick={props.submitClick}
 				style={{ backgroundColor: 'gray', color: 'white' }}
 			>
-        Review
+				Review
 			</Button>
 		)}
 	</div>

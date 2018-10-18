@@ -37,7 +37,8 @@ function cartTable(props) {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{props.cartBooks.length === 0 ? (<TableRow><TableCell><h3>Nothing Here</h3></TableCell></TableRow>) : (
+					{props.cartBooks.length === 0 ? (
+						<TableRow><TableCell><h3>Nothing Here</h3></TableCell></TableRow>) : (
 						props.cartBooks.map(row => (
 							<CartTableRow
 								key={row._id}

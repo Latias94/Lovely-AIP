@@ -10,11 +10,12 @@ const ShowContent = (bookNotFound, type, content) => {
 		);
 	}
 	if (type === 'Book Lists') {
-		return (<ShowList content={content.booklists} />);
-	} if (type === 'Books') {
-		return (<ShowBook content={content.books} />);
+		return (<ShowList content={content.booklists}/>);
 	}
-	return (<ShowBook content={[content]} />);
+	if (type === 'Books') {
+		return (<ShowBook content={content.books}/>);
+	}
+	return (<ShowBook content={[content]}/>);
 };
 
 class searchIndex extends Component {
@@ -41,14 +42,14 @@ class searchIndex extends Component {
 		let searchURL = '';
 
 		switch (type.replace('%20', ' ')) {
-		case 'Books':
-			searchURL = `/books/search/${parm}?page=1&pageSize=20`;
-			break;
-		case 'Book Lists':
-			searchURL = `/booklists/search/${parm}`;
-			break;
-		default:
-			break;
+			case 'Books':
+				searchURL = `/books/search/${parm}?page=1&pageSize=20`;
+				break;
+			case 'Book Lists':
+				searchURL = `/booklists/search/${parm}`;
+				break;
+			default:
+				break;
 		}
 
 		if (searchURL.length > 0) {

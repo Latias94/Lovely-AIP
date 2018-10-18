@@ -1,12 +1,12 @@
-import Axios from 'axios';
-import {createAction} from 'redux-actions';
+import axios from 'axios';
+import { createAction } from 'redux-actions';
 import swal from 'sweetalert2';
-import {showErrorMsgFromErrorObject} from '../../../common/utils/sweetAlert';
+import { showErrorMsgFromErrorObject } from '../../../common/utils/sweetAlert';
 
 export const setCurrentUserBookLists = createAction('SET_CURRENT_USER_BOOKLISTS');
 
 export const getCurrentUserBookLists = () => (dispatch) => {
-	Axios.get('/users/current/booklist')
+	axios.get('/users/current/booklist')
 		.then((res) => {
 			dispatch(setCurrentUserBookLists(res.data));
 		})
@@ -14,7 +14,7 @@ export const getCurrentUserBookLists = () => (dispatch) => {
 };
 
 export const createBookList = (title, description) => (dispatch) => {
-	Axios.post('/booklists', {title, description})
+	axios.post('/booklists', { title, description })
 		.then(() => {
 			// refresh
 			getCurrentUserBookLists()(dispatch);

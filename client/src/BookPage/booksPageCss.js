@@ -6,9 +6,7 @@ const styles = {
 		width: '80%',
 	},
 	bookImage: {
-		// height: '100%',
 		minWidth: '260px',
-		// backgroundColor: 'gray',
 	},
 	userHeadImage: {
 		height: '30px',
@@ -31,9 +29,7 @@ const styles = {
 		fontWeight: '500',
 	},
 	bookImageL: {
-		// height: '100%',
 		minWidth: '260px',
-		// backgroundColor: 'gray',
 	},
 	mainView: {
 		margin: '14px 18px 18px 18px',
@@ -47,9 +43,6 @@ const styles = {
 		margin: '20px',
 		border: '3px solid gray',
 		borderRadius: '5px',
-		// display: 'flex',
-		// flexDirection: 'column',
-		// alignItems: 'center',
 	},
 	viewPersonalInformation: {
 		display: 'flex',

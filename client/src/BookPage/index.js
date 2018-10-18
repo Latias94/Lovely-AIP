@@ -51,20 +51,27 @@ class BooksPage extends Component {
 
 	createANewBookList(title) {
 		axios.post('/booklists', { title, description: '' })
-			.then(() => { this.getUserBookList(); this.handleClose(); })
+			.then(() => {
+				this.getUserBookList();
+				this.handleClose();
+			})
 			.catch((error => showErrorMsgFromErrorObject(error)));
 	}
 
 	addBookIntoBooklist(booklistId, bookId) {
 		const url = `/booklists/book/${booklistId}/${bookId}`;
 		axios.post(url)
-			.then(() => { showSuccess(); })
+			.then(() => {
+				showSuccess();
+			})
 			.catch((error => showErrorMsgFromErrorObject(error)));
 	}
 
 	getRelateBookList(category) {
 		axios.get(`/categories/${category}`)
-			.then((response) => { this.setState({ relatedBookList: response.data }); })
+			.then((response) => {
+				this.setState({ relatedBookList: response.data });
+			})
 			.catch(error => showErrorMsgFromErrorObject(error));
 	}
 
@@ -166,7 +173,9 @@ class BooksPage extends Component {
 					description={description}
 					bookPrice={price}
 					quantity={quantity}
-					onQuantityChange={(quantity) => { this.setState({ quantity }); }}
+					onQuantityChange={(quantity) => {
+						this.setState({ quantity });
+					}}
 					stockNumber={stock}
 					views={reviews}
 					submittedReviewStar={submittedReviewStar}
