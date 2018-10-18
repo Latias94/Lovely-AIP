@@ -47,8 +47,9 @@ const styles = theme => ({
         display: 'none',
     },
     root: {
-        width: '100%',
+        width: '95%',
         marginTop: theme.spacing.unit * 3,
+        marginLeft: theme.spacing.unit * 3,
     },
     table: {
         minWidth: 500,
@@ -67,10 +68,13 @@ const styles = theme => ({
     },
     paper: {
         position: 'absolute',
-        width: theme.spacing.unit * 50,
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
+        top:'17%',
+        left:'23%',
+        width:'60%',
+        height:'60%',
     },
     textField: {
         marginLeft: theme.spacing.unit,
@@ -88,6 +92,19 @@ const styles = theme => ({
     card: {
         minWidth: 275,
     },
+    headerStyle: {
+        backgroundColor:'#C5CAE9',
+        color:'#1A237E',
+        fontSize:16,
+        textAlign:'Center',
+    },
+    headerLeft: {
+        textAlign:'left',
+        backgroundColor:'#C5CAE9',
+        color:'#1A237E',
+        fontSize:16,
+    },
+
 });
 
 // Control of the table page
@@ -171,7 +188,6 @@ class BookManage extends React.Component {
             isbn:0
         }],
         page: 0,
-
         newTitle: "",
         newAuthors: [""],
         newISBN: "",
@@ -182,9 +198,7 @@ class BookManage extends React.Component {
         newPrice: 0,
         newCategory: "",
         newBookError:{},
-
         rowsPerPage: 15,
-
         open: false,
         deleteDialogOpen: false,
         expanded: null,
@@ -313,34 +327,35 @@ class BookManage extends React.Component {
         const { classes } = this.props;
         const { rows, rowsPerPage, page, newBookError } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
         return (
-            <div>
+            //add a new book
+            <div style={{marginTop:'20px'}}>
                 <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    style={{outline:'none'}}
                     onClick={this.handleAddNewBookOpen}
->
+                    className={classes.button}
+                    color="primary"
+                    style={{outline:'none'}}
+                    variant="contained"
+                >
                     <AddIcon />
-                    New book
+                        New book
                 </Button>
                 <Modal
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
                     open={this.state.open}
                     onClose={this.handleAddNewBookClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
                 >
-                    <div className={classes.paper} style={{top:'17%', left:'23%', width:'60%', height:'60%'}}>
-                        <Typography variant="title" id="modal-title" style={{'marginBottom':'10px'}}>
+
+                    <div className={classes.paper}>
+                        <Typography variant="title" id="modal-title">
                             New book
                         </Typography>
                         <Typography variant="subheading" id="simple-modal-description">
                             <table style={{width:'100%'}}>
                                 <tbody>
                                 <tr>
-                                    <td>
+                                    <td >
                                         <TextField
                                             id="BookTitle"
                                             label="Book Title"
@@ -383,93 +398,100 @@ class BookManage extends React.Component {
                                 <tr>
                                     <td>
                                         <TextField
-                                            id="Stock"
-                                            label="In stock"
-                                            className={classes.textField}
-                                            type="text"
-                                            required
-                                            value={this.state.newStock}
                                             onChange={e => this.setState({newStock: e.target.value}) }
                                             error={newBookError.hasOwnProperty('stock')}
                                             helperText={newBookError.hasOwnProperty('stock') ? newBookError.stock : ""}
+                                            value={this.state.newStock}
+                                            className={classes.textField}
+                                            id="Stock"
+                                            label="In stock"
+                                            type="text"
+                                            required
                                         />
                                     </td>
                                     <td>
                                         <TextField
-                                            id="ISBN"
-                                            label="ISBN"
-                                            className={classes.textField}
-                                            placeholder="13 digits"
-                                            type="ISBN"
-                                            required
-                                            value={this.state.newISBN}
                                             onChange={e => this.setState({newISBN: e.target.value}) }
                                             error={newBookError.hasOwnProperty('isbn')}
                                             helperText={newBookError.hasOwnProperty('isbn') ? newBookError.isbn : ""}
+                                            value={this.state.newISBN}
+                                            className={classes.textField}
+                                            id="ISBN"
+                                            label="ISBN"
+                                            type="ISBN"
+                                            placeholder="13 digits"
+                                            required
                                         />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <TextField
-                                            id="Price"
-                                            label="Price"
-                                            className={classes.textField}
-                                            type="text"
-                                            required
-                                            value={this.state.newPrice}
                                             onChange={e => this.setState({newPrice: e.target.value}) }
                                             error={newBookError.hasOwnProperty('price')}
                                             helperText={newBookError.hasOwnProperty('price') ? newBookError.price : ""}
+                                            value={this.state.newPrice}
+                                            className={classes.textField}
+                                            id="Price"
+                                            label="Price"
+                                            type="text"
+                                            required
                                         />
                                     </td>
                                     <td>
                                         <TextField
-                                            id="PublishDate"
-                                            label="PublishDate"
-                                            className={classes.textField}
-                                            placeholder="sample: 7 21 2018"
-                                            required
-                                            value={this.state.newPublishDate}
                                             onChange={e => this.setState({newPublishDate: e.target.value}) }
                                             error={newBookError.hasOwnProperty('publishDate')}
                                             helperText={newBookError.hasOwnProperty('publishDate') ? newBookError.publishDate : ""}
+                                            value={this.state.newPublishDate}
+                                            className={classes.textField}
+                                            id="PublishDate"
+                                            label="PublishDate"
+                                            placeholder="sample: 7 21 2018"
+                                            required
                                         />
                                     </td>
                                 </tr>
                                 <tr>
                                         <td>
                                         <TextField
-                                            id="Description"
-                                            label="Description"
-                                            className={classes.textField}
-                                            type="Description"
-                                            placeholder="10 to 1000 characters"
-                                            required
-                                            value={this.state.newDescription}
                                             onChange={e => this.setState({newDescription: e.target.value}) }
                                             error={newBookError.hasOwnProperty('description')}
                                             helperText={newBookError.hasOwnProperty('description') ? newBookError.description : ""}
+                                            value={this.state.newDescription}
+                                            className={classes.textField}
+                                            id="Description"
+                                            label="Description"
+                                            type="Description"
+                                            placeholder="10 to 1000 characters"
+                                            required
+
                                         />
                                         </td>
                                 </tr>
                                 </tbody>
                             </table >
                             <Button
-                                variant="contained"
-                                onClick={this.handleCancelAddNewBook}
-                                style={{margin:'2%', outline:'none'}}
-                            >Cancel</Button>
-                            <Button variant="contained" color="primary" onClick={this.addABook} style={{outline:'none'}}>Confirm</Button>
+                                    variant="contained"
+                                    onClick={this.handleCancelAddNewBook}
+                                    style={{margin:'2%', outline:'none'}}>
+                                Cancel
+                            </Button>
+                            <Button variant="contained"
+                                    color="primary"
+                                    onClick={this.addABook}
+                                    style={{outline:'none'}}>
+                                Confirm
+                            </Button>
                         </Typography>
                     </div>
                 </Modal>
                 <Dialog
-          open={this.state.deleteDialogOpen}
-          onClose={this.handleDeleteDialogClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
+                      open={this.state.deleteDialogOpen}
+                      onClose={this.handleDeleteDialogClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                >
           <DialogTitle id="alert-dialog-title">{"Delete this book?"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -490,10 +512,10 @@ class BookManage extends React.Component {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Book Name</TableCell>
-                                <TableCell>Author</TableCell>
-                                <TableCell numeric>ISBN</TableCell>
-                                <TableCell>Action</TableCell>
+                                <TableCell className={classes.headerLeft}>Book Name</TableCell>
+                                <TableCell className={classes.headerLeft}>Author</TableCell>
+                                <TableCell className={classes.headerStyle} numeric>ISBN</TableCell>
+                                <TableCell className={classes.headerStyle}>Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -511,7 +533,7 @@ class BookManage extends React.Component {
                                             {/*</Button>*/}
                                             <Button 
                                             variant="contained" 
-                                            color="primary" 
+                                            color="secondary"
                                             className={classes.button}
                                             style={{outline:'none'}}
                                             onClick={() => this.handleDeleteDialogOpen(row._id, row.title)}>

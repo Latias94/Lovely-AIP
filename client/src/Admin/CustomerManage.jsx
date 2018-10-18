@@ -36,8 +36,10 @@ const styles = theme => ({
         display: 'none',
     },
     root: {
-        width: '100%',
+        width: '95%',
         marginTop: theme.spacing.unit * 3,
+        marginLeft: theme.spacing.unit * 3,
+
     },
     table: {
         minWidth: 500,
@@ -54,6 +56,12 @@ const styles = theme => ({
     iconSmall: {
         fontSize: 20,
     },
+    headerStyle: {
+        backgroundColor:'#C5CAE9',
+        color:'#1A237E',
+        fontSize:16,
+        textAlign: 'left',
+    }
 });
 
 
@@ -163,10 +171,10 @@ class CustomerManage extends React.Component {
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table}>
                         <TableHead>
-                            <TableRow>
-                                <TableCell>E-mail</TableCell>
-                                <TableCell>User Name</TableCell>
-                                <TableCell>Activated</TableCell>
+                            <TableRow >
+                                <TableCell className={classes.headerStyle} >E-mail</TableCell>
+                                <TableCell className={classes.headerStyle}>User Name</TableCell>
+                                <TableCell className={classes.headerStyle}>Activated</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -191,13 +199,13 @@ class CustomerManage extends React.Component {
                         <TableFooter>
                             <TableRow>
                                 <TablePagination
+                                    onChangePage={this.handleChangePage}
+                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActionsWrapped}
                                     colSpan={3}
                                     count={rows.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
-                                    onChangePage={this.handleChangePage}
-                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    ActionsComponent={TablePaginationActionsWrapped}
                                 />
                             </TableRow>
                         </TableFooter>
