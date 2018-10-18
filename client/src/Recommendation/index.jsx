@@ -13,7 +13,7 @@ class recommendation extends Component {
 			<div style={{
 				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
 			}}>
-				<RowofBookList content={this.props.recommendation} />
+				<RowofBookList content={this.props.recommendation}/>
 			</div>
 		);
 	}

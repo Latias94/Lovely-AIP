@@ -4,18 +4,18 @@ import { showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
 export const showBooksinCategoryAction = str => ({ type: 'SELECT_CATEGORY', name: str });
 export const initialAllCateories = data => ({ type: 'INITIAL_ALL_CATEGORIES', allCategories: data });
 export const setBooksInCategories = data => ({ type: 'SET_BOOKS_IN_CATEGORIES', booksInCategories: data });
-export const clearBooksinCategoryAction = () => dispatch => dispatch({ type: 'SELECT_CATEGORY', name: { mainCategories: 'All', subCategories: '' } });
+export const clearBooksinCategoryAction = () => dispatch => dispatch({
+	type: 'SELECT_CATEGORY',
+	name: { mainCategories: 'All', subCategories: '' }
+});
 
 export const getAllCategories = () => (dispatch) => {
-	axios({
-		method: 'get',
-		url: '/categories',
-	})
+	axios.get('/categories')
 		.then((response) => {
 			dispatch(initialAllCateories(response.data));
 		})
 		.catch((error) => {
-            showErrorMsgFromErrorObject(error);
+			showErrorMsgFromErrorObject(error);
 		});
 };
 
@@ -35,6 +35,6 @@ export const getBooksInCategories = (id, name) => (dispatch) => {
 			}
 			dispatch(setBooksInCategories(response.data));
 		}).catch((error) => {
-			showErrorMsgFromErrorObject(error);
-		});
+		showErrorMsgFromErrorObject(error);
+	});
 };

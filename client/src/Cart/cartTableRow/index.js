@@ -61,7 +61,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		setEachProductsPriceAction: (number) => { dispatch(setEachProductsPriceAction(number)); },
+		setEachProductsPriceAction: (number) => {
+			dispatch(setEachProductsPriceAction(number));
+		},
 	};
 }
 

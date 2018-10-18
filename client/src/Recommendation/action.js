@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
 
 export const setBookListDataAction = data => ({ type: 'SET_BOOKLIST_DATA', recommendation: data });
 
@@ -7,5 +8,7 @@ export const getBookListDataAction = () => (dispatch) => {
 		.then((response) => {
 			dispatch(setBookListDataAction(response.data));
 		})
-		.catch((error) => { console.log(error); });
+		.catch((error) => {
+			showErrorMsgFromErrorObject(error)
+		});
 };

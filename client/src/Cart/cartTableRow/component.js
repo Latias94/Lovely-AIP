@@ -20,7 +20,8 @@ const rowComponent = props => (
 				<Typography variant="subheading" color="textSecondary">
 					{props.author}
 				</Typography>
-				<Button color='secondary' size='small' style={{ padding: 0 }} onClick={() => props.deleteRow(props.id)}>delete</Button>
+				<Button color='secondary' size='small' style={{ padding: 0 }}
+				        onClick={() => props.deleteRow(props.id)}>delete</Button>
 			</CardContent>
 		</TableCell>
 		<TableCell numeric>${props.price}</TableCell>

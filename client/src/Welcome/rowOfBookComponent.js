@@ -5,7 +5,7 @@ import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import Book from '../AllCategoriesPage/childComponent/aBook';
 
 
-// According to window's width, caculate the variables:
+// According to window's width, calculate the variables:
 // numberOfCard: the length of books in row
 // bookMarginRight: the margin right of each book component
 // transformation: How many pixels will row component move when buttons clicked
@@ -98,23 +98,23 @@ export default class rowOfBookComponent extends Component {
 					onMouseOver={() => this.decreaseButtonOver()}
 					onMouseLeave={() => this.decreaseButtonLeave()}
 					onClick={() => this.decreaseTransform()} style={{
-						zIndex: '11',
-						opacity: '0.4',
-						backgroundColor: 'gray',
-						height: '100%',
-						width: '15px',
-						position: 'absolute',
-						left: '0px',
-						top: '0px',
-						overflow: 'hidden',
-						paddingLeft: '0',
-						paddingRight: '0',
-						transition: 'transform 0.5s',
-						transform: `translateX(${this.state.decreaseButtonTransform}%)`,
-					}}><ArrowLeft
-						style={{
-							zIndex: '5', opacity: '1', fontSize: '100px', color: 'white',
-						}}/></Button>
+					zIndex: '11',
+					opacity: '0.4',
+					backgroundColor: 'gray',
+					height: '100%',
+					width: '15px',
+					position: 'absolute',
+					left: '0px',
+					top: '0px',
+					overflow: 'hidden',
+					paddingLeft: '0',
+					paddingRight: '0',
+					transition: 'transform 0.5s',
+					transform: `translateX(${this.state.decreaseButtonTransform}%)`,
+				}}><ArrowLeft
+					style={{
+						zIndex: '5', opacity: '1', fontSize: '100px', color: 'white',
+					}}/></Button>
 				<div style={{
 					display: 'flex',
 					flexDirection: 'row',
@@ -130,15 +130,15 @@ export default class rowOfBookComponent extends Component {
 						if (this.props.currentBookId !== book._id) {
 							return (
 								< Book
-									bookMarginRight = { resizeWindowChange(this.state.windowWidth).bookMarginRight }
-									key = { book._id }
-									bookid = { book._id }
-									bookTitle = { book.title }
-									bookAuthor = { book.authors[0].name }
-									imagePath = { book.coverUrl }
-									bookPrice = { book.price }
-									reviewScore = { book.score }
-									bookReviews = { book.reviews ? book.reviews.length : 0 }
+									bookMarginRight={resizeWindowChange(this.state.windowWidth).bookMarginRight}
+									key={book._id}
+									bookid={book._id}
+									bookTitle={book.title}
+									bookAuthor={book.authors[0].name}
+									imagePath={book.coverUrl}
+									bookPrice={book.price}
+									reviewScore={book.score}
+									bookReviews={book.reviews ? book.reviews.length : 0}
 								/>
 							);
 						}
@@ -164,7 +164,7 @@ export default class rowOfBookComponent extends Component {
 						transition: 'transform 0.5s',
 						transform: `translateX(${this.state.increaseButtonTransform}%)`,
 					}}><ArrowRight
-						style={{ zIndex: '5', fontSize: '100px', color: 'white' }} /></Button>
+					style={{ zIndex: '5', fontSize: '100px', color: 'white' }}/></Button>
 			</div>
 		);
 	}

@@ -10,15 +10,15 @@ class showBook extends Component {
 						? (
 							this.props.content.map(v => (
 								<Book
-									bookMarginRight = {20}
-									key = { v._id }
-									bookid = { v._id }
-									bookTitle = { v.title }
-									bookAuthor = { v.authors ? v.authors[0].name : '' }
-									imagePath = { v.coverUrl }
-									bookPrice = { v.price }
-									reviewScore = { v.score }
-									bookReviews = { v.reviews ? v.reviews.length : 0 }
+									bookMarginRight={20}
+									key={v._id}
+									bookid={v._id}
+									bookTitle={v.title}
+									bookAuthor={v.authors ? v.authors[0].name : ''}
+									imagePath={v.coverUrl}
+									bookPrice={v.price}
+									reviewScore={v.score}
+									bookReviews={v.reviews ? v.reviews.length : 0}
 								/>
 							))
 						) : (

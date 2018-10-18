@@ -62,7 +62,7 @@ class headerPageIndex extends Component {
 
 	onKeyDown(e) {
 		// if ENTER pushed
-		if(e.keyCode === 13) {
+		if (e.keyCode === 13) {
 			this.onSearchClick();
 		}
 	}
@@ -75,7 +75,7 @@ class headerPageIndex extends Component {
 			iconLogo,
 			searchIcon,
 			rightIcon,
-            dashboardStyle
+			dashboardStyle
 		} = style;
 
 		return (
@@ -83,7 +83,7 @@ class headerPageIndex extends Component {
 				<div style={containerDiv}>
 					<div style={logoPart}>
 						<a href="/">
-							<img src={Logo} style={iconLogo} alt="logo" />
+							<img src={Logo} style={iconLogo} alt="logo"/>
 						</a>
 						<div style={searchIcon}>
 							<NativeSelect
@@ -113,7 +113,7 @@ class headerPageIndex extends Component {
 								width: '24px', height: '24px', marginBottom: '8px', color: 'white',
 								cursor: 'pointer'
 							}}
-							onClick={this.onSearchClick}
+							     onClick={this.onSearchClick}
 							>
 								<Icon icon={ic_search} size={24}/></div>
 						</div>
@@ -123,15 +123,17 @@ class headerPageIndex extends Component {
 								logoutUser={this.props.logoutUser}
 							/>
 							<Cart
-                                number={this.props.cartCount}
-                                auth={this.props.auth.isAuthenticated}
-                                />
+								number={this.props.cartCount}
+								auth={this.props.auth.isAuthenticated}
+							/>
 							{this.props.isAdmin && <div
 								title='Dashboard'
-								onClick={() => {this.props.history.push('/admin')}}
-                                style={dashboardStyle}
-                            >
-								<Icon icon={ic_dashboard} size={28} />
+								onClick={() => {
+									this.props.history.push('/admin')
+								}}
+								style={dashboardStyle}
+							>
+								<Icon icon={ic_dashboard} size={28}/>
 							</div>}
 						</div>
 					</div>

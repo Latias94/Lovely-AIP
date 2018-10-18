@@ -11,12 +11,14 @@ export default class booksPage extends Component {
 					<ul className="booksClassList" style={style.insideUl}>
 						<li>{this.props.categoryName}</li>
 						{this.props.subCategoryName
-							? (<div style={{ display: 'inline' }}><li>›</li>
-								<li>{this.props.subCategoryName}</li></div>) : (null)
+							? (<div style={{ display: 'inline' }}>
+								<li>›</li>
+								<li>{this.props.subCategoryName}</li>
+							</div>) : (null)
 						}
 					</ul>
 				</div>
-				<hr style={style.hrTag} />
+				<hr style={style.hrTag}/>
 				{this.props.booksInCategories.length !== 0 ? (
 					<div style={style.bookRow}>
 						{this.props.booksInCategories.map(

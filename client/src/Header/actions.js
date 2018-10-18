@@ -12,9 +12,6 @@ export const getUsersCart = () => (dispatch) => {
 	})
 		.then((res) => {
 			dispatch(setCartNumberAction(res.data.length));
-		})
-		.catch((err) => {
-            console.log(err.reponse.data);
 		});
 };
 
@@ -32,6 +29,6 @@ export const addBookToCartData = (bookid, count) => (dispatch) => {
 			showSuccess();
 		})
 		.catch((error) => {
-            showErrorMsgFromErrorObject(error);
+			showErrorMsgFromErrorObject(error);
 		});
 };

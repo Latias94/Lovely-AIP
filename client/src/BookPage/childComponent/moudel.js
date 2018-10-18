@@ -40,7 +40,8 @@ class SimpleModal extends React.Component {
 					open={!!this.props.openMoudal}
 					onClose={this.props.handleClose}
 				>
-					<div style={{ transform: 'translate(-50%, -50%)', top: '50%', left: '50%' }} className={classes.paper}>
+					<div style={{ transform: 'translate(-50%, -50%)', top: '50%', left: '50%' }}
+					     className={classes.paper}>
 						<h2>Creat a new BookList</h2>
 						<TextField
 							id="standard-dense"
@@ -48,11 +49,14 @@ class SimpleModal extends React.Component {
 							style={{ width: '100%' }}
 							margin="dense"
 							value={this.state.listTitle}
-							onChange={event => this.onChangeHandle(event.target.value) }
+							onChange={event => this.onChangeHandle(event.target.value)}
 						/>
 
-						<Button variant="outlined" style={{ width: '100%', marginTop: '15px' }} onClick={() => { this.props.createANewBookList(this.state.listTitle); this.onChangeHandle(''); }}>Create</Button>
-						<SimpleModalWrapped />
+						<Button variant="outlined" style={{ width: '100%', marginTop: '15px' }} onClick={() => {
+							this.props.createANewBookList(this.state.listTitle);
+							this.onChangeHandle('');
+						}}>Create</Button>
+						<SimpleModalWrapped/>
 					</div>
 				</Modal>
 			</div>

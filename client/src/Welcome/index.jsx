@@ -17,10 +17,10 @@ class welcomePageIndex extends Component {
 				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
 			}}>
 				{/* Carousel */}
-				<CarouselDIV />
+				<CarouselDIV/>
 				{/* Render books from database */}
 				{this.props.booksInHomePage ? <PopularBooks
-					bookList= {this.props.booksInHomePage}
+					bookList={this.props.booksInHomePage}
 				/> : null}
 			</div>
 		);

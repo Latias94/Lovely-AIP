@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -39,7 +39,7 @@ function onClickCheckOut() {
 }
 
 function CheckOutButton(props) {
-	const {classes} = props;
+	const { classes } = props;
 	return (
 		<Card className={classes.card}>
 			<CardContent>

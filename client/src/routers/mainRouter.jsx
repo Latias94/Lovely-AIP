@@ -14,7 +14,6 @@ import Cart from '../Cart';
 import Admin from '../Admin';
 import BookListDetail from '../BookList/index';
 import Recommendation from '../Recommendation';
-import BookListFeed from '../RSS/BookListFeed';
 import Search from '../Search';
 import PageNotFound from '../PageNotFound';
 
@@ -36,7 +35,6 @@ const MainRoute = (props) => {
 				<Route path={'/booklist/:slug'} component={BookListDetail}/>
 				<PrivateRoute authed={isAdmin} path={'/admin'} component={Admin} />
 				<Route path={'/recommendation'} component={Recommendation} />
-				<Route path={'/feed/book-lists.xml'} component={BookListFeed} />
 				<Route path={'/search/:type/:parm?'} component={Search} />
 				<Route component={PageNotFound} />
 			</Switch>

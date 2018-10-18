@@ -23,7 +23,7 @@ function MenuItems(props) {
 	}
 	return (
 		<span>
-			<MenuItem component={Link} to="/login" onClick={handleClose} >
+			<MenuItem component={Link} to="/login" onClick={handleClose}>
           Log in
 			</MenuItem>
 
@@ -61,8 +61,8 @@ class AuthIcon extends Component {
 		return (
 			<div>
 				<div style={avatarStyle}
-					onClick={this.handleClick}
-				><Icon icon={ic_account_circle} size={24} />
+				     onClick={this.handleClick}
+				><Icon icon={ic_account_circle} size={24}/>
 				</div>
 				<Menu
 					id="simple-menu"

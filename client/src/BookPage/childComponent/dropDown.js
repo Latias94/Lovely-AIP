@@ -12,7 +12,8 @@ const menu = (bookList, open, addBookIntoBooklist, bookid) => (
 			<List>
 				{
 					bookList.map(item => (
-						<ListItem style={styles.dropDownItem} button key={item._id} onClick={() => addBookIntoBooklist(item._id, bookid)}>
+						<ListItem style={styles.dropDownItem} button key={item._id}
+						          onClick={() => addBookIntoBooklist(item._id, bookid)}>
 							{item.title}
 						</ListItem>
 					))
@@ -25,16 +26,16 @@ const menu = (bookList, open, addBookIntoBooklist, bookid) => (
 );
 
 const dropdown = props => (!props.isLogin ? (
-	<div>
-		<Paper style={styles.dropDownList}>
-			<List>
-				<ListItem component={Link} to='/login' style={styles.dropDownItem} key="0">
-					You need to login
-				</ListItem >
-			</List>
-		</Paper>
-	</div>
-) : menu(props.booklist, props.open, props.addBookIntoBooklist, props.bookid)
+		<div>
+			<Paper style={styles.dropDownList}>
+				<List>
+					<ListItem component={Link} to='/login' style={styles.dropDownItem} key="0">
+						You need to login
+					</ListItem>
+				</List>
+			</Paper>
+		</div>
+	) : menu(props.booklist, props.open, props.addBookIntoBooklist, props.bookid)
 );
 
 export default dropdown;
