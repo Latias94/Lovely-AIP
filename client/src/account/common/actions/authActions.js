@@ -4,7 +4,6 @@ import { GET_ERRORS, SET_CURRENT_USER } from './types';
 import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
 
 /**
- * @todo use Redux for the validation
  * @param data - User data
  * @returns boolean is validated
  */
@@ -97,19 +96,18 @@ export const setCurrentUser = decoded => ({
 	payload: decoded,
 });
 
-// TODO: split it to the right page folder
 // Login and get the token
 export const loginUser = userData => (dispatch) => {
 	axios.post('/users/login', userData)
-	.then((res) => {
-		const { token } = res.data;
-		// Save to localStorage
-		localStorage.setItem('jwtToken', token);
-		// Set to Axios global header
-		setAuthTokenInHeader(token);
-		const decoded = jwt_decode(token);
-		dispatch(setCurrentUser(decoded));
-	})
+		.then((res) => {
+			const { token } = res.data;
+			// Save to localStorage
+			localStorage.setItem('jwtToken', token);
+			// Set to Axios global header
+			setAuthTokenInHeader(token);
+			const decoded = jwt_decode(token);
+			dispatch(setCurrentUser(decoded));
+		})
 		.catch(err => dispatch({
 			type: GET_ERRORS,
 			payload: err.response.data,
@@ -125,7 +123,6 @@ export const logoutUser = () => (dispatch) => {
 	dispatch(setCurrentUser({}));
 };
 
-// TODO: move this to account folder
 export const getCurrentUserInfo = () => (dispatch) => {
 	axios.get('/users/current')
 		.then((res) => {

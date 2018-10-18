@@ -5,10 +5,10 @@ const initialState = {};
 export default function (state = initialState, action) {
 	switch (action.type) {
 	case GET_ERRORS:
-		if(action.payload.hasOwnProperty('emailexist')) {
+		if (Object.prototype.hasOwnProperty.call(action.payload, 'emailexist')) {
 			return { email: 'This email address is already singed up.' };
 		}
-		if(action.payload.hasOwnProperty('usernotfound')) {
+		if (Object.prototype.hasOwnProperty.call(action.payload, 'usernotfound')) {
 			return { email: 'The email address is not signed up.' };
 		}
 		return action.payload;

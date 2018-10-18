@@ -1,4 +1,3 @@
-// separate this into each page folder
 export const styles = {
 	container: {
 		display: 'flex',
@@ -6,10 +5,10 @@ export const styles = {
 		flexWrap: 'wrap',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-    	padding: '5% 15%'
+		padding: '5% 15%'
 	},
 	emailVerificationHint: {
-    	padding: '10%',
+		padding: '10%',
 		fontSize: '25px'
 	},
 	verticalCenter: {

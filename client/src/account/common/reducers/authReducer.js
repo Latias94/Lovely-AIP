@@ -8,23 +8,22 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-	// TODO: redux-actions
 	switch (action.type) {
-	case SET_CURRENT_USER:
-		return {
-			...state,
-			isAuthenticated: !isEmpty(action.payload),
-			user: action.payload,
-		};
+		case SET_CURRENT_USER:
+			return {
+				...state,
+				isAuthenticated: !isEmpty(action.payload),
+				user: action.payload,
+			};
 		case SET_AVATAR:
-			// TODO: refine this
 			const newUser = state.user;
+			// update the avatar URL in the user
 			newUser.avatar = action.imgURL;
 			return {
 				...state,
 				user: newUser
 			};
-	default:
-		return state;
+		default:
+			return state;
 	}
 }

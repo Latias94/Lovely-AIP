@@ -5,52 +5,54 @@ import Button from '@material-ui/core/Button';
 import KFAccountInput from '../KFAccountInput';
 import { loginUser } from '../../common/actions/authActions';
 import { connect } from 'react-redux';
-import { compose } from "redux";
+import { compose } from 'redux';
+import { swal } from 'sweetalert2';
+
 
 const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-  },
-  underlineStyle: {
-    color: 'gray',
-    textDecoration: 'underline'
-  },
-  buttonStyle: {
-    flex: 1,// extend as much as it can
-    alignSelf: 'stretch',
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#007aff',
-    marginLeft: 5,
-    marginRight: 5
-  },
-  loginTitle: {
-    fontSize: '42px',
-    fontWeight: 'normal',
-    color: '#424242',
-    marginTop: '40px'
-  },
-  loginBtn: {
-      width: '200px',
-      height: '44px',
-      fontSize: '15px',
-      fontWeight: 'normal',
-      marginTop: '20px',
-      letterSpacing: '1px'
-  },
-  newHere: {
-    color: 'gray', 
-    textDecoration: 'underline', 
-    marginTop: '10px'
-  }
+	container: {
+		display: 'flex',
+		flexDirection: 'column',
+		flexWrap: 'wrap',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	formControl: {
+		margin: theme.spacing.unit,
+	},
+	underlineStyle: {
+		color: 'gray',
+		textDecoration: 'underline'
+	},
+	buttonStyle: {
+		flex: 1,// extend as much as it can
+		alignSelf: 'stretch',
+		backgroundColor: '#fff',
+		borderRadius: 5,
+		borderWidth: 1,
+		borderColor: '#007aff',
+		marginLeft: 5,
+		marginRight: 5
+	},
+	loginTitle: {
+		fontSize: '42px',
+		fontWeight: 'normal',
+		color: '#424242',
+		marginTop: '40px'
+	},
+	loginBtn: {
+		width: '200px',
+		height: '44px',
+		fontSize: '15px',
+		fontWeight: 'normal',
+		marginTop: '20px',
+		letterSpacing: '1px'
+	},
+	newHere: {
+		color: 'gray',
+		textDecoration: 'underline',
+		marginTop: '10px'
+	}
 });
 
 /**
@@ -58,128 +60,119 @@ const styles = theme => ({
  * Support ENTER key in password box.
  */
 class LoginForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      errors: {}
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleEnter = this.handleEnter.bind(this);
-  }
-  /**
-   if the user has already logged in, redirect to home page.
-   */
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      this.props.history.push('/');
-    }
-    // TODO: HUD hint
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			email: '',
+			password: '',
+			errors: {}
+		};
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleEnter = this.handleEnter.bind(this);
+	}
 
-  /**
-   *  @todo: how to use 'this' in getDerivedStateFromProps
-   // static getDerivedStateFromProps(nextProps, prevState) {
-  //   if (nextProps.auth.isAuthenticated) {
-  //     props.history.push('/welcome');
-  //   }
+	/**
+	 if the user has already logged in, redirect to home page.
+	 */
+	componentDidMount() {
+		if (this.props.auth.isAuthenticated) {
+			swal({
+				title: 'You are already logged in!',
+			})
+				.then(() => {
+					this.props.history.push('/');
+				})
+		}
+	}
 
-  //   if (nextProps.errors) {
-  //     return{ errors: nextProps.errors };
-  //   }
-  // }
-   * @param nextProps
-   * @param nextState
-   */
-  componentWillReceiveProps(nextProps, nextState) {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/');
-    }
+	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+		if (nextProps.auth.isAuthenticated) {
+			this.props.history.push('/');
+		}
 
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
-  }
+		if (nextProps.errors) {
+			this.setState({ errors: nextProps.errors });
+		}
+	}
 
-  handleChange(e) {
-    this.setState({ [e.target.id]: e.target.value });
-  };
+	handleChange(e) {
+		this.setState({ [e.target.id]: e.target.value });
+	};
 
-  handleSubmit(e) {
-    e.preventDefault();
-    const userData = {
+	handleSubmit(e) {
+		e.preventDefault();
+		const userData = {
 			email: this.state.email,
 			password: this.state.password,
 		};
-    this.props.loginUser(userData);
-  };
+		this.props.loginUser(userData);
+	};
 
-  handleEnter(e) {
-    if(e.keyCode === 13) {
-      this.handleSubmit(e)
-    }
-  };
+	handleEnter(e) {
+		if (e.keyCode === 13) {
+			this.handleSubmit(e)
+		}
+	};
 
-  render() {
-    const { email, password, errors } = this.state;
-    const { classes } = this.props;
+	render() {
+		const { email, password, errors } = this.state;
+		const { classes } = this.props;
 
-      return (
-        <div className={classes.container} style={{minHeight:'360px'}}>
-          <h1 className={classes.loginTitle}>Log in</h1>
+		return (
+			<div className={classes.container} style={{ minHeight: '360px' }}>
+				<h1 className={classes.loginTitle}>Log in</h1>
 
-          <KFAccountInput
-              onChange={this.handleChange}
-              error={errors.email}
-              className={classes.formControl}
-              id={"email"}
-              name={"Email"}
-              type={"email"}
-              value={email}
-          />
+				<KFAccountInput
+					onChange={this.handleChange}
+					error={errors.email}
+					className={classes.formControl}
+					id={"email"}
+					name={"Email"}
+					type={"email"}
+					value={email}
+				/>
 
-          <KFAccountInput
-              onChange={this.handleChange}
-              onKeyDown={this.handleEnter}
-              error={errors.password}
-              className={classes.formControl}
-              id={"password"}
-              name={"Password"}
-              type={"password"}
-              value={password}
-          />
+				<KFAccountInput
+					onChange={this.handleChange}
+					onKeyDown={this.handleEnter}
+					error={errors.password}
+					className={classes.formControl}
+					id={"password"}
+					name={"Password"}
+					type={"password"}
+					value={password}
+				/>
 
-          <Button 
-              className={classes.loginBtn}
-              variant="contained"
-              color="primary"
-              onClick={this.handleSubmit}
-          >
-            Sign in
-          </Button>
-          <a href="/register">
-              <div className={classes.newHere}>New here?</div>
-          </a>
-        </div>
-      )
-  }
+				<Button
+					className={classes.loginBtn}
+					variant="contained"
+					color="primary"
+					onClick={this.handleSubmit}
+				>
+					Sign in
+				</Button>
+				<a href="/register">
+					<div className={classes.newHere}>New here?</div>
+				</a>
+			</div>
+		)
+	}
 }
 
 LoginForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  loginUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired,
+	loginUser: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
+	errors: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth,
-  errors: state.errors,
+	auth: state.auth,
+	errors: state.errors,
 });
 
 export default compose(
-  withStyles(styles),
-  connect(mapStateToProps, { loginUser }),
+	withStyles(styles),
+	connect(mapStateToProps, { loginUser }),
 )(LoginForm);

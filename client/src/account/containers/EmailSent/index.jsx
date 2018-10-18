@@ -10,9 +10,6 @@ import axios from 'axios';
  * If success, the page will show a success message for 2s and direct to the login page.
  * If failed, the page will show a failure message and go to the home page.
  *
- * @todo use Button property for onClick
- * @todo countDown()
- * @todo jumpToUsersMailbox() should support various mailbox
  * @author AnLuoRidge
  */
 
@@ -25,17 +22,17 @@ class EmailSent extends Component {
 		axios({
 			method: 'post',
 			url: '/users/active/',
-			data: {email: sessionStorage.getItem('unactivatedEmail')}
+			data: { email: sessionStorage.getItem('unactivatedEmail') }
 		})
 			.then(this.countDown)
 			.catch(() => {
-        alert('Fail to send email.');
+				alert('Fail to send email.');
 			})
 	};
 
-  countDown = () => {
-		this.setState({timer:'(60s)'})
-  };
+	countDown = () => {
+		this.setState({ timer: '(60s)' })
+	};
 
 	render() {
 		const { container } = styles;
@@ -44,15 +41,16 @@ class EmailSent extends Component {
 			<div style={container}>
 				<h2>Thank you for signing up!</h2>
 				<p>
-                    We have sent an email with an activation link to your email address. In order to complete the sign-up process, please click the activation link.
+					We have sent an email with an activation link to your email address. In order to complete the
+					sign-up process, please click the activation link.
 					If you didn't receive the activation email, click on the button below to resend it.
 				</p>
 				<div style={{ padding: '20px' }} onClick={jumpToUsersMailbox}>
-					<Button variant="contained" color="secondary" >Go to your mail box</Button>
+					<Button variant="contained" color="secondary">Go to your mail box</Button>
 				</div>
 				<div onClick={this.resendActivationEmail}>
 					<Button variant="contained">
-                        Resend the verification email {this.state.timer.toString()}</Button>
+						Resend the verification email {this.state.timer.toString()}</Button>
 				</div>
 			</div>
 		);
@@ -60,7 +58,7 @@ class EmailSent extends Component {
 }
 
 function jumpToUsersMailbox() {
-  window.open('http://mail.google.com', '_blank');
+	window.open('http://mail.google.com', '_blank');
 }
 
 export default EmailSent;
