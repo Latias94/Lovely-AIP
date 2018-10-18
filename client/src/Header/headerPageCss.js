@@ -85,3 +85,9 @@ export const navSpan = {
 	display: 'table-cell',
 	verticalAlign: 'middle',
 };
+
+export const dashboardStyle = {
+	marginBottom:'3px',
+    cursor: 'pointer',
+	marginLeft: '15px'
+};
