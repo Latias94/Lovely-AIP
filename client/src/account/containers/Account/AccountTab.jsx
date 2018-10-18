@@ -28,7 +28,10 @@ const styles = theme => ({
 
 function TabContainer(props) {
     return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
+        <Typography
+            component="div"
+            style={{ padding: 8 * 3 }}
+        >
             {props.children}
         </Typography>
     );
@@ -56,13 +59,9 @@ class AccountTab extends React.Component {
                 <AppBar position="static">
                     <Tabs value={value} onChange={this.handleChange}>
                         <Tab label="My BookList" style={{outline:'none'}} />
-                        {/*<Tab label="My Order" style={{outline:'none'}} />*/}
-                        {/*<Tab label="My Payment" style={{outline:'none'}} />*/}
-                        {/*<Tab label="My Setting" style={{outline:'none'}}  />*/}
                     </Tabs>
                 </AppBar>
                 {value === 0 && <MyBookLists />}
-                {/*{value === 1 && <MySetting />}*/}
             </div>
         );
     }

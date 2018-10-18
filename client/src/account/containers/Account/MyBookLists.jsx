@@ -17,6 +17,7 @@ const styles = theme => ({
     buttonWrapper: {
         position: 'relative',
         marginBottom: theme.spacing.unit * 4,
+        paddingTop:'20px'
     },
 
     checked: {},
@@ -25,6 +26,8 @@ const styles = theme => ({
     },
     card: {
         minWidth: 275,
+        marginTop:'10px',
+        backgroundColor:'#FAFAFA',
     },
     title: {
         marginBottom: 16,
@@ -47,12 +50,26 @@ const styles = theme => ({
     },
     paper: {
         position: 'absolute',
-        width: theme.spacing.unit * 50,
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
+        top:'26%',
+        left:'30%',
+        width:'44%',
+        height:'31%',
     },
-
+    addButton: {
+        outline:'none',
+        backgroundColor:'#3D5AFE',
+        color:'#fff',
+        width:'170px',
+        height:'40px',
+    },
+    titleStyle: {
+        display:'inline',
+        fontSize:'18px',
+        paddingBottom:'0',
+    },
 });
 
 
@@ -111,67 +128,70 @@ class MyBookLists extends React.Component {
         const { classes } = this.props;
 
         return (
-            <div  style={{backgroundColor:'#FAFAFA'}}>
-                <Grid container justify="center" spacing={0}>
-                    <Grid item className={classes.buttonWrapper} style={{paddingTop:'20px'}}>
+            <div style={{backgroundColor:'#FAFAFA'}}>
+                <Grid justify="center" spacing={0} container>
+                    <Grid  className={classes.buttonWrapper} item>
                         <Button
-                            style={{outline:'none', backgroundColor:'#3D5AFE', color:'#fff', width:'170px', height:'40px'}}
-                            variant="contained"
+                            className={classes.addButton}
                             onClick={this.handleOpen}
+                            variant="contained"
                         >
                             + New book list
                         </Button>
                         <Modal
-                            aria-labelledby="simple-modal-title"
-                            aria-describedby="simple-modal-description"
                             open={this.state.open}
                             onClose={this.handleClose}
+                            aria-labelledby="simple-modal-title"
+                            aria-describedby="simple-modal-description"
                         >
-                            <div className={classes.paper} style={{top:'30%', left:'30%', width:'44%', height:'24%'}}>
-                                <Typography variant="title" id="modal-title">
+                            <div className={classes.paper}>
+                                <Typography id="modal-title" variant="title" >
                                     Create a new book list
                                 </Typography>
-                                <Typography variant="subheading" id="simple-modal-description">
+                                <Typography id="simple-modal-description" variant="subheading" >
                                     <table style={{width:'100%'}}>
                                         <tbody>
                                         <tr>
                                             <td>
                                                 <TextField
+                                                    inputRef={title => this.title = title}
+                                                    className={classes.textField}
                                                     id="BookListTitle"
+                                                    required
                                                     label="Title"
                                                     multiline
-                                                    className={classes.textField}
-                                                    inputRef={title => this.title = title}
-                                                    required
                                                 />
                                             </td>
                                             <td>
                                                 <TextField
-                                                    id="BookListDescription"
-                                                    label={`Description (more than ${this.descriptionMinLength} letters)`}
+                                                    onKeyDown={this.onKeyDown}
                                                     className={classes.textField}
-                                                    type="text"
+                                                    style={{width:'270px'}}
+                                                    id="BookListDescription"
                                                     multiline
+                                                    required
+                                                    label={`Description (more than ${this.descriptionMinLength} letters)`}
                                                     inputRef={description => this.description = description}
                                                     error={this.state.isDescriptionWrong}
                                                     helperText={this.state.descriptionError}
-                                                    required
-                                                    style={{width:'270px'}}
-                                                    onKeyDown={this.onKeyDown}
+                                                    type="text"
                                                 />
                                             </td>
                                         </tr>
                                         </tbody>
                                     </table >
                                     <Button
-                                        variant="contained"
-                                        onClick={this.handleCancelButton}
-                                        style={{margin:'2%'}}>
+                                            onClick={this.handleCancelButton}
+                                            style={{margin:'2%'}}
+                                            variant="contained"
+                                    >
                                         Cancel
                                     </Button>
-                                    <Button variant="contained"
+                                    <Button
+                                            onClick={this.handleConfirmButton}
+                                            variant="contained"
                                             color="primary"
-                                            onClick={this.handleConfirmButton}>
+                                    >
                                         Confirm
                                     </Button>
                                 </Typography>
@@ -183,15 +203,19 @@ class MyBookLists extends React.Component {
                     {
                         this.props.bookLists.map(
                             (bookList)=>{
-                                return <Card key={bookList._id} className={classes.card} style={{marginTop:'10px', backgroundColor:'#FAFAFA'}}>
+                                return <Card key={bookList._id} className={classes.card}>
                                     <CardContent>
-                                        <Typography variant="subheading" style={{display:'inline', fontSize:'18px', paddingBottom:'0'}}>
+                                        <Typography variant="subheading" className={classes.titleStyle}>
                                             <a href={'/booklist/'+bookList.slug}>
                                                 {bookList.title}
                                             </a>
                                         </Typography>
-                                        <Typography variant="caption" gutterBottom style={{float:'right', lineHeight:'26px'}}>
-                                            {bookList.updateDate.substring(0,10)}
+                                        <Typography
+                                            variant="caption"
+                                            gutterBottom
+                                            style={{float:'right', lineHeight:'26px'}}
+                                        >
+                                           Update Date: {bookList.updateDate.substring(0,10)}
                                         </Typography>
                                     </CardContent>
                                 </Card>

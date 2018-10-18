@@ -52,17 +52,25 @@ class AvatarUploader extends PureComponent {
         <div style={styles.container}>
         <h1>My Avatar</h1>
         <div style={styles.verticalCenter}>
-        <AvatarEdit
-          width={390}
-          height={295}
-          onCrop={this.onCrop}
-          onClose={this.onClose}
-          src={src}
-          style={{'marginBottom': '10px'}}
-        />
-        <Preview srcDataURL={preview}/>
+            <AvatarEdit
+                onCrop={this.onCrop}
+                onClose={this.onClose}
+                src={src}
+                width={390}
+                height={295}
+                style={{'marginBottom': '10px'}}
+            />
+            <Preview srcDataURL={preview}/>
         </div>
-        <Button variant="contained" color="secondary" id={"upload"} onClick={this.uploadHandler} disabled={!this.state.preview}>Upload</Button>
+        <Button
+            onClick={this.uploadHandler}
+            id={"upload"}
+            variant="contained"
+            color="secondary"
+            disabled={!this.state.preview}
+        >
+            Upload
+        </Button>
       </div>
       )
     }

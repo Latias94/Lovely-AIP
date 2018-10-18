@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {compose} from "redux";
 import {registerUser} from "../../common/actions/authActions";
@@ -86,54 +86,56 @@ class RegisterForm extends Component {
             <h1 className={classes.loginTitle}> Sign up</h1>
 
             <KFAccountInput
-                name={"Email*"}
+                onChange={this.handleChange}
                 className={classes.formControl}
-                error={errors.email}
                 id={"email"}
-                value={email}
+                error={errors.email}
+                name={"Email*"}
                 type={"email"}
-                onChange={this.handleChange}
+                value={email}
             />
 
             <KFAccountInput
-                name={"Name*"}
-                className={classes.formControl}
+                onChange={this.handleChange}
                 error={errors.name}
+                className={classes.formControl}
                 id={"name"}
-                value={name}
+                name={"Name*"}
                 type={"text"}
-                onChange={this.handleChange}
+                value={name}
             />
 
             <KFAccountInput
-                name={"Password"}
-                className={classes.formControl}
-                error={errors.password}
-                id={"password"}
-                value={password}
-                type={"password"}
                 onChange={this.handleChange}
+                error={errors.password}
+                className={classes.formControl}
+                id={"password"}
+                name={"Password"}
+                type={"password"}
+                value={password}
                 placeholder="6 - 30 characters"
             />
 
             <KFAccountInput
-                name={"Confirm your password"}
-                className={classes.formControl}
-                error={errors.password2}
-                id={"password2"}
-                value={password2}
-                type={"password"}
                 onChange={this.handleChange}
+                error={errors.password2}
+                className={classes.formControl}
+                id={"password2"}
+                name={"Confirm your password"}
+                type={"password"}
+                value={password2}
+
             />
 
-            <Button variant="contained"
-                    color="secondary"
-                    id={"submit"}
-                    onClick={this.handleSubmit}
-                    className={classes.registerBtn}
+            <Button style={{marginBottom:'20'}}
+                onClick={this.handleSubmit}
+                className={classes.registerBtn}
+                variant="contained"
+                color="secondary"
+                id={"submit"}
             >
-                Create your new account</Button>
-            <br/>
+                Create your new account
+            </Button>
             <div>
                 <a href="/login" style={{underlineStyle}}>Already signed up?</a>
             </div>

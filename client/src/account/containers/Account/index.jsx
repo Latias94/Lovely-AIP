@@ -26,17 +26,22 @@ const styles = {
     bigAvatar: {
         width: 160,
         height: 160,
+        backgroundColor: '#E0E0E0',
     },
     avatarModal: {
-        marginTop: '150px'
+        marginTop: '150px',
+    },
+    usernameStyle: {
+        fontSize: '24px',
+        fontWeight:'bold',
     }
 };
 
 function AccountInfo(props) {
-    const {username} = props;
+    const {username, usernameStyle} = props;
     return (
         <div style={{'marginBottom': '15px'}}>
-            <p style={{'fontSize': '24px', 'fontWeight': 'bold'}}>{username}</p>
+            <p className={usernameStyle}>{username}</p>
         </div>);
 }
 
@@ -78,11 +83,20 @@ class Account extends React.Component {
 				<div style={verticalCenter}>
                     <div>
 					{avatarType === 'letter' ? <LetterAvatar classes={classes} username={username}/> :
-                        <ImageAvatar classes={classes} avatarURL={avatarURL} alt={username}/>}
+                        <ImageAvatar
+                            classes={classes}
+                            avatarURL={avatarURL}
+                            alt={username}
+                        />}
                     </div>
                     <div>
-                         <Button variant="outlined" size="medium" color="primary" onClick={this.onOpenModal} >
-                          change
+                         <Button
+                             onClick={this.onOpenModal}
+                             variant="outlined"
+                             size="medium"
+                             color="primary"
+                         >
+                             change
                         </Button>
                     </div>
 				</div>

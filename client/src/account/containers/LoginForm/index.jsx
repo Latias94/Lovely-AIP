@@ -37,7 +37,7 @@ const styles = theme => ({
     fontWeight: 'normal',
     color: '#424242',
     marginTop: '40px'
-},
+  },
   loginBtn: {
       width: '200px',
       height: '44px',
@@ -131,34 +131,37 @@ class LoginForm extends Component {
           <h1 className={classes.loginTitle}>Log in</h1>
 
           <KFAccountInput
-            name={"Email"}
-            className={classes.formControl}
-                   error={errors.email}
-                   id={"email"}
-                   value={email}
-                   type={"email"}
-                   onChange={this.handleChange}
+              onChange={this.handleChange}
+              error={errors.email}
+              className={classes.formControl}
+              id={"email"}
+              name={"Email"}
+              type={"email"}
+              value={email}
           />
 
           <KFAccountInput
-            name={"Password"}
-            className={classes.formControl}
-            error={errors.password}
-            id={"password"}
-            value={password}
-            type={"password"}
-            onChange={this.handleChange}
-            onKeyDown={this.handleEnter}
+              onChange={this.handleChange}
+              onKeyDown={this.handleEnter}
+              error={errors.password}
+              className={classes.formControl}
+              id={"password"}
+              name={"Password"}
+              type={"password"}
+              value={password}
           />
 
           <Button 
-          className={classes.loginBtn}
-          variant="contained" 
-          color="primary" 
-          onClick={this.handleSubmit}>
-          Sign in
+              className={classes.loginBtn}
+              variant="contained"
+              color="primary"
+              onClick={this.handleSubmit}
+          >
+            Sign in
           </Button>
-          <a href="/register"><div className={classes.newHere}>New here?</div></a>
+          <a href="/register">
+              <div className={classes.newHere}>New here?</div>
+          </a>
         </div>
       )
   }
