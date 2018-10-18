@@ -43,10 +43,17 @@ class EmailSent extends Component {
 		return (
 			<div style={container}>
 				<h2>Thank you for signing up!</h2>
-				<p> We have sent an email with an activation link to your email address. In order to complete the sign-up process, please click the activation link.
-					If you didn't receive the activation email, click on the button below to resend it.</p>
-				<div style={{ padding: '20px' }} onClick={jumpToUsersMailbox}><Button variant="contained" color="secondary" >Go to your mail box</Button></div>
-				<div onClick={this.resendActivationEmail}><Button variant="contained">Resend the verification email {this.state.timer.toString()}</Button></div>
+				<p>
+                    We have sent an email with an activation link to your email address. In order to complete the sign-up process, please click the activation link.
+					If you didn't receive the activation email, click on the button below to resend it.
+				</p>
+				<div style={{ padding: '20px' }} onClick={jumpToUsersMailbox}>
+					<Button variant="contained" color="secondary" >Go to your mail box</Button>
+				</div>
+				<div onClick={this.resendActivationEmail}>
+					<Button variant="contained">
+                        Resend the verification email {this.state.timer.toString()}</Button>
+				</div>
 			</div>
 		);
 	}
