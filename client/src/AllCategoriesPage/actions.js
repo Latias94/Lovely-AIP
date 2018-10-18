@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
 
 export const showBooksinCategoryAction = str => ({ type: 'SELECT_CATEGORY', name: str });
 export const initialAllCateories = data => ({ type: 'INITIAL_ALL_CATEGORIES', allCategories: data });
@@ -14,7 +15,7 @@ export const getAllCategories = () => (dispatch) => {
 			dispatch(initialAllCateories(response.data));
 		})
 		.catch((error) => {
-			console.log(error);
+            showErrorMsgFromErrorObject(error);
 		});
 };
 
@@ -34,6 +35,6 @@ export const getBooksInCategories = (id, name) => (dispatch) => {
 			}
 			dispatch(setBooksInCategories(response.data));
 		}).catch((error) => {
-			console.log(error);
+			showErrorMsgFromErrorObject(error);
 		});
 };

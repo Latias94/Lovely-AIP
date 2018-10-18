@@ -75,6 +75,7 @@ class headerPageIndex extends Component {
 			iconLogo,
 			searchIcon,
 			rightIcon,
+            dashboardStyle
 		} = style;
 
 		return (
@@ -121,12 +122,16 @@ class headerPageIndex extends Component {
 								isAuthenticated={this.props.auth.isAuthenticated}
 								logoutUser={this.props.logoutUser}
 							/>
-							<Cart number={this.props.cartCount} auth={this.props.auth.isAuthenticated} />
+							<Cart
+                                number={this.props.cartCount}
+                                auth={this.props.auth.isAuthenticated}
+                                />
 							{this.props.isAdmin && <div
 								title='Dashboard'
 								onClick={() => {this.props.history.push('/admin')}}
-								style={{ cursor: 'pointer', marginLeft: '15px' }}>
-								<Icon icon={ic_dashboard} size={30}/>
+                                style={dashboardStyle}
+                            >
+								<Icon icon={ic_dashboard} size={28} />
 							</div>}
 						</div>
 					</div>

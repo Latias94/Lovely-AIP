@@ -23,6 +23,8 @@ const styles = theme => ({
 	},
 	table: {
 		minWidth: 700,
+        minHeight:100,
+        textAlign: 'center',
 	},
 	button: {
 		margin: theme.spacing.unit,
@@ -34,11 +36,44 @@ const styles = theme => ({
 		fontWeight: 'bold',
 		fontSize: '15px',
 	},
+	addNewbook: {
+        outline: 'none',
+        width: '170px',
+        backgroundColor: '#3D5AFE',
+        color: '#fff',
+        marginRight: '10px'
+    },
+    editBooklist: {
+        outline: 'none',
+        width: '80px',
+        marginRight: '10px',
+    },
+    deleteBookListStyle: {
+        outline: 'none',
+        width: '120px',
+        marginRight: '10px',
+    },
+    bookTitleStyle: {
+        fontSize: '14px',
+        fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif',
+    },
+    cardBorder: {
+        height: '220px',
+        borderBottom: '8px #E0E0E0  solid',
+    },
+    tableBook: {
+        width: '20%',
+        paddingLeft: '20px'
+    },
+    tableTitle: {
+        width: '50%',
+        textAlign:'left'
+    },
 	container: KFStyles.container,
 });
 
 class BookList extends React.PureComponent {
-	constructor(props) {
+    constructor(props) {
 		super(props);
 		this.state = {
 			userID: '',
@@ -49,14 +84,13 @@ class BookList extends React.PureComponent {
 			bookListId: 0,
 			openBookListEditorModal: false,
 		};
-		this.slug = this.props.match.params.slug;
 		this.confirmDelete = this.confirmDelete.bind(this);
 		this.handleBookListEditorModalClose = this.handleBookListEditorModalClose.bind(this);
 		this.operationButtons = this.operationButtons.bind(this);
 	}
 
-	componentDidMount() {
-		this.getBooksInBookList(this.slug);
+    componentDidMount() {
+		this.getBooksInBookList(this.props.match.params.slug);
 	}
 
 	getBooksInBookList(slug) {
@@ -106,41 +140,39 @@ class BookList extends React.PureComponent {
 	operationButtons(bookListOwnerId, userId, isAdmin, bookListId) {
 		const deletable = userId === bookListOwnerId || isAdmin;
 		const editable = userId === bookListOwnerId;
+        const {classes} = this.props;
 
 		return (
 			<div style={{ flexDirection: 'row' }}>
-				{editable && <Button
-					style={{
-						outline: 'none',
-						width: '170px',
-						backgroundColor: '#3D5AFE',
-						color: '#fff',
-						marginRight: '10px',
-					}}
-					variant="contained"
+				{editable &&
+                <Button
+                    className={classes.addNewbook}
+                    variant="contained"
 					href={'/'}
 				>
 					+ A new book
 				</Button>}
-				{editable && <Button
-					style={{ outline: 'none', width: '80px', marginRight: '10px' }}
+				{editable &&
+                <Button
+                    onClick={() => {
+                        this.setState({ openBookListEditorModal: true });
+                    }}
+                    className={classes.editBooklist}
 					variant="contained"
 					color="primary"
-					onClick={() => {
-						this.setState({ openBookListEditorModal: true });
-					}}
 					title={'Edit the list title and description'}
 				>
 					Edit
 				</Button>}
-				{deletable && <Button
+				{deletable &&
+				<Button
+                    onClick={() => {
+                        this.confirmDelete(bookListId);
+                    }}
+                    className={classes.deleteBookListStyle}
 					title={'Delete this book list'}
-					style={{ outline: 'none', width: '120px', marginRight: '10px' }}
 					variant="contained"
 					color="secondary"
-					onClick={() => {
-						this.confirmDelete(bookListId);
-					}}
 				>
 					Delete list
 				</Button>}
@@ -152,6 +184,7 @@ class BookList extends React.PureComponent {
 		const {
 			root, table, container,
 		} = this.props.classes;
+		const {classes} = this.props;
 		const {
 			bookListTitle,
 			books, totalBooks,
@@ -170,44 +203,45 @@ class BookList extends React.PureComponent {
 			return (
 				<div className={container}>
 					<BookListEditorModal
-						title={bookListTitle}
+                        handleClose={this.handleBookListEditorModalClose}
+                        title={bookListTitle}
 						description={description}
 						bookListId={bookListId}
-						handleClose={this.handleBookListEditorModalClose}
 						openModal={openBookListEditorModal}
-						slug={this.slug}
 					/>
 
 					<h1 style={{ fontSize: '20px' }}>{bookListTitle}</h1>
-					<p style={{
-						fontSize: '14px',
-						fontFamily: '"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif',
-					}}>{description}</p>
+					<p className={classes.bookTitleStyle}>{description}</p>
 					{this.operationButtons(this.props.userID, this.state.userID, this.props.isAdmin, bookListId)}
 					{/* Show books in list */}
 					<Paper className={root}>
 						<Table className={table} padding={'dense'}>
 							<tbody>
 							{books.length ? books.map(book => (
-								<tr key={book._id} style={{ height: '220px', borderBottom: '8px #E0E0E0  solid' }}>
-									<td style={{ width: '18%', paddingLeft: '20px' }}>
+								<tr key={book._id} className={classes.cardBorder}>
+									<td className={classes.tableBook}>
 										<a href={`/book/${book._id}`}>
-											<img style={{ width: '120px' }} src={book.coverUrl}
-											     title={book.title} alt={book.title}
+											<img
+                                                src={book.coverUrl}
+                                                title={book.title}
+                                                alt={book.title}
+                                                style={{ width: '120px' }}
 											/>
 										</a>
 									</td>
-									<td style={{ width: '60' }}>
+									<td className={classes.tableTitle}>
 										<a href={`/book/${book._id}`} style={{ fontSize: '18px' }}>{book.title}</a>
-										<div>{`by ${book.authors.map(author => author.name).join(', ')}`}</div>
-										<Rate disabled value={book.reviewStar}/>
+										<p style={{marginTop:'5'}}>{`by ${book.authors.map(author => author.name).join(', ')}`}</p>
 									</td>
-									<td style={{ width: '20%' }}>
-										{book.reviewContent ? book.reviewContent : ''}
+									<td style={{width: '30%'}}>
+                                        <p>
+                                            {book.reviewContent ? book.reviewContent : 'No reviews yet'}
+                                        </p>
+                                        <Rate disabled value={book.reviewStar}/>
 									</td>
 								</tr>
 							)) : <tr>
-								<td>No books yet.</td>
+								<td style={{fontSize:'20px'}}>No books yet.</td>
 							</tr>}
 							</tbody>
 						</Table>
