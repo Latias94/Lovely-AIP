@@ -22,11 +22,10 @@ class showList extends Component {
 							</CardContent>
 							<CardContent style={{ width: '30%' }}>
 								<Typography style={style.typo}>Books: {v.books.length}</Typography>
-								<Typography style={style.typo}>Likes: {v.likes.length}</Typography>
 							</CardContent>
 							<CardContent style={{ width: '30%' }}>
-								<Typography style={style.typo}>Create Date: {new Date(v.createDate).toLocaleDateString()}</Typography>
-								<Typography style={style.typo}>Updata Date: {new Date(v.updateDate).toLocaleDateString()}</Typography>
+								<Typography style={style.typo}>Created Date: {new Date(v.createDate).toLocaleDateString()}</Typography>
+								<Typography style={style.typo}>Updatde Date: {new Date(v.updateDate).toLocaleDateString()}</Typography>
 							</CardContent>
 						</Card>
 					))
