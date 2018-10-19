@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { showSuccess, showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
+import { showSuccess, showErrorMsgFromErrorObject } from '../common/utils/sweetAlert';
 
 
 export const setCartNumberAction = number => ({ type: 'SET_CART_NUMBER', cartNumber: number });

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
+import { showErrorMsgFromErrorObject } from '../common/utils/sweetAlert';
 
 export const setWelcomePageBooksDataAction = data => ({ type: 'SET_WELCOME_BOOKS_DATA', booksInHomePage: data });
 

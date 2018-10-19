@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 import { showErrorMsgFromObject, alertDeleted, showSuccess } from '../common/utils/sweetAlert';
 
 export function deleteBookList(id) {

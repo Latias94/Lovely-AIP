@@ -107,7 +107,6 @@ class MyBookLists extends React.Component {
 	handleConfirmButton = () => {
 		const { description, title } = this;
 		if (description.value.length > this.descriptionMinLength) {
-			// post
 			this.props.createBookList(title.value, description.value);
 			this.handleClose();
 		} else {
@@ -119,6 +118,7 @@ class MyBookLists extends React.Component {
 	};
 
 	onKeyDown = e => {
+		// ENTER key
 		if (e.keyCode === 13) {
 			this.handleConfirmButton()
 		}
@@ -215,7 +215,7 @@ class MyBookLists extends React.Component {
 											gutterBottom
 											style={{ float: 'right', lineHeight: '26px' }}
 										>
-											Update Date: {bookList.updateDate.substring(0, 10)}
+											Updated Date: {bookList.updateDate.substring(0, 10)}
 										</Typography>
 									</CardContent>
 								</Card>
