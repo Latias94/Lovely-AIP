@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-	Rate,
-} from 'antd';
+import Rate from '../../common/rateStar';
 import styles from '../booksPageCss';
 import { LetterAvatar, ImageAvatar } from '../../account/containers/AvatarUploader/Avatars';
 import { UPLOAD_BASE_URL } from '../../config';
@@ -23,7 +21,7 @@ const classes = {
 const reviewOfBook = props => (
 	<div>
 		{
-			props.views.length && (
+			!!props.views.length && (
 				props.views.map(item => (
 					<div style={styles.containerOfPersonalReview} key={item._id}>
 						<div style={styles.viewPersonalInformation}>
@@ -37,7 +35,7 @@ const reviewOfBook = props => (
 							<span style={{ marginLeft: '10px' }}>{item.username}</span>
 						</div>
 						<div style={styles.viewPersonalInformation}>
-							<Rate disabled value={item.star}/>
+							<Rate onlyShow value={item.star}/>
 						</div>
 						<div style={styles.reviewContent}>
 							<span>{new Date(item.createDate).toLocaleString()}</span>

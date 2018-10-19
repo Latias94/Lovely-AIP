@@ -1,8 +1,7 @@
 import React from 'react';
-import {
-	Rate, InputNumber, Dropdown, Icon,
-} from 'antd';
+import { InputNumber, Dropdown, Icon } from 'antd';
 import Button from '@material-ui/core/Button';
+import Rate from '../../common/rateStar';
 import styles from '../booksPageCss';
 import DropDownInCart from './dropDown';
 
@@ -12,19 +11,19 @@ const isInstock = number => (number ? 'In Stock.' : 'Out of Stock');
 
 const bookInformation = props => (
 	<div style={styles.mainView}>
-		{props.coverUrl &&
-		<div style={styles.bookImage}><img src={props.coverUrl} style={{ width: '200px' }} alt="000"/></div>}
+		{props.coverUrl
+			&& <div style={styles.bookImage}><img src={props.coverUrl} style={{ width: '200px' }} alt="000" /></div>}
 		<div style={styles.center}>
 			<h3>{props.bookName}</h3>
 			<div style={styles.bookInfo}>
 				<h5>{`by ${props.bookAuthor} (Author)`}</h5>
-				<div><Rate disabled value={props.reviewScore}/><span>{props.bookReviews}</span><span
+				<div><Rate onlyShow value={props.reviewScore} /><span>{props.bookReviews}</span><span
 					style={{ marginLeft: '5px' }}>customer reviews</span></div>
-				<hr/>
+				<hr />
 				<pre style={{
 					whiteSpace: 'pre-wrap',
 					fontFamily: 'Arial,sans-serif',
-					fontSize: '16px'
+					fontSize: '16px',
 				}}>{props.description}</pre>
 			</div>
 		</div>
@@ -37,13 +36,13 @@ const bookInformation = props => (
 					<div>
 						<span style={{ marginRight: '15px' }}>Buy</span>
 						<InputNumber min={1} max={10} value={props.quantity}
-						             onChange={value => props.onQuantityChange(value)}/>
+							onChange={value => props.onQuantityChange(value)} />
 					</div>
 					<div>{`Total: $${totalPrice(props.quantity, props.bookPrice)}`}</div>
 				</div>
 				<h4 style={{ marginTop: '15px' }}>{isInstock(props.stockNumber)}</h4>
 				<span>Deliver to Australia</span>
-				<hr/>
+				<hr />
 				<Button
 					variant="contained"
 					color="default"
@@ -54,13 +53,13 @@ const bookInformation = props => (
 					Add to Cart
 				</Button>
 				<Dropdown overlay={<DropDownInCart isLogin={props.authOrNot} booklist={props.usersBookList}
-				                                   open={props.handleOpen}
-				                                   addBookIntoBooklist={props.addBookIntoBooklist} bookid={props.id}/>}
-				          trigger={['click']}>
+					open={props.handleOpen}
+					addBookIntoBooklist={props.addBookIntoBooklist} bookid={props.id} />}
+				trigger={['click']}>
 					<Button variant="contained" color="default" style={{
 						backgroundColor: 'gray', color: 'white', marginTop: '15px', outline: 'none',
 					}}>
-						Add to your List<Icon type="down"/>
+						Add to your List<Icon type="down" />
 					</Button>
 				</Dropdown>
 			</div>

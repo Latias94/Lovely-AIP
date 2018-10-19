@@ -42,14 +42,14 @@ class searchIndex extends Component {
 		let searchURL = '';
 
 		switch (type.replace('%20', ' ')) {
-			case 'Books':
-				searchURL = `/books/search/${parm}?page=1&pageSize=20`;
-				break;
-			case 'Book Lists':
-				searchURL = `/booklists/search/${parm}`;
-				break;
-			default:
-				break;
+		case 'Books':
+			searchURL = `/books/search/${parm}?page=1&pageSize=20`;
+			break;
+		case 'Book Lists':
+			searchURL = `/booklists/search/${parm}`;
+			break;
+		default:
+			break;
 		}
 
 		if (searchURL.length > 0) {

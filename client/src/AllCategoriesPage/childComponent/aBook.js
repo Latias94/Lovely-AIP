@@ -5,8 +5,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { Rate } from 'antd';
 import { Link } from 'react-router-dom';
+import Rate from '../../common/rateStar';
 
 
 const styles = {
@@ -49,8 +49,8 @@ function SimpleMediaCard(props) {
 					<Typography component="span" noWrap={true} style={{ fontSize: '0.8rem', color: '#757575' }}>
 						{props.bookAuthor}
 					</Typography>
-					<Rate disabled value={props.reviewScore} style={{ fontSize: '0.8rem' }}/><p
-					style={{ display: 'inline' }}>{props.bookReviews}</p>
+					<Rate onlyShow value={props.reviewScore}/><p
+						style={{ display: 'inline' }}>{props.bookReviews}</p>
 					<Typography component="span" noWrap={true}>
 						{props.bookPrice ? `$${props.bookPrice}` : null}
 					</Typography>

@@ -12,7 +12,7 @@ import * as style from './headerPageCss';
 import Cart from './badgeIcon';
 import NavigationBar from './navigationBar';
 import { loginUser, logoutUser } from '../account/common/actions/authActions';
-import { getUsersCart } from './actions';
+import { getUsersCart, clearCartNumberAction } from './actions';
 import AuthIcon from './authPage';
 
 
@@ -33,6 +33,7 @@ class headerPageIndex extends Component {
 		this.onSearchTypeChange = this.onSearchTypeChange.bind(this);
 		this.onSearchClick = this.onSearchClick.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onLogoutClick = this.onLogoutClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -60,6 +61,12 @@ class headerPageIndex extends Component {
 		}
 	}
 
+	onLogoutClick() {
+		this.props.logoutUser();
+		this.props.clearCartNumberAction();
+		window.location.reload();
+	}
+
 	onKeyDown(e) {
 		// if ENTER pushed
 		if (e.keyCode === 13) {
@@ -75,7 +82,7 @@ class headerPageIndex extends Component {
 			iconLogo,
 			searchIcon,
 			rightIcon,
-			dashboardStyle
+			dashboardStyle,
 		} = style;
 
 		return (
@@ -110,8 +117,11 @@ class headerPageIndex extends Component {
 							/>
 							{/* submit search */}
 							<div style={{
-								width: '24px', height: '24px', marginBottom: '8px', color: 'white',
-								cursor: 'pointer'
+								width: '24px',
+								height: '24px',
+								marginBottom: '8px',
+								color: 'white',
+								cursor: 'pointer',
 							}}
 							     onClick={this.onSearchClick}
 							>
@@ -120,7 +130,7 @@ class headerPageIndex extends Component {
 						<div style={rightIcon}>
 							<AuthIcon
 								isAuthenticated={this.props.auth.isAuthenticated}
-								logoutUser={this.props.logoutUser}
+								logoutUser={this.onLogoutClick}
 							/>
 							<Cart
 								number={this.props.cartCount}
@@ -129,7 +139,7 @@ class headerPageIndex extends Component {
 							{this.props.isAdmin && <div
 								title='Dashboard'
 								onClick={() => {
-									this.props.history.push('/admin')
+									this.props.history.push('/admin');
 								}}
 								style={dashboardStyle}
 							>
@@ -156,4 +166,5 @@ export default withRouter(connect(mapStateToProps, {
 	loginUser,
 	logoutUser,
 	getUsersCart,
+	clearCartNumberAction,
 })(headerPageIndex));

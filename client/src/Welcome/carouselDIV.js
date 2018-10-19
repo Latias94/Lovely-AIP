@@ -1,107 +1,150 @@
-import React, { Component } from 'react';
-import {
-	Carousel,
-	CarouselItem,
-	CarouselControl,
-	CarouselIndicators,
-	CarouselCaption,
-} from 'reactstrap';
-import imageOne from '../Img/Banner1.png';
-import imageTwo from '../Img/Banner2.png';
-import imageThree from '../Img/Banner3.png';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import MobileStepper from '@material-ui/core/MobileStepper';
+import Button from '@material-ui/core/Button';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
 
 
-const items = [
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+
+const tutorialSteps = [
 	{
-		id: 1,
-		src: imageOne,
-		altText: ' ',
-		caption: ' ',
-		url: '/booklist/best-book-of-2018',
+		label: 'best-book-of-2018',
+		imgPath:
+			'/image/Banner1.png',
 	},
 	{
-		id: 2,
-		src: imageTwo,
-		altText: ' ',
-		caption: ' ',
-		url: '/booklist/life-books',
+		label: 'life-books',
+		imgPath:
+			'/image/Banner2.png',
 	},
 	{
-		id: 3,
-		src: imageThree,
-		altText: ' ',
-		caption: ' ',
-		url: '/booklist/the-best-book-i-have-ever-read-in-2018',
+		label: 'the-best-book-i-have-ever-read-in-2018',
+		imgPath:
+			'/image/Banner3.png',
 	},
 ];
 
-class CarouselDIV extends Component {
+const styles = theme => ({
+	root: {
+		width: '100%',
+		flexGrow: 1,
+		position: 'relative',
+	},
+	header: {
+		display: 'flex',
+		alignItems: 'center',
+		height: 50,
+		paddingLeft: theme.spacing.unit * 4,
+		backgroundColor: theme.palette.background.default,
+	},
+	img: {
+		height: 255,
+		display: 'block',
+		width: '100%',
+		overflow: 'hidden',
+	},
+	mobileStepper: {
+		position: 'absolute',
+		top: '0px',
+		height: '100%',
+		zIndex: '11',
+		width: '100%',
+		background: 'transparent',
+	},
+	dots: {
+		height: '100%',
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'flex-end',
+	},
+	dot: {
+		backgroundColor: 'white',
+	},
+});
+
+class SwipeableTextMobileStepper extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { activeIndex: 0 };
-		this.next = this.next.bind(this);
-		this.previous = this.previous.bind(this);
-		this.goToIndex = this.goToIndex.bind(this);
-		this.onExiting = this.onExiting.bind(this);
-		this.onExited = this.onExited.bind(this);
+		this.state = {
+			activeStep: 0,
+		};
+		this.handleNext = this.handleNext.bind(this);
+		this.handleBack = this.handleBack.bind(this);
+		this.handleStepChange = this.handleStepChange.bind(this);
 	}
 
-	onExiting() {
-		this.animating = true;
+
+	handleNext() {
+		this.setState(prevState => ({
+			activeStep: prevState.activeStep + 1,
+		}));
 	}
 
-	onExited() {
-		this.animating = false;
+	handleBack() {
+		this.setState(prevState => ({
+			activeStep: prevState.activeStep - 1,
+		}));
 	}
 
-	next() {
-		if (this.animating) return;
-		const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
-		this.setState({ activeIndex: nextIndex });
-	}
-
-	previous() {
-		if (this.animating) return;
-		const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
-		this.setState({ activeIndex: nextIndex });
-	}
-
-	goToIndex(newIndex) {
-		if (this.animating) return;
-		this.setState({ activeIndex: newIndex });
+	handleStepChange(activeStep) {
+		this.setState({ activeStep });
 	}
 
 	render() {
-		const { activeIndex } = this.state;
-		const slides = items.map(item => (
-
-			<CarouselItem
-				className="custom-tag"
-				tag="div"
-				key={item.id}
-				onExiting={this.onExiting}
-				onExited={this.onExited}
-			>
-				<a href={item.url}><img style={{ height: '100%', width: '100%' }} src={item.src}
-				                        alt={item.altText}/></a>
-				<CarouselCaption className="text-danger" captionText={item.caption} captionHeader={item.caption}/>
-			</CarouselItem>
-
-		));
+		const { classes, theme } = this.props;
+		const { activeStep } = this.state;
+		const maxSteps = tutorialSteps.length;
 
 		return (
-			<Carousel
-				activeIndex={activeIndex}
-				next={this.next}
-				previous={this.previous}
-			>
-				<CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex}/>
-				{slides}
-				<CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous}/>
-				<CarouselControl direction="next" directionText="Next" onClickHandler={this.next}/>
-			</Carousel>
+			<div className={classes.root}>
+				<AutoPlaySwipeableViews
+					axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+					index={activeStep}
+					onChangeIndex={this.handleStepChange}
+					enableMouseEvents
+				>
+					{tutorialSteps.map((step, index) => (
+						<div key={step.label}>
+							{Math.abs(activeStep - index) <= 2 ? (
+								<img className={classes.img} src={step.imgPath} alt={step.label} />
+							) : null}
+						</div>
+					))}
+				</AutoPlaySwipeableViews>
+				<MobileStepper
+					steps={maxSteps}
+					position="static"
+					activeStep={activeStep}
+					className={classes.mobileStepper}
+					classes={{
+						dots: classes.dots,
+						dot: classes.dot,
+					}}
+					variant="dots"
+					nextButton={
+						<Button size="small" onClick={this.handleNext} disabled={activeStep === maxSteps - 1}>
+							{theme.direction === 'rtl' ? <KeyboardArrowLeft style={{ color: 'white' }} /> : <KeyboardArrowRight style={{ color: 'white' }} />}
+						</Button>
+					}
+					backButton={
+						<Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
+							{theme.direction === 'rtl' ? <KeyboardArrowRight style={{ color: 'white' }} /> : <KeyboardArrowLeft style={{ color: 'white' }} />}
+						</Button>
+					}
+				/>
+			</div>
 		);
 	}
 }
 
-export default CarouselDIV;
+SwipeableTextMobileStepper.propTypes = {
+	classes: PropTypes.object.isRequired,
+	theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(SwipeableTextMobileStepper);

@@ -7,8 +7,8 @@ export function showErrorMsg(msg) {
 		title: 'Oops!',
 		text: msg,
 		showConfirmButton: false,
-		timer: 2000
-	})
+		timer: 2000,
+	});
 }
 
 export function showErrorMsgFromObject(obj) {
@@ -17,8 +17,8 @@ export function showErrorMsgFromObject(obj) {
 		title: 'Oops!',
 		text: printObj(obj),
 		showConfirmButton: false,
-		timer: 2000
-	})
+		timer: 2000,
+	});
 }
 
 export function showErrorMsgFromErrorObject(obj) {
@@ -27,8 +27,8 @@ export function showErrorMsgFromErrorObject(obj) {
 		title: 'Oops!',
 		text: printObj(obj.response.data),
 		showConfirmButton: false,
-		timer: 2000
-	})
+		timer: 2000,
+	});
 }
 
 export function alertDeleted() {
@@ -36,8 +36,8 @@ export function alertDeleted() {
 		position: 'top',
 		title: 'Deleted!',
 		showConfirmButton: false,
-		timer: 2000
-	})
+		timer: 2000,
+	});
 }
 
 export function showSuccess() {
@@ -46,6 +46,6 @@ export function showSuccess() {
 		type: 'success',
 		title: 'Success!',
 		showConfirmButton: false,
-		timer: 1500
+		timer: 1500,
 	});
 }

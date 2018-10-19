@@ -9,7 +9,6 @@ import { setCurrentUser, logoutUser } from './account/common/actions/authActions
 import setAuthTokenInHeader from './account/common/utils/setAuthTokenInHeader';
 import App from './App';
 import store from './store';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/antd.css';
 import { API_BASE_URL } from './config';
 

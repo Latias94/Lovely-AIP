@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
+import { showErrorMsgFromErrorObject } from '../common/utils/sweetAlert';
 
 export const setWelcomePageBooksDataAction = data => ({ type: 'SET_WELCOME_BOOKS_DATA', booksInHomePage: data });
 
@@ -10,12 +10,12 @@ export const getWelcomePageBooksDataAction = () => (dispatch) => {
 	bookListID.forEach(
 		(v) => {
 			axios.get(`/booklists/${v}`)
-			.then((response) => {
-				result.push(response.data);
-				dispatch(setWelcomePageBooksDataAction(result));
-			})
+				.then((response) => {
+					result.push(response.data);
+					dispatch(setWelcomePageBooksDataAction(result));
+				})
 				.catch((error) => {
-					showErrorMsgFromErrorObject(error)
+					showErrorMsgFromErrorObject(error);
 				});
 		},
 	);

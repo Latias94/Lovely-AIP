@@ -50,7 +50,7 @@ class BooksPage extends Component {
 	}
 
 	createANewBookList(title) {
-		axios.post('/booklists', { title, description: '' })
+		axios.post('/booklists', { title, description: 'There is nothing here' })
 			.then(() => {
 				this.getUserBookList();
 				this.handleClose();
@@ -142,48 +142,27 @@ class BooksPage extends Component {
 	render() {
 		const { auth } = this.props;
 		const {
-			_id,
-			categoryName,
-			title,
-			authors,
-			reviews,
-			description,
-			price,
-			stock,
-			coverUrl,
-			score,
-		} = this.state.bookDetailInformation;
-
-		const {
 			quantity,
 			submittedReviewStar,
 			submittedReviewContent,
+			bookDetailInformation,
 		} = this.state;
 
 		if (this.state.bookDetailInformation !== {}) {
 			return (
 				<ContentComponent
-					id={_id}
-					categaryName={categoryName}
-					bookName={title}
+					bookDetailInformation={bookDetailInformation}
+					id={bookDetailInformation._id}
 					bookImagePath={'#'}
-					bookAuthor={authors[0].name}
-					reviewScore={score}
-					bookReviews={reviews.length}
-					description={description}
-					bookPrice={price}
 					quantity={quantity}
 					onQuantityChange={(quantity) => {
 						this.setState({ quantity });
 					}}
-					stockNumber={stock}
-					views={reviews}
 					submittedReviewStar={submittedReviewStar}
 					reviewStarChange={this.reviewStarChange}
 					submittedReviewcontent={submittedReviewContent}
 					reviewContentChange={this.reviewContentChange}
 					submitClick={this.submitReview}
-					coverUrl={coverUrl}
 					authOrNot={auth}
 					addToCartClick={this.addToCartClick}
 					usersBookList={this.state.usersBookList}
