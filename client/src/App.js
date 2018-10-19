@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter} from 'react-router-dom';
-
 import './App.css';
 import MainRoute from './routers/mainRouter';
 import Header from './Header';

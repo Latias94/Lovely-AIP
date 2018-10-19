@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { registerUser, clearErrors } from "../../common/actions/authActions";
-import { PropTypes } from "prop-types";
-import { withRouter } from "react-router-dom";
+import { registerUser, clearErrors } from '../../common/actions/authActions';
+import { PropTypes } from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KFAccountInput from '../KFAccountInput';
