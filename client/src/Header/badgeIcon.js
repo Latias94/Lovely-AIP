@@ -18,15 +18,16 @@ const styles = theme => ({
 });
 
 function CustomizedBadge(props) {
-	const { classes } = props;
+	const { classes, quantity, authed } = props;
+	const noProduct = quantity === 0 || !quantity;
 
 	return (
-		<IconButton aria-label="Cart" component={Link} to={props.auth ? '/cart' : '/login'}>
+		<IconButton aria-label="Cart" component={Link} to={authed ? '/cart' : '/login'}>
 			{
-				props.number === 0 || !props.number ? (
+				noProduct || !authed ? (
 					<ShoppingCartIcon style={{ color: 'white' }}/>
 				) : (
-					<Badge badgeContent={props.number} color="primary" classes={{ badge: classes.badge }}>
+					<Badge badgeContent={quantity} color="primary" classes={{ badge: classes.badge }}>
 						<ShoppingCartIcon style={{ color: 'white' }}/>
 					</Badge>
 				)
