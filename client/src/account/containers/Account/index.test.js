@@ -12,7 +12,6 @@ describe('Test account page', () => {
 		await page.setViewport({ width: 1280, height: 800 });
 
 		await page.goto(loginURL, { waitUntil: 'networkidle2' });
-		// TODO: move to App.test.js
 		const title = await page.title();
 		expect(title).toBe('Knight Frank'); // code behind it won't execute
 		await browser.close();
@@ -30,10 +29,6 @@ describe('Test account page', () => {
 		await page.keyboard.type('sf4@sf.com');
 		await page.focus('input[name="password"]');
 		await page.keyboard.type('12345678');
-		await page.screenshot({
-			path: '/Users/anluoridge/Downloads/TEMP/KnightFrank.png',
-			fullPage: true,
-		});
 		const inputElement = await page.$('input[type=submit]');
 		await inputElement.click();
 		await page.waitFor(1000);
@@ -43,11 +38,6 @@ describe('Test account page', () => {
 
 		const url = page.url();
 		expect(url).toBe(url + 'login');
-
-		await page.screenshot({
-			path: '/Users/anluoridge/Downloads/TEMP/KnightFrankAccount.png',
-			fullPage: true,
-		});
 		await browser.close();
 	});
 });

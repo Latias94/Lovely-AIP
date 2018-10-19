@@ -133,9 +133,9 @@ class LoginForm extends Component {
 					onChange={this.handleChange}
 					error={errors.email}
 					className={classes.formControl}
-					id={"email"}
-					name={"Email"}
-					type={"email"}
+					id={'email'}
+					name={'Email'}
+					type={'email'}
 					value={email}
 				/>
 
@@ -144,9 +144,9 @@ class LoginForm extends Component {
 					onKeyDown={this.handleEnter}
 					error={errors.password}
 					className={classes.formControl}
-					id={"password"}
-					name={"Password"}
-					type={"password"}
+					id={'password'}
+					name={'password'}
+					type={'password'}
 					value={password}
 				/>
 
