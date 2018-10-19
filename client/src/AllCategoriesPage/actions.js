@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { showErrorMsgFromErrorObject } from "../common/utils/sweetAlert";
+import { showErrorMsgFromErrorObject } from '../common/utils/sweetAlert';
 
 export const showBooksinCategoryAction = str => ({ type: 'SELECT_CATEGORY', name: str });
 export const initialAllCateories = data => ({ type: 'INITIAL_ALL_CATEGORIES', allCategories: data });

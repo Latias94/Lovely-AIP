@@ -9,7 +9,7 @@ import { compose } from "redux";
 import { getCurrentUserInfo } from '../../common/actions/authActions';
 import isEmpty from '../../common/utils/isEmpty'
 import { UPLOAD_BASE_URL } from '../../../config';
-import { ImageAvatar, LetterAvatar } from "../AvatarUploader/Avatars";
+import { ImageAvatar, LetterAvatar } from '../AvatarUploader/Avatars';
 import './avatar-uploader.css';
 import { getCurrentUserBookLists } from './actions';
 import Button from '@material-ui/core/Button';

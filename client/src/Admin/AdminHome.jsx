@@ -18,6 +18,7 @@ const style = {
 	}
 };
 
+
 class AdminHome extends React.Component {
 	render() {
 		return (
