@@ -412,10 +412,15 @@ class BookManage extends React.Component {
 									</td>
 									<td>
 										<TextField
-											className={classes.textField}
-											label="PublishDate"
-											placeholder="sample: 7 21 2018"
-											required
+                                            id="PublishDate"
+                                            label="PublishDate"
+                                            className={classes.textField}
+                                            placeholder="sample: 7 21 2018"
+                                            required
+                                            value={this.state.newPublishDate}
+                                            onChange={e => this.setState({newPublishDate: e.target.value}) }
+                                            error={newBookError.hasOwnProperty('publishDate')}
+                                            helperText={newBookError.hasOwnProperty('publishDate') ? newBookError.publishDate : ""}
 										/>
 									</td>
 								</tr>

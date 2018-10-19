@@ -21,7 +21,7 @@ function CustomizedBadge(props) {
 	const { classes } = props;
 
 	return (
-		<IconButton aria-label="Cart" component={Link} to={props.auth ? '/cart' : '/login'}>
+		<IconButton aria-label="Cart" component={Link} to={props.authed ? '/cart' : '/login'}>
 			{
 				props.number === 0 || !props.number ? (
 					<ShoppingCartIcon style={{ color: 'white' }}/>
