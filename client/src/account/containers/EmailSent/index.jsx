@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import { styles } from '../../common/AccountStyles';
-import axios from 'axios';
+
 
 /**
  * Email verification page

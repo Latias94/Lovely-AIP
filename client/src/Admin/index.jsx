@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import AdminHome from './AdminHome';
+import CustomerManage from './CustomerManage';
+import BookManage from './BookManage';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import CustomerManage from './CustomerManage';
-import BookManage from './BookManage';
 import Home from '@material-ui/icons/Home';
-import AdminHome from './AdminHome'
 
 
 const styles = theme => ({

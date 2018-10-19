@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import KFAccountInput from '../KFAccountInput';
-import { loginUser, clearErrors } from '../../common/actions/authActions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import swal from 'sweetalert2';
+import KFAccountInput from '../KFAccountInput';
+import { loginUser, clearErrors } from '../../common/actions/authActions';
 
 
 const styles = theme => ({

@@ -5,7 +5,7 @@ import AccountTab from './AccountTab'
 import { styles as accountStyles } from '../../common/AccountStyles';
 import AvatarUploader from "../AvatarUploader";
 import { connect } from 'react-redux';
-import { compose } from "redux";
+import { compose } from 'redux';
 import { getCurrentUserInfo } from '../../common/actions/authActions';
 import isEmpty from '../../common/utils/isEmpty'
 import { UPLOAD_BASE_URL } from '../../../config';

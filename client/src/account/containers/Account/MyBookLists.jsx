@@ -1,4 +1,7 @@
 import React from 'react';
+import { createBookList } from './actions';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -8,9 +11,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Modal from '@material-ui/core/Modal';
-import { createBookList } from './actions';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 
 
 const styles = theme => ({
