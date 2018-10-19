@@ -14,6 +14,7 @@ import axios from 'axios';
  */
 
 class EmailSent extends Component {
+	// timer for resending the email
 	state = {
 		timer: ''
 	};

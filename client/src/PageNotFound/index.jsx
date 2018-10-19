@@ -7,7 +7,7 @@ class PageNotFound extends React.Component {
 			<div>
 				<h1 style={{ color: 'gray', fontSize: '40px', textAlign: 'center', marginTop: '20px' }}>
 					<p>Oooops ^~^<br/>The page can not be found.</p>
-					<img src={UFO} style={{ width: '280px', height: '280px' }} alt="page not found"></img>
+					<img src={UFO} style={{ width: '280px', height: '280px' }} alt="page not found"/>
 					<p
 						style={{
 							color: 'black',

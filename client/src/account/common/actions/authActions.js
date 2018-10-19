@@ -1,9 +1,10 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { GET_ERRORS, SET_CURRENT_USER } from './types';
+import { GET_ERRORS, SET_CURRENT_USER, CLEAR_ERRORS } from './types';
 import setAuthTokenInHeader from '../utils/setAuthTokenInHeader';
 
 /**
+ * Validate the sign up form
  * @param data - User data
  * @returns boolean is validated
  */
@@ -133,3 +134,10 @@ export const getCurrentUserInfo = () => (dispatch) => {
 			payload: err.response.data,
 		}));
 };
+
+export const clearErrors = () => (dispatch) => {
+	dispatch({
+		type: CLEAR_ERRORS,
+		payload: null
+	})
+}
