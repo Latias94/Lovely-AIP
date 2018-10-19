@@ -1,6 +1,10 @@
 # Client Side
 We use React.js and Redux for the client side.
-![home_page](https://i.loli.net/2018/10/19/5bc9a4afe52a7.png)
+
+
+![home_page](https://i.loli.net/2018/10/19/5bc9a534cd8f7.png)
+
+
 The structure of project is mainly organised by  features (i.e. pages), such as log in, account, and books.
 Each feature folder may contains containers, components, actions, reducers, and so on.
 ## Features
@@ -8,6 +12,7 @@ Each feature folder may contains containers, components, actions, reducers, and 
 The basic login and sign up are implemented. Avatar could be uploaded and cropped. After signing up, the account need to be activated via one email.
 The user can view his or her book lists in the account page.
 ### Book
+Apart from the introduction of the book, it also provides adding book to book list and cart functionalities.
 Related books will show under the book page.
 ### Book review
 The user could post reviews to a book as well as view other ones reviews..
@@ -42,4 +47,4 @@ To execute tests:
 npm run test
 ```
 ## Lint
-This project uses [ESLint](http://eslint.org) and [Prop Types](https://github.com/facebook/prop-types) to maintain the code convention in JavaScript files.
+This project uses [ESLint](http://eslint.org) and [Prop Types](https://github.com/facebook/prop-types) to maintain the code convention in *JavaScript* files.
