@@ -134,7 +134,7 @@ class headerPageIndex extends Component {
 							/>
 							<Cart
 								quantity={this.props.cartCount}
-								authed={authed}
+								authed={this.props.auth.isAuthenticated}
 							/>
 							{this.props.isAdmin && <div
 								title='Dashboard'
