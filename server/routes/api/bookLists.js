@@ -3,7 +3,7 @@ const passport = require('passport');
 const Book = require('../../models/Book');
 const BookList = require('../../models/BookList');
 const cleanCache = require('../../middlewares/cleanCache');
-const { clearHash } = require('../../config/cache');
+const { clearAll } = require('../../config/cache');
 
 const {
   noresult,
@@ -499,7 +499,7 @@ router.post(
 
         bookListFields.updateDate = Date.now();
         // Should clean redis cache whenever you modify the data
-        clearHash(req.params.id);
+        clearAll();
         // Update book
         const bookListObject = await BookList.findOneAndUpdate(
           { _id: req.params.id },
@@ -610,7 +610,8 @@ router.post(
           bookListFields,
           { new: true }
         );
-        clearHash({ key: req.params.id });
+        // clearHash({ key: req.params.id });
+        clearAll();
         if (bookListObject) {
           return res.json(success);
         } else {
@@ -685,7 +686,8 @@ router.delete(
       bookList.books.splice(removeIndex, 1);
 
       // Clean redis cache
-      clearHash(req.params.id);
+      // clearHash(req.params.id);
+      clearAll();
 
       // Save booklist
       const bookListObject = await bookList.save();
@@ -875,7 +877,7 @@ router.delete(
 
       const bookListObject = await BookList.findOneAndDelete({ _id: req.params.id });
       if (bookListObject) {
-        clearHash(req.params.id);
+        clearAll();
         return res.json(success);
       } else {
         return res.status(404)
