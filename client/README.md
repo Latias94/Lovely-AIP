@@ -1,6 +1,6 @@
 # Client Side
 We use React.js and Redux for the client side.
-![home page](./client/src/img/home-page.png)
+![home_page](https://i.loli.net/2018/10/19/5bc9a4afe52a7.png)
 The structure of project is mainly organised by  features (i.e. pages), such as log in, account, and books.
 Each feature folder may contains containers, components, actions, reducers, and so on.
 ## Features
