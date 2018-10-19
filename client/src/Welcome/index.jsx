@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { getWelcomePageBooksDataAction } from './actions';
 import CarouselDIV from './carouselDIV';
 import PopularBooks from './popularBooks';
-import RateStar from '../common/rateStar';
 
 // Component of Welcome Page
 
@@ -18,7 +17,6 @@ class welcomePageIndex extends Component {
 			<div style={{
 				height: 'auto', width: '80%', marginLeft: '10%', marginTop: '10px',
 			}}>
-				<RateStar onlyShow value={5} />
 				{/* Carousel */}
 				<CarouselDIV/>
 				{/* Render books from database */}
