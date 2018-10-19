@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { registerUser } from "../../common/actions/authActions";
-import { PropTypes } from "prop-types";
-import { withRouter } from "react-router-dom";
+import { registerUser, clearErrors } from '../../common/actions/authActions';
+import { PropTypes } from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KFAccountInput from '../KFAccountInput';
@@ -47,6 +47,10 @@ class RegisterForm extends Component {
 			errors: {},
 		}
 	};
+
+	componentWillUnmount() {
+		this.props.clearErrors();
+	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		// Store prevId in state so we can compare when props change.
@@ -144,15 +148,16 @@ RegisterForm.propTypes = {
 	registerUser: PropTypes.func.isRequired,
 	auth: PropTypes.object.isRequired,
 	errors: PropTypes.object.isRequired,
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
+	clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	auth: state.auth,
-	errors: state.errors
+	errors: state.errors,
 });
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps, { registerUser }),
+	connect(mapStateToProps, { registerUser, clearErrors }),
 )(withRouter(RegisterForm));

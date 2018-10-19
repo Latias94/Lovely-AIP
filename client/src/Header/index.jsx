@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-
 import { Icon } from 'react-icons-kit';
 import { ic_search } from 'react-icons-kit/md/ic_search';
 import { ic_dashboard } from 'react-icons-kit/md/ic_dashboard';
@@ -84,6 +83,7 @@ class headerPageIndex extends Component {
 			rightIcon,
 			dashboardStyle,
 		} = style;
+		const authed = this.props.auth.isAuthenticated;
 
 		return (
 			<div style={background}>
@@ -133,8 +133,8 @@ class headerPageIndex extends Component {
 								logoutUser={this.onLogoutClick}
 							/>
 							<Cart
-								number={this.props.cartCount}
-								auth={this.props.auth.isAuthenticated}
+								quantity={this.props.cartCount}
+								authed={authed}
 							/>
 							{this.props.isAdmin && <div
 								title='Dashboard'

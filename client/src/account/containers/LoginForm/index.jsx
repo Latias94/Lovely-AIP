@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import KFAccountInput from '../KFAccountInput';
-import { loginUser } from '../../common/actions/authActions';
+import { loginUser, clearErrors } from '../../common/actions/authActions';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { swal } from 'sweetalert2';
+import swal from 'sweetalert2';
 
 
 const styles = theme => ({
@@ -79,6 +79,8 @@ class LoginForm extends Component {
 		if (this.props.auth.isAuthenticated) {
 			swal({
 				title: 'You are already logged in!',
+				showConfirmButton: false,
+				timer: 1000
 			})
 				.then(() => {
 					this.props.history.push('/');
@@ -86,9 +88,13 @@ class LoginForm extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+		this.props.clearErrors();
+	}
+
 	UNSAFE_componentWillReceiveProps(nextProps, nextState) {
 		if (nextProps.auth.isAuthenticated) {
-			this.props.history.push('/');
+			nextProps.history.push('/');
 		}
 
 		if (nextProps.errors) {
@@ -127,9 +133,9 @@ class LoginForm extends Component {
 					onChange={this.handleChange}
 					error={errors.email}
 					className={classes.formControl}
-					id={"email"}
-					name={"Email"}
-					type={"email"}
+					id={'email'}
+					name={'Email'}
+					type={'email'}
 					value={email}
 				/>
 
@@ -138,9 +144,9 @@ class LoginForm extends Component {
 					onKeyDown={this.handleEnter}
 					error={errors.password}
 					className={classes.formControl}
-					id={"password"}
-					name={"Password"}
-					type={"password"}
+					id={'password'}
+					name={'password'}
+					type={'password'}
 					value={password}
 				/>
 
@@ -165,6 +171,7 @@ LoginForm.propTypes = {
 	loginUser: PropTypes.func.isRequired,
 	auth: PropTypes.object.isRequired,
 	errors: PropTypes.object.isRequired,
+	clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -174,5 +181,5 @@ const mapStateToProps = state => ({
 
 export default compose(
 	withStyles(styles),
-	connect(mapStateToProps, { loginUser }),
+	connect(mapStateToProps, { loginUser, clearErrors }),
 )(LoginForm);
