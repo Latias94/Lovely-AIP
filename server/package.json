@@ -13,7 +13,9 @@
     "lint": "eslint *.js",
     "test": "cross-env NODE_ENV=test jest test",
     "testwatch": "cross-env NODE_ENV=test jest --watchAll",
-    "coverage": "cross-env NODE_ENV=test jest --coverage"
+    "coverage": "cross-env NODE_ENV=test jest --coverage",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -48,7 +50,8 @@
     "redis": "^2.8.0",
     "rss": "^1.2.2",
     "swagger-jsdoc": "^1.10.3",
-    "validator": "^10.4.0"
+    "validator": "^10.4.0",
+    "snyk": "^1.258.2"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
@@ -66,5 +69,6 @@
   },
   "engines": {
     "node": "8.11.3"
-  }
+  },
+  "snyk": true
 }
