@@ -24,7 +24,7 @@
     "react-responsive-modal": "^3.3.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5",
+    "react-scripts": "3.0.0",
     "react-swipeable-views": "^0.12.16",
     "react-swipeable-views-utils": "0.13.0",
     "reactstrap": "^6.3.1",
@@ -32,7 +32,7 @@
     "redux-actions": "^2.6.1",
     "redux-thunk": "^2.3.0",
     "sweetalert2": "^7.28.4",
-    "webpack": "^3.0.0"
+    "webpack": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
