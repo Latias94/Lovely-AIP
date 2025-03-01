@@ -32,14 +32,17 @@
     "redux-actions": "^2.6.1",
     "redux-thunk": "^2.3.0",
     "sweetalert2": "^7.28.4",
-    "webpack": "^3.0.0"
+    "webpack": "^3.0.0",
+    "snyk": "^1.161.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
-    "esdoc": "rm -rf ./esdocs && esdoc && open ./esdocs/index.html"
+    "esdoc": "rm -rf ./esdocs && esdoc && open ./esdocs/index.html",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "devDependencies": {
     "ajv": "^6.0.0",
@@ -58,5 +61,6 @@
     "eslint-plugin-no-unused-expressions": "^0.1.0",
     "eslint-plugin-react": "^7.10.0",
     "puppeteer": "^1.6.2"
-  }
+  },
+  "snyk": true
 }
