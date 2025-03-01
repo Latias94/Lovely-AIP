@@ -11,7 +11,7 @@
     "@material-ui/icons": "^2.0.0",
     "@material/button": "^0.38.0",
     "antd": "^3.7.3",
-    "axios": "^0.18.0",
+    "axios": "^0.21.3",
     "classnames": "^2.2.6",
     "jwt-decode": "^2.2.0",
     "prop-types": "^15.6.2",
