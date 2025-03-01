@@ -32,7 +32,7 @@
     "redux-actions": "^2.6.1",
     "redux-thunk": "^2.3.0",
     "sweetalert2": "^7.28.4",
-    "webpack": "^3.0.0"
+    "webpack": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
